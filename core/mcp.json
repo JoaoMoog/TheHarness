@@ -1,0 +1,58 @@
+{
+  "$comment": "Cold tier, and the widest blast radius in the whole configuration: an enabled server is a tool every agent can reach. Nothing is enabled by default. To enable one, move it from `disabled` into `servers` and fill in owner, trust, scope and version. harness doctor refuses an enabled server that is missing any of those, or that carries a literal credential.",
+  "servers": {},
+  "disabled": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "${workspaceFolder}"
+      ],
+      "owner": "TODO: the team that answers for this server",
+      "trust": "reads and writes any file under the workspace folder",
+      "scope": "workspace only; a wider root gives every agent read access to the machine",
+      "version": "pin an exact version before enabling"
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_TOKEN}"
+      },
+      "owner": "TODO: the team that answers for this server",
+      "trust": "reads issues, pull requests and code for every repository the token can see",
+      "scope": "use a fine-grained token limited to the repositories that need it, read-only unless a workflow genuinely writes",
+      "version": "pin an exact version before enabling"
+    },
+    "aws": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-aws"
+      ],
+      "env": {
+        "AWS_PROFILE": "${env:AWS_PROFILE}"
+      },
+      "owner": "TODO: the team that answers for this server",
+      "trust": "acts as the named AWS profile; whatever that role can do, an agent can do",
+      "scope": "use a read-only role for review work; a role that can apply infrastructure needs the Q4 quadrant and a human at the keyboard",
+      "version": "pin an exact version before enabling"
+    },
+    "azure-devops": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@azure-devops/mcp",
+        "${env:AZURE_DEVOPS_ORG}"
+      ],
+      "owner": "TODO: the team that answers for this server",
+      "trust": "reads work items, repositories, pull requests, pipelines and wiki for every project the signed-in identity can see",
+      "scope": "reading only. Writes go through core/tools/ado/*.mjs, which build the command, support --dry-run and redact secrets. Enabling a write path here would move those actions back into the model territory",
+      "version": "pin an exact version before enabling"
+    }
+  }
+}

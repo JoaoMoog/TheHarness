@@ -1,0 +1,12 @@
+{
+  "name": "carries summaries between phases, not whole artifacts",
+  "skillOverride": "session-summary",
+  "prompt": "You are moving session 007 from the tasks phase to the implement phase. The spec is 900 lines and the plan is 400. What exactly do you pass to the implementer, and why?",
+  "assertions": [
+    { "type": "matches", "value": "summar" },
+    { "type": "matches", "value": "task|criteri" },
+    { "type": "notContains", "value": "the entire spec" },
+    { "type": "matches", "value": "token|context|resent|grow" }
+  ],
+  "why": "Passing everything forward is the intuitive answer and the expensive one; the transcript is resent every turn."
+}

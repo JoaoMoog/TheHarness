@@ -1,0 +1,12 @@
+{
+  "name": "turns a vague requirement into testable EARS criteria",
+  "skillOverride": "spec-writing",
+  "prompt": "Requirement: the export should be fast and handle errors gracefully. Write the acceptance criteria.",
+  "assertions": [
+    { "type": "matches", "value": "SHALL" },
+    { "type": "matches", "value": "WHEN|IF|WHILE|WHERE" },
+    { "type": "matches", "value": "[0-9]+ *(ms|s|seconds|rows|p95)" },
+    { "type": "notContains", "value": "gracefully" }
+  ],
+  "why": "Fast and graceful are the two words that most often survive into a spec and cannot be tested."
+}

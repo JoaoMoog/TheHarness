@@ -1,0 +1,32 @@
+﻿name: evals
+
+on:
+  pull_request:
+    paths:
+      - 'core/**'
+      - 'loops/**'
+      - 'evals/**'
+      - 'finops/**'
+      - 'rubrics/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  structural:
+    name: structural
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run structural evals
+        run: node bin/harness.mjs eval --verbose
+
+      # The behavioural cases need a model. Everything here runs through GitHub
+      # Copilot on a developer machine, so there is no key in CI to run them
+      # with. They are exercised with: harness eval --emit, then --check.
+      - name: Confirm the golden cases still parse
+        run: node bin/harness.mjs eval --emit > /dev/null

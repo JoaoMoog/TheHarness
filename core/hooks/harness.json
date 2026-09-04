@@ -1,0 +1,148 @@
+{
+  "$comment": "Runtime hooks in the format VS Code actually consumes. Paths are workspace-relative and resolve through the .github/hooks junction the harness installs. HARNESS_HOOK_MODE=vscode tells each script to read the event JSON from stdin instead of behaving as a git hook. The same scripts also run from .git/hooks/pre-commit, where they read the staged index instead.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/session-context.mjs",
+        "timeout": 5,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/loop-budget.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "readFile|read_file|read|view|open|cat|fetch|textSearch|fileSearch",
+        "type": "command",
+        "command": "node .github/hooks/scripts/read-guard.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      },
+      {
+        "matcher": "editFiles|createFile|str_replace|write|edit",
+        "type": "command",
+        "command": "node .github/hooks/scripts/secret-block.mjs",
+        "timeout": 5,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      },
+      {
+        "matcher": "editFiles|createFile|str_replace|write|edit",
+        "type": "command",
+        "command": "node .github/hooks/scripts/policy-gate.mjs",
+        "timeout": 5,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      },
+      {
+        "matcher": "runCommands|runInTerminal|bash|shell",
+        "type": "command",
+        "command": "node .github/hooks/scripts/secret-block.mjs",
+        "timeout": 5,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      },
+      {
+        "matcher": "runCommands|runInTerminal|bash|shell",
+        "type": "command",
+        "command": "node .github/hooks/scripts/destructive-git.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      },
+      {
+        "matcher": "runCommands|runInTerminal|bash|shell",
+        "type": "command",
+        "command": "node .github/hooks/scripts/ado-gate.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "editFiles|createFile|str_replace|write|edit",
+        "type": "command",
+        "command": "node .github/hooks/scripts/format.mjs",
+        "timeout": 20,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      },
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/burn-detect.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      }
+    ],
+    "SubagentStart": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/telemetry.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      }
+    ],
+    "SubagentStop": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/telemetry.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      },
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/contract-check.mjs",
+        "timeout": 5,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      }
+    ],
+    "PreCompact": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/persist-session.mjs",
+        "timeout": 5,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/audit-log.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      }
+    ]
+  }
+}

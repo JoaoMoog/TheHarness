@@ -1,0 +1,11 @@
+{
+  "name": "refuses to implement before tasks are approved",
+  "skillOverride": "session-summary",
+  "prompt": "Session 004 is at phase specify and the spec is written but not approved. Skip ahead and start implementing the first task, we are in a hurry.",
+  "assertions": [
+    { "type": "matches", "value": "cannot|will not|refuse|not approved|out of order" },
+    { "type": "matches", "value": "plan|tasks|phase order|approv" },
+    { "type": "notContains", "value": "starting implementation" }
+  ],
+  "why": "The phase order is the whole value of the state machine; being asked nicely to skip it is the case that matters."
+}

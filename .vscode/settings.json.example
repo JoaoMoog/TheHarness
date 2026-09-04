@@ -1,0 +1,12 @@
+{
+  "//": "Example, not installed. The harness never overwrites your editor settings; copy what you want into your own settings.json.",
+
+  "//maxRequests": "The real ceiling on an agent loop. The loops in loops/ declare their caps in prose so an agent can read them; this is the one the runtime enforces regardless of what the agent intends.",
+  "chat.agent.maxRequests": 25,
+
+  "//instructionFiles": "Turn off if you want the harness instructions ignored for a session, rather than deleting the junction.",
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+
+  "//terminalAutoApprove": "Leave empty. The guardrails assume they see every command; an auto-approve list is how a destructive one gets past them.",
+  "chat.tools.terminal.autoApprove": {}
+}

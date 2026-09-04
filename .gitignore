@@ -1,0 +1,8 @@
+node_modules/
+harness.config.json
+harness.lock.json
+.harness/
+.harness-audit.log
+*.local.json
+.DS_Store
+Thumbs.db

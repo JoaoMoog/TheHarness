@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "rationale": "Agent cost grows faster than linearly because the whole history is resent each turn. A loop without a cap is a hard constraint violation, not a style preference. The session entry is a state machine rather than a loop, so its cap is on the whole run.",
+  "defaults": {
+    "onBudgetExceeded": "stop and escalate to a human with the partial result",
+    "onNoProgress": "stop after two consecutive iterations with no measurable change"
+  },
+  "loops": {
+    "verify": {
+      "maxIterations": 3,
+      "stopCriterion": "every item in the skill validation checklist passes and the repository build, lint and tests pass",
+      "tokenBudget": 60000,
+      "escalateWhen": "the same check fails twice in a row"
+    },
+    "evaluate": {
+      "maxIterations": 4,
+      "stopCriterion": "the evaluator score reaches the threshold declared at the start, or two consecutive iterations move it by less than one point",
+      "tokenBudget": 120000,
+      "escalateWhen": "the score falls between iterations, which means the rubric or the task is wrong"
+    },
+    "session": {
+      "maxIterations": 1,
+      "stopCriterion": "the review verdict is approve or approve-with-comments and the test stage reports a real pass",
+      "tokenBudget": 220000,
+      "escalateWhen": "any phase returns blocked or escalated, or the same phase returns blocked twice",
+      "maxParallel": 3,
+      "phases": {
+        "specify": {
+          "tokenBudget": 30000
+        },
+        "plan": {
+          "tokenBudget": 50000
+        },
+        "tasks": {
+          "tokenBudget": 25000
+        },
+        "implement": {
+          "tokenBudget": 60000
+        },
+        "review": {
+          "tokenBudget": 35000
+        },
+        "deliver": {
+          "tokenBudget": 20000
+        }
+      },
+      "tracks": {
+        "patch": {
+          "tokenBudget": 115000
+        },
+        "fix": {
+          "tokenBudget": 145000
+        },
+        "refactor": {
+          "tokenBudget": 190000
+        },
+        "feature": {
+          "tokenBudget": 220000
+        },
+        "spike": {
+          "tokenBudget": 80000
+        },
+        "incident": {
+          "tokenBudget": 115000
+        }
+      },
+      "rationale": "A track budget is the sum of the phase budgets it runs, so the cap and the phases agree. Implement is 60k because it works one task at a time; a task that needs more is two tasks."
+    }
+  }
+}

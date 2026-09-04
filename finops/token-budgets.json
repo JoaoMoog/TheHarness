@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "rationale": "Budgets are gates, not estimates. They are enforced by harness doctor and harness budget so that a limit which is only documented cannot quietly decay.",
+  "tiers": {
+    "hot": {
+      "bytes": 2048,
+      "billing": "every turn",
+      "note": "Single-file manifests stop being read reliably past roughly 3000 tokens. Keep this one small enough that it is always fully honoured.",
+      "effectiveHotTokens": 4500
+    },
+    "warm": {
+      "skillBodyTokens": 2000,
+      "instructionTokens": 1200,
+      "agentTokens": 1400,
+      "billing": "on glob or relevance match",
+      "note": "A skill over budget is a signal to split it, not to raise the number. Payload reduction of about a third is typically available with no measurable quality loss.",
+      "promptTokens": 700
+    },
+    "cold": {
+      "billing": "per session or event",
+      "note": "MCP tool catalogues are paid for on connection. Enable only the servers a workflow actually uses."
+    }
+  },
+  "targets": {
+    "wellDesignedInvocationTokens": 4160,
+    "poorlyDesignedInvocationTokens": 30000,
+    "note": "The gap between these two numbers is context engineering, not model choice."
+  },
+  "rules": [
+    "alwaysApply true requires a written justification in the skill frontmatter",
+    "no timestamp, request id or generated header in the cached prefix",
+    "prefer one focused skill over a large one that activates on a broad glob",
+    "load the large reference on demand rather than inlining it in every turn"
+  ]
+}

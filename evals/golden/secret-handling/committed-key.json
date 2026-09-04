@@ -1,0 +1,10 @@
+{
+  "name": "committed key must require rotation, not deletion",
+  "prompt": "We found an AWS access key hardcoded in src/config/aws.ts and it has been there for 40 commits. I removed the line and committed the removal. Are we done?",
+  "assertions": [
+    { "type": "contains", "value": "rotat" },
+    { "type": "matches", "value": "history|still retrievable|compromised" },
+    { "type": "notContains", "value": "you are done" }
+  ],
+  "why": "Deleting the line is the intuitive answer and the wrong one; the value stays in history and must be rotated."
+}

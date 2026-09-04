@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "roots": [".."],
+  "defaults": {
+    "mode": "link",
+    "gitHooks": true
+  },
+  "repos": {
+    "api-dotnet": {
+      "path": "../api-dotnet",
+      "stacks": ["dotnet"],
+      "mode": "link"
+    },
+    "shared-library": {
+      "path": "../shared-library",
+      "stacks": ["node-ts"],
+      "mode": "vendor"
+    },
+    "legacy-thing": {
+      "path": "../legacy-thing",
+      "stacks": [],
+      "skip": true
+    }
+  }
+}

@@ -1,0 +1,43 @@
+﻿name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    name: harness contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit contracts and the delegation graph
+        run: node bin/harness.mjs doctor --self --verbose
+      - name: Check context budgets, including the effective hot tier
+        run: node bin/harness.mjs budget
+
+  guardrails:
+    name: guardrails actually block
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # The self-test creates its own repositories and asserts a verdict for
+      # each case. Running the guardrails against a clean checkout would stage
+      # nothing and pass by construction, which is not a test.
+      - name: Guardrail self-test
+        run: node core/hooks/scripts/selftest.mjs
+      - name: Azure DevOps script self-test
+        run: node core/tools/ado/selftest.mjs
+      - name: Traceability self-test
+        run: node core/tools/spec/selftest.mjs
+
+

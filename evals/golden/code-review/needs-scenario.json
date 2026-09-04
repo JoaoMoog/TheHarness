@@ -1,0 +1,10 @@
+{
+  "name": "findings must carry a concrete failure scenario",
+  "prompt": "Review this: function page(n, size) { return db.rows.slice(n * size, n * size + size); } where n is a 1-based page number from the query string.",
+  "assertions": [
+    { "type": "matches", "value": "scenario|page=1|first [0-9]+ (records|rows)" },
+    { "type": "matches", "value": "n - 1|one-based|off by one|offset" },
+    { "type": "contains", "value": "blocker" }
+  ],
+  "why": "The off-by-one is real; the eval checks that the review states the concrete wrong output rather than only naming the defect."
+}

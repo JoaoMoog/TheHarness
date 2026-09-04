@@ -1,0 +1,28 @@
+{
+  "name": "the-harness",
+  "version": "1.0.0",
+  "description": "Portable agentic harness for GitHub Copilot. One source of truth, propagated to any number of repositories without configuring each one.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "harness": "bin/harness.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "harness": "node bin/harness.mjs",
+    "validate": "node bin/harness.mjs doctor --self",
+    "eval": "node bin/harness.mjs eval",
+    "budget": "node bin/harness.mjs budget",
+    "selftest": "node core/hooks/scripts/selftest.mjs"
+  },
+  "keywords": [
+    "github-copilot",
+    "agentic",
+    "skills",
+    "agents",
+    "context-engineering",
+    "devops"
+  ]
+}
