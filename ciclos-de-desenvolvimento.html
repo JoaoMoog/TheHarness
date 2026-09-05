@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ciclos de Desenvolvimento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --ground: #F6F8F7;
+  --surface: #FFFFFF;
+  --paper: #FBFCFB;
+  --dot: #D3DBD7;
+  --sunken: #ECF0EE;
+  --lane: #F1F4F3;
+  --ink: #14201E;
+  --ink-soft: #445450;
+  --ink-mute: #74847E;
+  --rule: #D5DDDA;
+  --rule-soft: #E6EBE9;
+  --flow: #1F6F63;
+  --flow-wash: #E2EFEC;
+  --gate: #A96C15;
+  --gate-wash: #F8EFDE;
+  --gate-glow: rgba(169, 108, 21, 0.3);
+  --stop: #A33B2A;
+  --stop-wash: #F8E8E4;
+
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --measure: 40rem;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0E1513; --surface: #17221F; --paper: #141F1C; --dot: #263430; --sunken: #1C2825; --lane: #121C19;
+    --ink: #E8EEEB; --ink-soft: #B4C2BD; --ink-mute: #869691;
+    --rule: #29362F; --rule-soft: #1F2C28;
+    --flow: #52C0AA; --flow-wash: #123029;
+    --gate: #E2A94F; --gate-wash: #33270E; --gate-glow: rgba(226, 169, 79, 0.3);
+    --stop: #E68A72; --stop-wash: #341C16;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0E1513; --surface: #17221F; --paper: #141F1C; --dot: #263430; --sunken: #1C2825; --lane: #121C19;
+  --ink: #E8EEEB; --ink-soft: #B4C2BD; --ink-mute: #869691;
+  --rule: #29362F; --rule-soft: #1F2C28;
+  --flow: #52C0AA; --flow-wash: #123029;
+  --gate: #E2A94F; --gate-wash: #33270E; --gate-glow: rgba(226, 169, 79, 0.3);
+  --stop: #E68A72; --stop-wash: #341C16;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+.doc { max-width: 68rem; margin: 0 auto; padding: 2.75rem 1.25rem 5rem; }
+
+/* ---------- masthead + index ---------- */
+
+.kicker {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--flow); margin: 0 0 0.8rem;
+}
+h1 {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(2.3rem, 5.5vw, 3.6rem); letter-spacing: -0.035em;
+  line-height: 0.98; margin: 0; text-wrap: balance;
+}
+.lead { max-width: var(--measure); color: var(--ink-soft); font-size: 1.08rem; margin: 1.1rem 0 0; text-wrap: pretty; }
+
+.index {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  gap: 0.3rem 1.5rem; margin: 1.9rem 0 0; padding: 1rem 0 0;
+  border-top: 1px solid var(--rule); list-style: none;
+}
+.index a {
+  display: grid; grid-template-columns: 3.4rem 1fr; gap: 0.5rem; align-items: baseline;
+  color: var(--ink-soft); text-decoration: none; font-size: 0.86rem; padding: 0.25rem 0.2rem;
+  border-radius: 3px; transition: color 0.2s var(--ease);
+}
+.index a:hover { color: var(--ink); }
+.index a:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--flow); }
+.index span { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--flow); }
+
+/* ---------- sections + figures ---------- */
+
+section { margin-top: 3.4rem; scroll-margin-top: 1.5rem; }
+.fig-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--flow); margin: 0 0 0.3rem; }
+h2 {
+  font-family: var(--display); font-weight: 600;
+  font-size: 1.55rem; letter-spacing: -0.02em; line-height: 1.15;
+  margin: 0 0 0.4rem; text-wrap: balance;
+}
+.sub { max-width: var(--measure); color: var(--ink-soft); font-size: 0.96rem; margin: 0 0 1.2rem; text-wrap: pretty; }
+
+figure { margin: 0; }
+figcaption { font-size: 0.85rem; color: var(--ink-mute); margin-top: 0.8rem; max-width: var(--measure); text-wrap: pretty; }
+figcaption b { color: var(--ink-soft); font-weight: 600; }
+
+/* draw.io paper: a fine dot grid inside every diagram frame */
+.frame {
+  background-color: var(--paper);
+  background-image: radial-gradient(var(--dot) 0.8px, transparent 0.9px);
+  background-size: 14px 14px;
+  border: 1px solid var(--rule);
+  padding: 1rem;
+  overflow-x: auto;
+}
+svg { display: block; width: 100%; height: auto; min-width: 640px; }
+
+svg .lane { fill: var(--lane); }
+svg .laneline { stroke: var(--rule); stroke-width: 1; }
+svg .lanelbl { font-family: var(--mono); font-size: 10px; fill: var(--ink-mute); letter-spacing: 0.06em; }
+svg .box { fill: var(--surface); stroke: var(--flow); stroke-width: 1.5; }
+svg .box-plain { fill: var(--surface); stroke: var(--rule); stroke-width: 1.5; }
+svg .box-gate { fill: var(--gate-wash); stroke: var(--gate); stroke-width: 1.5; }
+svg .box-stop { fill: var(--stop-wash); stroke: var(--stop); stroke-width: 1.5; }
+svg .dash { fill: none; stroke: var(--rule); stroke-width: 1.5; stroke-dasharray: 5 4; }
+svg .t { font-family: var(--body); font-size: 12px; fill: var(--ink); }
+svg .tm { font-family: var(--mono); font-size: 11px; fill: var(--ink); }
+svg .ts { font-family: var(--body); font-size: 10.5px; fill: var(--ink-mute); }
+svg .tg { fill: var(--gate); }
+svg .tf { fill: var(--flow); }
+svg .tr { fill: var(--stop); }
+svg .arr { fill: none; stroke: var(--ink-mute); stroke-width: 1.4; marker-end: url(#head); }
+svg .arr-gate { stroke: var(--gate); }
+svg .arr-loop { stroke: var(--flow); stroke-dasharray: 5 4; }
+svg .head { fill: var(--ink-mute); }
+svg .head-gate { fill: var(--gate); }
+svg .head-flow { fill: var(--flow); }
+
+/* ---------- motion, in three places only ---------- */
+
+@keyframes march { to { stroke-dashoffset: -18; } }
+svg .arr-loop { animation: march 1.6s linear infinite; }
+
+@keyframes breathe {
+  0%, 100% { filter: drop-shadow(0 0 0 var(--gate-glow)); }
+  50% { filter: drop-shadow(0 0 5px var(--gate-glow)); }
+}
+svg .box-gate { animation: breathe 3.2s ease-in-out infinite; }
+
+@keyframes settle { from { opacity: 0.35; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.settle > * { animation: settle 0.6s var(--ease) both; }
+.settle > *:nth-child(2) { animation-delay: 0.08s; }
+.settle > *:nth-child(3) { animation-delay: 0.16s; }
+.settle > *:nth-child(4) { animation-delay: 0.24s; }
+.settle > *:nth-child(5) { animation-delay: 0.32s; }
+.settle > *:nth-child(6) { animation-delay: 0.4s; }
+.settle > *:nth-child(7) { animation-delay: 0.48s; }
+
+@media (prefers-reduced-motion: reduce) {
+  svg .arr-loop, svg .box-gate, .settle > * { animation: none; }
+}
+
+/* ---------- the track matrix ---------- */
+
+.matrix { display: grid; grid-template-columns: 7rem repeat(6, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); font-size: 0.85rem; }
+.matrix > * { background: var(--surface); padding: 0.55rem 0.6rem; }
+.matrix .h { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.04em; color: var(--ink-mute); text-align: center; }
+.matrix .h.first { text-align: left; }
+.matrix .name { font-family: var(--mono); font-size: 0.8rem; }
+.matrix .cell { text-align: center; font-family: var(--mono); font-size: 0.72rem; }
+.matrix .on { background: var(--flow-wash); color: var(--flow); }
+.matrix .off { color: var(--rule); }
+.matrix .must { background: var(--gate-wash); color: var(--gate); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; font-size: 0.78rem; color: var(--ink-mute); margin-top: 0.7rem; }
+.legend span::before { content: ""; display: inline-block; width: 0.6rem; height: 0.6rem; margin-right: 0.35rem; vertical-align: baseline; }
+.legend .k1::before { background: var(--flow-wash); border: 1px solid var(--flow); }
+.legend .k2::before { background: var(--gate-wash); border: 1px solid var(--gate); }
+.legend .k3::before { border: 1px solid var(--rule); }
+
+/* ---------- tables + footer ---------- */
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+.tbl th { text-align: left; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); font-weight: 500; padding: 0 1rem 0.45rem 0; border-bottom: 1px solid var(--rule); }
+.tbl td { padding: 0.5rem 1rem 0.5rem 0; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+.tbl td:first-child { font-family: var(--mono); font-size: 0.8rem; }
+.tbl .num { font-variant-numeric: tabular-nums; text-align: right; padding-right: 0; }
+.tbl tbody tr { transition: background 0.2s var(--ease); }
+.tbl tbody tr:hover { background: var(--sunken); }
+
+footer { margin-top: 3.5rem; padding-top: 1.1rem; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 0.72rem; color: var(--ink-mute); display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; }
+
+@media (max-width: 44rem) {
+  .matrix { grid-template-columns: 5.5rem repeat(6, 1fr); font-size: 0.75rem; }
+  .matrix > * { padding: 0.45rem 0.25rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+<header>
+  <p class="kicker">TheHarness — ciclos de desenvolvimento</p>
+  <h1>Como o pedido vira código</h1>
+  <p class="lead">
+    Nem todo pedido roda o ciclo inteiro. Um erro de digitação não precisa de
+    especificação nem de plano. Estes são os seis caminhos, o que muda entre eles,
+    e como o trabalho é verificado no fim de cada um.
+  </p>
+  <ol class="index">
+    <li><a href="#fig1"><span>Fig. 01</span>O ciclo, por inteiro</a></li>
+    <li><a href="#fig2"><span>Fig. 02</span>Qual trilha</a></li>
+    <li><a href="#fig3"><span>Fig. 03</span>O que cada trilha roda</a></li>
+    <li><a href="#fig4"><span>Fig. 04</span>Como uma etapa é verificada</a></li>
+    <li><a href="#fig5"><span>Fig. 05</span>Como se prova o que foi pedido</a></li>
+    <li><a href="#fig6"><span>Fig. 06</span>O loop dentro de uma etapa</a></li>
+    <li><a href="#fig7"><span>Fig. 07</span>Quando a trilha estava errada</a></li>
+    <li><a href="#fig8"><span>Fig. 08</span>O ciclo que melhora o ciclo</a></li>
+    <li><a href="#fig9"><span>Fig. 09</span>O que cada trilha custa</a></li>
+  </ol>
+</header>
+
+<section id="fig1">
+<p class="fig-label">Fig. 01</p>
+<h2>O ciclo, por inteiro</h2>
+<p class="sub">
+  Você pede. O orquestrador escolhe o caminho, entrega cada etapa a um
+  especialista e para para você conferir. O harness envolve tudo isso.
+</p>
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1080 430" role="img" aria-label="Diagrama de raias entre você, o orquestrador, os agentes e o harness">
+  <defs>
+    <marker id="head" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="head"/></marker>
+    <marker id="headg" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="head-gate"/></marker>
+    <marker id="headf" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="head-flow"/></marker>
+  </defs>
+
+  <rect class="lane" x="90" y="16" width="978" height="88"/>
+  <rect class="lane" x="90" y="200" width="978" height="88"/>
+  <line class="laneline" x1="90" y1="16" x2="1068" y2="16"/>
+  <line class="laneline" x1="90" y1="104" x2="1068" y2="104"/>
+  <line class="laneline" x1="90" y1="192" x2="1068" y2="192"/>
+  <line class="laneline" x1="90" y1="288" x2="1068" y2="288"/>
+  <line class="laneline" x1="90" y1="16" x2="90" y2="288"/>
+  <text class="lanelbl" x="8" y="64">VOCÊ</text>
+  <text class="lanelbl" x="8" y="152">ORQUESTRADOR</text>
+  <text class="lanelbl" x="8" y="240">AGENTES</text>
+  <text class="lanelbl" x="8" y="360">HARNESS</text>
+
+  <g class="settle">
+    <g><rect class="box-plain" x="106" y="38" width="118" height="44" rx="3"/><text class="t" x="165" y="56" text-anchor="middle">o pedido</text><text class="ts" x="165" y="71" text-anchor="middle">uma frase</text></g>
+    <g><rect class="box" x="250" y="126" width="118" height="44" rx="3"/><text class="t" x="309" y="144" text-anchor="middle">escolhe a</text><text class="t" x="309" y="159" text-anchor="middle">trilha</text></g>
+    <g><rect class="box-gate" x="394" y="38" width="118" height="44" rx="3"/><text class="t tg" x="453" y="56" text-anchor="middle">confirma</text><text class="ts tg" x="453" y="71" text-anchor="middle">a trilha</text></g>
+    <g><rect class="box" x="538" y="126" width="118" height="44" rx="3"/><text class="t" x="597" y="144" text-anchor="middle">entrega a</text><text class="t" x="597" y="159" text-anchor="middle">etapa</text></g>
+    <g><rect class="box" x="682" y="222" width="118" height="44" rx="3"/><text class="t" x="741" y="240" text-anchor="middle">o especialista</text><text class="t" x="741" y="255" text-anchor="middle">trabalha</text></g>
+    <g><rect class="box-gate" x="826" y="38" width="118" height="44" rx="3"/><text class="t tg" x="885" y="56" text-anchor="middle">aprova</text><text class="ts tg" x="885" y="71" text-anchor="middle">a etapa</text></g>
+    <g><rect class="box" x="946" y="222" width="118" height="44" rx="3"/><text class="t tf" x="1005" y="240" text-anchor="middle">pull request</text><text class="ts" x="1005" y="255" text-anchor="middle">aberto</text></g>
+  </g>
+
+  <path class="arr" d="M165,82 L165,148 L246,148"/>
+  <path class="arr" d="M309,126 L309,60 L390,60"/>
+  <path class="arr" d="M453,82 L453,148 L534,148"/>
+  <path class="arr" d="M656,148 L669,148 L669,244 L678,244"/>
+  <path class="arr" d="M800,244 L813,244 L813,60 L822,60"/>
+  <path class="arr arr-loop" marker-end="url(#headf)" d="M885,82 L885,180 L597,180 L597,174"/>
+  <text class="ts tf" x="741" y="196" text-anchor="middle">próxima etapa da trilha</text>
+  <path class="arr" d="M944,60 L975,60 L975,218"/>
+  <text class="ts" x="1010" y="150" text-anchor="middle">última etapa</text>
+
+  <rect class="dash" x="106" y="304" width="958" height="70" rx="4"/>
+  <text class="tm" x="126" y="328">hooks</text>
+  <text class="ts" x="126" y="344">leem o comando antes de</text>
+  <text class="ts" x="126" y="358">rodar, e o que vai ser lido</text>
+  <text class="tm" x="336" y="328">orçamento</text>
+  <text class="ts" x="336" y="344">cada trilha tem um teto</text>
+  <text class="ts" x="336" y="358">em tokens</text>
+  <text class="tm" x="546" y="328">memória</text>
+  <text class="ts" x="546" y="344">session.md e as decisões,</text>
+  <text class="ts" x="546" y="358">commitados no repositório</text>
+  <text class="tm" x="796" y="328">skills e rubricas</text>
+  <text class="ts" x="796" y="344">o procedimento e a régua</text>
+  <text class="ts" x="796" y="358">de cada etapa</text>
+  <text class="ts" x="106" y="398">O harness não aparece na conversa. Ele é o que garante que as regras valem mesmo quando ninguém lembra delas.</text>
+</svg>
+</div>
+<figcaption>
+  <b>Os retângulos âmbar são você.</b> Sem esse clique, a etapa seguinte não
+  começa. A seta que marcha é o ciclo: repete até acabarem as etapas da trilha.
+</figcaption>
+</figure>
+</section>
+
+<section id="fig2">
+<p class="fig-label">Fig. 02</p>
+<h2>Qual trilha</h2>
+<p class="sub">
+  Duas saídas rápidas e duas perguntas, nesta ordem. Você confirma antes de
+  qualquer etapa começar.
+</p>
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1080 340" role="img" aria-label="Árvore de decisão com duas saídas rápidas e duas perguntas levando às seis trilhas">
+  <rect class="box-plain" x="16" y="6" width="360" height="74" rx="3"/>
+  <text class="ts" x="30" y="26">saídas rápidas, antes das duas perguntas</text>
+  <text class="tm tr" x="30" y="48">incident</text>
+  <text class="ts" x="112" y="48">produção está quebrada agora</text>
+  <text class="tm tf" x="30" y="68">spike</text>
+  <text class="ts" x="112" y="68">é uma pergunta, não uma mudança</text>
+  <path class="arr" d="M76,130 L76,84"/>
+
+  <rect class="box-plain" x="16" y="130" width="120" height="44" rx="3"/>
+  <text class="t" x="76" y="148" text-anchor="middle">o pedido</text>
+  <text class="ts" x="76" y="163" text-anchor="middle">chega</text>
+  <path class="arr" d="M136,152 L186,152"/>
+
+  <path class="box-plain" d="M310,110 L410,152 L310,194 L210,152 z"/>
+  <text class="t" x="310" y="148" text-anchor="middle">muda o</text>
+  <text class="t" x="310" y="163" text-anchor="middle">comportamento?</text>
+  <path class="arr" d="M310,110 L310,70 L470,70"/>
+  <text class="ts" x="330" y="62">não</text>
+  <path class="arr" d="M310,194 L310,240 L470,240"/>
+  <text class="ts" x="330" y="258">sim</text>
+
+  <path class="box-plain" d="M580,40 L676,70 L580,100 L484,70 z"/>
+  <text class="t" x="580" y="67" text-anchor="middle">a estrutura</text>
+  <text class="t" x="580" y="81" text-anchor="middle">muda?</text>
+  <path class="box-plain" d="M580,210 L676,240 L580,270 L484,240 z"/>
+  <text class="t" x="580" y="237" text-anchor="middle">precisa decidir</text>
+  <text class="t" x="580" y="251" text-anchor="middle">antes de codar?</text>
+
+  <path class="arr" d="M580,40 L580,18 L790,18"/>
+  <text class="ts" x="600" y="12">não</text>
+  <path class="arr" d="M676,70 L730,70 L730,84 L790,84"/>
+  <text class="ts" x="694" y="62">sim</text>
+  <path class="arr" d="M580,270 L580,292 L790,292"/>
+  <text class="ts" x="600" y="308">sim</text>
+  <path class="arr" d="M676,240 L730,240 L730,226 L790,226"/>
+  <text class="ts" x="694" y="258">não</text>
+
+  <rect class="box" x="794" y="2" width="150" height="34" rx="3"/>
+  <text class="tm tf" x="808" y="24">patch</text><text class="ts" x="864" y="24">3 etapas</text>
+  <rect class="box" x="794" y="68" width="150" height="34" rx="3"/>
+  <text class="tm tf" x="808" y="90">refactor</text><text class="ts" x="874" y="90">5 etapas</text>
+  <rect class="box" x="794" y="210" width="150" height="34" rx="3"/>
+  <text class="tm tf" x="808" y="232">fix</text><text class="ts" x="864" y="232">4 etapas</text>
+  <rect class="box" x="794" y="276" width="150" height="34" rx="3"/>
+  <text class="tm tf" x="808" y="298">feature</text><text class="ts" x="874" y="298">6 etapas</text>
+</svg>
+</div>
+<figcaption>
+  <b>Um spike nunca abre pull request.</b> Se terminou em código, não era um
+  spike. E nada que toque autenticação, criptografia, pagamento ou schema de
+  produção pode ser <code>patch</code>, por menor que pareça.
+</figcaption>
+</figure>
+</section>
+
+<section id="fig3">
+<p class="fig-label">Fig. 03</p>
+<h2>O que cada trilha roda</h2>
+<p class="sub">
+  As etapas são sempre as mesmas seis, na mesma ordem. A trilha só decide quais
+  são puladas.
+</p>
+<figure>
+<div class="matrix">
+  <div class="h first">trilha</div>
+  <div class="h">specify</div><div class="h">plan</div><div class="h">tasks</div>
+  <div class="h">implement</div><div class="h">review</div><div class="h">deliver</div>
+
+  <div class="name">patch</div>
+  <div class="cell off">—</div><div class="cell off">—</div><div class="cell off">—</div>
+  <div class="cell on">roda</div><div class="cell must">roda</div><div class="cell on">roda</div>
+
+  <div class="name">incident</div>
+  <div class="cell off">—</div><div class="cell off">—</div><div class="cell off">—</div>
+  <div class="cell on">roda</div><div class="cell must">roda</div><div class="cell on">roda</div>
+
+  <div class="name">fix</div>
+  <div class="cell on">roda</div><div class="cell off">—</div><div class="cell off">—</div>
+  <div class="cell on">roda</div><div class="cell must">roda</div><div class="cell on">roda</div>
+
+  <div class="name">refactor</div>
+  <div class="cell off">—</div><div class="cell on">roda</div><div class="cell on">roda</div>
+  <div class="cell on">roda</div><div class="cell must">roda</div><div class="cell on">roda</div>
+
+  <div class="name">feature</div>
+  <div class="cell on">roda</div><div class="cell on">roda</div><div class="cell on">roda</div>
+  <div class="cell on">roda</div><div class="cell must">roda</div><div class="cell on">roda</div>
+
+  <div class="name">spike</div>
+  <div class="cell on">roda</div><div class="cell on">roda</div><div class="cell off">—</div>
+  <div class="cell off">—</div><div class="cell off">—</div><div class="cell off">—</div>
+</div>
+<div class="legend">
+  <span class="k1">roda</span>
+  <span class="k2">nunca é pulada quando a trilha entrega</span>
+  <span class="k3">pulada nesta trilha</span>
+</div>
+<figcaption>
+  <b>patch e incident rodam as mesmas etapas por motivos opostos:</b> um porque
+  não há o que especificar, o outro porque não há tempo. A trilha de incidente
+  cobra duas coisas que nenhuma outra cobra: um runbook na entrega, e uma sessão
+  <code>fix</code> aberta para a causa raiz.
+  <br><br>
+  <b>Por que um fix não tem plano:</b> o defeito já diz o que precisa mudar. O
+  <code>specify</code> dele não escreve um documento — escreve o teste que falha
+  e reproduz o problema. <b>Por que um refactor não tem specify:</b> o
+  comportamento não muda, então não há critério novo para escrever.
+</figcaption>
+</figure>
+</section>
+
+<section id="fig4">
+<p class="fig-label">Fig. 04</p>
+<h2>Como uma etapa é verificada</h2>
+<p class="sub">
+  Duas metades, nesta ordem. A primeira responde <em>funcionou</em>. A segunda,
+  só depois, responde <em>está bom</em>.
+</p>
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1080 300" role="img" aria-label="As duas metades da verificação: checagem determinística e depois rubrica">
+  <rect class="box-plain" x="16" y="112" width="132" height="52" rx="3"/>
+  <text class="t" x="82" y="134" text-anchor="middle">a etapa</text>
+  <text class="t" x="82" y="149" text-anchor="middle">entrega</text>
+  <path class="arr" d="M148,138 L186,138"/>
+
+  <rect class="box" x="190" y="112" width="204" height="52" rx="3"/>
+  <text class="t tf" x="292" y="132" text-anchor="middle">Check 01 · determinístico</text>
+  <text class="ts" x="292" y="149" text-anchor="middle">build, lint, suíte, matriz</text>
+  <path class="arr" d="M394,138 L432,138"/>
+
+  <path class="box-plain" d="M520,104 L604,138 L520,172 L436,138 z"/>
+  <text class="t" x="520" y="142" text-anchor="middle">passou?</text>
+  <path class="arr" d="M604,138 L642,138"/>
+  <text class="ts" x="616" y="130">sim</text>
+
+  <rect class="box-gate" x="646" y="112" width="204" height="52" rx="3"/>
+  <text class="t tg" x="748" y="132" text-anchor="middle">Check 02 · rubrica</text>
+  <text class="ts tg" x="748" y="149" text-anchor="middle">nota 1 a 5 por critério</text>
+  <path class="arr" d="M850,138 L888,138"/>
+
+  <rect class="box" x="892" y="112" width="172" height="52" rx="3"/>
+  <text class="t tf" x="978" y="132" text-anchor="middle">veredito</text>
+  <text class="ts" x="978" y="149" text-anchor="middle">com as notas junto</text>
+
+  <path class="arr arr-loop" marker-end="url(#headf)" d="M520,172 L520,224 L292,224 L292,170"/>
+  <text class="ts tr" x="406" y="242" text-anchor="middle">não — corrige. Nada a pontuar ainda</text>
+
+  <rect class="box-stop" x="646" y="26" width="418" height="62" rx="3"/>
+  <text class="t tr" x="666" y="48">O limiar é por critério, nunca pela média.</text>
+  <text class="ts" x="666" y="66">Um critério em 2 barra a mudança mesmo com quatro em 5 —</text>
+  <text class="ts" x="666" y="80">a média é justamente como um defeito real é derrotado por votos.</text>
+  <path class="arr" d="M748,112 L748,92"/>
+
+  <text class="ts" x="16" y="286">A rubrica é um arquivo versionado. O juiz é o reviewer, numa passada própria: quem produziu o trabalho nunca o pontua.</text>
+</svg>
+</div>
+<figcaption>
+  <b>A ordem importa.</b> Uma rubrica nunca passa por cima de um teste vermelho.
+  Enquanto a metade determinística falha, não existe nada para julgar.
+</figcaption>
+</figure>
+</section>
+
+<section id="fig5">
+<p class="fig-label">Fig. 05</p>
+<h2>Como se prova que foi feito o que foi pedido</h2>
+<p class="sub">
+  Cada critério tem um id. Cada teste diz qual id cobre. A matriz cruza os dois.
+</p>
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1080 320" role="img" aria-label="Matriz de rastreabilidade cruzando requisitos, testes e arquivos">
+  <rect class="box-plain" x="16" y="30" width="250" height="140" rx="3"/>
+  <text class="tm" x="32" y="52">spec.md</text>
+  <text class="ts" x="32" y="76">FR-001  exporta o filtro ativo</text>
+  <text class="ts" x="32" y="96">FR-002  arquivo só com cabeçalho</text>
+  <text class="ts" x="32" y="116">FR-003  desabilita o botão</text>
+  <text class="ts" x="32" y="144">ids estáveis, nunca renumerados</text>
+
+  <rect class="box-plain" x="16" y="196" width="250" height="96" rx="3"/>
+  <text class="tm" x="32" y="218">tests/</text>
+  <text class="ts" x="32" y="242">it("FR-001 exporta ...")</text>
+  <text class="ts" x="32" y="262">it("FR-002 cabeçalho ...")</text>
+  <text class="ts tr" x="32" y="282">nenhum cita FR-003</text>
+
+  <path class="arr" d="M266,100 L330,100 L330,150 L372,150"/>
+  <path class="arr" d="M266,244 L330,244 L330,178 L372,178"/>
+
+  <rect class="box" x="376" y="118" width="196" height="92" rx="3"/>
+  <text class="t tf" x="474" y="150" text-anchor="middle">traceability.mjs</text>
+  <text class="ts" x="474" y="170" text-anchor="middle">determinístico</text>
+  <text class="ts" x="474" y="188" text-anchor="middle">sai com código 2 se falta algo</text>
+  <path class="arr" d="M572,164 L616,164"/>
+
+  <rect class="box-stop" x="620" y="66" width="444" height="196" rx="3"/>
+  <text class="tm" x="642" y="92">| requisito | testes | status |</text>
+  <text class="tm tf" x="642" y="114">| FR-001    | sim    | PASS   |</text>
+  <text class="tm tf" x="642" y="134">| FR-002    | sim    | PASS   |</text>
+  <text class="tm tr" x="642" y="154">| FR-003    | MISSING| GAP    |</text>
+  <text class="ts tr" x="642" y="184">FR-003 · intenção que ninguém provou</text>
+  <text class="ts tr" x="642" y="206">src/telemetry.ts mudou e nenhum requisito pediu</text>
+  <text class="ts" x="642" y="236">Os dois cheiros que nenhum diff mostra. O primeiro é</text>
+  <text class="ts" x="642" y="250">intenção não verificada; o segundo, comportamento não aprovado.</text>
+
+  <text class="ts" x="16" y="312">A matriz vai no corpo do PR. A pergunta do revisor deixa de ser "isso parece certo" e passa a ser "isso satisfaz a spec", que tem resposta.</text>
+</svg>
+</div>
+<figcaption>
+  <b>Uma ambiguidade não vira suposição.</b> Ela vira
+  <code>[NEEDS CLARIFICATION]</code> na spec, e a fase não fecha enquanto
+  houver uma em aberto.
+</figcaption>
+</figure>
+</section>
+
+<section id="fig6">
+<p class="fig-label">Fig. 06</p>
+<h2>O loop dentro de uma etapa</h2>
+<p class="sub">
+  Implementar não é um passo só. É um ciclo curto que roda no máximo três vezes.
+</p>
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1080 260" role="img" aria-label="Loop de verificação com no máximo três voltas">
+  <rect class="box-plain" x="16" y="96" width="112" height="44" rx="3"/>
+  <text class="t" x="72" y="114" text-anchor="middle">uma tarefa</text>
+  <text class="ts" x="72" y="129" text-anchor="middle">da lista</text>
+  <path class="arr" d="M128,118 L166,118"/>
+
+  <rect class="box" x="170" y="96" width="132" height="44" rx="3"/>
+  <text class="t" x="236" y="114" text-anchor="middle">escreve o teste</text>
+  <text class="t" x="236" y="129" text-anchor="middle">que falha</text>
+  <path class="arr" d="M302,118 L340,118"/>
+
+  <rect class="box" x="344" y="96" width="122" height="44" rx="3"/>
+  <text class="t" x="405" y="122" text-anchor="middle">implementa</text>
+  <path class="arr" d="M466,118 L504,118"/>
+
+  <rect class="box" x="508" y="96" width="132" height="44" rx="3"/>
+  <text class="t" x="574" y="114" text-anchor="middle">roda a suíte</text>
+  <text class="t" x="574" y="129" text-anchor="middle">inteira</text>
+  <path class="arr" d="M640,118 L680,118"/>
+
+  <path class="box-plain" d="M770,86 L862,118 L770,150 L678,118 z"/>
+  <text class="t" x="770" y="122" text-anchor="middle">passou?</text>
+  <path class="arr" d="M862,118 L920,118"/>
+  <text class="ts" x="884" y="110">sim</text>
+
+  <rect class="box" x="924" y="96" width="140" height="44" rx="3"/>
+  <text class="t tf" x="994" y="114" text-anchor="middle">devolve o resumo</text>
+  <text class="ts" x="994" y="129" text-anchor="middle">e para na tarefa</text>
+
+  <path class="arr arr-loop" marker-end="url(#headf)" d="M770,150 L770,200 L405,200 L405,144"/>
+  <text class="ts tf" x="588" y="216" text-anchor="middle">não — corrige só o que falhou</text>
+
+  <rect class="box-stop" x="678" y="20" width="184" height="44" rx="3"/>
+  <text class="t tr" x="770" y="38" text-anchor="middle">3 voltas sem passar</text>
+  <text class="ts tr" x="770" y="53" text-anchor="middle">para e chama você</text>
+  <path class="arr" d="M770,86 L770,68"/>
+
+  <text class="ts" x="16" y="248">O teto existe porque o custo de um loop cresce mais rápido que o número de voltas: o histórico inteiro é reenviado a cada uma.</text>
+</svg>
+</div>
+<figcaption>
+  <b>Uma tarefa por vez.</b> O agente não segue para a próxima sozinho, porque a
+  fronteira entre tarefas é onde ainda sai barato você intervir. E na quinta
+  chamada idêntica de uma ferramenta, um hook avisa que ele está andando em círculos.
+</figcaption>
+</figure>
+</section>
+
+<section id="fig7">
+<p class="fig-label">Fig. 07</p>
+<h2>Quando a trilha estava errada</h2>
+<p class="sub">
+  É o que torna as trilhas curtas seguras: elas podem crescer no meio do caminho.
+</p>
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1080 210" role="img" aria-label="Promoção de trilha quando o trabalho se revela maior">
+  <rect class="box" x="16" y="70" width="150" height="44" rx="3"/>
+  <text class="tm tf" x="30" y="90">patch</text>
+  <text class="ts" x="30" y="106">corrigir um rótulo</text>
+  <path class="arr" d="M166,92 L216,92"/>
+
+  <rect class="box-stop" x="220" y="60" width="230" height="64" rx="3"/>
+  <text class="t tr" x="335" y="82" text-anchor="middle">o rótulo vem de um arquivo</text>
+  <text class="t tr" x="335" y="97" text-anchor="middle">de tradução que outras telas</text>
+  <text class="t tr" x="335" y="112" text-anchor="middle">também usam</text>
+  <path class="arr arr-gate" marker-end="url(#headg)" d="M450,92 L500,92"/>
+
+  <rect class="box-gate" x="504" y="70" width="210" height="44" rx="3"/>
+  <text class="t tg" x="609" y="88" text-anchor="middle">o agente anuncia</text>
+  <text class="ts tg" x="609" y="103" text-anchor="middle">e registra no session.md</text>
+  <path class="arr" d="M714,92 L764,92"/>
+
+  <rect class="box" x="768" y="70" width="150" height="44" rx="3"/>
+  <text class="tm tf" x="782" y="90">fix</text>
+  <text class="ts" x="782" y="106">volta ao specify</text>
+
+  <text class="ts" x="16" y="164">Promoção nunca é silenciosa. Continuar numa trilha que o trabalho já superou é exatamente o que esta regra existe para evitar.</text>
+  <text class="ts" x="16" y="184">patch → fix → feature. Um refactor que precisa de critério novo também vira feature. Um incident abre um fix ao fechar.</text>
+</svg>
+</div>
+<figcaption>
+  <b>A alternativa seria pior.</b> Sem promoção, ou toda tarefa roda o ciclo
+  completo por precaução, ou as trilhas curtas viram um atalho para pular
+  revisão.
+</figcaption>
+</figure>
+</section>
+
+<section id="fig8">
+<p class="fig-label">Fig. 08</p>
+<h2>O ciclo que melhora o ciclo</h2>
+<p class="sub">
+  Cada sessão deixa um rastro. Ele é lido de volta para apontar onde o próprio
+  harness está errado.
+</p>
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1080 250" role="img" aria-label="O rastro das sessões alimenta uma revisão do próprio harness">
+  <rect class="box-plain" x="16" y="84" width="140" height="52" rx="3"/>
+  <text class="t" x="86" y="106" text-anchor="middle">as sessões</text>
+  <text class="ts" x="86" y="122" text-anchor="middle">rodam</text>
+  <path class="arr" d="M156,110 L194,110"/>
+
+  <rect class="box" x="198" y="84" width="190" height="52" rx="3"/>
+  <text class="t tf" x="293" y="104" text-anchor="middle">o hook registra</text>
+  <text class="ts" x="293" y="121" text-anchor="middle">agente, duração, tokens</text>
+  <path class="arr" d="M388,110 L426,110"/>
+
+  <rect class="box" x="430" y="84" width="190" height="52" rx="3"/>
+  <text class="tm tf" x="525" y="104" text-anchor="middle">harness improve</text>
+  <text class="ts" x="525" y="121" text-anchor="middle">relata, nunca edita</text>
+  <path class="arr" d="M620,110 L658,110"/>
+
+  <rect class="box-gate" x="662" y="84" width="184" height="52" rx="3"/>
+  <text class="t tg" x="754" y="104" text-anchor="middle">você decide</text>
+  <text class="ts tg" x="754" y="121" text-anchor="middle">o que muda</text>
+  <path class="arr" d="M846,110 L884,110"/>
+
+  <rect class="box" x="888" y="84" width="176" height="52" rx="3"/>
+  <text class="t tf" x="976" y="104" text-anchor="middle">o harness muda</text>
+  <text class="ts" x="976" y="121" text-anchor="middle">skill, agente, orçamento</text>
+
+  <path class="arr arr-loop" marker-end="url(#headf)" d="M976,84 L976,46 L86,46 L86,80"/>
+  <text class="ts tf" x="531" y="38" text-anchor="middle">e as próximas sessões rodam com ele</text>
+
+  <text class="ts" x="16" y="176">O que ele aponta: agente interno que nunca é chamado, agente que volta na hora, a fase onde as sessões morrem,</text>
+  <text class="ts" x="16" y="192">retentativa dentro de uma fase, trilha que nunca entrega.</text>
+  <text class="ts" x="16" y="220">O que ele não consegue ver, e diz isso na saída: quais skills carregaram, se um humano aprovou o gate, e o custo por fase</text>
+  <text class="ts" x="16" y="236">quando o runtime não reporta uso. Cada achado é uma pergunta para investigar, não uma conclusão.</text>
+</svg>
+</div>
+<figcaption>
+  <b>Ele relata e nunca edita.</b> Um ciclo que reescreve as próprias regras sem
+  ninguém ler o diff é como um erro na telemetria vira uma mudança permanente na
+  constituição.
+</figcaption>
+</figure>
+</section>
+
+<section id="fig9">
+<p class="fig-label">Fig. 09</p>
+<h2>O que cada trilha custa</h2>
+<p class="sub">
+  O teto de uma trilha é a soma das etapas que ela roda. Ao estourar, a sessão
+  para e devolve o que já fez, em vez de continuar gastando.
+</p>
+<table class="tbl">
+  <thead>
+    <tr><th>trilha</th><th>quando</th><th class="num">teto</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>spike</td><td>uma pergunta a responder, sem mudança</td><td class="num">80k</td></tr>
+    <tr><td>patch</td><td>texto, versão, formatação, código morto</td><td class="num">115k</td></tr>
+    <tr><td>incident</td><td>produção quebrada; mitiga antes de entender</td><td class="num">115k</td></tr>
+    <tr><td>fix</td><td>um defeito relatado, reproduzido por um teste</td><td class="num">145k</td></tr>
+    <tr><td>refactor</td><td>a estrutura muda, o comportamento não</td><td class="num">190k</td></tr>
+    <tr><td>feature</td><td>comportamento que ainda não existe</td><td class="num">220k</td></tr>
+  </tbody>
+</table>
+<p class="sub" style="margin-top:1.2rem">
+  E o teto não é a métrica. <code>harness cost</code> conta as sessões pelo quanto
+  avançaram e divide o tempo de agente pelas que entregaram — porque um modelo que
+  custa o dobro e reduz as tentativas pela metade sai mais barato, e um relatório
+  que só soma tokens não mostra isso.
+</p>
+</section>
+
+<footer>
+  <span>TheHarness</span>
+  <span>6 trilhas · 6 etapas · 36 skills · 8 agentes · 8 eventos de hook</span>
+  <span>65 checagens de contrato · 81 casos de teste</span>
+  <span>MIT</span>
+</footer>
+
+</div>
+
+</body>
+</html>
