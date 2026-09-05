@@ -35,14 +35,20 @@ when it shares a file with another open task, even when asked to.
 
 ## Contracts
 
-Input: `plan.md` and the session summary.
+The session start states the spec directory and the file names for this
+repository. Under Copilot they are `specs/`, `spec.md` and `plan.md`; under
+Kiro they are `.kiro/specs/`, `requirements.md` and `design.md`, because that
+is what Kiro's own spec panel reads. Write the names the session context gave
+you. Below, `<specs>`, `<spec>` and `<plan>` stand for them.
 
-Output: `specs/<id>-<slug>/tasks.md` plus:
+Input: the plan and the session summary.
+
+Output: `<specs>/<id>-<slug>/tasks.md` plus:
 
 ```harness-handoff
 stage: tasks
 status: complete | blocked | escalated
-artifacts: specs/<id>-<slug>/tasks.md
+artifacts: <specs>/<id>-<slug>/tasks.md
 summary: at most 200 words, naming the Q3 and Q4 tasks explicitly
 next: implement
 ```

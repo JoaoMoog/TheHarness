@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { TARGETS, DEFAULT_TARGET } from './targets.mjs';
 
 /** Repository root of the harness itself (two levels up from src/lib). */
 export const HARNESS_ROOT = path.resolve(
@@ -11,27 +12,15 @@ export const HARNESS_ROOT = path.resolve(
 /**
  * Directory surfaces are linked (junction on Windows, symlink on POSIX) so an
  * edit in the harness is live in every target repository with no sync step.
+ * Single files are copied instead: a file symlink on Windows requires
+ * elevation and a junction cannot point at a file, so drift is caught by hash.
+ *
+ * These two are the default target's surfaces. A repository wired for another
+ * tool gets its map from targets.mjs; these exports stay so every existing
+ * caller keeps working unchanged.
  */
-export const DIR_SURFACES = [
-  { source: 'core/instructions', target: '.github/instructions' },
-  { source: 'core/skills', target: '.github/skills' },
-  { source: 'core/prompts', target: '.github/prompts' },
-  { source: 'core/agents', target: '.github/agents' },
-  { source: 'core/chatmodes', target: '.github/chatmodes' },
-  { source: 'core/hooks', target: '.github/hooks' },
-  { source: 'core/tools', target: '.github/tools' },
-  { source: 'core/rubrics', target: '.github/rubrics' },
-];
-
-/**
- * Single files are copied, not linked: a file symlink on Windows requires
- * elevation, a junction cannot point at a file. Drift is caught by hash.
- */
-export const FILE_SURFACES = [
-  { source: 'core/copilot-instructions.md', target: '.github/copilot-instructions.md' },
-  { source: 'core/AGENTS.md', target: 'AGENTS.md' },
-  { source: 'core/mcp.json', target: '.mcp.json' },
-];
+export const DIR_SURFACES = TARGETS[DEFAULT_TARGET].dirSurfaces;
+export const FILE_SURFACES = TARGETS[DEFAULT_TARGET].fileSurfaces;
 
 /** Runtime state the hooks write inside a target repository; never committed. */
 export const RUNTIME_DIRS = ['.harness'];

@@ -14,14 +14,26 @@ export const EXIT_BLOCK = 2;
 const STDIN_LIMIT = 4 * 1024 * 1024;
 const STDIN_TIMEOUT_MS = 2000;
 
+/** Every runtime that hands this script an event on stdin. */
+const STDIN_MODES = new Set(['vscode', 'kiro']);
+
 /**
  * Mode is explicit, never guessed. Guessing from isTTY blocks forever when
  * stdin is an open pipe that nobody writes to, which would hang the IDE or
- * the commit. The generated git hook and the generated hook JSON each set
- * HARNESS_HOOK_MODE, so an unset value means "run as a git hook".
+ * the commit. An unset mode means "run as a git hook".
+ *
+ * Two ways to set it, because the runtimes differ: VS Code hooks carry an env
+ * block, and Kiro's hook schema has none, so the generated Kiro command passes
+ * --hook-mode=kiro in argv instead.
  */
+export function hookMode() {
+  const flag = process.argv.find((arg) => arg.startsWith('--hook-mode='));
+  const mode = flag ? flag.slice('--hook-mode='.length) : process.env.HARNESS_HOOK_MODE;
+  return STDIN_MODES.has(mode) ? mode : null;
+}
+
 export async function readHookInput() {
-  if (process.env.HARNESS_HOOK_MODE !== "vscode") return null;
+  if (hookMode() === null) return null;
 
   const raw = await new Promise((resolve) => {
     let buf = "";

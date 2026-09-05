@@ -1,7 +1,7 @@
 {
   "name": "the-harness",
   "version": "1.0.0",
-  "description": "Portable agentic harness for GitHub Copilot. One source of truth, propagated to any number of repositories without configuring each one.",
+  "description": "Portable agentic harness for GitHub Copilot and Kiro. One source of truth, propagated to any number of repositories without configuring each one.",
   "type": "module",
   "license": "MIT",
   "bin": {
@@ -15,7 +15,10 @@
     "validate": "node bin/harness.mjs doctor --self",
     "eval": "node bin/harness.mjs eval",
     "budget": "node bin/harness.mjs budget",
-    "selftest": "node core/hooks/scripts/selftest.mjs"
+    "selftest": "node core/hooks/scripts/selftest.mjs",
+    "selftest:dream": "node core/hooks/scripts/dream-selftest.mjs",
+    "selftest:spec": "node core/tools/spec/selftest.mjs",
+    "selftest:ado": "node core/tools/ado/selftest.mjs"
   },
   "keywords": [
     "github-copilot",
@@ -23,6 +26,7 @@
     "skills",
     "agents",
     "context-engineering",
-    "devops"
+    "devops",
+    "kiro"
   ]
 }

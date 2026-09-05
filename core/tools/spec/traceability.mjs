@@ -141,12 +141,20 @@ function changedFiles(root, base) {
 
 const specDir = typeof args.spec === 'string' ? args.spec.split(BS).join('/').replace(/\/+$/, '') : null;
 if (!specDir) {
-  die('which spec?', 'Pass --spec=specs/<id>-<slug>. The directory holding spec.md and plan.md.');
+  die('which spec?', 'Pass --spec=<specs dir>/<id>-<slug>. The directory holding the spec and the plan.');
 }
 
 const root = args.root ?? process.cwd();
-const specFile = path.join(specDir, 'spec.md');
-if (!fs.existsSync(specFile)) die(`no spec.md in ${specDir}`);
+
+// The same document under two names: spec.md in the harness layout,
+// requirements.md in Kiro's. Both are tried rather than passed in, because the
+// caller knows the directory and should not have to know the layout.
+const SPEC_NAMES = ['spec.md', 'requirements.md'];
+const PLAN_NAMES = ['plan.md', 'design.md'];
+const firstExisting = (dir, names) => names.map((n) => path.join(dir, n)).find(fs.existsSync) ?? null;
+
+const specFile = firstExisting(specDir, SPEC_NAMES);
+if (!specFile) die(`no ${SPEC_NAMES.join(' or ')} in ${specDir}`);
 
 const { requirements, clarifications } = readRequirements(specFile);
 if (requirements.size === 0) {
@@ -157,7 +165,7 @@ if (requirements.size === 0) {
 }
 
 const coverage = readTests(root);
-const planned = readPlannedFiles(path.join(specDir, 'plan.md'));
+const planned = readPlannedFiles(firstExisting(specDir, PLAN_NAMES) ?? path.join(specDir, PLAN_NAMES[0]));
 const changed = args.base ? changedFiles(root, args.base) : null;
 if (args.base && changed === null) {
   die(
@@ -176,13 +184,21 @@ const gaps = rows.filter((r) => r.tests.length === 0);
 // Ids are global across specs, so a test may legitimately cite another spec's id.
 // An orphan is an id that no spec in the repository defines at all.
 const allDefined = new Set(requirements.keys());
-const specsRoot = path.dirname(path.resolve(root, specDir));
-if (fs.existsSync(specsRoot)) {
+// Ids are global, so both layouts are scanned even when only one is in use.
+// Otherwise migrating a repository to Kiro would turn every existing test into
+// an orphan overnight.
+const specsRoots = [
+  ...new Set([
+    path.dirname(path.resolve(root, specDir)),
+    path.resolve(root, 'specs'),
+    path.resolve(root, '.kiro', 'specs'),
+  ]),
+].filter(fs.existsSync);
+for (const specsRoot of specsRoots) {
   for (const dir of fs.readdirSync(specsRoot, { withFileTypes: true })) {
-    const other = path.join(specsRoot, dir.name, 'spec.md');
-    if (dir.isDirectory() && fs.existsSync(other)) {
-      for (const id of idsIn(fs.readFileSync(other, 'utf8'))) allDefined.add(id);
-    }
+    if (!dir.isDirectory()) continue;
+    const other = firstExisting(path.join(specsRoot, dir.name), SPEC_NAMES);
+    if (other) for (const id of idsIn(fs.readFileSync(other, 'utf8'))) allDefined.add(id);
   }
 }
 const orphanTests = [...coverage.keys()].filter((id) => !allDefined.has(id));

@@ -10,14 +10,15 @@ const COMMANDS = {
   budget: () => import('../src/commands/budget.mjs'),
   cost: () => import('../src/commands/cost.mjs'),
   improve: () => import('../src/commands/improve.mjs'),
+  dream: () => import('../src/commands/dream.mjs'),
   eval: () => import('../src/commands/eval.mjs'),
   new: () => import('../src/commands/new.mjs'),
 };
 
 const USAGE = `
-${c.bold('harness')} - portable agentic harness for GitHub Copilot
+${c.bold('harness')} - portable agentic harness for GitHub Copilot and Kiro
 
-  ${c.cyan('scan')} [folder...]        Discover sibling repositories and detect their stacks
+  ${c.cyan('scan')} [folder...]        Discover sibling repositories, their stacks and their tools
   ${c.cyan('link')} <repo>|--all      Install into repositories (junctions, no repo pollution)
   ${c.cyan('vendor')} <repo>|--all    Install as committable copies instead of links
   ${c.cyan('unlink')} <repo>|--all    Remove the harness, restoring the original state
@@ -25,10 +26,12 @@ ${c.bold('harness')} - portable agentic harness for GitHub Copilot
   ${c.cyan('budget')} [--self]        Report context token cost per tier against budgets
   ${c.cyan('cost')}                   Report cost per delivered outcome, by track and agent
   ${c.cyan('improve')}                Read the telemetry and propose harness changes
+  ${c.cyan('dream')} [repo]           Review what consolidation extracted between sessions
   ${c.cyan('eval')}                   Run structural evals against the authored artifacts
   ${c.cyan('new')} <kind> <name>      Scaffold a skill, agent or instruction
 
-Flags: --all  --force  --mode=link|vendor  --verbose  --json
+Flags: --all  --force  --mode=link|vendor  --target=copilot|kiro  --verbose  --json
+Dream:  --collect  --promote=<id>  --discard=<id> --why="<reason>"
 
 Docs: README.md   Rules: CONSTITUTION.md
 `;

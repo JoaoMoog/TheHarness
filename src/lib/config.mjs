@@ -7,7 +7,7 @@ export const CONFIG_FILE = harnessPath('harness.config.json');
 const DEFAULT_CONFIG = {
   version: 1,
   roots: [],
-  defaults: { mode: 'link', gitHooks: true, depth: 2 },
+  defaults: { mode: 'link', gitHooks: true, depth: 2, targets: ['copilot'] },
   repos: {},
 };
 
@@ -43,7 +43,11 @@ export function saveConfig(cfg) {
 
 export function repoSettings(cfg, name) {
   const entry = cfg.repos?.[name] ?? {};
-  return { mode: cfg.defaults.mode, gitHooks: cfg.defaults.gitHooks, skip: false, ...entry };
+  const settings = { mode: cfg.defaults.mode, gitHooks: cfg.defaults.gitHooks, skip: false, ...entry };
+  // Targets live on the entry when scan detected them, and fall back to the
+  // default rather than to nothing: a repository with no target installs nothing.
+  const targets = entry.targets ?? cfg.defaults.targets ?? ['copilot'];
+  return { ...settings, targets: Array.isArray(targets) ? targets : [targets] };
 }
 
 const norm = (p) => path.resolve(p).toLowerCase();

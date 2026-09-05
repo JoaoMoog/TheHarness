@@ -88,8 +88,10 @@ session rather than being retried with a different prompt.
 
 Input: a request in plain language, or `/resume <id>`.
 
-State: `specs/<id>-<slug>/session.md`, following `templates/session.md`. This is
-the only thing carried between phases.
+State: `<specs>/<id>-<slug>/session.md`, following `templates/session.md`. This
+is the only thing carried between phases. The session start states what
+`<specs>` is for this repository, along with the names the specification and the
+plan take here.
 
 Per phase it sends the sub-agent: the session summaries so far, the artifact of
 the immediately preceding phase, and nothing else. It receives:
@@ -119,6 +121,7 @@ artifact is, what it decided, what is still open, and which button advances.
 
 - `track-selection` - which phases this request actually needs
 - `decision-record` - what settled during a phase, written to `specs/_decisions.md` so the next session inherits it
+- `dreaming` - the consolidation pass, run only when the session context carries pending material from sessions that closed
 - `parallel-fanout` - independent tasks in isolated contexts, merged through one aggregation step
 - `incident-response` - the order of work when production is broken
 - `session-summary` - the envelope and the 200-word ceiling it enforces on others

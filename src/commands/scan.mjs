@@ -1,5 +1,7 @@
 import path from 'node:path';
+import fs from 'node:fs';
 import { detectStacks, findRepos } from '../detect/stacks.mjs';
+import { TARGETS, TARGET_IDS, DEFAULT_TARGET } from '../lib/targets.mjs';
 import { loadConfig, saveConfig } from '../lib/config.mjs';
 import { HARNESS_ROOT } from '../lib/paths.mjs';
 import { log, c } from '../lib/log.mjs';
@@ -14,6 +16,24 @@ const relativeToHarness = (dir) => path.relative(HARNESS_ROOT, dir).split(path.s
  * The moment two roots contain a repository of the same name, the second key
  * becomes its relative path rather than silently overwriting the first.
  */
+/**
+ * A repository that already has a tool's directory is using that tool. Both
+ * present means both, and neither means the default: installing nothing is
+ * never the useful answer to an ambiguous repository.
+ */
+function detectTargets(dir, args) {
+  if (args.target) {
+    const asked = String(args.target).split(',').map((t) => t.trim()).filter(Boolean);
+    const unknown = asked.filter((t) => !TARGET_IDS.includes(t));
+    if (unknown.length > 0) {
+      throw new Error('Unknown target: ' + unknown.join(', ') + '. Known: ' + TARGET_IDS.join(', ') + '.');
+    }
+    return asked;
+  }
+  const found = TARGET_IDS.filter((id) => fs.existsSync(path.join(dir, TARGETS[id].detect)));
+  return found.length > 0 ? found : [DEFAULT_TARGET];
+}
+
 export default function scan(args) {
   const roots = args._.length > 0 ? args._ : ['..'];
   const depth = Number(args.depth ?? 2);
@@ -48,13 +68,14 @@ export default function scan(args) {
         log.warn(`two repositories are named ${path.basename(dir)}; this one is keyed as ${rel}`);
       }
 
-      repos[name] = { ...(repos[name] ?? {}), path: rel, stacks };
+      repos[name] = { ...(repos[name] ?? {}), path: rel, stacks, targets: detectTargets(dir, args) };
       byPath.set(rel, name);
       found += 1;
 
       const label = stacks.length > 0 ? stacks.join(', ') : c.yellow('no stack detected');
+      const targetLabel = c.dim(' [' + repos[name].targets.join('+') + ']');
       const status = repos[name].skip ? c.dim(' [skipped]') : '';
-      log.info(`${name.padEnd(34)} ${label}${status}`);
+      log.info(`${name.padEnd(34)} ${label}${targetLabel}${status}`);
     }
   }
 

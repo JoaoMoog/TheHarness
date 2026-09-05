@@ -5,10 +5,11 @@ import { removeLink } from '../fs/link.mjs';
 import { removeCopy } from '../fs/copy.mjs';
 import { clearExclude } from '../fs/gitexclude.mjs';
 import { removeGitHook } from './githook.mjs';
+import { prunableDirs } from '../lib/targets.mjs';
 import { log, c } from '../lib/log.mjs';
 
-/** Only these are ever pruned, and only while empty. */
-const PRUNABLE_DIRS = ['.github'];
+/** Locks written before targets were recorded were all Copilot. */
+const LEGACY_TARGETS = ['copilot'];
 
 /** Removes a directory only when every level of it is already empty. */
 function pruneEmpty(dir) {
@@ -48,13 +49,26 @@ function uninstallRepo(name, entry) {
 
   // Vendored files are hashed, so a file the team has since edited is theirs
   // now and is left in place rather than silently deleted.
+  // Generated files are the harness's own output, so they go without a hash
+  // check: there is nothing of the user's in them to preserve.
+  for (const target of Object.keys(entry.generated ?? {})) {
+    const full = path.join(entry.dir, target);
+    if (fs.existsSync(full)) {
+      fs.rmSync(full, { force: true });
+      removed.push(target);
+    }
+  }
+
   for (const [target, hash] of Object.entries(entry.vendored ?? {})) {
     const result = removeCopy(path.join(dir, target), hash);
     if (result === 'removed') removed.push(target);
     else if (result === 'modified-kept') kept.push(`${target} (locally modified, kept)`);
   }
 
-  for (const prunable of PRUNABLE_DIRS) pruneEmpty(path.join(dir, prunable));
+  // Only directories the install itself created. Locks written before that
+  // was recorded fall back to the old behaviour of pruning any of them.
+  const created = entry.createdDirs ?? prunableDirs(entry.targets ?? LEGACY_TARGETS);
+  for (const prunable of created) pruneEmpty(path.join(dir, prunable));
 
   clearExclude(dir);
   removeGitHook(dir);

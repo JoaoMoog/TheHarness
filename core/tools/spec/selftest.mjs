@@ -158,6 +158,44 @@ check('a three-column table yields the requirement, not the pattern column',
 check('latest.json is not mistaken for a test file', !(parsed3?.orphanTests ?? []).includes('FR-999'), JSON.stringify(parsed3?.orphanTests));
 check('latest.json is reported as an unrequested change', (parsed3?.unrequested ?? []).some((f) => f.endsWith('latest.json')), JSON.stringify(parsed3?.unrequested));
 
+// The Kiro layout is the same spec under different file names, so the tool
+// has to find it without being told which layout it is looking at.
+const kiroDir = path.join(root, '.kiro', 'specs', '012-import-csv');
+fs.mkdirSync(kiroDir, { recursive: true });
+fs.writeFileSync(
+  path.join(kiroDir, 'requirements.md'),
+  ['# Requirements: import CSV', '', '| id | criterion |', '|---|---|',
+   '| FR-010 | WHEN a CSV is uploaded, the system SHALL validate its header row |', ''].join(NL),
+  'utf8'
+);
+fs.writeFileSync(
+  path.join(kiroDir, 'design.md'),
+  ['# Design', '', '## Files', '', '- src/import.ts', ''].join(NL),
+  'utf8'
+);
+fs.writeFileSync(
+  path.join(root, 'tests', 'import.spec.ts'),
+  ['it("FR-010 validates the header", () => {});', ''].join(NL),
+  'utf8'
+);
+const kiro = spawnSync(
+  process.execPath,
+  [path.join(HERE, 'traceability.mjs'), '--spec=.kiro/specs/012-import-csv', '--root=' + root, '--json'],
+  { cwd: root, encoding: 'utf8' }
+);
+let parsedKiro = null;
+try { parsedKiro = JSON.parse(kiro.stdout); } catch { /* asserted below */ }
+check('reads requirements.md when there is no spec.md', kiro.status === 0, 'exit ' + kiro.status + ' ' + kiro.stderr.slice(0, 120));
+check('traces the Kiro-layout requirement to its test', (parsedKiro?.gaps ?? ['unset']).length === 0, JSON.stringify(parsedKiro?.gaps));
+check('reads design.md as the plan', (parsedKiro?.unrequested ?? []).length === 0, JSON.stringify(parsedKiro?.unrequested));
+
+const missing = spawnSync(
+  process.execPath,
+  [path.join(HERE, 'traceability.mjs'), '--spec=specs', '--root=' + root],
+  { cwd: root, encoding: 'utf8' }
+);
+check('names both layouts when neither file is there', /spec.md or requirements.md/.test(missing.stdout + missing.stderr), (missing.stdout + missing.stderr).slice(0, 120));
+
 const failed = results.filter((r) => !r).length;
 console.log(NL + '  ' + (results.length - failed) + ' passed, ' + failed + ' failed');
 console.log('  sandbox: ' + root);

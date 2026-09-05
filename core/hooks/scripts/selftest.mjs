@@ -49,6 +49,19 @@ function runHook(name, payload) {
   }
 }
 
+function runKiroHook(name, payload) {
+  const r = spawnSync(process.execPath, [script(name), '--hook-mode=kiro'], {
+    input: JSON.stringify(payload),
+    encoding: 'utf8',
+    env: { ...process.env, HARNESS_HOOK_MODE: '' },
+  });
+  try {
+    return JSON.parse(r.stdout || '{}');
+  } catch {
+    return {};
+  }
+}
+
 function check(label, actual, expected) {
   const pass = actual === expected;
   results.push(pass);
@@ -239,6 +252,39 @@ const adoGate = (command) =>
   check('read-guard denies a private key in a pem', guard('srv.pem'), 'deny');
   check('read-guard allows a public certificate pem', guard('ca.pem'), 'allow');
   check('read-guard denies the aws credentials file', guard(path.join('.aws', 'credentials')), 'deny');
+}
+
+// Kiro passes the mode in argv and carries no env block, so every decision has
+// to come out the same way through both doors. A guardrail that only works
+// under one runtime is a guardrail nobody can rely on.
+{
+  const { dir } = sandbox();
+  fs.writeFileSync(path.join(dir, '.env'), 'TOKEN=abc');
+  fs.writeFileSync(path.join(dir, 'ca.pem'), '-----BEGIN CERTIFICATE-----');
+
+  const cases = [
+    ['read-guard', { hook_event_name: 'PreToolUse', tool_name: 'readFile', tool_input: { filePath: path.join(dir, '.env') } }],
+    ['read-guard', { hook_event_name: 'PreToolUse', tool_name: 'readFile', tool_input: { filePath: path.join(dir, 'ca.pem') } }],
+    ['secret-block', { hook_event_name: 'PreToolUse', tool_name: 'editFiles', tool_input: { filePath: 'src/aws.ts', content: 'const k = "' + FAKE_AWS_ID + '";' } }],
+    ['destructive-git', { hook_event_name: 'PreToolUse', tool_name: 'runCommands', tool_input: { command: 'git push --force origin main' } }],
+  ];
+
+  // The expected decision is written down, so 'both returned nothing' cannot
+  // pass as agreement.
+  const wanted = ['deny', 'allow', 'deny', 'ask'];
+  cases.forEach(([name, payload], index) => {
+    const viaEnv = runHook(name, payload).hookSpecificOutput?.permissionDecision;
+    const viaArgv = runKiroHook(name, payload).hookSpecificOutput?.permissionDecision;
+    check(name + ' decides ' + wanted[index] + ' under the vscode mode (case ' + (index + 1) + ')', viaEnv, wanted[index]);
+    check(name + ' decides the same through --hook-mode=kiro (case ' + (index + 1) + ')', viaArgv, viaEnv);
+  });
+
+  const noMode = spawnSync(process.execPath, [script('read-guard')], {
+    input: JSON.stringify(cases[0][1]),
+    encoding: 'utf8',
+    env: { ...process.env, HARNESS_HOOK_MODE: '' },
+  });
+  check('with no mode at all the hook stays a git hook and emits nothing', noMode.stdout.trim(), '');
 }
 
 const failed = results.filter((ok) => !ok).length;

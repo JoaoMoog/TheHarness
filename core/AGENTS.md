@@ -65,8 +65,23 @@ specify -> plan -> tasks -> implement -> review -> deliver -> done
 specifier  planner  tasker  implementer  reviewer + security
 ```
 
-State lives in `specs/NNN-slug/session.md`, committed to the repository, so a
+State lives in `<specs>/NNN-slug/session.md`, committed to the repository, so a
 session survives the chat window and can be reviewed in a pull request.
+
+Two tools spell the same four artifacts differently, so the directory and the
+file names are stated in the session context rather than assumed:
+
+| | Copilot | Kiro |
+|---|---|---|
+| directory | `specs/` | `.kiro/specs/` |
+| specification | `spec.md` | `requirements.md` |
+| plan | `plan.md` | `design.md` |
+| tasks | `tasks.md` | `tasks.md` |
+
+Kiro's spec panel reads its own names, so writing `spec.md` there produces a
+file its workflow cannot see. The `NNN-` prefix is the harness's in both: it is
+what orders sessions and what makes "the newest open one" a question with an
+answer.
 
 The orchestrator carries the session summaries and nothing else. Each phase
 agent receives those summaries plus the artifact of the phase before it, and
@@ -75,8 +90,13 @@ That split is what keeps a long session affordable: the transcript is resent
 every turn, so a parent holding every artifact grows faster than the work.
 
 Run `codebase-inventory` once per repository first. It writes
-`specs/_context.md`, which every later session reads instead of rediscovering
+`<specs>/_context.md`, which every later session reads instead of rediscovering
 the codebase.
+
+When a session closes, `dream-collect` gathers what it can be read to say. The
+next session start injects that material and asks for candidates in
+`<specs>/_dreams.md`. Nothing reaches `<specs>/_decisions.md` without
+`harness dream --promote`.
 ## Model routing
 
 Default to the mid-tier model — it covers roughly 80% of agentic work. Reserve

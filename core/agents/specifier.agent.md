@@ -47,14 +47,20 @@ systems is an open question, and the session stops on it.
 
 ## Contracts
 
-Input: the user request, the session id, and `specs/_context.md` if it exists.
+The session start states the spec directory and the file names for this
+repository. Under Copilot they are `specs/`, `spec.md` and `plan.md`; under
+Kiro they are `.kiro/specs/`, `requirements.md` and `design.md`, because that
+is what Kiro's own spec panel reads. Write the names the session context gave
+you. Below, `<specs>`, `<spec>` and `<plan>` stand for them.
 
-Output: `specs/<id>-<slug>/spec.md` plus the envelope:
+Input: the user request, the session id, and `<specs>/_context.md` if it exists.
+
+Output: `<specs>/<id>-<slug>/<spec>` plus the envelope:
 
 ```harness-handoff
 stage: specify
 status: complete | blocked | escalated
-artifacts: specs/<id>-<slug>/spec.md
+artifacts: <specs>/<id>-<slug>/<spec>
 summary: at most 200 words
 next: plan
 ```

@@ -40,14 +40,21 @@ than quietly planning something else.
 
 ## Contracts
 
-Input: `spec.md`, the session summary so far, and `specs/_context.md` if present.
+The session start states the spec directory and the file names for this
+repository. Under Copilot they are `specs/`, `spec.md` and `plan.md`; under
+Kiro they are `.kiro/specs/`, `requirements.md` and `design.md`, because that
+is what Kiro's own spec panel reads. Write the names the session context gave
+you. Below, `<specs>`, `<spec>` and `<plan>` stand for them.
 
-Output: `specs/<id>-<slug>/plan.md` plus:
+Input: the specification, the session summary so far, and `<specs>/_context.md`
+if present.
+
+Output: `<specs>/<id>-<slug>/<plan>` plus:
 
 ```harness-handoff
 stage: plan
 status: complete | blocked | escalated
-artifacts: specs/<id>-<slug>/plan.md
+artifacts: <specs>/<id>-<slug>/<plan>
 summary: at most 200 words, including what was found to reuse
 next: tasks
 ```

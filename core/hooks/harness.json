@@ -142,6 +142,14 @@
         "env": {
           "HARNESS_HOOK_MODE": "vscode"
         }
+      },
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/dream-collect.mjs --hook",
+        "timeout": 5,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
       }
     ]
   }

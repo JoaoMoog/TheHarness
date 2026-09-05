@@ -1,13 +1,25 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadConfig, selectedRepos } from '../lib/config.mjs';
-import { loadLock, hashFile } from '../lib/lock.mjs';
+import { loadLock, hashFile, sha256 } from '../lib/lock.mjs';
 import { linksTo, inspect } from '../fs/link.mjs';
 import { hasManagedBlock, isGitRepo } from '../fs/gitexclude.mjs';
 import { auditSelf, diagnose } from '../lib/audit.mjs';
+import { generatedFiles } from '../lib/kiro-gen.mjs';
+import { unmappedEvents } from '../lib/targets.mjs';
+import { readDreams, openOnes, isTemplate } from '../lib/dreams.mjs';
 import { createReport, log, c } from '../lib/log.mjs';
 
 const VENDOR_SAMPLE = 400;
+
+/** One occurrence is an event; two make a pattern. The skill says the same thing. */
+const MIN_EVIDENCE = 2;
+
+/**
+ * Above this, candidates are accumulating because nobody is deciding on them,
+ * and a memory nobody prunes stops being read at all.
+ */
+const MAX_OPEN_CANDIDATES = 12;
 
 function auditRepos(report) {
   const cfg = loadConfig();
@@ -60,6 +72,10 @@ function auditRepos(report) {
       }
     }
 
+    checkGenerated(report, repo, entry);
+    checkTargetGaps(report, repo);
+    checkDreams(report, repo);
+
     if (!isGitRepo(repo.dir)) {
       report.warn(`${repo.name}: not a git repository, so the local exclude was skipped`);
     } else if (entry.mode === 'link' && !hasManagedBlock(repo.dir)) {
@@ -69,6 +85,79 @@ function auditRepos(report) {
     }
   }
   return installed;
+}
+
+/**
+ * Generated files are the one surface the harness writes rather than links, so
+ * they can drift two ways: someone edits the copy, or the source moves on and
+ * the copy stays behind. Both are compared here against what would be
+ * generated right now, which catches the second case as well as the first.
+ */
+function checkGenerated(report, repo, entry) {
+  const recorded = Object.entries(entry.generated ?? {});
+  if (recorded.length === 0) return;
+
+  const expected = new Map(generatedFiles().map((file) => [file.path, sha256(file.content)]));
+  const stale = recorded.filter(([target, hash]) => {
+    const onDisk = hashFile(path.join(repo.dir, target));
+    return onDisk === null || onDisk !== hash || expected.get(target) !== hash;
+  });
+
+  if (stale.length === 0) {
+    report.pass(`${repo.name}: ${recorded.length} generated files match their source`);
+    return;
+  }
+  for (const [target] of stale.slice(0, 5)) {
+    report.fail(`${repo.name}/${target} was hand-edited or is stale, re-run harness link`);
+  }
+  if (stale.length > 5) {
+    report.fail(`${repo.name}: ${stale.length - 5} more generated files are stale`);
+  }
+}
+
+/**
+ * Consolidation writes suggestions, and a suggestion with no evidence behind
+ * it is the failure mode worth catching: it reads exactly like one that has
+ * evidence, and it is one keystroke away from becoming a rule.
+ */
+function checkDreams(report, repo) {
+  const { file, candidates } = readDreams(repo.dir);
+  const real = candidates.filter((candidate) => !isTemplate(candidate));
+  if (real.length === 0) return;
+
+  const open = openOnes(real);
+  const thin = open.filter((candidate) => candidate.sessions.length < MIN_EVIDENCE);
+  const where = path.relative(repo.dir, file).split(path.sep).join('/');
+
+  for (const candidate of thin.slice(0, 5)) {
+    report.fail(
+      `${repo.name}/${where}: ${candidate.id} cites ${candidate.sessions.length} session(s); ` +
+        'a pattern needs two'
+    );
+  }
+  if (thin.length > 5) report.fail(`${repo.name}/${where}: ${thin.length - 5} more candidates lack evidence`);
+  if (thin.length === 0) report.pass(`${repo.name}: ${open.length} dream candidates all cite their sessions`);
+
+  if (open.length > MAX_OPEN_CANDIDATES) {
+    report.warn(
+      `${repo.name}/${where}: ${open.length} open candidates, above the ${MAX_OPEN_CANDIDATES} ceiling. ` +
+        'Promote or discard some, or the file stops being read'
+    );
+  }
+}
+
+/**
+ * A target with no equivalent for an event silently drops the guardrails bound
+ * to it. Said out loud once per repository, because the alternative - moving
+ * them to a nearby event - fires a guardrail at the wrong moment.
+ */
+function checkTargetGaps(report, repo) {
+  const missing = unmappedEvents(repo.settings.targets ?? ['copilot']);
+  if (missing.length === 0) return;
+  report.warn(
+    `${repo.name}: no target here fires ${missing.join(', ')}, so sub-agent telemetry, ` +
+      'handoff validation and compaction rescue do not run'
+  );
 }
 
 export default function doctor(args) {
