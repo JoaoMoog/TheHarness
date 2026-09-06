@@ -1,7 +1,7 @@
 # TheHarness
 
-Uma configuração de agentes para **GitHub Copilot e Kiro** que vive em **um
-repositório** e vale para **todos os outros**. Você clona ao lado dos seus projetos, roda o
+Uma configuração de agentes para **GitHub Copilot, Kiro e Claude Code** que vive
+em **um repositório** e vale para **todos os outros**. Você clona ao lado dos seus projetos, roda o
 bootstrap, e cada repositório passa a ter os mesmos agentes, skills, regras e
 guardrails — sem copiar arquivo e sem sujar o git de ninguém.
 
@@ -55,28 +55,69 @@ Nada é sobrescrito. Se o repositório já tem um `AGENTS.md` próprio ou um
 deixa cada repositório byte-idêntico ao que era, incluindo os diretórios que a
 instalação criou e ninguém mais usa.
 
-## Copilot e Kiro
+## Copilot, Kiro e Claude Code
 
 O `scan` olha o repositório e decide: `.github/` presente vira alvo `copilot`,
-`.kiro/` vira `kiro`, os dois viram os dois. `--target=kiro` força.
+`.kiro/` vira `kiro`, `.claude/` vira `claude`, e quantos estiverem presentes
+viram todos. `--target=claude` força.
 
-O princípio é o mesmo nos dois: **linkar o conteúdo real, gerar só o que muda
+O princípio é o mesmo nos três: **linkar o conteúdo real, gerar só o que muda
 de formato**. No Kiro o conteúdo é linkado em `.kiro/harness/`, e o que se
 gera são arquivos finos de steering, um por instruction e um por skill, com
 uma linha `#[[file:...]]` apontando para o original. Editar uma skill no
 harness continua valendo na hora, sem regerar nada.
 
-| | Copilot | Kiro |
-|---|---|---|
-| conteúdo | `.github/` | `.kiro/harness/` |
-| instruções | `applyTo` no frontmatter | steering com `inclusion: fileMatch` |
-| skills | lidas por relevância | steering `inclusion: manual`, uma por skill |
-| hooks | `core/hooks/harness.json` | `.kiro/hooks/harness.json`, gerado |
-| MCP | `.mcp.json` | `.kiro/settings/mcp.json` |
-| specs | `specs/NNN-slug/spec.md`, `plan.md` | `.kiro/specs/NNN-slug/requirements.md`, `design.md` |
+O Claude Code precisa de menos geração que o Kiro: ele lê `SKILL.md` no mesmo
+formato que o harness já escreve, então as skills são **linkadas** direto em
+`.claude/skills`. O que se gera são os quatro formatos que realmente diferem.
+
+| | Copilot | Kiro | Claude Code |
+|---|---|---|---|
+| conteúdo | `.github/` | `.kiro/harness/` | `.claude/` |
+| instruções | `applyTo` no frontmatter | steering com `inclusion: fileMatch` | **sem equivalente** (ver abaixo) |
+| skills | lidas por relevância | steering `inclusion: manual`, uma por skill | linkadas em `.claude/skills`, formato idêntico |
+| agents | `.github/agents/*.agent.md` | idem, via steering | `.claude/agents/*.md`, gerado |
+| prompts | `/comando` | idem | `.claude/commands/*.md`, gerado |
+| hooks | `core/hooks/harness.json` | `.kiro/hooks/harness.json`, gerado | `.claude/settings.local.json`, mesclado |
+| MCP | `.mcp.json` | `.kiro/settings/mcp.json` | `.mcp.json` com chave `mcpServers`, gerado |
+| memória | `AGENTS.md` | `AGENTS.md` | `CLAUDE.md` de uma linha, importando `AGENTS.md` |
+| specs | `specs/NNN-slug/spec.md`, `plan.md` | `.kiro/specs/NNN-slug/requirements.md`, `design.md` | como o Copilot |
 
 Os arquivos gerados entram no lock com hash, então o `doctor` acusa se alguém
 editar um deles à mão ou se a fonte tiver mudado desde a última instalação.
+
+**Três coisas no Claude Code que não são cópia de formato e valem saber.**
+
+Os matchers de hook nomeiam **tools**, e o Claude Code compara com maiúsculas:
+`write` nunca casa com `Write`. Copiar os matchers do VS Code produziria
+guardrails que jamais disparam, então eles são traduzidos —
+`runCommands|bash` vira `Bash`, `editFiles|write` vira `Edit|Write|NotebookEdit`.
+Um matcher sem tradução é descartado e reportado, nunca chutado.
+
+Uma entrada de hook não tem campo `env`, então o modo que manda os scripts
+lerem o stdin viaja em argv (`--hook-mode=claude`) — mesma solução, e mesma
+razão, do Kiro.
+
+E os hooks vão para `.claude/settings.local.json`, não para o
+`.claude/settings.json` que o time commita. Um arquivo **rastreado** que o
+harness edita aparece como modificação local no `git status` de todo mundo, para
+sempre — o exclude local esconde arquivo não rastreado, nunca um rastreado. O
+Claude Code aplica a camada local por cima da compartilhada e mescla as listas
+de hooks, então os hooks do time e os do harness rodam os dois. Mesmo ali o
+harness é hóspede: só as entradas dele são escritas e só o hash **delas** entra
+no lock, senão o `doctor` acusaria drift toda vez que você aprovasse um comando
+com "não perguntar de novo".
+
+**A lacuna real, documentada e não contornada:** o Claude Code não tem conceito
+de regra por glob — não há `applyTo` nem `fileMatch`. As instruções ficam
+linkadas em `.claude/harness/instructions` e alcançáveis, mas nada as carrega
+sozinho. Num repositório só de Claude, o `doctor` avisa. Um repositório que
+também tenha `.github/` fecha a lacuna, porque o `applyTo` do Copilot cobre.
+
+Se o repositório tiver `.github/` **e** `.claude/`, os dois querem escrever
+`.mcp.json`, com schemas incompatíveis (`servers` contra `mcpServers`). O
+primeiro a instalar fica com o arquivo, o segundo passa sem servidores MCP, e o
+`doctor` diz qual dos dois ficou sem.
 
 **Duas lacunas reais, documentadas e não contornadas.** O Kiro não tem
 equivalente para `SubagentStart`, `SubagentStop` e `PreCompact`. Num repo só de
@@ -201,15 +242,17 @@ fechado quando o git não responde, e cobrem os formatos reais de credencial:
 CloudFormation. Um `.env` também não pode ser **lido** para dentro do contexto.
 
 ```bash
-npm run selftest          # 45 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 49 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
+npm run selftest:claude   # 127 casos do target Claude, instalando de verdade
 ```
 
-Os guardrails recebem o evento por STDIN no VS Code e no Kiro. O modo vem do
-`env` no primeiro e de `--hook-mode=kiro` no argv no segundo, porque o schema de
-hook do Kiro não tem campo `env`. O self-test confere caso a caso que a decisão
-sai igual pelas duas portas.
+Os guardrails recebem o evento por STDIN no VS Code, no Kiro e no Claude Code. O
+modo vem do `env` no primeiro e do argv nos outros dois (`--hook-mode=kiro`,
+`--hook-mode=claude`), porque nem o schema de hook do Kiro nem o do Claude Code
+têm campo `env`. O self-test confere caso a caso que a decisão sai igual pelas
+três portas.
 
 ## Estender para a sua stack
 

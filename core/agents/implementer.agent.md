@@ -30,7 +30,7 @@ and may invoke several in parallel when the tasks are marked parallel.
 
 Every test it writes starts with the requirement id it proves, so the traceability
 matrix links the two without anyone reading the file. Before returning, it runs
-`node .github/tools/spec/traceability.mjs --spec=<the session spec>` and reports
+`node .agents/tools/spec/traceability.mjs --spec=<the session spec>` and reports
 any GAP in its envelope rather than leaving it for review to find.
 
 

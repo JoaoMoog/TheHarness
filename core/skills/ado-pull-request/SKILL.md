@@ -49,7 +49,7 @@ Anti-patterns to refuse:
 3. Write the body to `specs/<id>-<slug>/pr-body.md`, following the template
    below. Keep it under a screen.
 4. Open it as a draft:
-   `node .github/tools/ado/pr-create.mjs --title="<conventional title>" --description-file=specs/<id>-<slug>/pr-body.md`
+   `node .agents/tools/ado/pr-create.mjs --title="<conventional title>" --description-file=specs/<id>-<slug>/pr-body.md`
 5. Read the returned url back to the user with the PR id.
 6. Publishing is a separate step and needs a human yes. Offer it; do not do it.
 

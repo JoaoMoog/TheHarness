@@ -40,7 +40,7 @@ Anti-patterns to refuse:
 ## Workflow
 
 1. Run the script and capture its output as a draft:
-   `node .github/skills/codebase-inventory/scripts/inventory.mjs > specs/_context.md`
+   `node .agents/skills/codebase-inventory/scripts/inventory.mjs > specs/_context.md`
 2. Read the module map it produced. Open the two or three largest modules and
    establish what each one owns.
 3. Find the real entry points. Follow them far enough to see the layering.

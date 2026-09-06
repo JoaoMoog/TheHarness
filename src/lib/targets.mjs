@@ -1,11 +1,11 @@
 /**
  * The tools a repository can be wired for.
  *
- * Two targets, hard-coded. An adapter abstraction with one implementation is
- * speculative generality; with two it is still cheaper to read the two maps
- * than to read an abstraction over them. A third tool is when to reconsider.
+ * Three targets, hard-coded. An adapter abstraction over three maps would hide
+ * exactly what a reader needs to see - which surface each tool reads, and where
+ * each one has no equivalent at all.
  *
- * The rule that shapes both maps: link the real content, generate only what
+ * The rule that shapes all three: link the real content, generate only what
  * changes format, and generate as little as possible. A generated file is a
  * copy, and a copy drifts.
  */
@@ -24,6 +24,21 @@ const SHARED_DIRS = [
 const under = (prefix, sources) =>
   sources.map((source) => ({ source, target: `${prefix}/${source.replace('core/', '')}` }));
 
+/**
+ * One path for content that no tool discovers on its own.
+ *
+ * Skills, tools and rubrics are referred to by path from inside agent and skill
+ * prose - `node .agents/tools/spec/traceability.mjs`. That text is linked, not
+ * generated, so every target reads the same bytes, and a target-specific prefix
+ * inside it would be wrong everywhere but one. This is where that path
+ * resolves, and every target links it in addition to its own native locations.
+ *
+ * It is not `.harness/`: that name already belongs to the runtime state the
+ * hooks write (RUNTIME_DIRS in paths.mjs). `.agents/` is also where the Codex
+ * CLI looks for project skills, which the next target gets for free.
+ */
+const SHARED_PATH = under('.agents', ['core/skills', 'core/tools', 'core/rubrics']);
+
 export const TARGETS = {
   copilot: {
     id: 'copilot',
@@ -33,6 +48,7 @@ export const TARGETS = {
     dirSurfaces: [
       ...under('.github', SHARED_DIRS),
       { source: 'core/chatmodes', target: '.github/chatmodes' },
+      ...SHARED_PATH,
     ],
     fileSurfaces: [
       { source: 'core/copilot-instructions.md', target: '.github/copilot-instructions.md' },
@@ -44,7 +60,7 @@ export const TARGETS = {
     /** Every harness event has a Copilot equivalent. */
     unmappedEvents: [],
     /** Directories unlink removes once they are empty again. */
-    prunable: ['.github'],
+    prunable: ['.github', '.agents'],
     hooksAt: '.github/hooks',
     specs: { dir: 'specs', layout: 'harness' },
   },
@@ -58,7 +74,7 @@ export const TARGETS = {
      * directly, because steering is a flat list of markdown files and the
      * harness ships directories. The generated steering files point here.
      */
-    dirSurfaces: under('.kiro/harness', SHARED_DIRS),
+    dirSurfaces: [...under('.kiro/harness', SHARED_DIRS), ...SHARED_PATH],
     fileSurfaces: [
       // Kiro reads AGENTS.md natively, from the workspace root.
       { source: 'core/AGENTS.md', target: 'AGENTS.md' },
@@ -75,9 +91,48 @@ export const TARGETS = {
     // exclude block; these two directories hold nothing else.
     excludeExtra: ['.kiro/steering', '.kiro/hooks'],
     // .kiro itself is Kiro's, not the harness's, so it stays even when empty.
-    prunable: ['.kiro/harness', '.kiro/steering', '.kiro/hooks', '.kiro/settings'],
+    prunable: ['.kiro/harness', '.kiro/steering', '.kiro/hooks', '.kiro/settings', '.agents'],
     hooksAt: '.kiro/harness/hooks',
     specs: { dir: '.kiro/specs', layout: 'kiro' },
+  },
+
+  claude: {
+    id: 'claude',
+    label: 'Claude Code',
+    detect: '.claude',
+    dirSurfaces: [
+      // Claude Code reads SKILL.md in the shape the harness already writes, so
+      // this is a link rather than a wrapper. It is the one surface that needed
+      // no translation at all.
+      { source: 'core/skills', target: '.claude/skills' },
+      // The scripts the generated hook commands point at.
+      { source: 'core/hooks', target: '.claude/harness/hooks' },
+      // Read by nothing automatically; linked so a generated agent that names
+      // an instruction file has something to open.
+      { source: 'core/instructions', target: '.claude/harness/instructions' },
+      ...SHARED_PATH,
+    ],
+    fileSurfaces: [
+      // Claude Code does not read AGENTS.md, but the generated CLAUDE.md
+      // imports it, so the file still has to be here.
+      { source: 'core/AGENTS.md', target: 'AGENTS.md' },
+    ],
+    generators: ['agents', 'commands', 'mcp', 'claude-md'],
+    /** Claude Code has an equivalent for every event the harness fires. */
+    unmappedEvents: [],
+    /**
+     * Instructions are the one surface with no equivalent. Claude Code has no
+     * rule-per-glob concept - no applyTo, no fileMatch - so the files are
+     * linked and reachable but never loaded on their own.
+     */
+    unmappedSurfaces: ['core/instructions'],
+    // Generated and merged paths are not surfaces, so they are named here for
+    // the git exclude block that keeps them out of everyone else's git status.
+    excludeExtra: ['.claude/agents', '.claude/commands', '.claude/settings.local.json', 'CLAUDE.md', '.mcp.json'],
+    // .claude itself belongs to the user, so it stays even when empty.
+    prunable: ['.claude/harness', '.claude/agents', '.claude/commands', '.agents'],
+    hooksAt: '.claude/harness/hooks',
+    specs: { dir: 'specs', layout: 'harness' },
   },
 };
 
@@ -131,6 +186,17 @@ export function unmappedEvents(ids) {
   const lists = ids.map((id) => getTarget(id).unmappedEvents ?? []);
   if (lists.length === 0) return [];
   return lists[0].filter((event) => lists.every((list) => list.includes(event)));
+}
+
+/**
+ * Content surfaces no target of this repository loads on its own. Same
+ * intersection as the events, for the same reason: Copilot's applyTo covers
+ * the instructions that Claude Code alone would leave inert.
+ */
+export function unmappedSurfaces(ids) {
+  const lists = ids.map((id) => getTarget(id).unmappedSurfaces ?? []);
+  if (lists.length === 0) return [];
+  return lists[0].filter((surface) => lists.every((list) => list.includes(surface)));
 }
 
 /** The spec layout for a repository, when a repository has more than one target. */

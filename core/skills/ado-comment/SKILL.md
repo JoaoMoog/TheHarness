@@ -45,7 +45,7 @@ Anti-patterns to refuse:
 3. If there is a blocker, comment on that first and say plainly that the rest
    are optional until it is resolved.
 4. For each remaining finding, open one thread anchored to its file and line:
-   `node .github/tools/ado/pr-comment.mjs --pr=<id> --file=<path> --line=<n> --content-file=<path>`
+   `node .agents/tools/ado/pr-comment.mjs --pr=<id> --file=<path> --line=<n> --content-file=<path>`
 5. Use `--content-file` whenever the text has more than one line, so nothing
    free-form travels on the command line.
 6. Report how many threads were opened and their severities.

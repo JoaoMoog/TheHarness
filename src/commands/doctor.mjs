@@ -5,8 +5,9 @@ import { loadLock, hashFile, sha256 } from '../lib/lock.mjs';
 import { linksTo, inspect } from '../fs/link.mjs';
 import { hasManagedBlock, isGitRepo } from '../fs/gitexclude.mjs';
 import { auditSelf, diagnose } from '../lib/audit.mjs';
-import { generatedFiles } from '../lib/kiro-gen.mjs';
-import { unmappedEvents } from '../lib/targets.mjs';
+import { generatedFilesFor } from '../lib/generators.mjs';
+import { harnessHookSlice, agentsWithUnmappedTools } from '../lib/claude-gen.mjs';
+import { unmappedEvents, unmappedSurfaces } from '../lib/targets.mjs';
 import { readDreams, openOnes, isTemplate } from '../lib/dreams.mjs';
 import { createReport, log, c } from '../lib/log.mjs';
 
@@ -93,25 +94,69 @@ function auditRepos(report) {
  * the copy stays behind. Both are compared here against what would be
  * generated right now, which catches the second case as well as the first.
  */
-function checkGenerated(report, repo, entry) {
+export function driftedGenerated(repoDir, entry) {
   const recorded = Object.entries(entry.generated ?? {});
-  if (recorded.length === 0) return;
+  if (recorded.length === 0) return [];
 
-  const expected = new Map(generatedFiles().map((file) => [file.path, sha256(file.content)]));
-  const stale = recorded.filter(([target, hash]) => {
-    const onDisk = hashFile(path.join(repo.dir, target));
-    return onDisk === null || onDisk !== hash || expected.get(target) !== hash;
-  });
+  const expected = new Map(generatedFilesFor(entry.targets ?? []).map((file) => [file.path, sha256(file.content)]));
+  return recorded
+    .filter(([target, hash]) => {
+      const onDisk = hashFile(path.join(repoDir, target));
+      return onDisk === null || onDisk !== hash || expected.get(target) !== hash;
+    })
+    .map(([target]) => target);
+}
 
-  if (stale.length === 0) {
-    report.pass(`${repo.name}: ${recorded.length} generated files match their source`);
-    return;
+/**
+ * Drift in a file the harness only partly owns.
+ *
+ * Only the harness's own entries are compared. The keys around them are the
+ * repository's, and reporting drift because somebody changed their own model
+ * setting would teach everyone to ignore the report.
+ */
+export function driftedMerged(repoDir, entry) {
+  const drifted = [];
+  for (const [target, hash] of Object.entries(entry.mergedFiles ?? {})) {
+    const full = path.join(repoDir, target);
+    if (!fs.existsSync(full)) {
+      drifted.push(target);
+      continue;
+    }
+    try {
+      const slice = harnessHookSlice(JSON.parse(fs.readFileSync(full, 'utf8')));
+      if (sha256(JSON.stringify(slice)) !== hash) drifted.push(target);
+    } catch {
+      drifted.push(target);
+    }
   }
-  for (const [target] of stale.slice(0, 5)) {
+  return drifted;
+}
+
+function checkGenerated(report, repo, entry) {
+  const recorded = Object.keys(entry.generated ?? {}).length;
+  const stale = driftedGenerated(repo.dir, entry);
+
+  if (recorded > 0 && stale.length === 0) {
+    report.pass(`${repo.name}: ${recorded} generated files match their source`);
+  }
+  for (const target of stale.slice(0, 5)) {
     report.fail(`${repo.name}/${target} was hand-edited or is stale, re-run harness link`);
   }
   if (stale.length > 5) {
     report.fail(`${repo.name}: ${stale.length - 5} more generated files are stale`);
+  }
+
+  for (const target of driftedMerged(repo.dir, entry)) {
+    report.fail(`${repo.name}/${target}: the harness hooks in it were edited or removed, re-run harness link`);
+  }
+
+  // Recorded at install time: a path a second target had to go without,
+  // because the first one writes it in a schema the second cannot read.
+  for (const target of entry.contested ?? []) {
+    report.warn(
+      `${repo.name}/${target} belongs to another target here, so ${(entry.targets ?? []).join('+')} ` +
+        'do not all read it. Wire the repository for one of them, or maintain that file by hand'
+    );
   }
 }
 
@@ -152,12 +197,35 @@ function checkDreams(report, repo) {
  * them to a nearby event - fires a guardrail at the wrong moment.
  */
 function checkTargetGaps(report, repo) {
-  const missing = unmappedEvents(repo.settings.targets ?? ['copilot']);
-  if (missing.length === 0) return;
-  report.warn(
-    `${repo.name}: no target here fires ${missing.join(', ')}, so sub-agent telemetry, ` +
-      'handoff validation and compaction rescue do not run'
-  );
+  const targets = repo.settings.targets ?? ['copilot'];
+  const missing = unmappedEvents(targets);
+  if (missing.length > 0) {
+    report.warn(
+      `${repo.name}: no target here fires ${missing.join(', ')}, so sub-agent telemetry, ` +
+        'handoff validation and compaction rescue do not run'
+    );
+  }
+
+  // The same statement for content: a surface every target here leaves inert
+  // is one the files are present for and nothing ever loads.
+  const inert = unmappedSurfaces(targets);
+  if (inert.length > 0) {
+    report.warn(
+      `${repo.name}: no target here loads ${inert.join(', ')} on its own, so those rules apply ` +
+        'only when an agent is pointed at them'
+    );
+  }
+
+  // A tool name the translation cannot place is dropped from the generated
+  // subagent, which is invisible unless it is said out loud.
+  if (targets.includes('claude')) {
+    for (const agent of agentsWithUnmappedTools()) {
+      report.warn(
+        `${repo.name}: ${agent.name} asks for ${agent.tools.join(', ')}, which has no Claude Code ` +
+          'equivalent, so the generated subagent goes without it'
+      );
+    }
+  }
 }
 
 export default function doctor(args) {

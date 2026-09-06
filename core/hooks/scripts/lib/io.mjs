@@ -15,7 +15,7 @@ const STDIN_LIMIT = 4 * 1024 * 1024;
 const STDIN_TIMEOUT_MS = 2000;
 
 /** Every runtime that hands this script an event on stdin. */
-const STDIN_MODES = new Set(['vscode', 'kiro']);
+const STDIN_MODES = new Set(['vscode', 'kiro', 'claude']);
 
 /**
  * Mode is explicit, never guessed. Guessing from isTTY blocks forever when
@@ -23,8 +23,8 @@ const STDIN_MODES = new Set(['vscode', 'kiro']);
  * the commit. An unset mode means "run as a git hook".
  *
  * Two ways to set it, because the runtimes differ: VS Code hooks carry an env
- * block, and Kiro's hook schema has none, so the generated Kiro command passes
- * --hook-mode=kiro in argv instead.
+ * block, while neither Kiro's hook schema nor Claude Code's has one, so their
+ * generated commands pass --hook-mode=<runtime> in argv instead.
  */
 export function hookMode() {
   const flag = process.argv.find((arg) => arg.startsWith('--hook-mode='));

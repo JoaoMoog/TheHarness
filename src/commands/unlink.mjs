@@ -6,6 +6,7 @@ import { removeCopy } from '../fs/copy.mjs';
 import { clearExclude } from '../fs/gitexclude.mjs';
 import { removeGitHook } from './githook.mjs';
 import { prunableDirs } from '../lib/targets.mjs';
+import { removeFrom } from '../fs/settings.mjs';
 import { log, c } from '../lib/log.mjs';
 
 /** Locks written before targets were recorded were all Copilot. */
@@ -30,7 +31,7 @@ function pruneEmpty(dir) {
 }
 
 /** Reverses exactly what the lock says was installed, and nothing else. */
-function uninstallRepo(name, entry) {
+export function uninstallRepo(name, entry) {
   const dir = entry.dir;
   const removed = [];
   const kept = [];
@@ -47,22 +48,28 @@ function uninstallRepo(name, entry) {
     else if (result === 'modified-kept') kept.push(`${target} (locally modified, kept)`);
   }
 
-  // Vendored files are hashed, so a file the team has since edited is theirs
-  // now and is left in place rather than silently deleted.
-  // Generated files are the harness's own output, so they go without a hash
-  // check: there is nothing of the user's in them to preserve.
-  for (const target of Object.keys(entry.generated ?? {})) {
-    const full = path.join(entry.dir, target);
-    if (fs.existsSync(full)) {
-      fs.rmSync(full, { force: true });
-      removed.push(target);
-    }
+  // Vendored and generated files are both hashed, so a file the team has since
+  // edited is theirs now and is left in place rather than silently deleted.
+  // Generated ones used to skip that check on the grounds that they hold
+  // nothing of the user's - which stops being true the moment CLAUDE.md is one
+  // of them.
+  for (const [target, hash] of Object.entries(entry.generated ?? {})) {
+    const result = removeCopy(path.join(dir, target), hash);
+    if (result === 'removed') removed.push(target);
+    else if (result === 'modified-kept') kept.push(`${target} (locally modified, kept)`);
   }
 
   for (const [target, hash] of Object.entries(entry.vendored ?? {})) {
     const result = removeCopy(path.join(dir, target), hash);
     if (result === 'removed') removed.push(target);
     else if (result === 'modified-kept') kept.push(`${target} (locally modified, kept)`);
+  }
+
+  for (const target of Object.keys(entry.mergedFiles ?? {})) {
+    const result = removeFrom(path.join(dir, target), (entry.createdFiles ?? []).includes(target));
+    if (result === 'removed') removed.push(target);
+    else if (result === 'cleaned') kept.push(`${target} (theirs, harness entries removed)`);
+    else if (result === 'unreadable-kept') kept.push(`${target} (not valid JSON, kept)`);
   }
 
   // Only directories the install itself created. Locks written before that

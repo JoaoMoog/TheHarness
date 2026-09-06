@@ -57,7 +57,7 @@ is the whole point of writing it down rather than picking an answer quietly.
 Every requirement above becomes at least one test that names its id. Run:
 
 ```
-node .github/tools/spec/traceability.mjs --spec=specs/<id>-<slug>
+node .agents/tools/spec/traceability.mjs --spec=specs/<id>-<slug>
 ```
 
 It fails while any requirement has no test, any test claims an id this spec does

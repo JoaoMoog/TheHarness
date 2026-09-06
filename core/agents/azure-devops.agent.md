@@ -26,7 +26,7 @@ either reversible or gated.
 
 - `codebase`, `search` - to read the session file, the specification and the
   review verdict. It never reads more of the codebase than that
-- `runCommands` - **restricted to `.github/tools/ado/*.mjs`**. It does not call
+- `runCommands` - **restricted to `.agents/tools/ado/*.mjs`**. It does not call
   `az` directly. Those scripts own the command construction, the `--dry-run`
   path, the secret redaction and the failure messages, so an action can be read
   before it happens and audited after
@@ -36,7 +36,7 @@ writes that through `pr-create.mjs --description-file`.
 
 ## Scope
 
-Before writing the body it runs `node .github/tools/spec/traceability.mjs
+Before writing the body it runs `node .agents/tools/spec/traceability.mjs
 --spec=<the session spec> --base=<target branch>` and pastes the matrix into the
 body. A GAP is either closed or explained there; an open `[NEEDS CLARIFICATION]`
 means there is no pull request to open yet. On the incident track the body links

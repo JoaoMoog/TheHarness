@@ -6,7 +6,7 @@
  * reproducible: the stack, the commands, the module map, the entry points, the
  * size of things. The skill fills in the judgement afterwards.
  *
- *   node .github/skills/codebase-inventory/scripts/inventory.mjs > specs/_context.md
+ *   node .agents/skills/codebase-inventory/scripts/inventory.mjs > specs/_context.md
  */
 import fs from 'node:fs';
 import path from 'node:path';

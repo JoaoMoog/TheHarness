@@ -62,6 +62,20 @@ function runKiroHook(name, payload) {
   }
 }
 
+/** Claude Code hook entries carry no env block either, so the mode is argv. */
+function runClaudeHook(name, payload) {
+  const r = spawnSync(process.execPath, [script(name), '--hook-mode=claude'], {
+    input: JSON.stringify(payload),
+    encoding: 'utf8',
+    env: { ...process.env, HARNESS_HOOK_MODE: '' },
+  });
+  try {
+    return JSON.parse(r.stdout || '{}');
+  } catch {
+    return {};
+  }
+}
+
 function check(label, actual, expected) {
   const pass = actual === expected;
   results.push(pass);
@@ -275,8 +289,10 @@ const adoGate = (command) =>
   cases.forEach(([name, payload], index) => {
     const viaEnv = runHook(name, payload).hookSpecificOutput?.permissionDecision;
     const viaArgv = runKiroHook(name, payload).hookSpecificOutput?.permissionDecision;
+    const viaClaude = runClaudeHook(name, payload).hookSpecificOutput?.permissionDecision;
     check(name + ' decides ' + wanted[index] + ' under the vscode mode (case ' + (index + 1) + ')', viaEnv, wanted[index]);
     check(name + ' decides the same through --hook-mode=kiro (case ' + (index + 1) + ')', viaArgv, viaEnv);
+    check(name + ' decides the same through --hook-mode=claude (case ' + (index + 1) + ')', viaClaude, viaEnv);
   });
 
   const noMode = spawnSync(process.execPath, [script('read-guard')], {

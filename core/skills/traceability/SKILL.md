@@ -47,7 +47,7 @@ Anti-patterns to refuse:
    `[NEEDS CLARIFICATION: question]` instead of choosing.
 2. When writing tests, put the id first in the test name.
 3. Before opening the pull request, run the matrix:
-   `node .github/tools/spec/traceability.mjs --spec=specs/<id>-<slug> --base=main`
+   `node .agents/tools/spec/traceability.mjs --spec=specs/<id>-<slug> --base=main`
 4. For each `GAP`, either write the missing test or explain in the pull request
    why the requirement is out of scope for this change.
 5. For each unrequested file, either link it to a requirement or say why it had

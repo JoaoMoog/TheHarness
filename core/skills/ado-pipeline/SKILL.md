@@ -45,10 +45,10 @@ Anti-patterns to refuse:
    next session does not have to look it up.
 2. Check whether the pull request already started one. If it did, stop here.
 3. Queue it, which will ask for confirmation:
-   `node .github/tools/ado/pipeline-run.mjs --name="<pipeline>"`
+   `node .agents/tools/ado/pipeline-run.mjs --name="<pipeline>"`
 4. Report the run id and url. Do not poll.
 5. When asked for the result:
-   `node .github/tools/ado/pipeline-status.mjs --id=<run id>`
+   `node .agents/tools/ado/pipeline-status.mjs --id=<run id>`
 6. On failure, name the failing tasks and their first issue, then say whether
    the cause is inside the change or outside it.
 

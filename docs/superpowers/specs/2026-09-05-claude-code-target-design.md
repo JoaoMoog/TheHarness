@@ -298,6 +298,74 @@ Nova seção "## Claude Code", no molde de "## Copilot e Kiro"; a tabela de
 comparação ganha uma terceira coluna. Menção ao gap de `core/instructions` e à
 política de conflito de `.mcp.json` quando dois targets coexistem.
 
+## O que a implementação corrigiu neste desenho
+
+Cinco pontos acima estavam errados, descobertos verificando a documentação e
+rodando a coisa de verdade. Ficam registrados aqui em vez de silenciosamente
+reescritos, porque a fase 2 (Codex) vai enfrentar os mesmos três primeiros.
+
+1. **Hooks não têm campo `env`.** A seção `settings-hooks` dizia
+   "`HARNESS_HOOK_MODE=claude`". Uma entrada de hook do Claude Code aceita
+   `type`, `command`, `args`, `timeout`, `statusMessage` e mais alguns — `env`
+   não está entre eles. O modo viaja em argv (`--hook-mode=claude`), mesma
+   solução do Kiro. Sem isso `hookMode()` devolveria `null` e todo guardrail
+   viraria no-op silencioso — que foi exatamente o que o teste vermelho mostrou.
+2. **Matchers nomeiam tools e são case-sensitive.** O desenho não previa
+   tradução. Os matchers do harness são nomes do VS Code
+   (`runCommands|runInTerminal|bash|shell`); no Claude Code o nome é `Bash`, e
+   `bash` não casa. Copiados como estavam, os guardrails nunca disparariam.
+   Existe agora um `MATCHER_MAP` ao lado do `TOOL_MAP`, com a mesma regra de
+   descartar-e-reportar o que não tem tradução.
+3. **A estrutura é evento → grupos por matcher → array `hooks` aninhado**, não
+   a lista plana do `core/hooks/harness.json`. E o comando usa
+   `${CLAUDE_PROJECT_DIR}`, porque o Claude Code não promete o diretório de
+   trabalho do hook.
+4. **Os hooks vão para `.claude/settings.local.json`, não `.claude/settings.json`.**
+   Descoberto instalando num repositório que tinha o `settings.json`
+   **commitado**: o `git status` ficou sujo (` M .claude/settings.json`) e
+   continuaria sujo para sempre, porque `.git/info/exclude` só esconde arquivo
+   não rastreado. Isso quebrava a promessa central do harness. A camada local é
+   aplicada por cima da compartilhada, as listas de hooks mesclam entre camadas,
+   e o Claude Code já mantém esse arquivo fora do git. Todo o mecanismo de merge
+   do desenho continua valendo — só mudou o arquivo alvo.
+5. **O `.mcp.json` gerado não leva `$comment`.** Todo outro arquivo que o
+   harness escreve leva; esse é parseado por uma ferramenta cujo schema o
+   harness não controla, e um marcador que talvez trombe com validação não paga
+   o aviso que carrega.
+
+**O que a revisão de código pegou depois disso**, e que os testes acima não
+cobriam:
+
+- **`installGenerated` escrevia sem checar nada.** Todo outro caminho de escrita
+  (`createLink`, `copyFile`) recusa um arquivo que o harness não escreveu; o de
+  arquivos gerados não recusava. Era latente no Kiro, cujos paths gerados
+  ninguém escreve à mão — mas o target Claude gera `CLAUDE.md` e `.mcp.json` na
+  raiz, exatamente os nomes que um repositório que **já usa Claude Code**
+  provavelmente escreveu sozinho. Instalar sobrescrevia em silêncio, e o
+  `unlink` depois **apagava**, porque tratava tudo em `entry.generated` como
+  propriedade do harness. Perda de dados nos dois lados. Agora a regra de recusa
+  é uma só, `writeGenerated` em `src/fs/copy.mjs`, da qual `copyFile` passou a
+  ser um caso particular; e a remoção usa `removeCopy`, que preserva o que foi
+  editado depois.
+- **`mergeSettings` só iterava os eventos novos.** Um evento que saísse do
+  `core/hooks/harness.json` deixaria suas entradas em
+  `.claude/settings.local.json` para sempre: reinstalar não as tirava, e o
+  `doctor` não via, porque o lixo entra dos dois lados da comparação de hash.
+  Agora itera a união das chaves.
+- **`frontMatter` não citava escalares.** Uma `description` com `": "` corromperia
+  o front matter gerado, sem nada validando depois.
+- **Tools que mapeiam para vazio omitiam o campo `tools`.** No Claude Code
+  omitir o campo significa **herdar todas as ferramentas** — o oposto exato da
+  restrição declarada, e o pior desfecho que esta tradução pode produzir. Agora
+  o agente não é gerado, e o `doctor` diz qual.
+
+**Bug pré-existente corrigido de passagem** (`install.mjs`): `createdDirs` era
+recalculado com `!fs.existsSync` a cada instalação, inclusive sobre a lista já
+gravada no lock. Na segunda instalação os diretórios já existem — porque a
+primeira os criou — então o harness concluía que não havia criado nenhum, e o
+`unlink` os deixava para trás. Valia igual para `.kiro/harness` e `.github`; foi
+o `.agents/` novo que expôs.
+
 ## Riscos / a confirmar durante a implementação
 
 - Nomes exatos de ferramenta do Claude Code (`Read`, `Grep`, `Glob`, `Edit`,
