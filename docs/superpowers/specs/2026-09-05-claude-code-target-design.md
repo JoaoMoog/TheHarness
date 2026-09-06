@@ -43,7 +43,9 @@ claude: {
     { source: 'core/skills', target: '.claude/skills' },
     // Sem equivalente nativo de carregamento por glob (ver "Gaps").
     // Ficam aqui só para referência por path a partir de agents/skills.
-    ...under('.harness', ['core/instructions', 'core/rubrics', 'core/tools']),
+    { source: 'core/instructions', target: '.agents/instructions' },
+    { source: 'core/rubrics', target: '.agents/rubrics' },
+    { source: 'core/tools', target: '.agents/tools' },
   ],
   fileSurfaces: [
     { source: 'core/AGENTS.md', target: 'AGENTS.md' },
@@ -57,33 +59,60 @@ claude: {
 },
 ```
 
-Note que `core/tools` e `core/rubrics` deixam de viver só sob o prefixo de um
-target (`.github/tools`, `.kiro/harness/tools`) e passam a ter **um** lugar
-compartilhado, `.harness/`, usado por qualquer target ativo. Isso não é
-exclusivo do Claude — é o fix da próxima seção.
+Note que `core/tools`, `core/rubrics` e `core/instructions` (para o Claude)
+deixam de viver só sob o prefixo de um target (`.github/tools`,
+`.kiro/harness/tools`) e passam a ter **um** lugar adicional, compartilhado,
+`.agents/`, usado por qualquer target ativo. Isso não é exclusivo do Claude —
+é o fix da próxima seção. **Não é `.harness/`**: esse nome já é usado pelo
+harness para estado de runtime que os hooks escrevem (`telemetry.jsonl`,
+`dream-pending.json`, `sessions.jsonl` — ver `RUNTIME_DIRS` em
+[paths.mjs](../../../src/lib/paths.mjs:26)), nunca commitado e sem relação com
+conteúdo linkado. `.agents/` é livre no repositório hoje, e por coincidência é
+também o path nativo que o Codex CLI já usa para skills de projeto
+(`.agents/skills`) — um alinhamento de graça para a fase 2.
 
 ## Gap pré-existente corrigido aqui
 
-Três arquivos em `core/` chamam ferramentas por um path que assume o Copilot:
+Nove arquivos em `core/` chamam ferramentas por um path que assume o Copilot
+(`grep -rn '\.github/tools\|\.github/skills' core/ templates/` encontra todos):
 
-- `core/agents/azure-devops.agent.md:29,39` — `.github/tools/ado/*.mjs` e
-  `.github/tools/spec/traceability.mjs`
-- `core/agents/implementer.agent.md:33` — `.github/tools/spec/traceability.mjs`
-- `core/skills/codebase-inventory/SKILL.md:43` —
-  `.github/skills/codebase-inventory/scripts/inventory.mjs`
+- `core/agents/azure-devops.agent.md:29,39`
+- `core/agents/implementer.agent.md:33`
+- `core/skills/codebase-inventory/SKILL.md:43` (`.github/skills/...`)
+- `core/skills/ado-pull-request/SKILL.md:52`
+- `core/skills/ado-pipeline/SKILL.md:48,51`
+- `core/skills/ado-comment/SKILL.md:48`
+- `core/skills/traceability/SKILL.md:50`
+- `core/prompts/deliver.prompt.md:9,17`
+- `templates/spec.md:60`
+
+(`core/hooks/scripts/selftest.mjs:227-233` também contém `.github/tools/ado/...`,
+mas só como exemplo de comando passado a `ado-gate.mjs`, que casa por nome de
+arquivo — `pipeline-run.mjs`, `pr-create.mjs` — não por prefixo. Não precisa
+mudar.)
 
 Isso já está errado hoje num repositório só-Kiro (o path real lá é
-`.kiro/harness/tools/...`), e ficaria errado de novo em `.claude/harness/...`.
-Como esses três arquivos são **linkados**, não gerados, o mesmo texto é lido
-por todo target — não dá para ter um path por target dentro do mesmo arquivo.
+`.kiro/harness/tools/...`), e ficaria errado de novo em `.claude/`. Como esses
+arquivos são **linkados**, não gerados, o mesmo texto é lido por todo target —
+não dá para ter um path por target dentro do mesmo arquivo.
 
-Fix: os três passam a referenciar `.harness/tools/...` e
-`.harness/skills/codebase-inventory/scripts/inventory.mjs`, e `core/tools` /
-`core/rubrics` viram uma superfície **compartilhada por todos os targets**
-(`.harness/tools`, `.harness/rubrics`), linkada uma vez, fora do prefixo de
-cada target. `copilot` e `kiro` passam a receber esse link extra também — sem
-mudar nada do que já funciona, só corrigindo os três paths que já estavam
-quebrados fora do Copilot.
+Fix: os nove passam a referenciar `.agents/tools/...` e
+`.agents/skills/codebase-inventory/scripts/inventory.mjs`, e `core/tools` /
+`core/rubrics` / `core/skills` ganham uma superfície **adicional,
+compartilhada por todos os targets** (`.agents/tools`, `.agents/rubrics`,
+`.agents/skills`), linkada uma vez, ao lado — não em vez — do que cada target
+já linka no seu próprio prefixo nativo. `copilot` e `kiro` passam a receber
+esse link extra também (redundante com `.github/tools`/`.kiro/harness/tools`,
+mas inofensivo: é outro link para o mesmo conteúdo, sem risco de drift) — sem
+mudar nada do que já funciona, só corrigindo os paths que já estavam quebrados
+fora do Copilot.
+
+**Achado adicional, também bloqueante**: `core/hooks/scripts/lib/io.mjs:18`
+tem `const STDIN_MODES = new Set(['vscode', 'kiro'])`. Um hook do Claude
+rodaria com `HARNESS_HOOK_MODE=claude`, que não está nesse conjunto —
+`hookMode()` voltaria `null` e todo guardrail se comportaria como git hook
+(sem ler stdin), um no-op silencioso sob o Claude. Fix: adicionar `'claude'`
+ao `STDIN_MODES`.
 
 ## Gaps documentados (não contornados)
 
@@ -214,16 +243,32 @@ Mesma regra de conflito dos outros arquivos que o harness é dono: se
 `installGenerated` em [install.mjs](../../../src/commands/install.mjs:168) e
 `checkGenerated` em [doctor.mjs](../../../src/commands/doctor.mjs:96) hoje
 importam `generatedFiles` só de `kiro-gen.mjs`, direto — funciona porque só
-existe um target com gerador. Com dois, isso precisa despachar por target:
+existe um target com gerador. Com dois, isso precisa despachar por target. O
+despacho não pode viver em `targets.mjs`: `kiro-gen.mjs` já importa `TARGETS`
+de lá, então `targets.mjs` importar de volta `claude-gen.mjs`/`kiro-gen.mjs`
+seria um ciclo. Em vez disso, um módulo novo, que depende dos três e não é
+importado por nenhum deles:
 
 ```js
-// targets.mjs ganha um campo por target apontando pro módulo gerador
+// src/lib/generators.mjs
+import * as kiroGen from './kiro-gen.mjs';
+import * as claudeGen from './claude-gen.mjs';
+
 const GENERATOR_MODULES = { kiro: kiroGen, claude: claudeGen };
+
+export function generatedFilesFor(targetIds) {
+  const files = new Map();
+  for (const id of targetIds) {
+    for (const file of (GENERATOR_MODULES[id]?.generatedFiles() ?? [])) files.set(file.path, file);
+  }
+  return [...files.values()];
+}
 ```
 
-`installGenerated`/`checkGenerated` passam a iterar os targets ativos do
-repositório, chamar `generatedFiles()` de cada módulo presente e mesclar por
-path (mesma regra de dedupe por path que `mergedSurfaces` já usa pros links).
+`install.mjs`/`doctor.mjs` passam a importar `generatedFilesFor` daqui em vez
+de `generatedFiles` de `kiro-gen.mjs` direto, iterando os targets ativos do
+repositório e mesclando por path (mesma regra de dedupe que `mergedSurfaces`
+já usa pros links).
 
 `unmappedSurfaces(ids)`: mesma forma de `unmappedEvents(ids)` em
 [targets.mjs](../../../src/lib/targets.mjs:130) — interseção entre os targets
