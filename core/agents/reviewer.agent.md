@@ -4,7 +4,7 @@ description: Reviews a change set for correctness and contract violations and re
 version: 2.0.0
 argument-hint: the branch, diff or task to review
 user-invocable: true
-tools: [crosstk, codebase, search, usages, problems, changes, runCommands]
+allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: []
 ---
 

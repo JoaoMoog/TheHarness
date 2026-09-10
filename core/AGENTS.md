@@ -54,7 +54,11 @@ it bills on every single turn.
 
 **Agents** (`.github/agents/<name>.agent.md`) have exactly six sections:
 identity, tool manifest, scope and boundaries (including what it refuses),
-typed I/O contracts, skills loaded, and escalation rules.
+typed I/O contracts, skills loaded, and escalation rules. The frontmatter
+manifest is explicit (`tools: [...]`) or deliberately open (`allTools:` with
+the reason), never absent. The harness opens its own so the Cross TK server
+can be found on the first run; the prose manifest still states the intended
+scope, and the hooks are the gate.
 
 Target ratio: **one user-invocable agent per 6-14 skills**. More agents than that means
 the work belongs in skills.

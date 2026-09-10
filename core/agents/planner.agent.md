@@ -3,7 +3,7 @@ name: planner
 description: Turns an approved spec into an implementation plan with files, contracts, order and risks. Second phase of a session.
 version: 1.0.0
 user-invocable: false
-tools: [crosstk, codebase, search, usages, problems, editFiles]
+allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: []
 ---
 

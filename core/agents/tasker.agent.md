@@ -3,7 +3,7 @@ name: tasker
 description: Breaks an approved plan into atomic tasks with parallel and oversight markers. Third phase of a session.
 version: 1.0.0
 user-invocable: false
-tools: [crosstk, codebase, search, editFiles]
+allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: []
 ---
 

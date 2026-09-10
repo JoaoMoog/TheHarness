@@ -9,11 +9,14 @@ export const SKILL_FRONTMATTER = ['name', 'description', 'version', 'sfa'];
 
 export const AGENT_SECTIONS = ['Identity', 'Tools', 'Scope', 'Contracts', 'Skills', 'Escalation'];
 /**
- * `tools` is required, not optional. An agent whose tool manifest is implicit
- * has unbounded blast radius, and the previous contract asked for the manifest
- * in prose while never checking that one existed.
+ * A manifest is explicit or deliberately open, never absent. `tools` lists
+ * what the agent may call; `allTools` opens everything and carries the reason
+ * in its value, the way `alwaysApply` needs a justification. The harness opens
+ * its own agents so the Cross TK MCP server can be found on the first run
+ * without its tool names ever being written down; the hooks stay the gate.
  */
-export const AGENT_FRONTMATTER = ['name', 'description', 'version', 'tools'];
+export const AGENT_FRONTMATTER = ['name', 'description', 'version'];
+export const AGENT_ALL_TOOLS = 'allTools';
 
 export const INSTRUCTION_FRONTMATTER = ['applyTo'];
 export const PROMPT_FRONTMATTER = ['description', 'version'];

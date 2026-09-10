@@ -19,8 +19,19 @@ import { crossTkServer, isCrossTkTool, isMandatory } from './lib/crosstk.mjs';
 import * as git from './lib/git.mjs';
 import { readHookInput, isHookMode, allow, deny, EXIT_OK } from './lib/io.mjs';
 
-/** The same reads read-guard watches, plus the search and listing tools the agents carry. */
-const READ = /read|view|open|cat|fetch|textSearch|fileSearch|semantic_search|grep_search|file_search|listDirectory|list_dir|codebase|usages/i;
+/**
+ * The built-in reads and searches the gate holds, matched by the last name
+ * segment so `search/codebase` and `codebase` are the same tool. Anything
+ * else passes, an MCP tool with an unrecorded name included: a Cross TK call
+ * that happens to be named `search_lines` must never be refused as a read,
+ * because that would lock the session out of the very tool the gate exists for.
+ */
+const BUILT_IN_READS = new Set([
+  'readFile', 'read_file', 'read', 'view', 'open', 'cat', 'fetch', 'textSearch', 'fileSearch',
+  'semantic_search', 'grep_search', 'file_search', 'listDirectory', 'list_dir', 'codebase', 'usages',
+  'changes', 'problems', 'findTestFiles',
+]);
+const isBuiltInRead = (name) => BUILT_IN_READS.has(String(name).split('/').pop());
 const STATE_TTL_MS = 12 * 60 * 60 * 1000;
 
 const input = await readHookInput();
@@ -76,13 +87,14 @@ if (isCrossTkTool(tool, server)) {
   process.exit(allow('PreToolUse'));
 }
 
-if (state.used || !READ.test(tool)) process.exit(allow('PreToolUse'));
+if (state.used || !isBuiltInRead(tool)) process.exit(allow('PreToolUse'));
 
+const where = server.scope === 'user' ? 'your user profile' : server.scope === 'record' ? 'the first-run record' : server.file;
 const reason =
-  `Cross TK first: \`${server.name}\` is declared in ${server.file} and has not been used in this session yet. ` +
+  `Cross TK first: \`${server.name}\` is known from ${where} and has not been used in this session yet. ` +
   'Learn its tools from their descriptions and make this read through it; the built-in tools open after that, as ' +
-  'the fallback. If this agent has no Cross TK tool, its tools list must name one (harness doctor says which agents ' +
-  'lack it); if its calls are not being recognised, list its tool names under "tools" in the server entry.';
+  'the fallback. If the server is not in your tool list, say so to the user instead of retrying: it must be ' +
+  'enabled in the tools picker. If its calls are not being recognised, record its tool names in .harness/crosstk.json.';
 
 if (isMandatory(server)) process.exit(deny('PreToolUse', reason));
 
