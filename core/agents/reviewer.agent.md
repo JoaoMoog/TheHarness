@@ -22,6 +22,8 @@ It is invocable directly and as the review phase of a session.
 
 ## Tools
 
+- Cross TK, whenever its MCP server is connected - the first tool for every
+  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages`, `problems`, `changes` - the change and the
   code around it
 - `runCommands` - the repository build, lint and test commands, and nothing

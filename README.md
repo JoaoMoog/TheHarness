@@ -177,17 +177,25 @@ arquivo que não mudou, avisa.
 
 ## Cross TK
 
-Quando um servidor MCP chamado `cross-tk` (qualquer grafia) está conectado, os
-agentes preferem as ferramentas dele para ler, buscar e resumir, descobrindo o
-que ele oferece pelas descrições das ferramentas. O harness não presume nomes
-nem assinaturas. O início da sessão diz se há um configurado no repositório
-(`.mcp.json`, `.vscode/mcp.json` ou `.kiro/settings/mcp.json`); se não há, o
-agente diz isso uma vez e segue com as ferramentas nativas, sem tentar de novo.
+Regra geral, não preferência: quando o servidor MCP chamado `cross-tk`
+(qualquer grafia) está conectado, toda leitura, busca e resumo que ele cobre
+passa por ele, e as ferramentas nativas são o fallback para o que ele não
+cobre. A regra está no hot tier (`copilot-instructions.md`, carregado em todo
+turno), na `CONSTITUTION.md` como protocolo, nas regras básicas do `AGENTS.md`,
+na instrução `token-economy` e no manifesto de ferramentas de cada agente que
+lê código. Os agentes descobrem o que ele oferece pelas descrições das
+ferramentas, uma vez por sessão; o harness não presume nomes nem assinaturas.
+O início da sessão diz se há um configurado no repositório (`.mcp.json`,
+`.vscode/mcp.json` ou `.kiro/settings/mcp.json`); se não há, o agente diz isso
+uma vez e segue com as ferramentas nativas, sem tentar de novo.
 
 Para habilitar em todos os repositórios, preencha a entrada `cross-tk` em
 `core/mcp.json` com o comando real e mova-a para `servers`. O `doctor` recusa
 um servidor habilitado enquanto houver `TODO` no comando, nos argumentos, no
-dono ou na versão.
+dono ou na versão. Com o servidor habilitado, ele também avisa de cada agente
+cujo `tools:` não lista uma ferramenta do Cross TK: um agente do Copilot só
+chama o que está no manifesto, e uma regra que o manifesto não deixa cumprir é
+decoração.
 
 ## Comandos
 

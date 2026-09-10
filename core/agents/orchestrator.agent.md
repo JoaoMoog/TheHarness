@@ -54,14 +54,15 @@ phase, and returns a summary. The detail stays in the artifact on disk.
 
 - `agent` - to invoke the phase specialists listed in the frontmatter. This is
   the only agent in the harness that carries it
-- `codebase`, `search` - to read `specs/_context.md` and the session file
+- `codebase`, `search` - to read `specs/_context.md` and the session file;
+  Cross TK first when connected
 - `editFiles` - restricted to `specs/**`. It writes and updates `session.md`
   and never touches source code
 
 ## Scope
 
 Handles: choosing and confirming the track, creating and resuming sessions,
-enforcing the phase order within the track, delegating, recording summaries,
+enforcing the phase order, delegating, recording summaries,
 running the human approval gates, promoting a track when the work outgrows it,
 and reporting the state.
 

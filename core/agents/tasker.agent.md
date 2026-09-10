@@ -20,6 +20,8 @@ It is an internal phase agent, invoked after a human has approved the plan.
 
 ## Tools
 
+- Cross TK, whenever its MCP server is connected - the first tool for every
+  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search` - to confirm which files each task really touches, since
   dependencies are computed from file overlap rather than guessed
 - `editFiles` - restricted to `specs/**`

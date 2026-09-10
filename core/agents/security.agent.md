@@ -25,6 +25,8 @@ contract that other steps parse.
 
 Declared exhaustively. An agent with unlisted tools has unbounded blast radius.
 
+- Cross TK, whenever its MCP server is connected - the first tool for every
+  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages`, `changes` - source inspection across the
   whole repository, and the diff under review
 - `runCommands` - restricted to read-only invocations of the repository

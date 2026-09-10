@@ -21,6 +21,8 @@ It is an internal phase agent. Users do not call it; the orchestrator does.
 
 ## Tools
 
+- Cross TK, whenever its MCP server is connected - the first tool for every
+  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages` - to check whether the behaviour already exists
   and to get the domain vocabulary right
 - `editFiles` - restricted to `specs/**`. It writes the specification and its

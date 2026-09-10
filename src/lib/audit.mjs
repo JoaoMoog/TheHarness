@@ -3,7 +3,7 @@ import path from 'node:path';
 import { harnessPath } from './paths.mjs';
 import { parseFrontmatter, headings } from './frontmatter.mjs';
 import { estimateTokens } from './tokens.mjs';
-import { auditAgents, auditRatio } from './audit-graph.mjs';
+import { auditAgents, auditRatio, loadAgents } from './audit-graph.mjs';
 import {
   SKILL_SECTIONS, SKILL_FRONTMATTER, INSTRUCTION_FRONTMATTER, PROMPT_FRONTMATTER,
   SFA_KEYS, BUDGETS, REQUIRED_INSTRUCTIONS, LOOP_REQUIRED_KEYS, MCP_SERVER_FIELDS,
@@ -205,6 +205,26 @@ export function auditMcp(report) {
     }
     if (missingKeys.length === 0 && literal.length === 0 && unfilled.length === 0) {
       report.pass(`mcp ${name}: owner ${server.owner}, scope ${server.scope}`);
+    }
+  }
+  auditCrossTkReach(report, servers.map(([name]) => name));
+}
+
+/**
+ * The rule is "Cross TK first", and a rule an agent's manifest does not let it
+ * follow is decoration: a Copilot agent with a tools list can only call what
+ * is on it. So once the server is enabled, every agent that reads code must
+ * name one of its tools. Warned rather than failed, because the tool names are
+ * only known once the server is.
+ */
+const CROSS_TK = /cross[-_ ]?tk/i;
+
+function auditCrossTkReach(report, enabledServers) {
+  if (!enabledServers.some((name) => CROSS_TK.test(name))) return;
+  const readers = loadAgents().filter((a) => a.tools.some((t) => /^(codebase|search)$/.test(String(t))));
+  for (const agent of readers) {
+    if (!agent.tools.some((t) => CROSS_TK.test(String(t)))) {
+      report.warn(`agent ${agent.id}: cross-tk is enabled but no cross-tk tool is in its tools list, so it cannot put it first`);
     }
   }
 }
