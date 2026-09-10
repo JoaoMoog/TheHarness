@@ -1,7 +1,7 @@
 ---
 name: code-review
 description: How a change is scored during the review phase.
-version: 1.0.0
+version: 1.1.0
 appliesTo: review
 threshold: 3
 ---
@@ -47,6 +47,15 @@ different-but-correct approach is a 4 or a 5.
 
 Every score below 4 names the concrete failure: the input or state, and the
 wrong result. A low score without that is a preference wearing a number.
+
+Score the change, not the file. Each criterion is scored on the lines the
+change introduced or altered and the behaviour they produce. A gap that
+predates the change does not lower a score: it is a `warn` finding beside the
+scores. C3 in particular: a handler the application's global exception
+handling already covers is not a failure-handling gap.
+
+On a track with no specification - patch, incident, refactor - C2 is scored
+against the request as stated, and the traceability matrix is not required.
 
 The agent that produced the change never scores it. Self-assessment converges on
 self-agreement, not on quality.

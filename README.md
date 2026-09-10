@@ -145,6 +145,50 @@ num repo de Kiro — commitado, então dá para fechar o editor e retomar com
 Para abrir um pull request de um branch pronto, sem sessão: `/deliver` ou
 `@azure-devops`.
 
+## Verificação proporcional e WARN
+
+Três regras cortam o custo das etapas de `fix` e `patch` sem tirar verificação
+do caminho. Elas vivem em `core/instructions/token-economy.instructions.md`,
+carregada em todo turno, e nos contratos do `implementer`, do `reviewer` e do
+`orchestrator`.
+
+- **Um resultado vale até a árvore mudar.** O `implementer` registra o que
+  rodou e em qual estado da árvore (`node .github/tools/verify/tree-state.mjs`,
+  uma linha determinística). Dentro do loop de verificação só o check que
+  falhou roda de novo; a suíte completa roda uma vez, na árvore final. O
+  `reviewer` roda a dele uma vez, porque revisão independente é o contrato; a
+  pontuação da rubrica, o deliver e os retries reaproveitam o registro. Uma nova
+  rodada precisa de uma falha nova, um finding aberto ou um risco não checado.
+- **Problema preexistente é WARN, não correção.** A revisão aponta o que a
+  mudança introduziu ou alterou. O que já existia no arquivo tocado vira uma
+  linha `WARN local - problema - melhoria sugerida`, gravada em `session.md`,
+  levada ao corpo do pull request, e nunca bloqueia um gate nem abre outra
+  rodada. Antes de apontar falta de tratamento de erro, o revisor olha o que a
+  aplicação já tem: um controller atrás de um exception filter global não é
+  finding.
+- **Duas rodadas de revisão.** `request-changes` manda ao `implementer` só os
+  blockers e majors, e a re-revisão lê só o delta e confirma cada finding. Um
+  finding ainda aberto na segunda rodada escala: o problema está antes da
+  correção.
+
+O hook `burn-detect` conta releituras por caminho e zera o contador quando o
+conteúdo muda: reler um arquivo recém-editado não avisa; reler três vezes um
+arquivo que não mudou, avisa.
+
+## Cross TK
+
+Quando um servidor MCP chamado `cross-tk` (qualquer grafia) está conectado, os
+agentes preferem as ferramentas dele para ler, buscar e resumir, descobrindo o
+que ele oferece pelas descrições das ferramentas. O harness não presume nomes
+nem assinaturas. O início da sessão diz se há um configurado no repositório
+(`.mcp.json`, `.vscode/mcp.json` ou `.kiro/settings/mcp.json`); se não há, o
+agente diz isso uma vez e segue com as ferramentas nativas, sem tentar de novo.
+
+Para habilitar em todos os repositórios, preencha a entrada `cross-tk` em
+`core/mcp.json` com o comando real e mova-a para `servers`. O `doctor` recusa
+um servidor habilitado enquanto houver `TODO` no comando, nos argumentos, no
+dono ou na versão.
+
 ## Comandos
 
 | comando | faz |
@@ -170,13 +214,13 @@ Execute com `node bin/harness.mjs <comando>`.
 core/                  propagado para todo repositório
   copilot-instructions.md   sempre carregado, teto de 2 KB
   AGENTS.md                 o contrato de agentes e sessões
-  instructions/  17         regras por tipo de arquivo
+  instructions/  18         regras por tipo de arquivo
   skills/        37         procedimentos, por relevância
   agents/         8         orchestrator, 4 de fase, reviewer, security, azure-devops
   prompts/        9         /feature, /resume, /deliver e os loops
   rubrics/        3         a régua de cada etapa que julga
   hooks/          8 eventos guardrails de runtime, de pre-commit e o coletor do dream
-  tools/                    scripts determinísticos: ado/ e spec/
+  tools/                    scripts determinísticos: ado/, spec/ e verify/
 loops/                 os três loops e os orçamentos
 templates/             spec, plan, tasks, session, runbook, postmortem, ADR, decisions, dreams
 ```
@@ -201,7 +245,7 @@ fechado quando o git não responde, e cobrem os formatos reais de credencial:
 CloudFormation. Um `.env` também não pode ser **lido** para dentro do contexto.
 
 ```bash
-npm run selftest          # 45 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 66 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```

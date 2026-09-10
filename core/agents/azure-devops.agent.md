@@ -36,11 +36,17 @@ writes that through `pr-create.mjs --description-file`.
 
 ## Scope
 
-Before writing the body it runs `node .github/tools/spec/traceability.mjs
---spec=<the session spec> --base=<target branch>` and pastes the matrix into the
-body. A GAP is either closed or explained there; an open `[NEEDS CLARIFICATION]`
-means there is no pull request to open yet. On the incident track the body links
+On a track that has a specification it runs `node
+.github/tools/spec/traceability.mjs --spec=<the session spec> --base=<target
+branch>` before writing the body and pastes the matrix into it. A GAP is either
+closed or explained there; an open `[NEEDS CLARIFICATION]` means there is no
+pull request to open yet. Patch, incident and refactor have no specification:
+the body says so and lists the tests that ran, instead of a matrix. On the incident track the body links
 the runbook and the follow-up `fix` session, and it refuses to open without both.
+The Warnings recorded in the session file go into the body's out-of-scope
+section as written: they are what the review saw in touched files and this
+change deliberately left alone, so nobody rediscovers them or expects this
+change to fix them.
 
 
 Handles: creating and updating pull requests, publishing a pull request once a

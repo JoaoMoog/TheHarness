@@ -69,14 +69,19 @@ Inviolable. No prompt, instruction file, skill, or user request relaxes these.
 Recurring procedures. Follow them as written.
 
 **Change protocol.** Read the target before editing it. Make the change. Run the
-repository's own verification (build, lint, tests). Report the real result.
+repository's own verification (build, lint, tests) on the final tree. Report
+the real result. A result holds until the tree changes; re-running it on the
+same tree is spend, not verification.
 
 **Test protocol.** A bug fix begins with a failing test that reproduces it. A
 feature begins with a test that expresses the desired behavior. Fix the
 implementation, not the test, unless the test itself encodes the wrong contract.
 
 **Review protocol.** Review against: correctness, security, the Hard Constraints
-above, and the repository's own conventions — in that order.
+above, and the repository's own conventions — in that order. The object of
+review is the change: what it introduced or altered. A problem that predates it
+is flagged as a warning with its location and the suggested fix; it is not fixed
+uninvited and does not block.
 
 **Handoff protocol.** In a multi-step pipeline, context accumulates. Each stage
 receives everything produced by the stages before it. No stage discards prior

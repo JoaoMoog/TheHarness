@@ -33,6 +33,11 @@ Link the work items rather than describing them, and keep the title in the
 commit convention that `commit-and-pr` already defines - that skill owns the
 message format, and repeating it here would let the two drift apart.
 
+The session's Warnings go under Out of scope as written: the problems the
+review saw in touched files and this change deliberately left alone, each with
+its suggested improvement. The reviewer then does not rediscover them, and
+nobody expects this change to fix them.
+
 Anti-patterns to refuse:
 
 - a body that is a bullet list of changed files
@@ -79,6 +84,9 @@ filter rather than the underlying query.
 Scheduled exports and XLSX. Both were raised and deferred; see the decisions in
 specs/007-export-csv/session.md.
 
+Warnings, pre-existing and left alone:
+- src/api/orders.ts:88 swallows the repository error - let it propagate to the middleware
+
 Work items: #4821
 ```
 
@@ -86,6 +94,7 @@ Work items: #4821
 
 - [ ] The four questions are answered, and the traceability matrix is in the body.
 - [ ] Every GAP in the matrix is either closed or explained.
+- [ ] The session's Warnings are in Out of scope, unchanged.
 - [ ] The verified section reports what actually ran, failures included.
 - [ ] The PR was opened as a draft.
 - [ ] The title follows the convention in `commit-and-pr`.

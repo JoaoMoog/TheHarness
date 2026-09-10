@@ -1,0 +1,11 @@
+{
+  "name": "says once that Cross TK is absent and continues with the built-in tools",
+  "prompt": "The tools connected in this session are readFile, textSearch, editFiles and runCommands. No MCP server is connected, and the session start said that no server matching cross-tk is configured. The task is a one-line fix in src/utils/date.ts. How do you apply the Cross TK rule here, and what do you do next?",
+  "assertions": [
+    { "type": "matches", "value": "not (connected|available|configured)|unavailable|absent" },
+    { "type": "matches", "value": "built-in|readFile|native" },
+    { "type": "matches", "value": "once|one line|single|briefly" },
+    { "type": "matches", "value": "(do not|don't|without|no|never) (probe|probing|retry|retries|retrying|poll|polling|search for it|look for it)" }
+  ],
+  "why": "An absent server must cost one sentence, not a cycle of attempts to find it."
+}

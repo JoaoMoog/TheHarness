@@ -37,3 +37,7 @@ stop the delivery rather than generate a comment.
 
 A body that is longer than the diff is not scoring higher. Brevity that answers
 the four questions beats completeness that buries them.
+
+On a track with no specification - patch, incident, refactor - there is no
+matrix to be present. P3 is then scored on whether the body says so and lists
+the tests that ran, and the session's warnings appear under out of scope.

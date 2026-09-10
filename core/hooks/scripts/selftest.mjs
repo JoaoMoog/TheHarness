@@ -36,10 +36,11 @@ function runGuardrail(name, cwd) {
   return spawnSync(process.execPath, [script(name)], { cwd, encoding: 'utf8' });
 }
 
-function runHook(name, payload) {
+function runHook(name, payload, cwd = undefined) {
   const r = spawnSync(process.execPath, [script(name)], {
     input: JSON.stringify(payload),
     encoding: 'utf8',
+    cwd,
     env: { ...process.env, HARNESS_HOOK_MODE: 'vscode' },
   });
   try {
@@ -285,6 +286,94 @@ const adoGate = (command) =>
     env: { ...process.env, HARNESS_HOOK_MODE: '' },
   });
   check('with no mode at all the hook stays a git hook and emits nothing', noMode.stdout.trim(), '');
+}
+
+/* burn-detect: the same file read three times without changing is circling;
+   the same file read again after an edit is checking the edit. */
+console.log('\nburn-detect: repetition that does and does not mean circling');
+
+{
+  const { dir } = sandbox();
+  const file = write(dir, 'src/app.js', 'export const a = 1;\n');
+  const session = 'burn-' + process.pid;
+  const read = (input) =>
+    runHook(
+      'burn-detect',
+      { hook_event_name: 'PostToolUse', session_id: session, tool_name: 'readFile', tool_input: input },
+      dir
+    );
+  read({ filePath: file });
+  const second = read({ filePath: file });
+  const third = read({ filePath: file, startLine: 1, endLine: 5 });
+  check('two reads of an unchanged file pass quietly', second.systemMessage === undefined, true);
+  check('a third read of the same path warns, even as a different slice', typeof third.systemMessage === 'string', true);
+  check('the warning says the file did not change in between', /without changing in between/.test(third.systemMessage ?? ''), true);
+
+  write(dir, 'src/app.js', 'export const a = 2;\n');
+  read({ filePath: file });
+  const afterEdit = read({ filePath: file });
+  check('re-reading a file after editing it does not warn', afterEdit.systemMessage === undefined, true);
+  check('but the third read of the new content does', typeof read({ filePath: file }).systemMessage === 'string', true);
+
+  const run = () =>
+    runHook(
+      'burn-detect',
+      { hook_event_name: 'PostToolUse', session_id: session, tool_name: 'runCommands', tool_input: { command: 'npm test' } },
+      dir
+    );
+  const outputs = [];
+  for (let i = 0; i < 10; i += 1) outputs.push(run());
+  check('the fourth identical command passes quietly', outputs[3].systemMessage === undefined, true);
+  check('the fifth identical command warns', typeof outputs[4].systemMessage === 'string', true);
+  check('the sixth is quiet again, so the warning is not a nag', outputs[5].systemMessage === undefined, true);
+  check('the tenth warns again, because it is still circling', typeof outputs[9].systemMessage === 'string', true);
+}
+
+/* session-context: whether a token-saving server is configured is said once,
+   by name, so no turn is spent probing for it. */
+console.log('\nsession-context: Cross TK discovery by name');
+
+{
+  const { dir } = sandbox();
+  const context = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
+  check('reports that no cross-tk server is configured', /No server matching cross-tk/.test(context()), true);
+  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
+  check('reports a configured cross-tk server by name and file', /`cross-tk` is configured in `\.mcp\.json`/.test(context()), true);
+  write(dir, '.mcp.json', JSON.stringify({ servers: {}, disabled: { 'cross-tk': { command: 'x' } } }));
+  check('a server left in the disabled block counts as absent', /No server matching cross-tk/.test(context()), true);
+  write(dir, '.mcp.json', JSON.stringify({ mcpServers: { CrossTK: { command: 'x', disabled: true } } }));
+  check('a Kiro-style server marked disabled counts as absent', /No server matching cross-tk/.test(context()), true);
+  write(dir, '.mcp.json', JSON.stringify({ mcpServers: { crosstk: { command: 'x' } } }));
+  check('any spelling of the name is found', /`crosstk` is configured/.test(context()), true);
+  write(dir, '.mcp.json', '{ not json');
+  fs.mkdirSync(path.join(dir, '.vscode'), { recursive: true });
+  write(dir, '.vscode/mcp.json', JSON.stringify({ servers: { 'cross_tk': { command: 'x' } } }));
+  check('a file that does not parse is skipped and the next one is read', /`cross_tk` is configured in `\.vscode\/mcp\.json`/.test(context()), true);
+}
+
+/* tree-state: one short line per state of the tree, so a verification result
+   can be tied to the tree it ran on and reused only while that holds. */
+console.log('\ntree-state: one line per state of the tree');
+
+{
+  const TREE_STATE = path.join(HERE, '..', '..', 'tools', 'verify', 'tree-state.mjs');
+  const state = (cwd) => spawnSync(process.execPath, [TREE_STATE], { cwd, encoding: 'utf8' });
+  const { dir, git } = sandbox();
+  write(dir, 'a.txt', 'one\n');
+  git('add', 'a.txt');
+  git('-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'one');
+  const clean = state(dir).stdout.trim();
+  check('a clean tree is the short commit alone', /^[0-9a-f]{7,}$/.test(clean), true);
+  write(dir, 'a.txt', 'two\n');
+  const dirty = state(dir).stdout.trim();
+  check('an uncommitted edit adds a suffix to the commit', dirty.startsWith(clean + '+') && dirty.length > clean.length + 1, true);
+  check('the same edit reports the same state', state(dir).stdout.trim(), dirty);
+  write(dir, 'b.txt', 'new\n');
+  const withUntracked = state(dir).stdout.trim();
+  check('an untracked file changes the state', withUntracked !== dirty, true);
+  check('reverting the edit and removing the file restores the clean state', (fs.rmSync(path.join(dir, 'b.txt')), write(dir, 'a.txt', 'one\n'), state(dir).stdout.trim()), clean);
+  const nogit = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-nogit-'));
+  check('outside a repository it refuses instead of inventing a state', state(nogit).status, 2);
 }
 
 const failed = results.filter((ok) => !ok).length;
