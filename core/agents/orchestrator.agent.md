@@ -4,7 +4,7 @@ description: Runs a multi-agent development session as a state machine, delegati
 version: 1.0.0
 argument-hint: what you want built, in one or two sentences
 user-invocable: true
-tools: [crosstk, agent, codebase, search, editFiles]
+allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: [specifier, planner, tasker, implementer, reviewer, security, azure-devops]
 handoffs:
   - label: Approve spec, start planning

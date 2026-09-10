@@ -4,7 +4,7 @@ description: Reviews changes for vulnerabilities and produces a severity-ranked 
 version: 2.0.0
 argument-hint: the change, branch or path to audit
 user-invocable: true
-tools: [crosstk, codebase, search, usages, changes, runCommands]
+allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: []
 ---
 

@@ -15,6 +15,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { valueId, addAllow, globToRegExp } from './lib/allowlist.mjs';
+import { userMcpFiles } from './lib/crosstk.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const script = (name) => path.join(HERE, name + '.mjs');
@@ -39,12 +40,12 @@ function runGuardrail(name, cwd) {
   return spawnSync(process.execPath, [script(name)], { cwd, encoding: 'utf8' });
 }
 
-function runHook(name, payload, cwd = undefined) {
+function runHook(name, payload, cwd = undefined, extraEnv = {}) {
   const r = spawnSync(process.execPath, [script(name)], {
     input: JSON.stringify(payload),
     encoding: 'utf8',
     cwd,
-    env: { ...process.env, HARNESS_HOOK_MODE: 'vscode' },
+    env: { ...process.env, ...extraEnv, HARNESS_HOOK_MODE: 'vscode' },
   });
   try {
     return JSON.parse(r.stdout || '{}');
@@ -496,7 +497,8 @@ console.log('\ncrosstk-first: the first read goes through Cross TK');
 
   write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', tools: ['compact_read'] } } }));
   const fresh = session + '-declared';
-  check('a read tool whose name carries neither the server nor a declared name is refused', decision(call('compact_read_file', {}, fresh)), 'deny');
+  check('an unknown tool name is not gated, so an unrecorded Cross TK tool can never lock the session out', decision(call('compact_read_file', {}, fresh)), 'allow');
+  check('while a built-in read handed over with its source prefix still is', decision(call('search/codebase', {}, fresh)), 'deny');
   check('but the declared tool name is recognised and unlocks', decision(call('compact_read', {}, fresh)) === 'allow' && decision(call('readFile', {}, fresh)) === 'allow', true);
 
   write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', mandatoryFirst: false } } }));
@@ -541,6 +543,32 @@ console.log('\ncrosstk-first: the first read goes through Cross TK');
   check('a record without a server name records nothing', call('readFile', session + '-empty'), 'allow');
   write(dir, '.harness/crosstk.json', '{ not json');
   check('a record that does not parse records nothing', call('readFile', session + '-bad'), 'allow');
+}
+
+/* A server configured in the user's own VS Code or Kiro profile is connected
+   in every workspace, so it is found there too; otherwise the session start
+   would tell the agent the server does not exist while it sits next to it. */
+{
+  const { dir } = sandbox();
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-home-'));
+  const env = { HOME: home, USERPROFILE: home, APPDATA: home };
+  const session = 'ctk-user-' + process.pid;
+  const start = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir, env).hookSpecificOutput?.additionalContext ?? '';
+  const read = (sid) =>
+    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name: 'readFile', tool_input: {} }, dir, env).hookSpecificOutput?.permissionDecision;
+
+  check('an empty profile: nothing is found and reads pass', /No server matching cross-tk/.test(start()) && read(session) === 'allow', true);
+  const [defaultProfile] = userMcpFiles({ home, appData: home });
+  fs.mkdirSync(path.dirname(defaultProfile), { recursive: true });
+  fs.writeFileSync(defaultProfile, JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
+  check('a server in the VS Code user profile is found and said to be global', /`cross-tk` is configured in your user profile/.test(start()) && /every workspace/.test(start()), true);
+  check('and it arms the gate with no file in the repository', read(session + '-2'), 'deny');
+  fs.writeFileSync(defaultProfile, JSON.stringify({ servers: { 'cross-tk': { command: 'x', disabled: true } } }));
+  check('disabled in the profile counts as absent', read(session + '-3'), 'allow');
+  const kiro = userMcpFiles({ home, appData: home }).at(-1);
+  fs.mkdirSync(path.dirname(kiro), { recursive: true });
+  fs.writeFileSync(kiro, JSON.stringify({ mcpServers: { crosstk: { command: 'x' } } }));
+  check('a server in the Kiro user settings is found too', /`crosstk` is configured in your user profile/.test(start()), true);
 }
 
 /* tree-state: one short line per state of the tree, so a verification result

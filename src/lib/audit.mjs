@@ -221,7 +221,8 @@ const CROSS_TK = /cross[-_ ]?tk/i;
 
 function auditCrossTkReach(report, enabledServers) {
   if (!enabledServers.some((name) => CROSS_TK.test(name))) return;
-  const readers = loadAgents().filter((a) => a.tools.some((t) => /^(codebase|search)$/.test(String(t))));
+  // An open manifest can call every tool of the server; only a list can leave it out.
+  const readers = loadAgents().filter((a) => !a.allTools && a.tools.some((t) => /^(codebase|search)$/.test(String(t))));
   for (const agent of readers) {
     if (!agent.tools.some((t) => CROSS_TK.test(String(t)))) {
       report.warn(`agent ${agent.id}: cross-tk is enabled but no cross-tk tool is in its tools list, so it cannot put it first`);
@@ -427,7 +428,7 @@ export function auditSelf(report) {
  */
 export function diagnose({ skills = 0, agentList = [], installed = null, lockExists = false } = {}) {
   const invocable = agentList.filter((a) => a.userInvocable);
-  const withTools = agentList.filter((a) => a.tools.length > 0);
+  const withTools = agentList.filter((a) => a.tools.length > 0 || a.allTools);
   const delegating = agentList.filter((a) => a.subagents.length > 0 || a.wildcard);
   const versioned = agentList.length > 0 && agentList.every((a) => Boolean(a.data.version));
 
@@ -439,10 +440,10 @@ export function diagnose({ skills = 0, agentList = [], installed = null, lockExi
       why: 'no skills are defined',
     },
     {
-      question: 'Does every custom agent declare its tools explicitly?',
+      question: 'Does every custom agent declare its tools, or open them all with a written reason?',
       answer: agentList.length > 0 && withTools.length === agentList.length,
       blocking: true,
-      why: `${agentList.length - withTools.length} agent(s) declare no tools, so their blast radius is unbounded`,
+      why: `${agentList.length - withTools.length} agent(s) declare no tools and give no reason, so their blast radius is unbounded by accident`,
     },
     {
       question: 'Is there an orchestrator that can actually delegate?',

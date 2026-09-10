@@ -33,18 +33,21 @@ function crossTkSection(root) {
   const server = crossTkServer(root);
   if (!server) {
     return (
-      '## Cross TK\n\nNo server matching cross-tk is configured in this repository, and no first run has ' +
-      'recorded one in `' + DISCOVERY_FILE + '`. Look for it in your tool list now, as ' +
+      '## Cross TK\n\nNo server matching cross-tk is configured in this repository or in your user profile, ' +
+      'and no first run has recorded one in `' + DISCOVERY_FILE + '`. Look for it in your tool list now, as ' +
       '`token-economy.instructions.md` says: found, record it there and use it first; not found, say so ' +
       'once, use the built-in tools, and do not probe or retry for it.'
     );
   }
   const record = server.discovered;
   const known =
-    server.file === DISCOVERY_FILE
+    server.scope === 'record'
       ? '`' + server.name + '` was recorded in `' + DISCOVERY_FILE + '`' + (record?.discoveredAt ? ' on ' + record.discoveredAt : '')
-      : '`' + server.name + '` is configured in `' + server.file + '`' +
-        (record ? ', and recorded in `' + DISCOVERY_FILE + '`' : '');
+      : server.scope === 'user'
+        ? '`' + server.name + '` is configured in your user profile, `' + server.file + '`, so it is connected in ' +
+          'every workspace' + (record ? ', and recorded in `' + DISCOVERY_FILE + '`' : '')
+        : '`' + server.name + '` is configured in `' + server.file + '`' +
+          (record ? ', and recorded in `' + DISCOVERY_FILE + '`' : '');
   const tools =
     record && record.tools.length > 0
       ? ' Its tools, as your runtime shows them: ' + record.tools.slice(0, TOOLS_SHOWN).join(', ') +

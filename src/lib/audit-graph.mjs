@@ -4,7 +4,7 @@ import { harnessPath } from './paths.mjs';
 import { parseFrontmatter, headings } from './frontmatter.mjs';
 import { estimateTokens } from './tokens.mjs';
 import {
-  AGENT_SECTIONS, AGENT_FRONTMATTER, BUDGETS, AGENT_SKILL_RATIO, PLACEHOLDER_MARKERS,
+  AGENT_SECTIONS, AGENT_FRONTMATTER, AGENT_ALL_TOOLS, BUDGETS, AGENT_SKILL_RATIO, PLACEHOLDER_MARKERS,
 } from './contracts.mjs';
 
 const listFiles = (dir, suffix) =>
@@ -31,6 +31,7 @@ export function loadAgents() {
       subagents: asArray(data.agents).filter((a) => a !== '*'),
       wildcard: asArray(data.agents).includes('*'),
       tools: asArray(data.tools),
+      allTools: typeof data[AGENT_ALL_TOOLS] === 'string' && data[AGENT_ALL_TOOLS].trim() !== '',
       handoffs: parseHandoffs(text),
       userInvocable: data['user-invocable'] !== false,
     };
@@ -97,6 +98,13 @@ export function auditAgents(report) {
     if (missingKeys.length > 0) {
       report.fail(`${label}: frontmatter missing ${missingKeys.join(', ')}`);
     }
+    if (agent.tools.length === 0 && !agent.allTools) {
+      report.fail(`${label}: declares no tools and gives no ${AGENT_ALL_TOOLS} reason; a manifest is explicit or deliberately open, never absent`);
+    }
+    if (agent.tools.length > 0 && agent.allTools) {
+      report.fail(`${label}: has both a tools list and ${AGENT_ALL_TOOLS}; one of them is not what runs`);
+    }
+    const hasTool = (name) => agent.allTools || agent.tools.includes(name);
 
     const missingSections = missing(AGENT_SECTIONS, agent.sections);
     if (missingSections.length > 0) {
@@ -128,7 +136,7 @@ export function auditAgents(report) {
     }
 
     const delegates = agent.subagents.length > 0 || agent.wildcard;
-    if (delegates && !agent.tools.includes('agent')) {
+    if (delegates && !hasTool('agent')) {
       report.fail(`${label}: lists sub-agents but has no "agent" tool, so it cannot invoke them`);
     }
     if (!delegates && agent.tools.includes('agent')) {

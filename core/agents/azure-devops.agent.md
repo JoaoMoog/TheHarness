@@ -4,7 +4,7 @@ description: Opens and updates pull requests, comments with structure and queues
 version: 1.0.0
 argument-hint: what to deliver, or the pull request number to act on
 user-invocable: true
-tools: [crosstk, codebase, search, runCommands]
+allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: []
 ---
 
