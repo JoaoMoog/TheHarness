@@ -14,8 +14,13 @@ built-in tools are the fallback for what it does not cover. Learn what it
 offers from the tool descriptions, once per session. Never assume a tool name
 or a signature, and never call it only to satisfy this rule.
 
+The first read of a session goes through it. Where the server is declared for
+the repository, the harness refuses a built-in read or search until a Cross TK
+tool has been used, so use it before anything else, not after the first
+detour.
+
 Not connected: say so in one line, use the built-in tools, and do not probe or
-retry. The session start reports whether one is configured in this repository.
+retry. The session start reports whether one is declared in this repository.
 
 ## Read once
 

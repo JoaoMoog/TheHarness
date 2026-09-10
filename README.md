@@ -185,9 +185,23 @@ turno), na `CONSTITUTION.md` como protocolo, nas regras básicas do `AGENTS.md`,
 na instrução `token-economy` e no manifesto de ferramentas de cada agente que
 lê código. Os agentes descobrem o que ele oferece pelas descrições das
 ferramentas, uma vez por sessão; o harness não presume nomes nem assinaturas.
-O início da sessão diz se há um configurado no repositório (`.mcp.json`,
-`.vscode/mcp.json` ou `.kiro/settings/mcp.json`); se não há, o agente diz isso
-uma vez e segue com as ferramentas nativas, sem tentar de novo.
+
+**Obrigatório antes de começar, e o runtime cobra.** Com o servidor declarado
+no repositório (`.mcp.json`, `.vscode/mcp.json` ou `.kiro/settings/mcp.json`),
+o hook `crosstk-first` recusa a primeira leitura ou busca nativa da sessão até
+uma ferramenta do Cross TK ter sido usada; depois disso as nativas abrem como
+fallback. Regra só em prosa é a que o agente pula quando está com pressa. O
+início da sessão diz que o servidor está declarado e que a primeira leitura é
+obrigatória; sem servidor declarado não há gate, e o agente diz isso uma vez e
+segue com as nativas. Dois ajustes na entrada do servidor: `tools` lista os
+nomes das ferramentas como o runtime os mostra, só necessário quando eles não
+carregam o nome do servidor; `mandatoryFirst: false` troca a recusa por um
+lembrete único.
+
+Se o Cross TK está configurado só na sua conta do VS Code e não no
+repositório, o harness não sabe que ele existe: nem avisa, nem cobra. Declare
+em `core/mcp.json` (vale para todos os repositórios após `link --all --force`)
+ou no `.vscode/mcp.json` do repositório.
 
 Para habilitar em todos os repositórios, preencha a entrada `cross-tk` em
 `core/mcp.json` com o comando real e mova-a para `servers`. O `doctor` recusa
@@ -282,7 +296,7 @@ quer dizer silencioso, não seguro: um valor real que chegou ao histórico
 continua precisando de rotação.
 
 ```bash
-npm run selftest          # 87 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 102 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```

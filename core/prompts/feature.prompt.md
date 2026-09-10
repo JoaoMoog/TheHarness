@@ -8,6 +8,9 @@ Start a session with `@orchestrator` for the request below.
 
 Before anything else:
 
+0. If the session start says Cross TK is declared, use it first: read its
+   tools from their descriptions and make the first read through it. The
+   harness refuses a built-in read before that, and so does the orchestrator.
 1. If `specs/_context.md` does not exist, say so and offer to run the
    `codebase-inventory` skill first. Every session after that one is cheaper for it.
 2. If a session is already open, stop. Resume it with `/resume` or close it.

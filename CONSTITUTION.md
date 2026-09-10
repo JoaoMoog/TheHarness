@@ -92,10 +92,12 @@ tier on demand. More context is not better context — past the relevance
 threshold it measurably degrades output quality.
 
 **Cross TK protocol.** Where the Cross TK MCP server is connected, every read,
-search and summary it covers goes through it. The built-in tools are the
-fallback for what it does not cover, never the default. Its tools are learned
-from their descriptions once per session, never assumed. Where it is absent,
-say so once and continue; do not probe for it.
+search and summary it covers goes through it, starting with the first read of
+the session: the harness refuses a built-in read before a Cross TK tool has
+been used. The built-in tools are the fallback for what it does not cover,
+never the default. Its tools are learned from their descriptions once per
+session, never assumed. Where it is absent, say so once and continue; do not
+probe for it.
 
 ---
 

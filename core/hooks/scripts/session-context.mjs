@@ -14,6 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { contextFile, readSession, clip, specsDir, layoutFor } from './lib/session.mjs';
+import { crossTkServer, isMandatory } from './lib/crosstk.mjs';
 import * as git from './lib/git.mjs';
 import { readHookInput, isHookMode, context, EXIT_OK } from './lib/io.mjs';
 
@@ -22,41 +23,27 @@ const SESSION_LIMIT = 4000;
 const DREAM_LIMIT = 5000;
 
 /**
- * Where a repository configures MCP servers, per tool. The harness copies its
- * own file to the first and the last; VS Code reads the middle one on its own.
- * Kiro spells the map `mcpServers` and marks a server off with `disabled`.
- */
-const CROSS_TK = /cross[-_ ]?tk/i;
-const MCP_FILES = ['.mcp.json', '.vscode/mcp.json', '.kiro/settings/mcp.json'];
-
-/**
- * Whether a token-saving server is configured here, said once so the agent
- * does not spend a turn probing for it. Discovery is by name and never by an
- * assumed tool: what the server actually offers is read from the tool
- * descriptions once it is connected. Configured but disabled counts as absent.
+ * Whether a Cross TK server is declared here, said once so the agent does not
+ * spend a turn probing for it, and said as the obligation it is: the first
+ * read of the session goes through it, and crosstk-first refuses a built-in
+ * read before that. Discovery is by name and never by an assumed tool.
  */
 function crossTkSection(root) {
-  for (const rel of MCP_FILES) {
-    const file = path.join(root, ...rel.split('/'));
-    if (!fs.existsSync(file)) continue;
-    let config;
-    try {
-      config = JSON.parse(fs.readFileSync(file, 'utf8'));
-    } catch {
-      continue; // A file that does not parse configures nothing.
-    }
-    const servers = { ...(config.servers ?? {}), ...(config.mcpServers ?? {}) };
-    const name = Object.keys(servers).find((n) => CROSS_TK.test(n) && servers[n]?.disabled !== true);
-    if (name) {
-      return (
-        '## Cross TK\n\n`' + name + '` is configured in `' + rel + '`. Read its tools from their descriptions ' +
-        'once, and prefer them for reading, searching and summarising, as `token-economy.instructions.md` says.'
-      );
-    }
+  const server = crossTkServer(root);
+  if (!server) {
+    return (
+      '## Cross TK\n\nNo server matching cross-tk is configured in this repository. If your runtime connects ' +
+      'one anyway, use it; otherwise use the built-in tools and do not probe or retry for it.'
+    );
   }
+  const gate = isMandatory(server)
+    ? 'The first built-in read or search of this session is refused until a Cross TK tool has been used.'
+    : 'The first built-in read of this session gets a reminder; the rule still stands.';
   return (
-    '## Cross TK\n\nNo server matching cross-tk is configured in this repository. If your runtime connects ' +
-    'one anyway, use it; otherwise use the built-in tools and do not probe or retry for it.'
+    '## Cross TK\n\n`' + server.name + '` is configured in `' + server.file + '`. Mandatory, before anything ' +
+    'else: use it first. Read its tools from their descriptions once, then every read, search and summary it ' +
+    'covers goes through it, and the built-in tools are the fallback, as `token-economy.instructions.md` says. ' +
+    gate
   );
 }
 

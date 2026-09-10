@@ -468,6 +468,53 @@ console.log('\nsession-context: Cross TK discovery by name');
   check('a file that does not parse is skipped and the next one is read', /`cross_tk` is configured in `\.vscode\/mcp\.json`/.test(context()), true);
 }
 
+/* crosstk-first: with a Cross TK server declared, the first built-in read of a
+   session is refused until a Cross TK tool has been used; without one, or once
+   it has been used, everything passes. The rule is only worth having if the
+   runtime enforces it. */
+console.log('\ncrosstk-first: the first read goes through Cross TK');
+
+{
+  const { dir } = sandbox();
+  const session = 'ctk-' + process.pid;
+  const call = (tool_name, extra = {}, sid = session) =>
+    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name, tool_input: { filePath: path.join(dir, 'a.ts') }, ...extra }, dir);
+  const decision = (out) => out.hookSpecificOutput?.permissionDecision;
+
+  check('no server declared: a read passes', decision(call('readFile')), 'allow');
+
+  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
+  const refused = call('readFile');
+  check('server declared: the first built-in read is refused', decision(refused), 'deny');
+  check('the refusal names the server and says what to do', /Cross TK first: `cross-tk`/.test(refused.hookSpecificOutput?.permissionDecisionReason ?? '') && /descriptions/.test(refused.hookSpecificOutput?.permissionDecisionReason ?? ''), true);
+  check('a search is refused too', decision(call('textSearch')), 'deny');
+  check('an edit is not a read, so it passes', decision(call('editFiles')), 'allow');
+  check('delegating to a sub-agent passes', decision(call('agent')), 'allow');
+  check('a Cross TK tool, named after the server, passes and unlocks the session', decision(call('mcp_cross-tk_outline')), 'allow');
+  check('after that, a built-in read passes as the fallback', decision(call('readFile')), 'allow');
+  check('a different session is gated on its own', decision(call('readFile', {}, session + '-other')), 'deny');
+
+  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', tools: ['compact_read'] } } }));
+  const fresh = session + '-declared';
+  check('a read tool whose name carries neither the server nor a declared name is refused', decision(call('compact_read_file', {}, fresh)), 'deny');
+  check('but the declared tool name is recognised and unlocks', decision(call('compact_read', {}, fresh)) === 'allow' && decision(call('readFile', {}, fresh)) === 'allow', true);
+
+  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', mandatoryFirst: false } } }));
+  const advisory = session + '-advisory';
+  const first = call('readFile', {}, advisory);
+  check('mandatoryFirst false: the first read passes with a reminder', decision(first) === 'allow' && /advisory/.test(first.systemMessage ?? ''), true);
+  check('and the reminder is said once', call('readFile', {}, advisory).systemMessage === undefined, true);
+
+  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
+  const kiro = session + '-kiro';
+  const viaEnv = decision(runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: kiro, tool_name: 'readFile', tool_input: {} }, dir));
+  const viaArgv = decision(runKiroHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: kiro + '2', tool_name: 'readFile', tool_input: {} }, dir));
+  check('the same refusal comes out under the vscode mode and --hook-mode=kiro', viaEnv === 'deny' && viaArgv === 'deny', true);
+
+  const start = runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
+  check('the session start says the first read is mandatory', /Mandatory, before anything else/.test(start) && /refused until/.test(start), true);
+}
+
 /* tree-state: one short line per state of the tree, so a verification result
    can be tied to the tree it ran on and reused only while that holds. */
 console.log('\ntree-state: one line per state of the tree');
