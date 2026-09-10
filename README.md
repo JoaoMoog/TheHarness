@@ -239,13 +239,23 @@ CI a cada push.
 ## Guardrails
 
 Os mesmos scripts rodam como hooks do VS Code durante a sessão e como
-`pre-commit` no git. Eles leem o índice (não a árvore de trabalho), falham
-fechado quando o git não responde, e cobrem os formatos reais de credencial:
-`.env`, YAML sem aspas, tfvars, Secret do Kubernetes, `Default` de
-CloudFormation. Um `.env` também não pode ser **lido** para dentro do contexto.
+`pre-commit` no git. Eles leem o índice (não a árvore de trabalho) e cobrem os
+formatos reais de credencial: `.env`, YAML sem aspas, tfvars, Secret do
+Kubernetes, `Default` de CloudFormation. Um `.env` também não pode ser **lido**
+para dentro do contexto.
+
+Dois níveis de resposta. Um **arquivo** que nunca deve entrar no histórico
+(`.env`, chave privada, `tfstate`, kubeconfig) é recusado pelo `policy-gate`,
+que falha fechado quando o git não responde. Um **valor** com cara de
+credencial dentro de um arquivo comum gera aviso, não bloqueio: o
+`secret-block` deixa o commit seguir, imprime o achado com o valor redigido e
+grava uma linha em `.harness/secrets.log` no repositório, fora do git. O aviso
+diz o que o bloqueio não dizia: o valor que chegou ao histórico está
+comprometido e precisa ser rotacionado, remover a linha não resolve. Falso
+positivo documentado leva o comentário `harness:allow-secret` na linha.
 
 ```bash
-npm run selftest          # 66 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 72 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```

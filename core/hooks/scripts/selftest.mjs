@@ -3,9 +3,11 @@
  * Proves the guardrails refuse what they claim to refuse, and only that.
  *
  * Every case here exists because the previous version got it wrong: scanning
- * the working tree instead of the index, failing open when git was unavailable,
- * and a credential regex that matched none of the formats an AWS or Kubernetes
- * repository is actually made of.
+ * the working tree instead of the index, a policy gate failing open when git
+ * was unavailable, and a credential regex that matched none of the formats an
+ * AWS or Kubernetes repository is actually made of. The credential scanner is
+ * advisory by decision, so its cases assert a warning and a record, never a
+ * refusal.
  */
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -50,10 +52,11 @@ function runHook(name, payload, cwd = undefined) {
   }
 }
 
-function runKiroHook(name, payload) {
+function runKiroHook(name, payload, cwd = undefined) {
   const r = spawnSync(process.execPath, [script(name), '--hook-mode=kiro'], {
     input: JSON.stringify(payload),
     encoding: 'utf8',
+    cwd,
     env: { ...process.env, HARNESS_HOOK_MODE: '' },
   });
   try {
@@ -80,6 +83,19 @@ const write = (dir, file, body) => {
 console.log('Guardrail self-test\n');
 console.log('secret-block: index versus working tree');
 
+/* secret-block is advisory: a finding is a warning on stderr plus a line in
+   .harness/secrets.log with the value redacted, and the exit code is always
+   zero. "Warned" and "clean" are the two outcomes worth telling apart. */
+const secretsLog = (dir) => {
+  try {
+    return fs.readFileSync(path.join(dir, '.harness', 'secrets.log'), 'utf8');
+  } catch {
+    return '';
+  }
+};
+const warned = (r, dir) => r.status === 0 && /secret-block: WARNING/.test(r.stderr) && secretsLog(dir).trim() !== '';
+const clean = (r, dir) => r.status === 0 && !/WARNING/.test(r.stderr) && secretsLog(dir) === '';
+
 {
   const { dir, git } = sandbox();
   write(dir, 'creds.js', 'const key = "' + FAKE_AWS_ID + '";\n');
@@ -87,7 +103,10 @@ console.log('secret-block: index versus working tree');
   // The bypass the previous version allowed: stage the secret, then clean the
   // file on disk. The commit still records the staged blob.
   write(dir, 'creds.js', 'const key = process.env.AWS_KEY;\n');
-  check('refuses a secret staged but edited out of the working tree', runGuardrail('secret-block', dir).status !== 0, true);
+  const r = runGuardrail('secret-block', dir);
+  check('warns about a secret staged but edited out of the working tree, and lets the commit through', warned(r, dir), true);
+  check('the record names the pattern and never carries the value', /AWS access key id/.test(secretsLog(dir)) && !secretsLog(dir).includes(FAKE_AWS_ID), true);
+  check('the warning says the value must be rotated', /rotate/.test(r.stderr), true);
 }
 
 {
@@ -95,9 +114,9 @@ console.log('secret-block: index versus working tree');
   write(dir, 'clean.js', 'export const a = 1;\n');
   git('add', 'clean.js');
   // The false positive the previous version produced: an unstaged secret
-  // elsewhere in the tree must not refuse a clean staged hunk.
+  // elsewhere in the tree must not warn about a clean staged hunk.
   write(dir, 'notes.txt', 'AWS_SECRET_ACCESS_KEY=' + FAKE_AWS_SECRET + '\n');
-  check('allows a clean staged file while an unstaged secret sits nearby', runGuardrail('secret-block', dir).status === 0, true);
+  check('stays quiet on a clean staged file while an unstaged secret sits nearby', clean(runGuardrail('secret-block', dir), dir), true);
 }
 
 console.log('\nsecret-block: formats the previous version missed');
@@ -114,14 +133,14 @@ for (const [label, file, body] of missedFormats) {
   const { dir, git } = sandbox();
   write(dir, file, body);
   git('add', file);
-  check('refuses ' + label, runGuardrail('secret-block', dir).status !== 0, true);
+  check('warns about ' + label, warned(runGuardrail('secret-block', dir), dir), true);
 }
 
 {
   const { dir, git } = sandbox();
   write(dir, 'settings.yaml', 'password: ' + DOLLAR + '{DB_PASSWORD}\ntoken: !Ref ApiToken\napi_key: your-key-here\n');
   git('add', 'settings.yaml');
-  check('allows references and placeholders in a file it does scan', runGuardrail('secret-block', dir).status === 0, true);
+  check('stays quiet on references and placeholders in a file it does scan', clean(runGuardrail('secret-block', dir), dir), true);
 }
 
 {
@@ -132,16 +151,32 @@ for (const [label, file, body] of missedFormats) {
   ]);
   fs.writeFileSync(path.join(dir, 'env.config'), utf16);
   git('add', 'env.config');
-  check('refuses a UTF-16 file, which PowerShell writes by default', runGuardrail('secret-block', dir).status !== 0, true);
+  check('warns about a UTF-16 file, which PowerShell writes by default', warned(runGuardrail('secret-block', dir), dir), true);
 }
 
-console.log('\nsecret-block: fail-secure');
+{
+  const { dir, git } = sandbox();
+  write(dir, 'fixture.js', 'const key = "' + FAKE_AWS_ID + '"; // harness:allow-secret\n');
+  git('add', 'fixture.js');
+  check('honours the harness:allow-secret marker without recording it', clean(runGuardrail('secret-block', dir), dir), true);
+}
+
+/* Advisory means advisory when the scanner itself cannot run: it says so,
+   records that it did not scan, and never turns its own failure into a block.
+   policy-gate keeps failing closed; the two are tested apart on purpose. */
+console.log('\nsecret-block: cannot scan');
 
 {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-nogit-'));
   const r = runGuardrail('secret-block', dir);
-  check('refuses when it is not in a git work tree', r.status !== 0, true);
-  check('says why it refused', /cannot verify/.test(r.stderr), true);
+  check('warns instead of blocking when it is not in a git work tree', r.status === 0 && /WARNING/.test(r.stderr), true);
+  check('says why it could not scan', /could not scan/.test(r.stderr) && /git work tree/.test(r.stderr), true);
+}
+
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-nogit-'));
+  const r = runGuardrail('policy-gate', dir);
+  check('policy-gate still refuses when it cannot verify', r.status !== 0 && /cannot verify/.test(r.stderr), true);
 }
 
 console.log('\npolicy-gate');
@@ -175,12 +210,19 @@ for (const [label, file, body, shouldBlock] of policyCases) {
 console.log('\nVS Code hook protocol');
 
 {
-  const out = runHook('secret-block', {
-    hook_event_name: 'PreToolUse',
-    tool_name: 'editFiles',
-    tool_input: { filePath: 'src/aws.ts', content: 'const k = "' + FAKE_AWS_ID + '";' },
-  });
-  check('denies a credential inside a tool payload', out.hookSpecificOutput?.permissionDecision, 'deny');
+  const { dir } = sandbox();
+  const out = runHook(
+    'secret-block',
+    {
+      hook_event_name: 'PreToolUse',
+      tool_name: 'editFiles',
+      tool_input: { filePath: 'src/aws.ts', content: 'const k = "' + FAKE_AWS_ID + '";' },
+    },
+    dir
+  );
+  check('allows a credential inside a tool payload, with a warning the model sees', out.hookSpecificOutput?.permissionDecision === 'allow' && /looks like a AWS access key id/.test(out.systemMessage ?? ''), true);
+  check('the warning says it was recorded and must be rotated', /recorded/.test(out.systemMessage ?? '') && /rotated/.test(out.systemMessage ?? ''), true);
+  check('the record names the tool and never carries the value', /"event":"PreToolUse"/.test(secretsLog(dir)) && /"tool":"editFiles"/.test(secretsLog(dir)) && !secretsLog(dir).includes(FAKE_AWS_ID), true);
 }
 
 {
@@ -271,11 +313,12 @@ const adoGate = (command) =>
   ];
 
   // The expected decision is written down, so 'both returned nothing' cannot
-  // pass as agreement.
-  const wanted = ['deny', 'allow', 'deny', 'ask'];
+  // pass as agreement. Case 3 is 'allow' because secret-block is advisory: the
+  // credential goes through with a warning under both runtimes alike.
+  const wanted = ['deny', 'allow', 'allow', 'ask'];
   cases.forEach(([name, payload], index) => {
-    const viaEnv = runHook(name, payload).hookSpecificOutput?.permissionDecision;
-    const viaArgv = runKiroHook(name, payload).hookSpecificOutput?.permissionDecision;
+    const viaEnv = runHook(name, payload, dir).hookSpecificOutput?.permissionDecision;
+    const viaArgv = runKiroHook(name, payload, dir).hookSpecificOutput?.permissionDecision;
     check(name + ' decides ' + wanted[index] + ' under the vscode mode (case ' + (index + 1) + ')', viaEnv, wanted[index]);
     check(name + ' decides the same through --hook-mode=kiro (case ' + (index + 1) + ')', viaArgv, viaEnv);
   });
