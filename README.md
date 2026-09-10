@@ -175,6 +175,18 @@ O hook `burn-detect` conta releituras por caminho e zera o contador quando o
 conteúdo muda: reler um arquivo recém-editado não avisa; reler três vezes um
 arquivo que não mudou, avisa.
 
+**Ajuste rápido paga só o que usa.** Uma trilha omite fases, mas não pode
+manter a cerimônia de cada fase. Em `patch` e `fix`: o `security` só entra na
+revisão quando o diff toca área sensível (auth, crypto, pagamento, segredo,
+fronteira de entrada, dependência), e a sessão diz quando pulou; o corpo do
+pull request é pontuado pelo próprio orchestrator, que não o escreveu, em vez
+de uma terceira invocação do `reviewer`; e mudança sem comportamento
+observável, como texto, versão ou formatação, não ganha teste inventado. Um
+`patch` fica em três sub-agentes e três gates humanos. O exemplo de settings
+sobe `chat.agent.maxRequests` de 25 para 80, porque cada parada nesse teto
+espera alguém clicar em continuar; os budgets dos loops e o `burn-detect` são
+o que segura um loop de verdade.
+
 ## Cross TK
 
 Regra geral, não preferência: quando o servidor MCP chamado `cross-tk`
@@ -321,7 +333,7 @@ quer dizer silencioso, não seguro: um valor real que chegou ao histórico
 continua precisando de rotação.
 
 ```bash
-npm run selftest          # 118 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 120 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```

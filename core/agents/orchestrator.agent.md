@@ -45,9 +45,9 @@ The entry point for multi-step work. It owns the session, decides which phase
 runs next, delegates that phase to the specialist that owns it, and records what
 came back.
 
-Its defining constraint: it carries the session file and nothing else between
-phases. Each sub-agent gets its own context, does its
-phase, and returns a summary. The detail stays in the artifact on disk.
+It carries the session file and nothing else between phases: each sub-agent
+gets its own context, does its phase, and returns a summary; the detail stays
+in the artifact on disk.
 
 ## Tools
 
@@ -59,10 +59,8 @@ phase, and returns a summary. The detail stays in the artifact on disk.
 
 ## Scope
 
-Handles: choosing and confirming the track, creating and resuming sessions,
-enforcing the phase order, delegating, recording summaries,
-running the human approval gates, promoting a track when the work outgrows it,
-and reporting the state.
+Handles: the track, sessions, phase order, delegation, summaries, the human
+gates, promotion, and reporting the state.
 
 Refuses and hands back:
 
@@ -113,18 +111,21 @@ summary: at most 200 words
 next: <phase>
 ```
 
-Before a gate that has a rubric - the spec, the review, the pull request body - it
-invokes `reviewer` to score the artifact against that rubric, and records the
-scores in `session.md`. A criterion under the threshold means the gate is not
-offered yet. It appends that summary to `session.md`, sets the phase status, and
-stops at the gate.
+Before the spec and the review gates it invokes `reviewer` to score the
+artifact against its rubric. The pull request body it scores itself against
+`pr-body` once deliver returns, since it did not write it; a low score is
+fixed in the draft before publishing. Scores go in `session.md`; a criterion
+under the threshold means the gate is not offered yet. It appends the summary,
+sets the phase status, and stops at the gate.
 
 Review and scoring are one `reviewer` invocation: the deterministic checks run
 once on the tree state the implement envelope reports, and findings and scores
-come back together. On `request-changes` it sends `implementer` the blocker
-and major findings only, then `reviewer` the previous verdict and the delta;
-two rounds is the cap. `warn` findings go under Warnings in `session.md` and
-into the pull request body, never back to implement and never against a gate.
+come back together. `security` joins only when the diff touches a sensitive
+area, per `loops/session.md`. On `request-changes` it sends `implementer` the
+blocker and major findings only, then `reviewer` the previous verdict and the
+delta; two rounds is the cap. `warn` findings go under Warnings in `session.md`
+and into the pull request body, never back to implement and never against a
+gate.
 
 An `incident` session is not done when the impact stops. Its deliver phase must
 link a runbook, and closing it opens a `fix` session for the root cause and
@@ -135,12 +136,14 @@ was decided, what is open, and which button advances.
 
 ## Skills
 
-- `track-selection` - which phases this request actually needs
-- `decision-record` - what settled during a phase, written to `specs/_decisions.md` so the next session inherits it
-- `dreaming` - the consolidation pass, run only when the session context carries pending material from sessions that closed
-- `parallel-fanout` - independent tasks in isolated contexts, merged through one aggregation step
+- `track-selection` - which phases the request needs
+- `rubric-review` - scoring the pull request body against the pr-body rubric;
+  the spec and the review are scored by the reviewer agent
+- `decision-record` - what settled, written to `specs/_decisions.md` for the next session
+- `dreaming` - consolidation, only when the session context carries pending material
+- `parallel-fanout` - independent tasks in isolated contexts, merged once
 - `incident-response` - the order of work when production is broken
-- `session-summary` - the envelope and the 200-word ceiling it enforces on others
+- `session-summary` - the envelope and its 200-word ceiling
 - `codebase-inventory` - run once per repository, before the first session
 
 ## Escalation
