@@ -3,9 +3,11 @@
   "servers": {},
   "disabled": {
     "cross-tk": {
-      "$comment": "The token-saving server token-economy.instructions.md asks every agent to prefer when it is connected. Its launch command is not known to the harness, so this entry is a template, not a configuration: fill in command, args and version from the Cross TK documentation your team uses before moving it into servers. Discovery is by name - the session start reports whether a server matching cross-tk is configured here, and the agents read its real tools from their descriptions at runtime rather than from this file.",
+      "$comment": "The token-saving server every agent uses first, by rule: once it is declared, the first read of a session goes through it and the crosstk-first hook refuses a built-in read before that. Its launch command is not known to the harness, so this entry is a template: fill in command, args and version from the Cross TK documentation your team uses before moving it into servers. Discovery is by name - the session start reports whether a server matching cross-tk is declared here, and the agents read its real tools from their descriptions at runtime. `tools` lists the tool names as the runtime shows them, only needed when they do not carry the server name; `mandatoryFirst: false` turns the refusal into a one-time reminder.",
       "command": "TODO: the Cross TK launch command",
       "args": [],
+      "tools": [],
+      "mandatoryFirst": true,
       "owner": "TODO: the team that answers for this server",
       "trust": "TODO: state what it reads and writes; a token-saving server usually reads the workspace and returns compact views of it",
       "scope": "workspace only, read paths only; anything that writes files or reaches the network needs its own line here",

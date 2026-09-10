@@ -3,9 +3,8 @@ name: implementer
 description: Executes one approved task, test first, and stops at the task boundary. Fourth phase of a session.
 version: 1.0.0
 user-invocable: false
-tools: [codebase, search, usages, problems, editFiles, runCommands]
+tools: [crosstk, codebase, search, usages, problems, editFiles, runCommands]
 agents: []
-model: [Claude Sonnet 4.5, GPT-5.2]
 ---
 
 # implementer

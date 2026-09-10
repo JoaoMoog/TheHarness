@@ -110,6 +110,13 @@ export function auditAgents(report) {
       }
     }
 
+    // The model is the user's choice in the chat, never the file's: a pinned
+    // model goes stale the day a newer one ships and silently overrides what
+    // the person selected.
+    if (agent.data.model !== undefined) {
+      report.warn(`${label}: pins a model (${asArray(agent.data.model).join(', ')}); remove it, the one selected in the chat runs`);
+    }
+
     // Delegation graph. These are the checks that make an orchestrator real
     // rather than a paragraph describing one.
     for (const target of agent.subagents) {

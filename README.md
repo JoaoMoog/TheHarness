@@ -185,9 +185,40 @@ turno), na `CONSTITUTION.md` como protocolo, nas regras básicas do `AGENTS.md`,
 na instrução `token-economy` e no manifesto de ferramentas de cada agente que
 lê código. Os agentes descobrem o que ele oferece pelas descrições das
 ferramentas, uma vez por sessão; o harness não presume nomes nem assinaturas.
-O início da sessão diz se há um configurado no repositório (`.mcp.json`,
-`.vscode/mcp.json` ou `.kiro/settings/mcp.json`); se não há, o agente diz isso
-uma vez e segue com as ferramentas nativas, sem tentar de novo.
+
+**Obrigatório antes de começar, e o runtime cobra.** Com o servidor declarado
+no repositório (`.mcp.json`, `.vscode/mcp.json` ou `.kiro/settings/mcp.json`),
+o hook `crosstk-first` recusa a primeira leitura ou busca nativa da sessão até
+uma ferramenta do Cross TK ter sido usada; depois disso as nativas abrem como
+fallback. Regra só em prosa é a que o agente pula quando está com pressa. O
+início da sessão diz que o servidor está declarado e que a primeira leitura é
+obrigatória; sem servidor declarado não há gate, e o agente diz isso uma vez e
+segue com as nativas. Dois ajustes na entrada do servidor: `tools` lista os
+nomes das ferramentas como o runtime os mostra, só necessário quando eles não
+carregam o nome do servidor; `mandatoryFirst: false` troca a recusa por um
+lembrete único.
+
+**Nenhum nome confidencial entra no repositório.** O harness aprende o
+servidor sozinho, na primeira execução:
+
+1. Os manifestos dos agentes apontam um conjunto de ferramentas chamado
+   `crosstk`. Crie esse conjunto uma vez por máquina, em "Chat: Configure Tool
+   Sets" do VS Code, com as ferramentas do seu servidor. Os nomes ficam no seu
+   perfil, fora do repositório. Sem o conjunto, marque as ferramentas no
+   seletor de ferramentas ao usar `@orchestrator`; um agente do Copilot só
+   chama o que o manifesto ou o seletor liberam.
+2. Na primeira execução, o agente que enxergar o servidor na lista de
+   ferramentas grava `.harness/crosstk.json` com o nome do servidor e os nomes
+   das ferramentas como o runtime os mostra. O arquivo é local da máquina e
+   nunca é commitado.
+3. Daí em diante o início da sessão nomeia o servidor e suas ferramentas, e o
+   hook `crosstk-first` reconhece as chamadas pelos nomes gravados, inteiros
+   ou pelo último segmento, e recusa a primeira leitura nativa até uma delas
+   ter sido usada.
+
+Declarar o servidor em `core/mcp.json` ou no `.vscode/mcp.json` do repositório
+continua valendo e arma o gate sem esperar a primeira execução; o registro só
+acrescenta os nomes das ferramentas.
 
 Para habilitar em todos os repositórios, preencha a entrada `cross-tk` em
 `core/mcp.json` com o comando real e mova-a para `servers`. O `doctor` recusa
@@ -282,7 +313,7 @@ quer dizer silencioso, não seguro: um valor real que chegou ao histórico
 continua precisando de rotação.
 
 ```bash
-npm run selftest          # 87 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 112 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```

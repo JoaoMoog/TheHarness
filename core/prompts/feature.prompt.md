@@ -8,6 +8,12 @@ Start a session with `@orchestrator` for the request below.
 
 Before anything else:
 
+0. Cross TK first. If the session start names it, read its tools from their
+   descriptions and make the first read through it. If nothing has recorded
+   it yet, look for it in your tool list and, found, write
+   `.harness/crosstk.json` with the server and tool names before any read.
+   The harness refuses a built-in read before that, and so does the
+   orchestrator.
 1. If `specs/_context.md` does not exist, say so and offer to run the
    `codebase-inventory` skill first. Every session after that one is cheaper for it.
 2. If a session is already open, stop. Resume it with `/resume` or close it.

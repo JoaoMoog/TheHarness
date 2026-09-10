@@ -23,6 +23,14 @@
     ],
     "PreToolUse": [
       {
+        "type": "command",
+        "command": "node .github/hooks/scripts/crosstk-first.mjs",
+        "timeout": 3,
+        "env": {
+          "HARNESS_HOOK_MODE": "vscode"
+        }
+      },
+      {
         "matcher": "readFile|read_file|read|view|open|cat|fetch|textSearch|fileSearch",
         "type": "command",
         "command": "node .github/hooks/scripts/read-guard.mjs",

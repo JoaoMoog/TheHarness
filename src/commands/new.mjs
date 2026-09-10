@@ -47,7 +47,7 @@ function skillTemplate(name) {
  * An orchestrator created without the agent tool, or naming a sub-agent that
  * does not exist, fails harness doctor - so the generator emits both together.
  */
-function agentTemplate(name, { internal = false, subagents = [], model = null } = {}) {
+function agentTemplate(name, { internal = false, subagents = [] } = {}) {
   const tools = internal
     ? ['codebase', 'search', 'editFiles']
     : ['codebase', 'search', 'usages'];
@@ -63,7 +63,6 @@ function agentTemplate(name, { internal = false, subagents = [], model = null } 
   frontmatter.push(`user-invocable: ${internal ? false : true}`);
   frontmatter.push(`tools: [${tools.join(", ")}]`);
   frontmatter.push(`agents: [${subagents.join(", ")}]`);
-  if (model) frontmatter.push(`model: [${model}]`);
   frontmatter.push('---');
 
   const hints = { ...AGENT_HINTS };
@@ -117,7 +116,7 @@ export default function create(args) {
   const [kind, rawName] = args._;
   if (!kind || !rawName) {
     throw new Error(
-      'Usage: harness new <skill|agent|instruction> <name> [--internal] [--subagents=a,b] [--model=X]'
+      'Usage: harness new <skill|agent|instruction> <name> [--internal] [--subagents=a,b]'
     );
   }
   const build = KINDS[kind];
@@ -127,7 +126,6 @@ export default function create(args) {
   const options = {
     internal: Boolean(args.internal),
     subagents: String(args.subagents ?? '').split(',').map((s) => s.trim()).filter(Boolean),
-    model: args.model ?? null,
   };
   const { file, content } = build(name, options);
   if (fs.existsSync(file)) throw new Error(`${path.relative(harnessPath('.'), file)} already exists.`);

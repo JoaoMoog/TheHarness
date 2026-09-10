@@ -4,9 +4,8 @@ description: Reviews a change set for correctness and contract violations and re
 version: 2.0.0
 argument-hint: the branch, diff or task to review
 user-invocable: true
-tools: [codebase, search, usages, problems, changes, runCommands]
+tools: [crosstk, codebase, search, usages, problems, changes, runCommands]
 agents: []
-model: [Claude Sonnet 4.5, GPT-5.2]
 ---
 
 # reviewer
