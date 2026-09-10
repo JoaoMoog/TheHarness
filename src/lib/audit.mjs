@@ -9,7 +9,7 @@ import {
   SFA_KEYS, BUDGETS, REQUIRED_INSTRUCTIONS, LOOP_REQUIRED_KEYS, MCP_SERVER_FIELDS,
   SESSION_PHASES, SESSION_TRACKS, MANDATORY_PHASE,
   RUBRIC_SECTIONS, RUBRIC_FRONTMATTER, RUBRIC_REQUIRED_PHASES,
-  PLACEHOLDER_MARKERS,
+  PLACEHOLDER_MARKERS, MCP_PLACEHOLDER,
 } from './contracts.mjs';
 
 const listDir = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }) : []);
@@ -196,7 +196,14 @@ export function auditMcp(report) {
     if (literal.length > 0) {
       report.fail(`mcp ${name}: a credential looks inlined; read it from the environment instead`);
     }
-    if (missingKeys.length === 0 && literal.length === 0) {
+    // The disabled block doubles as the template, so an entry moved into
+    // servers with its TODOs intact would be enabled without a real command
+    // or a real owner.
+    const unfilled = ['command', 'args', 'owner', 'version'].filter((k) => MCP_PLACEHOLDER.test(JSON.stringify(server[k] ?? '')));
+    if (unfilled.length > 0) {
+      report.fail(`mcp ${name}: enabled with a TODO placeholder in ${unfilled.join(', ')}; fill it in before enabling`);
+    }
+    if (missingKeys.length === 0 && literal.length === 0 && unfilled.length === 0) {
       report.pass(`mcp ${name}: owner ${server.owner}, scope ${server.scope}`);
     }
   }

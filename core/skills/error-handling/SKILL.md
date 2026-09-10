@@ -26,6 +26,12 @@ What those do not cover:
   degradation. If it cannot, the fallback is a silent failure with extra steps.
 - Retries need a limit, a backoff, and an operation that is safe to repeat. Two
   of three is not enough.
+- The unit is the one being changed. Existing handlers elsewhere in the file
+  are reviewed only where the change alters what reaches them; the rest is a
+  WARN at most, never a rewrite.
+- Before adding a handler, find the mechanism the application already has:
+  middleware, filters, global handlers. A handler that duplicates it is noise,
+  and its absence is not a defect.
 
 Anti-patterns to refuse:
 

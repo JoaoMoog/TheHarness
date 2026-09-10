@@ -67,7 +67,10 @@ export function emitPrompt(cases, skillsRoot) {
     if (testCase.broken) continue;
     const skillFile = path.join(skillsRoot, testCase.subject, "SKILL.md");
     const agentFile = path.join(skillsRoot, "..", "agents", `${testCase.subject}.agent.md`);
-    const source = fs.existsSync(skillFile) ? skillFile : fs.existsSync(agentFile) ? agentFile : null;
+    // An instruction can be the subject too: the token-economy rules live in
+    // one, and a case that nothing defines would be silently unrunnable.
+    const instructionFile = path.join(skillsRoot, "..", "instructions", `${testCase.subject}.instructions.md`);
+    const source = [skillFile, agentFile, instructionFile].find((f) => fs.existsSync(f)) ?? null;
     lines.push('---');
     lines.push(`case: ${testCase.id}`);
     lines.push(`follow: ${source ?? `(nothing defines ${testCase.subject})`}`);

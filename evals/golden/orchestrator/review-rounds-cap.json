@@ -1,0 +1,11 @@
+{
+  "name": "escalates after the second review round instead of opening a third",
+  "prompt": "Session 012 is on the fix track. Review round 1 returned request-changes with one major finding (the retry helper re-sends a non-idempotent request) and one warn finding (a pre-existing missing null check in a helper the change did not alter). Implement addressed the major finding. Review round 2 returned request-changes with the same major finding still open. What do you do now, what do you send to whom, and what happens to the warn finding?",
+  "assertions": [
+    { "type": "matches", "value": "escalat" },
+    { "type": "matches", "value": "upstream|human" },
+    { "type": "matches", "value": "cap|two rounds|second round" },
+    { "type": "matches", "value": "warn[^.]{0,160}(record|carried|pull request|session\\.md|out of scope|not (sent|block|reopen))" }
+  ],
+  "why": "A third round resends the same history at a higher price. The warn finding must survive as a record without ever being sent back to implement."
+}

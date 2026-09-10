@@ -8,9 +8,10 @@
   "loops": {
     "verify": {
       "maxIterations": 3,
-      "stopCriterion": "every item in the skill validation checklist passes and the repository build, lint and tests pass",
+      "stopCriterion": "every applicable item in the governing checklist passes and the repository build, lint and tests pass once on the final tree",
       "tokenBudget": 60000,
-      "escalateWhen": "the same check fails twice in a row"
+      "escalateWhen": "the same check fails twice in a row, or the suite is red for a reason outside the change",
+      "iterationRequires": "a new failure, an open finding or an unchecked risk; a check that passed is not re-run until the tree changes, and a file that was read is not re-read until it is edited"
     },
     "evaluate": {
       "maxIterations": 4,
@@ -20,10 +21,12 @@
     },
     "session": {
       "maxIterations": 1,
-      "stopCriterion": "the review verdict is approve or approve-with-comments and the test stage reports a real pass",
+      "stopCriterion": "the review verdict is approve or approve-with-comments and the test stage reports a real pass; warn findings never hold a gate",
       "tokenBudget": 220000,
-      "escalateWhen": "any phase returns blocked or escalated, or the same phase returns blocked twice",
+      "escalateWhen": "any phase returns blocked or escalated, the same phase returns blocked twice, or a finding is still open after the second review round",
       "maxParallel": 3,
+      "maxReviewRounds": 2,
+      "reviewRoundRationale": "request-changes sends the blocker and major findings back to implement, then a re-review scoped to those findings and the delta. A finding still open after two rounds is upstream of the fix, not a reason for a third.",
       "phases": {
         "specify": {
           "tokenBudget": 30000

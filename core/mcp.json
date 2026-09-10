@@ -1,7 +1,16 @@
 {
-  "$comment": "Cold tier, and the widest blast radius in the whole configuration: an enabled server is a tool every agent can reach. Nothing is enabled by default. To enable one, move it from `disabled` into `servers` and fill in owner, trust, scope and version. harness doctor refuses an enabled server that is missing any of those, or that carries a literal credential.",
+  "$comment": "Cold tier, and the widest blast radius in the whole configuration: an enabled server is a tool every agent can reach. Nothing is enabled by default. To enable one, move it from `disabled` into `servers` and fill in owner, trust, scope and version. harness doctor refuses an enabled server that is missing any of those, that carries a literal credential, or that still has a TODO in its command, args, owner or version.",
   "servers": {},
   "disabled": {
+    "cross-tk": {
+      "$comment": "The token-saving server token-economy.instructions.md asks every agent to prefer when it is connected. Its launch command is not known to the harness, so this entry is a template, not a configuration: fill in command, args and version from the Cross TK documentation your team uses before moving it into servers. Discovery is by name - the session start reports whether a server matching cross-tk is configured here, and the agents read its real tools from their descriptions at runtime rather than from this file.",
+      "command": "TODO: the Cross TK launch command",
+      "args": [],
+      "owner": "TODO: the team that answers for this server",
+      "trust": "TODO: state what it reads and writes; a token-saving server usually reads the workspace and returns compact views of it",
+      "scope": "workspace only, read paths only; anything that writes files or reaches the network needs its own line here",
+      "version": "pin an exact version before enabling"
+    },
     "filesystem": {
       "command": "npx",
       "args": [

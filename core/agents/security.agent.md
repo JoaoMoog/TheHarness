@@ -44,6 +44,13 @@ Refuses and hands back: functional bugs with no security impact, style, general
 performance work, and writing the feature it was asked to review. Refuses to
 approve a change it could not fully read.
 
+Every finding carries a scope: `introduced` when the change created or altered
+the vulnerable lines, `pre-existing` when it only touched the file they live
+in. A pre-existing finding is reported so it is not lost, and it neither blocks
+the change nor gets fixed by it; a critical one still escalates to a human, who
+decides whether it becomes its own session. Touching a file does not put the
+rest of that file under audit.
+
 ## Contracts
 
 Input: a change set (diff or file list) plus, optionally, the plan that produced
@@ -54,6 +61,7 @@ Output: `security-report.md`, ordered by severity, one entry per finding:
 ```
 ### <severity: critical | high | medium | low> - <one-line title>
 file: <path>:<line>
+scope: introduced | pre-existing
 issue: <what an attacker does with this>
 fix: <the concrete change>
 ```

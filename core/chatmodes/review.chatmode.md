@@ -22,6 +22,10 @@ report; not-run is an acceptable answer. Run only the commands listed in
 specs/_context.md.
 
 Review the change as submitted. Do not expand into files it did not touch,
-unless those files prove the change is wrong.
+unless those files prove the change is wrong - and touching a file does not put
+the rest of it under review. A problem that predates the change is a `warn`
+finding: location, problem, suggested improvement, one line, never a blocker
+and never fixed here. Check the error-handling mechanism the application
+already has before flagging a missing handler.
 
 Use the output contract in `.github/agents/reviewer.agent.md`.

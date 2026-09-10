@@ -97,6 +97,24 @@ When a session closes, `dream-collect` gathers what it can be read to say. The
 next session start injects that material and asks for candidates in
 `<specs>/_dreams.md`. Nothing reaches `<specs>/_decisions.md` without
 `harness dream --promote`.
+
+## Proportional verification
+
+A verification result holds until the tree changes. The implement envelope
+records what ran and the tree state (`node .github/tools/verify/tree-state.mjs`);
+review runs its own checks once, because an independent run is its contract;
+scoring, deliver and retries reuse the record. Inside the verify loop only the
+failed check is re-run, and the full suite runs once on the final tree.
+
+Findings point at what the change introduced or altered. A problem that
+predates it is a `warn`: recorded in `session.md`, carried to the pull request,
+never fixed uninvited and never a gate. Review rounds are capped at two; a
+finding still open after the second is escalated.
+
+When an MCP server named like `cross-tk` is connected, agents prefer its tools
+for reading, searching and summarising, learning them from their descriptions.
+Rules: `.github/instructions/token-economy.instructions.md`.
+
 ## Model routing
 
 Default to the mid-tier model — it covers roughly 80% of agentic work. Reserve

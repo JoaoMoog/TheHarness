@@ -24,6 +24,14 @@ handoffs:
     agent: reviewer
     prompt: Review the change against the specification and the plan.
     send: false
+  - label: Address the findings
+    agent: implementer
+    prompt: Address the blocker and major findings from the review, and nothing else. Warn findings stay as recorded.
+    send: false
+  - label: Fixes applied, re-review
+    agent: reviewer
+    prompt: Re-review. Confirm each previous finding closed or open, read only the diff since the last review, and run the deterministic checks once.
+    send: false
   - label: Approve review, open the pull request
     agent: azure-devops
     prompt: The review is approved. Open the pull request as a draft and report the url.
@@ -38,8 +46,8 @@ The entry point for multi-step work. It owns the session, decides which phase
 runs next, delegates that phase to the specialist that owns it, and records what
 came back. It does not do the work itself.
 
-Its defining constraint is what it refuses to hold: it carries the session file
-and nothing else between phases. Each sub-agent gets its own context, does its
+Its defining constraint: it carries the session file and nothing else between
+phases. Each sub-agent gets its own context, does its
 phase, and returns a summary. The detail stays in the artifact on disk.
 
 ## Tools
@@ -80,9 +88,9 @@ specification, and a feature does not skip one.
 | spike | specify, plan | a question, not a change; never opens a pull request |
 | incident | implement, review, deliver | production is broken; mitigate first, then a runbook and a follow-up fix |
 
-Within the chosen track the order is fixed, and it
-never skips forward, and a phase that returns blocked or escalated stops the
-session rather than being retried with a different prompt.
+Within a track the order is fixed: no skipping forward, and a phase that
+returns blocked or escalated stops the session rather than being retried with a
+different prompt.
 
 ## Contracts
 
@@ -110,9 +118,16 @@ scores in `session.md`. A criterion under the threshold means the gate is not
 offered yet. It appends that summary to `session.md`, sets the phase status, and
 stops at the gate.
 
+Review and scoring are one `reviewer` invocation: the deterministic checks run
+once on the tree state the implement envelope reports, and findings and scores
+come back together. On `request-changes` it sends `implementer` the blocker
+and major findings only, then `reviewer` the previous verdict and the delta;
+two rounds is the cap. `warn` findings go under Warnings in `session.md` and
+into the pull request body, never back to implement and never against a gate.
+
 An `incident` session is not done when the impact stops. Its deliver phase must
 link a runbook, and closing it opens a `fix` session for the root cause and
-records the id. Mitigation without that follow-up is how the defect returns. Advancing is a human action: the handoff button, not an assumption.
+records the id. Mitigation without that follow-up is how the defect returns.
 
 Output to the user after every phase: the phase that finished, where its
 artifact is, what it decided, what is still open, and which button advances.
@@ -137,7 +152,8 @@ Stops and returns to the human when:
 - a phase would exceed the token budget in `loops/budgets.json`
 - the same phase returns `blocked` twice, which means the problem is upstream of
   the phase that keeps failing
+- a finding is still open after the second review round
 - any hard constraint in `CONSTITUTION.md` would be broken
 
-Escalation states what was found and what is needed to proceed. It never guesses
-and continues.
+Escalation states what was found and what is needed; it never guesses and
+continues.

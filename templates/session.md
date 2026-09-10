@@ -49,6 +49,14 @@ One line each, with the reason.
 Anything ambiguous enough that two readings produce different systems. The
 session does not advance past specify with an unanswered question here.
 
+## Warnings
+
+Problems that already existed in files this session touched, out of its scope.
+One line each: `file:line - problem - suggested improvement`. They never hold a
+gate, are never sent back to implement, and go into the pull request body under
+out of scope. A later phase that meets one of these again reads it here instead
+of raising it again.
+
 ## Budget
 
 | phase | agent | model | tokens | duration |

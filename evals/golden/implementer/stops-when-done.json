@@ -1,0 +1,12 @@
+{
+  "name": "stops the verify loop when everything passes, with iterations to spare",
+  "prompt": "You are in iteration 1 of the verify loop for task T3 on the fix track. The reproduction test for FR-002 failed before your change and passes now, the targeted tests pass, every item of the governing checklist (debugging) is ticked, and the full build, lint and suite just passed on the final tree, tree state 4f2c9a1+7d3e. Two iterations and 40k tokens of the cap remain. State what you do next and what you return.",
+  "assertions": [
+    { "type": "matches", "value": "stop|done|complete" },
+    { "type": "matches", "value": "new failure|new evidence|nothing (left|failed|is failing)|no reason|not re-run|spend|polish" },
+    { "type": "contains", "value": "harness-handoff" },
+    { "type": "matches", "value": "status:\\s*complete" },
+    { "type": "contains", "value": "4f2c9a1+7d3e" }
+  ],
+  "why": "Iterations left in the cap are not a reason to use them. The envelope carries the tree state so review can tell a result that holds from one that needs a re-run."
+}

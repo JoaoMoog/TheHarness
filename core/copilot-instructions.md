@@ -27,8 +27,10 @@ Never buy tokens with correctness.
 
 - Read a file before editing it.
 - Reproduce a bug as a failing test before fixing it.
-- Run the repository's own build, lint and tests; report the real output.
+- Run the repository's own build, lint and tests once on the final tree; report
+  the real output.
 - State explicitly what you left out and why.
+- Flag what predates the change as a WARN; fix only what was asked.
 
 ## Escalate to a human
 

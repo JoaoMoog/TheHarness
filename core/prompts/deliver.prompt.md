@@ -14,8 +14,11 @@ Then, in order:
 1. Read the session file for this branch. If the review phase did not return
    approve or approve-with-comments, stop and say so - there is nothing ready to
    open a pull request for.
-2. Run `node .github/tools/spec/traceability.mjs --spec=<spec dir> --base=<target>`.
+2. On a track that has a specification, run
+   `node .github/tools/spec/traceability.mjs --spec=<spec dir> --base=<target>`.
    A GAP is closed or explained in the body; an open clarification stops here.
+   Patch, incident and refactor have none: the body says so and lists the
+   tests that ran.
 3. Write the body to `specs/<id>-<slug>/pr-body.md`, following the
    `ado-pull-request` skill. Four questions: what changed, why, what was
    actually verified, what was left out.

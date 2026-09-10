@@ -30,6 +30,12 @@ previous version to declare an escalation condition that could never fire.
 of the phase immediately before it. The full text of earlier artifacts stays on
 disk.
 
+The implement envelope carries its verification record: what ran, the result,
+and the tree state from `node .github/tools/verify/tree-state.mjs`. Review runs
+its own checks once, because an independent run is its contract. Scoring,
+deliver and any retry reuse the newest record for the same tree state rather
+than running the suite again on a tree nobody changed.
+
 This is the whole reason the session stays affordable: the accumulated
 transcript is resent on every turn, so a parent that holds every artifact grows
 faster than the work does. The parent holds summaries; the children hold detail.
@@ -43,6 +49,22 @@ and then it moves.
 
 The orchestrator refuses to advance when the previous phase is not complete, and
 refuses to run a Q3 or Q4 task without the confirmation that quadrant requires.
+
+A `warn` finding never holds a gate. It names a problem that already existed
+in a file the change touched, with the suggested improvement; it is recorded
+under Warnings in `session.md`, carried into the pull request body, and not
+sent back to implement. Touching a file is not a request to fix everything in
+it.
+
+## Review rounds
+
+`request-changes` is not a stop condition and not a restart. The orchestrator
+sends `implementer` the blocker and major findings and nothing else, then sends
+`reviewer` the previous verdict and the diff since that review, so the
+re-review confirms each finding closed or open and reads only the new lines.
+`maxReviewRounds` in `budgets.json` caps this at two. A finding still open
+after the second round is escalated: the problem is upstream of the fix, and a
+third round would only resend the same history at a higher price.
 
 ## Parallelism
 
@@ -62,6 +84,7 @@ Stop and escalate when any of these is true:
 - the token budget is exhausted
 - the same phase returns `blocked` twice, which means the problem is upstream of
   the phase that keeps failing
+- a finding is still open after the second review round
 - the specification has an open question that changes the shape of the result
 - the next task is Q3 or Q4 and no human has confirmed it
 - any hard constraint in `../CONSTITUTION.md` would be broken

@@ -42,8 +42,13 @@ export const BUDGETS = {
  */
 export const AGENT_SKILL_RATIO = { min: 6, max: 14 };
 
-/** Universal instruction coverage that real-world repositories usually lack. */
-export const REQUIRED_INSTRUCTIONS = ['security', 'performance', 'testing', 'routing'];
+/**
+ * Universal instruction coverage that real-world repositories usually lack.
+ * token-economy is required because the rules it carries - verify once per
+ * tree state, warn rather than fix what predates the change, use a token-saving
+ * MCP server when one is connected - are the ones every phase drifts from.
+ */
+export const REQUIRED_INSTRUCTIONS = ['security', 'performance', 'testing', 'routing', 'token-economy'];
 
 export const LOOP_REQUIRED_KEYS = ['maxIterations', 'stopCriterion', 'tokenBudget'];
 
@@ -114,6 +119,13 @@ export const HANDOFF_STATUSES = ['complete', 'blocked', 'escalated'];
 
 /** MCP servers must declare who owns them and what they can reach. */
 export const MCP_SERVER_FIELDS = ['owner', 'trust', 'scope', 'version'];
+
+/**
+ * A disabled server may carry TODO placeholders, because the file is also the
+ * template for enabling one. An enabled server may not: a placeholder command
+ * does not start, and a placeholder owner means nobody answers for it.
+ */
+export const MCP_PLACEHOLDER = /\bTODO\b/;
 
 /** Text the scaffolder writes that must be replaced before the contract holds. */
 export const PLACEHOLDER_MARKERS = [

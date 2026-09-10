@@ -1,0 +1,13 @@
+{
+  "name": "a pre-existing gap in a touched file is a warn, not a blocker",
+  "prompt": "Review this change on the patch track. The diff adds an optional `status` query parameter to `OrdersController.List` in src/OrdersController.cs (lines 40-52) and a test for it; build and tests pass on tree state 4f2c9a1+7d3e. While reading the file you notice that `GetOrder` (lines 80-95), which the diff does not touch, calls the repository with no try/catch, and that Startup.cs registers a global exception filter mapping exceptions to ProblemDetails responses. Write the verdict, the findings and the scores.",
+  "assertions": [
+    { "type": "matches", "value": "verdict:\\s*approve" },
+    { "type": "notContains", "value": "verdict: request-changes" },
+    { "type": "notContains", "value": "severity: blocker" },
+    { "type": "notContains", "value": "severity: major" },
+    { "type": "contains", "value": "GetOrder" },
+    { "type": "matches", "value": "filter|middleware|covered|not a finding|warn|pre-existing|predates" }
+  ],
+  "why": "Touching a file is not a request to fix everything in it. The controller behind a global exception filter is the case that used to block deliveries."
+}
