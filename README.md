@@ -203,6 +203,7 @@ dono ou na versão.
 | `harness cost` | Custo por resultado entregue, por trilha e agente |
 | `harness improve` | Lê a telemetria e aponta o que mudar no harness |
 | `harness dream <repo>` | Lista os candidatos; `--promote`, `--discard --why`, `--collect` |
+| `harness secrets <repo>` | Avisos de credencial registrados; `--allow=<id> --why`, `--allow-path=<glob> --why` |
 | `harness eval` | Evals estruturais; `--emit` e `--check` para as comportamentais |
 | `harness new agent\|skill\|instruction <nome>` | Scaffold com todas as seções obrigatórias |
 
@@ -239,13 +240,41 @@ CI a cada push.
 ## Guardrails
 
 Os mesmos scripts rodam como hooks do VS Code durante a sessão e como
-`pre-commit` no git. Eles leem o índice (não a árvore de trabalho), falham
-fechado quando o git não responde, e cobrem os formatos reais de credencial:
-`.env`, YAML sem aspas, tfvars, Secret do Kubernetes, `Default` de
-CloudFormation. Um `.env` também não pode ser **lido** para dentro do contexto.
+`pre-commit` no git. Eles leem o índice (não a árvore de trabalho) e cobrem os
+formatos reais de credencial: `.env`, YAML sem aspas, tfvars, Secret do
+Kubernetes, `Default` de CloudFormation. Um `.env` também não pode ser **lido**
+para dentro do contexto.
+
+Dois níveis de resposta. Um **arquivo** que nunca deve entrar no histórico
+(`.env`, chave privada, `tfstate`, kubeconfig) é recusado pelo `policy-gate`,
+que falha fechado quando o git não responde. Um **valor** com cara de
+credencial dentro de um arquivo comum gera aviso, não bloqueio: o
+`secret-block` deixa o commit seguir, imprime o achado com o valor redigido e
+grava uma linha em `.harness/secrets.log` no repositório, fora do git. O aviso
+diz o que o bloqueio não dizia: o valor que chegou ao histórico está
+comprometido e precisa ser rotacionado, remover a linha não resolve.
+
+**Falso positivo se marca uma vez.** Cada aviso imprime um `id` de 16
+caracteres, derivado do valor e não do arquivo, então o mesmo falso positivo
+tem o mesmo id em qualquer arquivo, commit ou máquina. Marcar é um comando, e
+o próprio aviso já mostra qual:
 
 ```bash
-npm run selftest          # 66 casos de guardrail, em repositórios descartáveis
+node bin/harness.mjs secrets <repo>                                   # lista o que avisou
+node bin/harness.mjs secrets <repo> --allow=<id> --why="fixture de teste"
+node bin/harness.mjs secrets <repo> --allow-path="tests/fixtures/**" --why="dados sintéticos"
+```
+
+Isso escreve `.harness-allow.json` na raiz do repositório, que se commita: é
+a lista do time, lida a cada commit e a cada chamada de ferramenta, e nunca
+contém o valor, só o id e o motivo. `--why` é obrigatório, e o `doctor`
+reprova entrada sem motivo, pelo mesmo princípio do `dream --discard`. Para
+uma linha só, o comentário `harness:allow-secret` continua valendo. Marcado
+quer dizer silencioso, não seguro: um valor real que chegou ao histórico
+continua precisando de rotação.
+
+```bash
+npm run selftest          # 87 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```

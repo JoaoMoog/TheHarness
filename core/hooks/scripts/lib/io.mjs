@@ -103,8 +103,11 @@ export function ask(eventName, reason) {
   return EXIT_OK;
 }
 
-export function allow(eventName) {
-  emit({ hookSpecificOutput: { hookEventName: eventName, permissionDecision: 'allow' } });
+/** An allow may carry a warning the model sees; an advisory guardrail is one that uses it. */
+export function allow(eventName, systemMessage = undefined) {
+  const out = { hookSpecificOutput: { hookEventName: eventName, permissionDecision: 'allow' } };
+  if (systemMessage) out.systemMessage = systemMessage;
+  emit(out);
   return EXIT_OK;
 }
 
