@@ -6,7 +6,6 @@ argument-hint: what to deliver, or the pull request number to act on
 user-invocable: true
 tools: [crosstk, codebase, search, runCommands]
 agents: []
-model: [Claude Sonnet 4.5, GPT-5.2]
 ---
 
 # azure-devops

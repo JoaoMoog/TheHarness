@@ -6,7 +6,6 @@ argument-hint: the branch, diff or task to review
 user-invocable: true
 tools: [crosstk, codebase, search, usages, problems, changes, runCommands]
 agents: []
-model: [Claude Sonnet 4.5, GPT-5.2]
 ---
 
 # reviewer

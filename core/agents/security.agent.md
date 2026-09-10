@@ -6,7 +6,6 @@ argument-hint: the change, branch or path to audit
 user-invocable: true
 tools: [crosstk, codebase, search, usages, changes, runCommands]
 agents: []
-model: [Claude Sonnet 4.5, GPT-5.2]
 ---
 
 # security

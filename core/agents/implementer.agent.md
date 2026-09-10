@@ -5,7 +5,6 @@ version: 1.0.0
 user-invocable: false
 tools: [crosstk, codebase, search, usages, problems, editFiles, runCommands]
 agents: []
-model: [Claude Sonnet 4.5, GPT-5.2]
 ---
 
 # implementer

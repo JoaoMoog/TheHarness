@@ -6,7 +6,6 @@ argument-hint: what you want built, in one or two sentences
 user-invocable: true
 tools: [crosstk, agent, codebase, search, editFiles]
 agents: [specifier, planner, tasker, implementer, reviewer, security, azure-devops]
-model: [Claude Opus 4.5, GPT-5.2, Claude Sonnet 4.5]
 handoffs:
   - label: Approve spec, start planning
     agent: planner

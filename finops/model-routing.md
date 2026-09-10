@@ -103,9 +103,11 @@ twenty times the utility tier and buys almost nothing back.
 | A multi-file refactor | frontier | 20x |
 | Architectural design, hard debugging | frontier | 20x |
 
-This is why the phase agents declare a model. `specifier` and `planner` reason
-over a small context and earn the frontier tier; `implementer` and `tasker`
-execute a decision that was already made, and do not.
+The agents do not pin a model: the one selected in the chat is the one that
+runs, and the doctor warns about an agent file that says otherwise. This table
+is the advice for that selection. `specifier` and `planner` reason over a small
+context and earn the frontier tier; `implementer` and `tasker` execute a
+decision that was already made, and do not.
 
 The number that matters is still cost per delivered outcome, not per token. A
 tier that costs twice as much and halves the retries is cheaper. `harness cost`

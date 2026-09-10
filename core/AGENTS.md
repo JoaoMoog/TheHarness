@@ -124,7 +124,8 @@ continue. Rules: `.github/instructions/token-economy.instructions.md`.
 
 ## Model routing
 
-Default to the mid-tier model — it covers roughly 80% of agentic work. Reserve
-the frontier model for planning and hard reasoning, not for execution. Use the
-small model for classification, extraction, and batch work. Details:
-`finops/model-routing.md`.
+No agent pins a model: the one selected in the chat runs every phase. As a
+selection, default to the mid-tier model — it covers roughly 80% of agentic
+work. Reserve the frontier model for planning and hard reasoning, not for
+execution. Use the small model for classification, extraction, and batch work.
+Details: `finops/model-routing.md`.
