@@ -21,6 +21,8 @@ and may invoke several in parallel when the tasks are marked parallel.
 
 ## Tools
 
+- Cross TK, whenever its MCP server is connected - the first tool for every
+  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages`, `problems` - to work inside existing code
 - `editFiles` - source and tests, limited to the files the task names
 - `runCommands` - restricted to the commands listed in `specs/_context.md`. A

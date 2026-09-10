@@ -7,11 +7,12 @@ description: Keeps verification, re-reads and review scope proportional to the c
 
 ## Cross TK
 
-When an MCP server whose name matches `cross-tk` (any spelling: `crosstk`,
-`cross_tk`) is connected, use its tools wherever their descriptions cover the
-operation: reading, searching, summarising, diffing, counting tokens. Learn
-what it offers from the tool descriptions, once per session. Never assume a
-tool name or a signature, and never call it only to satisfy this rule.
+Cross TK is the default, not an option. Whenever the MCP server whose name
+matches `cross-tk` (any spelling: `crosstk`, `cross_tk`) is connected, every
+read, search, summary, diff and token count it covers goes through it; the
+built-in tools are the fallback for what it does not cover. Learn what it
+offers from the tool descriptions, once per session. Never assume a tool name
+or a signature, and never call it only to satisfy this rule.
 
 Not connected: say so in one line, use the built-in tools, and do not probe or
 retry. The session start reports whether one is configured in this repository.

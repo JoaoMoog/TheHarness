@@ -21,6 +21,8 @@ approved the specification.
 
 ## Tools
 
+- Cross TK, whenever its MCP server is connected - the first tool for every
+  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages` - to find what already exists before proposing
   anything new. This is the majority of its work
 - `problems` - to see what is already failing, so the plan does not assume green
