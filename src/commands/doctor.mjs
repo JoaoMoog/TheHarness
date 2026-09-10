@@ -8,6 +8,7 @@ import { auditSelf, diagnose } from '../lib/audit.mjs';
 import { generatedFiles } from '../lib/kiro-gen.mjs';
 import { unmappedEvents } from '../lib/targets.mjs';
 import { readDreams, openOnes, isTemplate } from '../lib/dreams.mjs';
+import { loadAllowlist, entryProblems, ALLOW_FILE } from '../../core/hooks/scripts/lib/allowlist.mjs';
 import { createReport, log, c } from '../lib/log.mjs';
 
 const VENDOR_SAMPLE = 400;
@@ -75,6 +76,7 @@ function auditRepos(report) {
     checkGenerated(report, repo, entry);
     checkTargetGaps(report, repo);
     checkDreams(report, repo);
+    checkAllowlist(report, repo);
 
     if (!isGitRepo(repo.dir)) {
       report.warn(`${repo.name}: not a git repository, so the local exclude was skipped`);
@@ -144,6 +146,26 @@ function checkDreams(report, repo) {
         'Promote or discard some, or the file stops being read'
     );
   }
+}
+
+/**
+ * The false-positive list of the credential scan is committed and hand-editable,
+ * so it is checked like any authored artifact: a file that does not parse
+ * silences nothing, and an entry without a reason is a hole nobody can review.
+ */
+function checkAllowlist(report, repo) {
+  const list = loadAllowlist(repo.dir);
+  if (list.error) {
+    report.fail(`${repo.name}/${ALLOW_FILE} is not valid JSON, so no false positive in it is honoured: ${list.error}`);
+    return;
+  }
+  if (list.entries.length === 0) return;
+  const bad = list.entries.map((entry, i) => ({ i, problems: entryProblems(entry) })).filter((x) => x.problems.length > 0);
+  for (const { i, problems } of bad.slice(0, 5)) {
+    report.fail(`${repo.name}/${ALLOW_FILE}: entry ${i + 1} ${problems.join(' and ')}`);
+  }
+  if (bad.length > 5) report.fail(`${repo.name}/${ALLOW_FILE}: ${bad.length - 5} more entries are malformed`);
+  if (bad.length === 0) report.pass(`${repo.name}: ${list.entries.length} credential false positive(s) marked, each with a reason`);
 }
 
 /**

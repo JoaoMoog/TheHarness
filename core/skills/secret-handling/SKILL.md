@@ -44,7 +44,10 @@ Anti-patterns to refuse:
 6. Confirm the guardrail sees it - stage the change and let the pre-commit
    scan run. It warns and records in `.harness/secrets.log` rather than
    refusing, so read the warning: a quiet run is the confirmation, a warning
-   means the value is still in the change.
+   means the value is still in the change. A warning about a value that is
+   genuinely not a credential is marked, never argued around: `harness secrets
+   --allow=<id> --why="<reason>"` with the id the warning printed, or
+   `--allow-path=<glob>` for a fixture directory. Marked means quiet, not safe.
 
 ## Output
 

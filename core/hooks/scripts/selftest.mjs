@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { valueId, addAllow, globToRegExp } from './lib/allowlist.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const script = (name) => path.join(HERE, name + '.mjs');
@@ -159,6 +160,79 @@ for (const [label, file, body] of missedFormats) {
   write(dir, 'fixture.js', 'const key = "' + FAKE_AWS_ID + '"; // harness:allow-secret\n');
   git('add', 'fixture.js');
   check('honours the harness:allow-secret marker without recording it', clean(runGuardrail('secret-block', dir), dir), true);
+}
+
+/* A person marks a false positive once, in the committed .harness-allow.json,
+   and the scanner is quiet about that value or that path everywhere after,
+   under both entry points. The id is the handle: printed with the warning,
+   written to the record, derived from the value alone. */
+console.log('\nsecret-block: marking a false positive');
+
+{
+  const { dir, git } = sandbox();
+  write(dir, 'fixture.js', 'const key = "' + FAKE_AWS_ID + '";\n');
+  git('add', 'fixture.js');
+  const first = runGuardrail('secret-block', dir);
+  const id = /id: ([0-9a-f]{16})/.exec(first.stderr)?.[1] ?? null;
+  check('the warning prints a 16 hex id for the value', id !== null, true);
+  check('the warning tells how to mark it', /harness secrets .*--allow=/.test(first.stderr), true);
+  check('the record carries the same id', new RegExp('"id":"' + id + '"').test(secretsLog(dir)), true);
+  check('the id is derived from the value alone', id, valueId(FAKE_AWS_ID));
+
+  fs.rmSync(path.join(dir, '.harness'), { recursive: true, force: true });
+  addAllow(dir, { id, why: 'documented fixture key, not live' });
+  write(dir, 'other.js', 'export const k = "' + FAKE_AWS_ID + '";\n');
+  git('add', 'other.js');
+  check('once marked, the same value in another file is quiet', clean(runGuardrail('secret-block', dir), dir), true);
+  const hook = runHook(
+    'secret-block',
+    { hook_event_name: 'PreToolUse', tool_name: 'editFiles', tool_input: { filePath: path.join(dir, 'x.ts'), content: 'const k = "' + FAKE_AWS_ID + '";' } },
+    dir
+  );
+  check('and quiet in a tool payload too', hook.hookSpecificOutput?.permissionDecision === 'allow' && hook.systemMessage === undefined && secretsLog(dir) === '', true);
+  check('marking the same id twice changes nothing', addAllow(dir, { id, why: 'again' }), null);
+  check('an entry without a reason is refused', (() => { try { addAllow(dir, { id: 'ffffffffffffffff' }); return false; } catch { return true; } })(), true);
+  check('the list never holds the value', !fs.readFileSync(path.join(dir, '.harness-allow.json'), 'utf8').includes(FAKE_AWS_ID), true);
+}
+
+{
+  const { dir, git } = sandbox();
+  addAllow(dir, { path: 'tests/fixtures/**', why: 'synthetic data only' });
+  write(dir, 'tests/fixtures/aws.yaml', 'secret_access_key: ' + FAKE_AWS_SECRET + '\n');
+  write(dir, 'src/real.js', 'const secret_access_key = "' + FAKE_AWS_SECRET + '";\n');
+  git('add', 'tests/fixtures/aws.yaml', 'src/real.js');
+  const r = runGuardrail('secret-block', dir);
+  check('a path rule silences findings under the glob', !/tests\/fixtures\/aws\.yaml/.test(r.stderr), true);
+  check('and leaves the same value outside the glob warning', /src\/real\.js/.test(r.stderr) && warned(r, dir), true);
+  const inside = runHook(
+    'secret-block',
+    { hook_event_name: 'PreToolUse', tool_name: 'editFiles', tool_input: { filePath: path.join(dir, 'tests', 'fixtures', 'b.yaml'), content: 'secret_access_key: ' + FAKE_AWS_SECRET } },
+    dir
+  );
+  check('the path rule matches an absolute tool path inside the repository', inside.systemMessage === undefined, true);
+  const outside = runHook(
+    'secret-block',
+    { hook_event_name: 'PreToolUse', tool_name: 'editFiles', tool_input: { filePath: path.join(dir, 'src', 'b.yaml'), content: 'secret_access_key: ' + FAKE_AWS_SECRET } },
+    dir
+  );
+  check('and not a path outside the glob', typeof outside.systemMessage === 'string', true);
+  write(dir, '.harness-allow.json', '{ not json');
+  git('add', 'src/real.js');
+  check('a list that does not parse silences nothing', warned(runGuardrail('secret-block', dir), dir), true);
+}
+
+{
+  const cases = [
+    ['tests/fixtures/**', 'tests/fixtures/a/b.json', true],
+    ['tests/fixtures/**', 'tests/other.json', false],
+    ['**/*.snap', 'a.snap', true],
+    ['**/*.snap', 'x/y/a.snap', true],
+    ['src/*.ts', 'src/a.ts', true],
+    ['src/*.ts', 'src/deep/a.ts', false],
+    ['config/app.json', 'config/app.json', true],
+    ['config/app.json', 'config/appXjson', false],
+  ];
+  check('glob rules match what they say and nothing more', cases.every(([g, p, want]) => globToRegExp(g).test(p) === want), true);
 }
 
 /* Advisory means advisory when the scanner itself cannot run: it says so,

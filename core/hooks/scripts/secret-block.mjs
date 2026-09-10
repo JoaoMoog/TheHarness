@@ -14,18 +14,21 @@
  *   git pre-commit         scans the staged INDEX, warns on stderr, exits 0
  *   VS Code PreToolUse     scans the tool payload, allows it with a warning
  *
- * A documented false positive takes the comment marker harness:allow-secret on
- * that line, so it is neither reported nor recorded again.
+ * A false positive is marked once and stays quiet everywhere after: by id in
+ * .harness-allow.json through `harness secrets --allow=<id> --why`, by path
+ * glob through --allow-path, or with the comment marker harness:allow-secret
+ * on that one line. Every warning prints the id it would take.
  *
- * The log carries the redacted value only. A record of the secret would be a
- * second copy of the secret.
+ * The log carries the redacted value and the id only. A record of the secret
+ * would be a second copy of the secret.
  */
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { scanLine, scanStructured, redact } from './lib/patterns.mjs';
+import { loadAllowlist, isAllowed, valueId, ALLOW_FILE } from './lib/allowlist.mjs';
 import * as git from './lib/git.mjs';
-import { readHookInput, isHookMode, collectStrings, allow, EXIT_OK } from './lib/io.mjs';
+import { readHookInput, isHookMode, collectStrings, toolFilePath, allow, EXIT_OK } from './lib/io.mjs';
 
 const ALLOW_MARKER = 'harness:allow-secret';
 const LARGE_FILE_BYTES = 512 * 1024;
@@ -34,7 +37,19 @@ const LOG_MAX_BYTES = 2 * 1024 * 1024;
 /** Only files that genuinely cannot hold a live credential. */
 const SKIP_FILE = /(^|\/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|Cargo\.lock|go\.sum|poetry\.lock)$/i;
 
-function scanText(text, file) {
+function repoRootOrNull() {
+  try {
+    return git.isInsideRepo() ? git.repoRoot() : null;
+  } catch {
+    return null;
+  }
+}
+
+const ROOT = repoRootOrNull();
+const ALLOWLIST = loadAllowlist(ROOT ?? process.cwd());
+
+/** `file` is what the warning shows; `where` is the repository-relative path the allowlist matches on. */
+function scanText(text, file, where = file) {
   const lines = text.split(/\r?\n/);
   const findings = [];
 
@@ -48,7 +63,7 @@ function scanText(text, file) {
     if (lines[hit.line - 1]?.includes(ALLOW_MARKER)) continue;
     findings.push({ file, ...hit });
   }
-  return findings;
+  return findings.filter((f) => !isAllowed(ALLOWLIST, { value: f.value, file: where }));
 }
 
 function scanIndex() {
@@ -75,13 +90,7 @@ function scanIndex() {
 
 /** The record lives next to the telemetry: inside the repository, never committed. */
 function logFile() {
-  let root = null;
-  try {
-    root = git.isInsideRepo() ? git.repoRoot() : null;
-  } catch {
-    root = null;
-  }
-  const dir = path.join(root ?? os.tmpdir(), '.harness');
+  const dir = path.join(ROOT ?? os.tmpdir(), '.harness');
   fs.mkdirSync(dir, { recursive: true });
   return path.join(dir, 'secrets.log');
 }
@@ -107,7 +116,16 @@ function record(event, findings, extra = {}) {
     const file = logFile();
     rotate(file);
     const lines = findings.map((f) =>
-      JSON.stringify({ at, event, file: f.file, line: f.line, name: f.name, value: redact(f.value), ...extra })
+      JSON.stringify({
+        at,
+        event,
+        file: f.file,
+        line: f.line,
+        name: f.name,
+        value: redact(f.value),
+        id: valueId(f.value),
+        ...extra,
+      })
     );
     fs.appendFileSync(file, `${lines.join('\n')}\n`, 'utf8');
     return file;
@@ -115,6 +133,17 @@ function record(event, findings, extra = {}) {
     console.error(`harness secret-block: could not record the warning - ${err.message}`);
     return null;
   }
+}
+
+/** How a person marks a false positive, printed with every warning so nobody has to look it up. */
+function markingHint(ids) {
+  const repo = path.basename(ROOT ?? process.cwd());
+  const example = ids[0] ?? '<id>';
+  return [
+    'False positive? Mark it once and it stays quiet everywhere:',
+    `  harness secrets ${repo} --allow=${example} --why="<reason>"    (or --allow-path=<glob>)`,
+    `  It writes ${ALLOW_FILE}, which the team commits. Or put the comment ${ALLOW_MARKER} on that one line.`,
+  ];
 }
 
 function runGit() {
@@ -140,28 +169,40 @@ function runGit() {
   console.error(`\nharness secret-block: WARNING, ${findings.length} credential-shaped value(s) in this commit\n`);
   for (const f of findings) {
     console.error(`  ${f.file}:${f.line}  ${f.name}`);
-    console.error(`    value: ${redact(f.value)}`);
+    console.error(`    value: ${redact(f.value)}   id: ${valueId(f.value)}`);
   }
   console.error(`\nThe commit goes ahead.${where ? ` Recorded in ${shown(where)}.` : ''}`);
   console.error('A value that reaches history is compromised: rotate it. Removing the line later is not enough.');
   console.error('Move it to an environment variable or a secret manager.');
-  console.error(`A documented false positive takes the comment ${ALLOW_MARKER} on that line.\n`);
+  for (const line of markingHint([...new Set(findings.map((f) => valueId(f.value)))])) console.error(line);
+  console.error('');
   return EXIT_OK;
+}
+
+/** The tool's file, repository-relative, so a path rule can match it; null outside the repository. */
+function hookTarget(input) {
+  const raw = toolFilePath(input);
+  if (typeof raw !== 'string' || raw === '' || !ROOT) return null;
+  const rel = path.relative(ROOT, path.resolve(raw)).split(path.sep).join('/');
+  return rel.startsWith('..') ? null : rel;
 }
 
 function runHook(input) {
   const tool = input.tool_name ?? 'tool input';
-  const findings = collectStrings(input.tool_input).flatMap((s) => scanText(s, tool));
+  const where = hookTarget(input);
+  const findings = collectStrings(input.tool_input).flatMap((s) => scanText(s, tool, where));
   if (findings.length === 0) return allow('PreToolUse');
 
-  const where = record('PreToolUse', findings, { tool, session: input.session_id ?? null });
+  const logged = record('PreToolUse', findings, { tool, target: where, session: input.session_id ?? null });
   const first = findings[0];
+  const id = valueId(first.value);
   const more = findings.length > 1 ? ` and ${findings.length - 1} more` : '';
   return allow(
     'PreToolUse',
-    `harness: this ${tool} payload contains what looks like a ${first.name} (${redact(first.value)})${more}. ` +
-      `It was allowed and recorded${where ? ` in ${shown(where)}` : ''}. Read the value from an environment ` +
-      'variable or a secret manager instead, and if it is real, tell the user it must be rotated.'
+    `harness: this ${tool} payload contains what looks like a ${first.name} (${redact(first.value)}, id ${id})${more}. ` +
+      `It was allowed and recorded${logged ? ` in ${shown(logged)}` : ''}. Read the value from an environment ` +
+      'variable or a secret manager instead; if it is real, tell the user it must be rotated, and if it is a ' +
+      `false positive, tell them to mark it with: harness secrets --allow=${id} --why="<reason>".`
   );
 }
 
