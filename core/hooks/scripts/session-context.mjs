@@ -14,13 +14,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { contextFile, readSession, clip, specsDir, layoutFor } from './lib/session.mjs';
-import { crossTkServer, isMandatory } from './lib/crosstk.mjs';
+import { crossTkServer, isMandatory, DISCOVERY_FILE } from './lib/crosstk.mjs';
 import * as git from './lib/git.mjs';
 import { readHookInput, isHookMode, context, EXIT_OK } from './lib/io.mjs';
 
 const CONTEXT_LIMIT = 6000;
 const SESSION_LIMIT = 4000;
 const DREAM_LIMIT = 5000;
+const TOOLS_SHOWN = 12;
 
 /**
  * Whether a Cross TK server is declared here, said once so the agent does not
@@ -32,18 +33,30 @@ function crossTkSection(root) {
   const server = crossTkServer(root);
   if (!server) {
     return (
-      '## Cross TK\n\nNo server matching cross-tk is configured in this repository. If your runtime connects ' +
-      'one anyway, use it; otherwise use the built-in tools and do not probe or retry for it.'
+      '## Cross TK\n\nNo server matching cross-tk is configured in this repository, and no first run has ' +
+      'recorded one in `' + DISCOVERY_FILE + '`. Look for it in your tool list now, as ' +
+      '`token-economy.instructions.md` says: found, record it there and use it first; not found, say so ' +
+      'once, use the built-in tools, and do not probe or retry for it.'
     );
   }
+  const record = server.discovered;
+  const known =
+    server.file === DISCOVERY_FILE
+      ? '`' + server.name + '` was recorded in `' + DISCOVERY_FILE + '`' + (record?.discoveredAt ? ' on ' + record.discoveredAt : '')
+      : '`' + server.name + '` is configured in `' + server.file + '`' +
+        (record ? ', and recorded in `' + DISCOVERY_FILE + '`' : '');
+  const tools =
+    record && record.tools.length > 0
+      ? ' Its tools, as your runtime shows them: ' + record.tools.slice(0, TOOLS_SHOWN).join(', ') +
+        (record.tools.length > TOOLS_SHOWN ? ', +' + (record.tools.length - TOOLS_SHOWN) + ' more' : '') + '.'
+      : '';
   const gate = isMandatory(server)
     ? 'The first built-in read or search of this session is refused until a Cross TK tool has been used.'
     : 'The first built-in read of this session gets a reminder; the rule still stands.';
   return (
-    '## Cross TK\n\n`' + server.name + '` is configured in `' + server.file + '`. Mandatory, before anything ' +
-    'else: use it first. Read its tools from their descriptions once, then every read, search and summary it ' +
-    'covers goes through it, and the built-in tools are the fallback, as `token-economy.instructions.md` says. ' +
-    gate
+    '## Cross TK\n\n' + known + '. Mandatory, before anything else: use it first. Read its tools from their ' +
+    'descriptions once, then every read, search and summary it covers goes through it, and the built-in tools ' +
+    'are the fallback, as `token-economy.instructions.md` says.' + tools + ' ' + gate
   );
 }
 

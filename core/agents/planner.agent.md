@@ -3,7 +3,7 @@ name: planner
 description: Turns an approved spec into an implementation plan with files, contracts, order and risks. Second phase of a session.
 version: 1.0.0
 user-invocable: false
-tools: [codebase, search, usages, problems, editFiles]
+tools: [crosstk, codebase, search, usages, problems, editFiles]
 agents: []
 model: [Claude Opus 4.5, GPT-5.2, Claude Sonnet 4.5]
 ---

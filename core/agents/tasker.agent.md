@@ -3,7 +3,7 @@ name: tasker
 description: Breaks an approved plan into atomic tasks with parallel and oversight markers. Third phase of a session.
 version: 1.0.0
 user-invocable: false
-tools: [codebase, search, editFiles]
+tools: [crosstk, codebase, search, editFiles]
 agents: []
 model: [Claude Sonnet 4.5, GPT-5.2]
 ---

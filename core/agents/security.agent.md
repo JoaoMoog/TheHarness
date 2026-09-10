@@ -4,7 +4,7 @@ description: Reviews changes for vulnerabilities and produces a severity-ranked 
 version: 2.0.0
 argument-hint: the change, branch or path to audit
 user-invocable: true
-tools: [codebase, search, usages, changes, runCommands]
+tools: [crosstk, codebase, search, usages, changes, runCommands]
 agents: []
 model: [Claude Sonnet 4.5, GPT-5.2]
 ---

@@ -515,6 +515,34 @@ console.log('\ncrosstk-first: the first read goes through Cross TK');
   check('the session start says the first read is mandatory', /Mandatory, before anything else/.test(start) && /refused until/.test(start), true);
 }
 
+/* The first run records what the agent saw in its tool list, in
+   .harness/crosstk.json: no declaration in the repository is needed, no tool
+   name is written anywhere shared, and from then on the gate arms and the
+   calls are recognised by the recorded names, whole or by last segment. */
+{
+  const { dir } = sandbox();
+  const session = 'ctk-rec-' + process.pid;
+  const call = (tool_name, sid = session) =>
+    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name, tool_input: {} }, dir).hookSpecificOutput?.permissionDecision;
+  const start = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
+
+  check('nothing known: the session start asks for the first-run discovery', /no first run has recorded one/.test(start()) && /Look for it in your tool list/.test(start()), true);
+  check('nothing known: reads pass', call('readFile'), 'allow');
+
+  write(dir, '.harness/crosstk.json', JSON.stringify({ server: 'acme-tk', tools: ['acme/acme-tk/outline_file', 'acme/acme-tk/search_lines'], discoveredAt: '2026-09-10' }));
+  check('a record without any declaration arms the gate', call('readFile'), 'deny');
+  check('the session start names the recorded server and its tools', /`acme-tk` was recorded in `\.harness\/crosstk\.json` on 2026-09-10/.test(start()) && /outline_file, acme\/acme-tk\/search_lines/.test(start()), true);
+  check('a recorded name handed to the hook whole is recognised', call('acme/acme-tk/outline_file', session + '-whole'), 'allow');
+  check('a recorded name handed to the hook as its last segment is recognised', call('search_lines', session + '-seg'), 'allow');
+  check('and unlocks the reads that follow', call('readFile', session + '-seg'), 'allow');
+  check('a name that is not recorded stays a refused read', call('list_dir', session + '-other'), 'deny');
+
+  write(dir, '.harness/crosstk.json', JSON.stringify({ server: '', tools: ['x'] }));
+  check('a record without a server name records nothing', call('readFile', session + '-empty'), 'allow');
+  write(dir, '.harness/crosstk.json', '{ not json');
+  check('a record that does not parse records nothing', call('readFile', session + '-bad'), 'allow');
+}
+
 /* tree-state: one short line per state of the tree, so a verification result
    can be tied to the tree it ran on and reused only while that holds. */
 console.log('\ntree-state: one line per state of the tree');

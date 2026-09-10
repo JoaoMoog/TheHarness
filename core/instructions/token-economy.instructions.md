@@ -14,13 +14,18 @@ built-in tools are the fallback for what it does not cover. Learn what it
 offers from the tool descriptions, once per session. Never assume a tool name
 or a signature, and never call it only to satisfy this rule.
 
-The first read of a session goes through it. Where the server is declared for
+The first read of a session goes through it. Where the server is known for
 the repository, the harness refuses a built-in read or search until a Cross TK
 tool has been used, so use it before anything else, not after the first
 detour.
 
-Not connected: say so in one line, use the built-in tools, and do not probe or
-retry. The session start reports whether one is declared in this repository.
+First run: when `.harness/crosstk.json` does not exist, look for the server in
+your own tool list, by a name matching `cross-tk` or a description that names
+it. Found: write that file with `server`, `tools` (the names exactly as your
+tool list shows them) and `discoveredAt`, then use it first. The harness reads
+the file from then on, to state the obligation and to recognise your calls, so
+the names never have to be written anywhere else. Not found: say so once,
+write nothing, use the built-in tools, and do not probe or retry.
 
 ## Read once
 

@@ -4,7 +4,7 @@ description: Runs a multi-agent development session as a state machine, delegati
 version: 1.0.0
 argument-hint: what you want built, in one or two sentences
 user-invocable: true
-tools: [agent, codebase, search, editFiles]
+tools: [crosstk, agent, codebase, search, editFiles]
 agents: [specifier, planner, tasker, implementer, reviewer, security, azure-devops]
 model: [Claude Opus 4.5, GPT-5.2, Claude Sonnet 4.5]
 handoffs:
@@ -56,7 +56,7 @@ phase, and returns a summary. The detail stays in the artifact on disk.
   other agent carries it
 - `codebase`, `search` - to read `specs/_context.md` and the session file;
   Cross TK first when connected
-- `editFiles` - restricted to `specs/**`: `session.md`, never source code
+- `editFiles` - `specs/**` and `.harness/crosstk.json` only; never source code
 
 ## Scope
 
@@ -70,8 +70,8 @@ Refuses and hands back:
 - writing source code, tests or specifications itself. Every phase has an owner
 - advancing a phase whose predecessor in the track is not complete and approved
 - starting any phase before the track has been confirmed by a human
-- a first read through the built-in tools while Cross TK is declared; the
-  hook refuses it anyway
+- a first read through the built-in tools while Cross TK is known. On its
+  first run it records the server in `.harness/crosstk.json` first
 - staying on a track the work has outgrown. Promotion is announced and recorded,
   never silent or skipped to save a turn
 - starting a second session while one is open. Resume or close the first
@@ -129,10 +129,10 @@ into the pull request body, never back to implement and never against a gate.
 
 An `incident` session is not done when the impact stops. Its deliver phase must
 link a runbook, and closing it opens a `fix` session for the root cause and
-records the id. Mitigation without that follow-up is how the defect returns.
+records the id.
 
-Output to the user after every phase: the phase that finished, where its
-artifact is, what it decided, what is still open, and which button advances.
+After every phase, tell the user: what finished, where the artifact is, what
+was decided, what is open, and which button advances.
 
 ## Skills
 
