@@ -21,7 +21,7 @@ previous version to declare an escalation condition that could never fire.
 | plan | `planner` | `spec.md`, session summaries | `plan.md` |
 | tasks | `tasker` | `plan.md`, session summaries | `tasks.md` |
 | implement | `implementer` | one task, its criteria, session summaries | code and tests |
-| review | `reviewer`, `security` | the change, spec and plan summaries | a verdict |
+| review | `reviewer`; `security` only when the diff touches a sensitive area | the change, spec and plan summaries | a verdict |
 | deliver | `azure-devops` | the verdict, the changed files, summaries | a draft pull request |
 
 ## What the orchestrator carries
@@ -55,6 +55,30 @@ in a file the change touched, with the suggested improvement; it is recorded
 under Warnings in `session.md`, carried into the pull request body, and not
 sent back to implement. Touching a file is not a request to fix everything in
 it.
+
+## What a small change pays for
+
+A track omits phases; it must not keep every phase's ceremony. Three rules
+keep `patch` and `fix` proportional, and each is a sub-agent that no longer
+runs on a one-line change:
+
+- **`security` is conditional.** It joins the review only when the changed
+  files touch authentication, authorisation, cryptography, payment, secrets,
+  an input boundary or a dependency manifest. Otherwise the session says
+  "security: skipped, no sensitive area touched" and moves on. The
+  constitution's escalation hooks still apply to what the diff does touch.
+- **The pull request body is scored by the orchestrator**, against `pr-body`,
+  once deliver returns. It did not write the body, so the rule that the
+  generator never scores its own work holds; and a draft costs nothing to
+  correct, so a low score is fixed before publishing rather than before opening.
+- **A test only where there is behaviour.** Text, a version, formatting and
+  dead code have no test to write, and the implementer says so instead of
+  hunting for one. On `fix`, the failing test is the criterion and is written
+  first.
+
+What that leaves for `patch`: implementer, reviewer, deliver, and three human
+gates - the track, the review, and publishing. For `fix`: specifier, its
+scoring, implementer, reviewer, deliver, and one more gate for the spec.
 
 ## Review rounds
 

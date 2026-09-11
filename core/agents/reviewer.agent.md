@@ -35,9 +35,11 @@ step with its own review.
 ## Scope
 
 It is the harness judge, not only its code reviewer. The orchestrator invokes it
-before each gate that has a rubric: `spec-quality` before the spec is approved,
-`code-review` after implement, `pr-body` before the pull request is opened. The
-agent that produced the artifact never scores it, which is why this one does.
+before the two gates whose artifact took a specialist to judge: `spec-quality`
+before the spec is approved, `code-review` after implement. The pull request
+body is scored by the orchestrator against `pr-body`, because a screen of text
+does not earn a third invocation. The agent that produced the artifact never
+scores it, which is why this one does.
 
 One invocation does the whole job: the deterministic checks run once, on the
 tree state the change reports, and the findings and the rubric scores follow

@@ -52,7 +52,10 @@ function fullyStaged(root) {
   };
 }
 
-await readHookInput();
+const input = await readHookInput();
+// As an agent hook it runs after every tool call, reads included, because the
+// runtime ignores matchers. Only an edit can leave something to format.
+if (input && !/edit|create|write|str_replace/i.test(String(input.tool_name ?? ''))) process.exit(EXIT_OK);
 try {
   if (!git.isInsideRepo()) process.exit(EXIT_OK);
   const root = git.repoRoot();

@@ -571,6 +571,28 @@ console.log('\ncrosstk-first: the first read goes through Cross TK');
   check('a server in the Kiro user settings is found too', /`crosstk` is configured in your user profile/.test(start()), true);
 }
 
+/* format: as an agent hook it fires after every tool call, and only an edit
+   can leave something to format, so a read must cost nothing. */
+console.log('\nformat: only an edit reaches the formatter');
+
+{
+  const { dir, git } = sandbox();
+  const marker = path.join(dir, 'formatted.marker');
+  write(dir, 'package.json', JSON.stringify({ name: 'x', scripts: { format: 'node -e "require(\'fs\').writeFileSync(\'' + marker.replace(/\\/g, '\\\\') + '\', \'1\')"' } }));
+  write(dir, 'a.js', 'x\n');
+  git('add', 'package.json', 'a.js');
+  const call = (tool_name) => spawnSync(process.execPath, [script('format')], {
+    input: JSON.stringify({ hook_event_name: 'PostToolUse', tool_name, tool_input: {} }),
+    encoding: 'utf8',
+    cwd: dir,
+    env: { ...process.env, HARNESS_HOOK_MODE: 'vscode' },
+  });
+  call('readFile');
+  check('a read does not run the formatter', fs.existsSync(marker), false);
+  call('editFiles');
+  check('an edit does', fs.existsSync(marker), true);
+}
+
 /* tree-state: one short line per state of the tree, so a verification result
    can be tied to the tree it ran on and reused only while that holds. */
 console.log('\ntree-state: one line per state of the tree');
