@@ -20,8 +20,10 @@ Then, in order:
    Patch, incident and refactor have none: the body says so and lists the
    tests that ran.
 3. Write the body to `specs/<id>-<slug>/pr-body.md`, following the
-   `ado-pull-request` skill. Four questions: what changed, why, what was
-   actually verified, what was left out.
+   `ado-pull-request` skill: in Brazilian Portuguese, as a summary of what was
+   done. Four questions: what changed, why, what was actually verified, what
+   was left out. The target branch is the base branch recorded in the session
+   file.
 3. Open it as a **draft** and report the id and url.
 4. If the review left findings, open one anchored thread per finding, following
    `ado-comment`. Blocker first.

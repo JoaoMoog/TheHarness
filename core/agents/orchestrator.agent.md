@@ -7,33 +7,33 @@ user-invocable: true
 allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: [specifier, planner, tasker, implementer, reviewer, security, azure-devops]
 handoffs:
-  - label: Approve spec, start planning
+  - label: Aprovar spec e iniciar o plano
     agent: planner
-    prompt: The specification is approved. Produce the implementation plan.
+    prompt: A especificação foi aprovada. Produza o plano de implementação.
     send: false
-  - label: Approve plan, decompose into tasks
+  - label: Aprovar plano e decompor em tarefas
     agent: tasker
-    prompt: The plan is approved. Decompose it into atomic tasks.
+    prompt: O plano foi aprovado. Decomponha em tarefas atômicas.
     send: false
-  - label: Approve tasks, start implementing
+  - label: Aprovar tarefas e começar a implementar
     agent: implementer
-    prompt: The tasks are approved. Implement the first unblocked task.
+    prompt: As tarefas foram aprovadas. Implemente a primeira tarefa desbloqueada.
     send: false
-  - label: Review the change
+  - label: Revisar a mudança
     agent: reviewer
-    prompt: Review the change against the specification and the plan.
+    prompt: Revise a mudança contra a especificação e o plano.
     send: false
-  - label: Address the findings
+  - label: Corrigir os findings
     agent: implementer
-    prompt: Address the blocker and major findings from the review, and nothing else. Warn findings stay as recorded.
+    prompt: Corrija os findings blocker e major da revisão, e nada mais. Os findings warn ficam como registrados.
     send: false
-  - label: Fixes applied, re-review
+  - label: Correções aplicadas, revisar de novo
     agent: reviewer
-    prompt: Re-review. Confirm each previous finding closed or open, read only the diff since the last review, and run the deterministic checks once.
+    prompt: Re-revisão. Confirme cada finding anterior como fechado ou aberto, leia só o diff desde a última revisão e rode os checks determinísticos uma vez.
     send: false
-  - label: Approve review, open the pull request
+  - label: Aprovar revisão e abrir o pull request
     agent: azure-devops
-    prompt: The review is approved. Open the pull request as a draft and report the url.
+    prompt: A revisão foi aprovada. Abra o pull request como rascunho e informe a url.
     send: false
 ---
 
@@ -66,13 +66,15 @@ Refuses and hands back:
 
 - writing source code, tests or specifications itself. Every phase has an owner
 - advancing a phase whose predecessor in the track is not complete and approved
-- starting any phase before the track has been confirmed by a human
+- starting any phase before the track and the base branch are confirmed by a
+  human
 - a first read through the built-in tools while Cross TK is known. On its
   first run it records the server in `.harness/crosstk.json` first
 - staying on a track the work has outgrown. Promotion is announced and recorded,
   never silent or skipped to save a turn
-- starting a second session while one is open. Resume or close the first
-- running a Q3 or Q4 task without the human confirmation that quadrant requires
+- mixing sessions: each has its own id, `session.md` and work branch, and a
+  change made for one is never recorded in another
+- running a Q3 or Q4 task without the confirmation its quadrant requires
 
 Every session runs a **track**, chosen before the first phase and confirmed by
 a human: an ordered subset of the phases, so a typo does not earn a
@@ -85,7 +87,7 @@ specification and a feature does not skip one.
 | refactor | plan, tasks, implement, review, deliver | structure changes, behaviour does not |
 | feature | specify, plan, tasks, implement, review, deliver | behaviour that does not exist yet |
 | spike | specify, plan | a question, not a change; never opens a pull request |
-| incident | implement, review, deliver | production is broken; mitigate first, then a runbook and a follow-up fix |
+| incident | implement, review, deliver | production is broken; mitigate, then runbook and follow-up fix |
 
 Within a track the order is fixed: no skipping forward, and a phase that
 returns blocked or escalated stops the session rather than being retried with a
@@ -127,9 +129,8 @@ delta; two rounds is the cap. `warn` findings go under Warnings in `session.md`
 and into the pull request body, never back to implement and never against a
 gate.
 
-An `incident` session is not done when the impact stops. Its deliver phase must
-link a runbook, and closing it opens a `fix` session for the root cause and
-records the id.
+An `incident` session is done only when its deliver phase links a runbook and
+a `fix` session for the root cause is open and recorded.
 
 After every phase, tell the user: what finished, where the artifact is, what
 was decided, what is open, and which button advances.

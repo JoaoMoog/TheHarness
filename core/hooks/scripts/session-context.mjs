@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * SessionStart: injects the precomputed repository inventory and the open
- * session, so the orchestrator starts a turn already knowing where it is
+ * sessions, so the orchestrator starts a turn already knowing where it is
  * without spending a tool call to find out.
  *
  * This is the cheap half of the Precompute idea: the expensive scan happens
@@ -13,7 +13,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { contextFile, readSession, clip, specsDir, layoutFor } from './lib/session.mjs';
+import { contextFile, openSessions, clip, specsDir, layoutFor } from './lib/session.mjs';
 import { crossTkServer, isMandatory, DISCOVERY_FILE } from './lib/crosstk.mjs';
 import * as git from './lib/git.mjs';
 import { readHookInput, isHookMode, context, EXIT_OK } from './lib/io.mjs';
@@ -160,15 +160,24 @@ if (fs.existsSync(pending)) {
   }
 }
 
-const session = readSession(root);
-if (session) {
+// Every open session, not only the newest: two unrelated adjustments in two
+// chats are two sessions, and a start that names one and forbids the other
+// blocks the second chat for no reason. The newest is shown in full; the rest
+// are one line each, so /resume <id> can pick any of them.
+const open = openSessions(root);
+if (open.length > 0) {
+  const [newest] = open;
+  const line = (s) => `- ${s.id}-${s.slug} (phase: ${s.phase}` + (s.workBranch ? `, work branch: ${s.workBranch}` : '') + ')';
   parts.push(
-    `## Open session ${session.id}-${session.slug} (phase: ${session.phase})\n\n` +
-      clip(session.text, SESSION_LIMIT) +
-      `\n\nResume it with /resume ${session.id}. Do not start a new session while this one is open.`
+    `## Open sessions (${open.length})\n\n` +
+      open.map(line).join('\n') +
+      `\n\n/resume <id> continues one of them; /feature starts another alongside them. ` +
+      `Two sessions that change the same files are the one real conflict, so say so before the first phase.` +
+      `\n\n### Newest: ${newest.id}-${newest.slug}\n\n` +
+      clip(fs.readFileSync(newest.file, 'utf8'), SESSION_LIMIT)
   );
 } else {
-  parts.push('## Open session\n\nNone. Start multi-step work with @orchestrator, which will create one.');
+  parts.push('## Open sessions\n\nNone. Start multi-step work with @orchestrator, which will create one.');
 }
 
 process.exit(context('SessionStart', parts.join('\n\n')));

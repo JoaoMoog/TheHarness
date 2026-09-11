@@ -30,6 +30,12 @@ request. If it ends with code, it was not a spike.
 `review` is never omitted from a track that delivers. Nothing ships unreviewed,
 regardless of how small it looked.
 
+The base branch is confirmed in the same stop as the track: `Production` by
+default, or the current branch when the person wants to continue on it. The
+work branch `<type>/<slug>` is created from that base, and the pull request
+targets it. One stop, two answers; a session that guesses the base delivers
+to the wrong place.
+
 **Promotion is the safety net.** Any track can be promoted mid-session when the
 work turns out larger than it looked. A patch that touches authorisation becomes
 a fix; a fix that needs a design decision becomes a feature. Promotion is
@@ -53,9 +59,11 @@ Anti-patterns to refuse:
 3. State, in one line, what the omitted phases would have added and why the
    request does not need it. If you cannot, pick the longer track.
 4. Show the phases the session will run, and the token budget for that track.
-5. Ask the human to confirm the track. This is the cheapest correction in the
-   whole session.
-6. Record the track and the reason in `session.md` before the first phase runs.
+5. Ask the human to confirm the track and the base branch, `Production` by
+   default or the current branch, in one message. This is the cheapest
+   correction in the whole session.
+6. Record the track, the reason, the base branch and the work branch in
+   `session.md` before the first phase runs.
 
 ## Output
 
@@ -69,7 +77,10 @@ Track: patch
   ordering to decide for a one-word label
 
 Phases: implement -> review -> deliver
-Budget: 45k tokens
+Budget: 115k tokens
+
+Base branch: Production (default), or continue on the current branch
+feature/reports? Work branch: patch/export-label, created from the base.
 
 Promotes to fix if the label turns out to come from a translation file that
 other screens share.
@@ -82,5 +93,7 @@ other screens share.
 - [ ] The omitted phases are justified in one line each, or the longer track was
       chosen instead.
 - [ ] The track delivers only if it includes review.
-- [ ] The human confirmed before the first phase ran.
-- [ ] The track and the reason are in `session.md`.
+- [ ] The human confirmed the track and the base branch before the first
+      phase ran.
+- [ ] The track, the reason, the base branch and the work branch are in
+      `session.md`.

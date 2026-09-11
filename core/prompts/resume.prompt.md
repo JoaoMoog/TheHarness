@@ -12,7 +12,9 @@ Resume the session with `@orchestrator`.
    before a Cross TK tool has been used.
 1. Read `specs/<id>-*/session.md`. If no id is given, use the newest session
    whose phase is not `done`.
-2. Report the current phase, what the last summary said, and what is open.
+2. Report the current phase, the work branch, what the last summary said, and
+   what is open. If the checkout is not on that work branch, say so and stop;
+   switching branches is the person's call.
 3. Load only what the next phase needs: the session summaries plus the artifact
    of the immediately preceding phase. Do not reload every artifact; that is
    what makes a resumed session cost more than the original.

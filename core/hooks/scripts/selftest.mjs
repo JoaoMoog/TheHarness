@@ -332,6 +332,28 @@ console.log('\nVS Code hook protocol');
   check('SessionStart returns additional context', typeof out.hookSpecificOutput?.additionalContext === 'string', true);
 }
 
+/* Two chats doing two unrelated adjustments are two open sessions. The start
+   lists every one of them, with its phase and work branch, and never tells the
+   second chat to wait for the first. */
+{
+  const { dir } = sandbox();
+  const start = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
+  const session = (id, slug, phase, branch) =>
+    write(dir, `specs/${id}-${slug}/session.md`, `# Session ${id}-${slug}\n\nid: ${id}\ntrack: patch\nbase branch: Production\nwork branch: ${branch}\nphase: ${phase}\n`);
+  check('no session: the start says none is open', /## Open sessions\n\nNone\./.test(start()), true);
+  session('001', 'export-label', 'implement', 'patch/export-label');
+  session('002', 'retry-policy', 'review', 'fix/retry-policy');
+  session('003', 'closed', 'done', 'patch/closed');
+  const out = start();
+  check('two open sessions are both listed, with phase and work branch',
+    /## Open sessions \(2\)/.test(out) &&
+      /- 001-export-label \(phase: implement, work branch: patch\/export-label\)/.test(out) &&
+      /- 002-retry-policy \(phase: review, work branch: fix\/retry-policy\)/.test(out),
+    true);
+  check('the newest is shown in full and a closed one is not listed', /### Newest: 002-retry-policy/.test(out) && !/003-closed/.test(out), true);
+  check('the start never forbids a second session', !/Do not start a new session/.test(out) && /\/feature starts another/.test(out), true);
+}
+
 /* The Azure DevOps quadrant gate: the decision has to come from the command,
    not from the agent remembering the rule. */
 const adoGate = (command) =>

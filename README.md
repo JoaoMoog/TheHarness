@@ -126,7 +126,9 @@ node bin/harness.mjs dream <repo> --discard=D-009 --why="uma sessão só"
 
 Trabalho de vários passos começa com `/feature` ou `@orchestrator`. Ele escolhe
 uma **trilha** — quais das seis etapas o pedido realmente precisa — e para para
-você confirmar antes de começar.
+você confirmar antes de começar. Na mesma parada ele pergunta de qual branch
+partir: `Production` por padrão, ou continuar na branch que já está aberta. A
+resposta fica gravada em `session.md`, e o pull request é aberto contra ela.
 
 | trilha | etapas | teto |
 |---|---|---|
@@ -137,13 +139,22 @@ você confirmar antes de começar.
 | `refactor` | plan → tasks → implement → review → deliver | 190k |
 | `feature` | as seis | 220k |
 
-Entre cada etapa aparece um botão. Você lê o artefato e confirma. O estado da
-sessão fica em `specs/NNN-slug/session.md` — ou `.kiro/specs/NNN-slug/session.md`
-num repo de Kiro — commitado, então dá para fechar o editor e retomar com
-`/resume`. O início da sessão diz qual é o layout, para ninguém ter que adivinhar.
+Entre cada etapa aparece um botão, em português. Você lê o artefato e confirma.
+O estado da sessão fica em `specs/NNN-slug/session.md` — ou
+`.kiro/specs/NNN-slug/session.md` num repo de Kiro — commitado, então dá para
+fechar o editor e retomar com `/resume`. O início da sessão diz qual é o layout,
+para ninguém ter que adivinhar.
+
+Mais de uma sessão pode ficar aberta ao mesmo tempo: dois ajustes sem relação
+em dois chats são duas sessões, cada uma com id, arquivo e branch de trabalho
+próprios. O início da sessão lista todas, `/resume <id>` continua uma delas e
+`/feature` abre outra ao lado. O único conflito real é duas sessões mexendo
+nos mesmos arquivos, e isso é dito antes da primeira etapa.
 
 Para abrir um pull request de um branch pronto, sem sessão: `/deliver` ou
-`@azure-devops`.
+`@azure-devops`. O corpo do pull request sai em português do Brasil, como um
+resumo do que foi feito — o que mudou, por quê, o que foi verificado de fato e
+o que ficou de fora — e não como a lista dos arquivos tocados.
 
 ## Verificação proporcional e WARN
 
@@ -333,7 +344,7 @@ quer dizer silencioso, não seguro: um valor real que chegou ao histórico
 continua precisando de rotação.
 
 ```bash
-npm run selftest          # 120 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 124 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```

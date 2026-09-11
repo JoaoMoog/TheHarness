@@ -30,6 +30,12 @@ previous version to declare an escalation condition that could never fire.
 of the phase immediately before it. The full text of earlier artifacts stays on
 disk.
 
+More than one session may be open at a time: a person doing two unrelated
+adjustments in two chats has two sessions, each with its own id, file and work
+branch, and the harness lists them instead of refusing the second. The one
+real conflict is two sessions changing the same files, and the session start
+says so before the first phase.
+
 The implement envelope carries its verification record: what ran, the result,
 and the tree state from `node .github/tools/verify/tree-state.mjs`. Review runs
 its own checks once, because an independent run is its contract. Scoring,
