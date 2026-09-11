@@ -77,15 +77,33 @@ export function nextSessionId(root) {
   return String(highest + 1).padStart(3, '0');
 }
 
-/** The open session is the newest one whose phase is not done. */
-export function openSession(root) {
-  const sessions = listSessions(root).reverse();
-  for (const session of sessions) {
+/**
+ * Every session whose phase is not done, newest first. More than one may be
+ * open: a person doing two unrelated adjustments in two chats has two
+ * sessions, each with its own id, file and work branch, and the harness lists
+ * them rather than refusing the second.
+ */
+export function openSessions(root) {
+  const open = [];
+  for (const session of listSessions(root).reverse()) {
     if (!fs.existsSync(session.file)) continue;
-    const phase = currentPhase(fs.readFileSync(session.file, 'utf8'));
-    if (phase !== 'done') return { ...session, phase };
+    const text = fs.readFileSync(session.file, 'utf8');
+    const phase = currentPhase(text);
+    if (phase !== 'done') open.push({ ...session, phase, workBranch: headerField(text, 'work branch') });
   }
-  return null;
+  return open;
+}
+
+/** The newest open session, which is what a hook with room for one reports. */
+export function openSession(root) {
+  return openSessions(root)[0] ?? null;
+}
+
+/** A `key: value` line from the session header, ignoring unfilled placeholders. */
+export function headerField(text, key) {
+  const match = new RegExp(`^${key}:\\s*(.+)$`, 'im').exec(text);
+  const value = match ? match[1].trim() : '';
+  return value && !value.startsWith('<') ? value : null;
 }
 
 const PHASE_LINE = /^phase:\s*([a-z]+)\s*$/im;

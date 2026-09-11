@@ -75,7 +75,12 @@ specifier  planner  tasker  implementer  reviewer + security
 ```
 
 State lives in `<specs>/NNN-slug/session.md`, committed to the repository, so a
-session survives the chat window and can be reviewed in a pull request.
+session survives the chat window and can be reviewed in a pull request. The
+track and the base branch are confirmed in the same stop before the first
+phase: `Production` by default, or the branch already checked out. More than
+one session may be open at once - two unrelated adjustments in two chats are
+two sessions, each with its own id, file and work branch - and the session
+start lists them instead of refusing the second.
 
 Two tools spell the same four artifacts differently, so the directory and the
 file names are stated in the session context rather than assumed:

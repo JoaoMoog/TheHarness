@@ -24,7 +24,11 @@ explains the reason the change was necessary; the diff already shows what moved.
 ## Branches
 
 Work on a branch, never directly on the default branch. Name it
-`<type>/<short-description>`.
+`<type>/<short-description>`. The base is chosen at the start of every change,
+with the person: `Production` by default, or the current branch when they want
+to continue on it. The work branch is created from that base and the pull
+request targets it; a base that was assumed rather than asked delivers to the
+wrong place.
 
 ## Pull requests
 

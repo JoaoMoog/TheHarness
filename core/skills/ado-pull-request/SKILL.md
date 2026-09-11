@@ -17,6 +17,11 @@ why, what was actually verified, and what was deliberately left out - and
 carries the traceability matrix, because the reviewer question is not "does this
 look right" but "does this satisfy the spec", which only the matrix answers.
 
+The body is written in Brazilian Portuguese, for the people who review it, and
+it summarises: one to three lines per question, the matrix when there is a
+specification, and nothing that restates the diff. A body longer than a screen
+is read less, not more.
+
 Draft first, always. A draft costs nothing to correct; a published PR has
 already notified reviewers and started branch policies. Publishing is a separate
 decision and a separate quadrant.
@@ -61,31 +66,31 @@ Anti-patterns to refuse:
 ## Output
 
 ```markdown
-## What
-Export the saved report as CSV from the report toolbar.
+## O que mudou
+Exportação do relatório salvo em CSV, a partir da barra do relatório.
 
-## Why
-Finance re-keys these numbers into a spreadsheet every month. The filter set is
-what they need, not the whole table, which is why the export follows the active
-filter rather than the underlying query.
+## Por quê
+O financeiro redigita esses números numa planilha todo mês. O que eles
+precisam é o conjunto filtrado, não a tabela inteira, por isso a exportação
+segue o filtro ativo e não a consulta original.
 
-## Traceability
-| requirement | tests | status |
+## Rastreabilidade
+| requisito | testes | status |
 |---|---|---|
 | FR-001 | tests/export.spec.ts | PASS |
 | FR-002 | tests/export.spec.ts | PASS |
 
-## Verified
-- npm test: 214 passing, 0 failing
-- Six acceptance criteria, each with a test: specs/007-export-csv/spec.md
-- Manually checked the empty result and the permission-denied paths
+## Verificado
+- npm test: 214 passando, 0 falhando
+- Seis critérios de aceite, cada um com teste: specs/007-export-csv/spec.md
+- Conferidos manualmente o resultado vazio e a permissão negada
 
-## Out of scope
-Scheduled exports and XLSX. Both were raised and deferred; see the decisions in
+## Fora do escopo
+Exportação agendada e XLSX. Levantados e adiados; ver as decisões em
 specs/007-export-csv/session.md.
 
-Warnings, pre-existing and left alone:
-- src/api/orders.ts:88 swallows the repository error - let it propagate to the middleware
+Avisos, preexistentes e deixados como estão:
+- src/api/orders.ts:88 engole o erro do repositório - deixar propagar ao middleware
 
 Work items: #4821
 ```
@@ -93,6 +98,7 @@ Work items: #4821
 ## Validation
 
 - [ ] The four questions are answered, and the traceability matrix is in the body.
+- [ ] The body is in Brazilian Portuguese, summarises, and fits on a screen.
 - [ ] Every GAP in the matrix is either closed or explained.
 - [ ] The session's Warnings are in Out of scope, unchanged.
 - [ ] The verified section reports what actually ran, failures included.

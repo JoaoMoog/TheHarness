@@ -52,21 +52,24 @@ failed payment leaked a connection. Under load the pool exhausted after about
 twenty failures and every later request timed out.
 ```
 
+The pull request body is written in Brazilian Portuguese, for the people who
+review it, and summarises; commit messages keep the conventional format.
+
 ```
-## What
-Release the connection on the payment failure path.
+## O que mudou
+Libera a conexão no caminho de falha do pagamento.
 
-## Why
-A leak on the error branch exhausted the pool under load, causing timeouts
-unrelated to the original failure.
+## Por quê
+Um vazamento no ramo de erro esgotava o pool sob carga, causando timeouts sem
+relação com a falha original.
 
-## Verification
-- npm test: 214 passing, 0 failing
-- Reproduced the leak with the new regression test, confirmed failing before
-  the fix and passing after
+## Verificado
+- npm test: 214 passando, 0 falhando
+- Vazamento reproduzido pelo teste de regressão novo, falhando antes da
+  correção e passando depois
 
-## Out of scope
-The retry policy around charge() is unchanged; it deserves its own review.
+## Fora do escopo
+A política de retry em volta de charge() não mudou; merece revisão própria.
 ```
 
 ## Validation

@@ -5,6 +5,8 @@ feature: <one line, what the user asked for>
 track: <patch | incident | fix | refactor | feature | spike>
 promoted from: <none, or the track this session started on and why>
 track reason: <one line, and what the omitted phases would have added>
+base branch: <Production by default, or the branch the person chose; the pull request targets it>
+work branch: <type/slug created from the base, or the current branch when the person chose to stay on it>
 phase: <first phase of the track>
 started: <YYYY-MM-DD>
 

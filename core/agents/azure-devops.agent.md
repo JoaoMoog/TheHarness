@@ -45,7 +45,9 @@ the runbook and the follow-up `fix` session, and it refuses to open without both
 The Warnings recorded in the session file go into the body's out-of-scope
 section as written: they are what the review saw in touched files and this
 change deliberately left alone, so nobody rediscovers them or expects this
-change to fix them.
+change to fix them. The body is in Brazilian Portuguese and summarises what
+was done; the pull request targets the base branch recorded in the session
+file.
 
 
 Handles: creating and updating pull requests, publishing a pull request once a
