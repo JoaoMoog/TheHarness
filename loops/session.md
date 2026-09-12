@@ -37,10 +37,13 @@ real conflict is two sessions changing the same files, and the session start
 says so before the first phase.
 
 The implement envelope carries its verification record: what ran, the result,
-and the tree state from `node .github/tools/verify/tree-state.mjs`. Review runs
-its own checks once, because an independent run is its contract. Scoring,
-deliver and any retry reuse the newest record for the same tree state rather
-than running the suite again on a tree nobody changed.
+and the tree state from `node .github/tools/verify/tree-state.mjs`. Review
+reuses that record while the tree state matches and the record is green, and
+adds its own evidence with the targeted check on the changed files; it runs the
+build, lint and suite itself only when the state differs or the record is
+missing, `not-run` or red. Scoring, deliver and any retry reuse the newest
+record for the same tree state. The suite runs once per tree state; CI at
+deliver is the run nobody in the session has to repeat.
 
 This is the whole reason the session stays affordable: the accumulated
 transcript is resent on every turn, so a parent that holds every artifact grows
@@ -48,10 +51,14 @@ faster than the work does. The parent holds summaries; the children hold detail.
 
 ## Gates
 
-Every transition is a human action. The phase agent finishes, the orchestrator
-records the summary and reports, and a handoff button advances. `send: false` on
-every handoff is deliberate: the button appears, the human reads the artifact,
-and then it moves.
+Every transition is a human action, with one exception a short track earns. The
+phase agent finishes, the orchestrator records the phase in `session.md` in one
+edit and reports, and a handoff button advances. `send: false` on every handoff
+is deliberate: the button appears, the human reads the artifact, and then it
+moves. On `patch` and `incident` the review starts as soon as implement returns
+`complete`: a one-line change has nothing for a person to read between the two
+phases, and the human reads the change and its verdict together at the review
+gate.
 
 The orchestrator refuses to advance when the previous phase is not complete, and
 refuses to run a Q3 or Q4 task without the confirmation that quadrant requires.
@@ -83,8 +90,10 @@ runs on a one-line change:
   first.
 
 What that leaves for `patch`: implementer, reviewer, deliver, and three human
-gates - the track, the review, and publishing. For `fix`: specifier, its
-scoring, implementer, reviewer, deliver, and one more gate for the spec.
+gates - the track, the review, and publishing - with implement running into
+review without a stop. For `fix`: specifier, implementer, reviewer, deliver,
+and one more gate for the spec, which is the failing test and is scored by the
+orchestrator rather than by another `reviewer` invocation.
 
 ## Review rounds
 

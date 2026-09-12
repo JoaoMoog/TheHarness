@@ -46,7 +46,9 @@ Anti-patterns to refuse:
 4. List anything still open, and who has to answer it.
 5. Set the status: complete, blocked or escalated. Blocked and escalated both
    require the reason.
-6. Emit the envelope. Append the same summary to session.md under the phase.
+6. Emit the envelope. The orchestrator records it in session.md in one edit -
+   summary, status, scores and warnings together - so a phase costs one write,
+   not four.
 
 ## Output
 
@@ -73,4 +75,5 @@ complete, blocked, escalated.
 - [ ] Every open question is in it, with who must answer.
 - [ ] Status reflects what actually happened, not what was hoped.
 - [ ] The artifact path is real and was written.
-- [ ] The same summary was appended to session.md.
+- [ ] The envelope reached session.md in the orchestrator's single edit for the
+      phase.

@@ -12,7 +12,9 @@
  *
  * Two entry points, one implementation:
  *   git pre-commit         scans the staged INDEX, warns on stderr, exits 0
- *   VS Code PreToolUse     scans the tool payload, allows it with a warning
+ *   VS Code PreToolUse     scans the tool payload, allows it with a warning;
+ *                          runs inside tool-hooks.mjs, and on its own for
+ *                          Kiro and the self-test
  *
  * A false positive is marked once and stays quiet everywhere after: by id in
  * .harness-allow.json through `harness secrets --allow=<id> --why`, by path
@@ -28,7 +30,9 @@ import path from 'node:path';
 import { scanLine, scanStructured, redact } from './lib/patterns.mjs';
 import { loadAllowlist, isAllowed, valueId, ALLOW_FILE } from './lib/allowlist.mjs';
 import * as git from './lib/git.mjs';
-import { readHookInput, isHookMode, collectStrings, toolFilePath, allow, EXIT_OK } from './lib/io.mjs';
+import {
+  readHookInput, isHookMode, collectStrings, toolFilePath, verdict, emitVerdict, isMain, EXIT_OK,
+} from './lib/io.mjs';
 
 const ALLOW_MARKER = 'harness:allow-secret';
 const LARGE_FILE_BYTES = 512 * 1024;
@@ -37,16 +41,18 @@ const LOG_MAX_BYTES = 2 * 1024 * 1024;
 /** Only files that genuinely cannot hold a live credential. */
 const SKIP_FILE = /(^|\/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|Cargo\.lock|go\.sum|poetry\.lock)$/i;
 
-function repoRootOrNull() {
-  try {
-    return git.isInsideRepo() ? git.repoRoot() : null;
-  } catch {
-    return null;
-  }
-}
+/**
+ * The repository root, or null outside one, and the team's false-positive
+ * list. Resolved once per process by whoever calls first: the dispatcher hands
+ * in the root it already looked up, so no git call is spent here.
+ */
+let ROOT = null;
+let ALLOWLIST = null;
 
-const ROOT = repoRootOrNull();
-const ALLOWLIST = loadAllowlist(ROOT ?? process.cwd());
+function configure(root) {
+  ROOT = root ?? null;
+  ALLOWLIST = loadAllowlist(ROOT ?? process.cwd());
+}
 
 /** `file` is what the warning shows; `where` is the repository-relative path the allowlist matches on. */
 function scanText(text, file, where = file) {
@@ -187,35 +193,45 @@ function hookTarget(input) {
   return rel.startsWith('..') ? null : rel;
 }
 
-function runHook(input) {
-  const tool = input.tool_name ?? 'tool input';
-  const where = hookTarget(input);
-  const findings = collectStrings(input.tool_input).flatMap((s) => scanText(s, tool, where));
-  if (findings.length === 0) return allow('PreToolUse');
+/**
+ * An allow, with a warning when the payload carries a credential-shaped value;
+ * null when it is clean. Never a block, not even when the scanner itself fails.
+ */
+export function decide(input, ctx) {
+  try {
+    if (ALLOWLIST === null) configure(ctx?.inRepo ? ctx.root : null);
+    const tool = input.tool_name ?? 'tool input';
+    const where = hookTarget(input);
+    const findings = collectStrings(input.tool_input).flatMap((s) => scanText(s, tool, where));
+    if (findings.length === 0) return null;
 
-  const logged = record('PreToolUse', findings, { tool, target: where, session: input.session_id ?? null });
-  const first = findings[0];
-  const id = valueId(first.value);
-  const more = findings.length > 1 ? ` and ${findings.length - 1} more` : '';
-  return allow(
-    'PreToolUse',
-    `harness: this ${tool} payload contains what looks like a ${first.name} (${redact(first.value)}, id ${id})${more}. ` +
-      `It was allowed and recorded${logged ? ` in ${shown(logged)}` : ''}. Read the value from an environment ` +
-      'variable or a secret manager instead; if it is real, tell the user it must be rotated, and if it is a ' +
-      `false positive, tell them to mark it with: harness secrets --allow=${id} --why="<reason>".`
-  );
+    const logged = record('PreToolUse', findings, { tool, target: where, session: input.session_id ?? null });
+    const first = findings[0];
+    const id = valueId(first.value);
+    const more = findings.length > 1 ? ` and ${findings.length - 1} more` : '';
+    return verdict.allow(
+      `harness: this ${tool} payload contains what looks like a ${first.name} (${redact(first.value)}, id ${id})${more}. ` +
+        `It was allowed and recorded${logged ? ` in ${shown(logged)}` : ''}. Read the value from an environment ` +
+        'variable or a secret manager instead; if it is real, tell the user it must be rotated, and if it is a ' +
+        `false positive, tell them to mark it with: harness secrets --allow=${id} --why="<reason>".`
+    );
+  } catch (err) {
+    // Never a block: a scanner that failed is said, not enforced.
+    const reason = err?.message ?? String(err);
+    console.error(`harness secret-block: WARNING, the scanner failed - ${reason}. Nothing was blocked.`);
+    return verdict.allow(`harness: the credential scanner failed (${reason}); the call was allowed unscanned.`);
+  }
 }
 
-const input = await readHookInput();
-try {
-  process.exit(isHookMode(input) ? runHook(input) : runGit());
-} catch (err) {
-  // Never a block: a scanner that failed is said, not enforced.
-  const reason = err?.message ?? String(err);
-  console.error(`harness secret-block: WARNING, the scanner failed - ${reason}. Nothing was blocked.`);
-  process.exit(
-    isHookMode(input)
-      ? allow('PreToolUse', `harness: the credential scanner failed (${reason}); the call was allowed unscanned.`)
-      : EXIT_OK
-  );
+if (isMain(import.meta.url)) {
+  const input = await readHookInput();
+  if (isHookMode(input)) process.exit(emitVerdict('PreToolUse', decide(input, git.hookContext())));
+  try {
+    configure(git.repoRootOrNull());
+    process.exit(runGit());
+  } catch (err) {
+    const reason = err?.message ?? String(err);
+    console.error(`harness secret-block: WARNING, the scanner failed - ${reason}. Nothing was blocked.`);
+    process.exit(EXIT_OK);
+  }
 }

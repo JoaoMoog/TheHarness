@@ -92,13 +92,14 @@ de spec. O coletor do dream roda ali também.
 
 Uma sessão termina e leva junto tudo o que aprendeu. A próxima começa do mesmo
 lugar e faz o mesmo desvio. O ciclo abaixo é o que corta isso, e ele acontece
-**entre** sessões, sem custo de sessão extra e sem daemon.
+**entre** sessões, sem custo de sessão extra e sem daemon. A extração nunca
+vem antes do pedido: um ajuste rápido não paga pela memória da sessão anterior.
 
 | quando | quem | o que faz |
 |---|---|---|
 | a sessão fecha | `dream-collect`, em Node | Lê os `session.md` fechados e grava o que é mecanicamente observável em `.harness/dream-pending.json` |
-| a sessão seguinte abre | `session-context` | Injeta o material e o contrato de extração, e apaga o pendente |
-| durante esse turno | a skill `dreaming` | Escreve candidatos em `_dreams.md` |
+| a sessão seguinte abre | `session-context` | Avisa que há material pendente e segue direto para o pedido |
+| essa sessão fecha, ou `/dream` | a skill `dreaming` | Escreve candidatos em `_dreams.md` e consome o pendente |
 | quando você quiser | `harness dream` | Lista, promove ou descarta |
 
 O coletor não roda modelo nenhum e sai calado quando nada fechou desde a última
@@ -139,7 +140,8 @@ resposta fica gravada em `session.md`, e o pull request é aberto contra ela.
 | `refactor` | plan → tasks → implement → review → deliver | 190k |
 | `feature` | as seis | 220k |
 
-Entre cada etapa aparece um botão, em português. Você lê o artefato e confirma.
+Entre cada etapa aparece um botão, em português; só em `patch` e `incident` a
+revisão começa sozinha quando implement termina. Você lê o artefato e confirma.
 O estado da sessão fica em `specs/NNN-slug/session.md` — ou
 `.kiro/specs/NNN-slug/session.md` num repo de Kiro — commitado, então dá para
 fechar o editor e retomar com `/resume`. O início da sessão diz qual é o layout,
@@ -192,11 +194,20 @@ revisão quando o diff toca área sensível (auth, crypto, pagamento, segredo,
 fronteira de entrada, dependência), e a sessão diz quando pulou; o corpo do
 pull request é pontuado pelo próprio orchestrator, que não o escreveu, em vez
 de uma terceira invocação do `reviewer`; e mudança sem comportamento
-observável, como texto, versão ou formatação, não ganha teste inventado. Um
-`patch` fica em três sub-agentes e três gates humanos. O exemplo de settings
-sobe `chat.agent.maxRequests` de 25 para 80, porque cada parada nesse teto
-espera alguém clicar em continuar; os budgets dos loops e o `burn-detect` são
-o que segura um loop de verdade.
+observável, como texto, versão ou formatação, não ganha teste inventado. A
+suíte roda uma vez por estado da árvore: o `reviewer` reaproveita o registro
+de verificação do implement quando o estado bate e o registro está verde, e
+roda por conta própria só o check dirigido aos arquivos mudados. Em `patch` e
+`incident` a revisão começa sozinha quando implement termina; cada fase é uma
+edição só no `session.md`; sem `_context.md`, um patch segue com os scripts do
+próprio manifesto do repo; e a consolidação (dreaming) fica para o fim da
+sessão ou para `/dream`, nunca antes do pedido. No `fix`, a spec é o teste que
+falha mais o comportamento esperado, pontuada pelo orchestrator sem invocar o
+`reviewer` só para isso, e o botão "Aprovar spec e implementar a correção" vai
+direto ao implementer. Um `patch` fica em três sub-agentes e três gates
+humanos. O exemplo de settings sobe `chat.agent.maxRequests` de 25 para 80,
+porque cada parada nesse teto espera alguém clicar em continuar; os budgets
+dos loops e o `burn-detect` são o que segura um loop de verdade.
 
 ## Cross TK
 
@@ -344,8 +355,8 @@ quer dizer silencioso, não seguro: um valor real que chegou ao histórico
 continua precisando de rotação.
 
 ```bash
-npm run selftest          # 124 casos de guardrail, em repositórios descartáveis
-npm run selftest:dream    # 27 casos de consolidação, com sessões sintéticas
+npm run selftest          # 136 casos de guardrail, em repositórios descartáveis
+npm run selftest:dream    # 32 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```
 
@@ -353,6 +364,18 @@ Os guardrails recebem o evento por STDIN no VS Code e no Kiro. O modo vem do
 `env` no primeiro e de `--hook-mode=kiro` no argv no segundo, porque o schema de
 hook do Kiro não tem campo `env`. O self-test confere caso a caso que a decisão
 sai igual pelas duas portas.
+
+**Um processo por evento de ferramenta.** O VS Code roda todo hook de
+`PreToolUse` e `PostToolUse` em toda chamada de ferramenta e ignora o campo
+`matcher` (está na documentação oficial). Oito scripts registrados eram oito
+processos Node e cinco spawns de git por chamada: 402 ms de hooks numa leitura
+simples, medidos aqui. Por isso os oito guardrails de ferramenta rodam dentro
+de `tool-hooks.mjs`, um processo por evento, na mesma ordem, com uma leitura de
+stdin e uma consulta ao git, e a resposta é combinada como o próprio runtime
+combinaria: deny vence ask, que vence allow, e toda mensagem é preservada.
+Medido na mesma máquina depois da mudança: 117 ms por chamada (pre e post
+juntos). Cada script continua com entrada própria para o `pre-commit` do git,
+o Kiro e o self-test, e a mesma decisão sai pelas três portas.
 
 ## Estender para a sua stack
 

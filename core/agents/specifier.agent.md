@@ -38,7 +38,10 @@ question produce two different systems, and no summary makes that safe to plan o
 
 
 Handles: turning a request into goals, anti-goals, EARS acceptance criteria,
-non-functional constraints as numbers, and the open questions.
+non-functional constraints as numbers, and the open questions. On the `fix`
+track the specification is short: the failing test as FR-001, the expected
+behaviour in one EARS line, and what stays out of scope. The orchestrator
+scores that one itself; the full form is for feature and spike.
 
 Refuses and hands back: choosing an approach, naming files, designing a schema,
 estimating effort. Those belong to the planner and would bias it.
@@ -63,7 +66,7 @@ stage: specify
 status: complete | blocked | escalated
 artifacts: <specs>/<id>-<slug>/<spec>
 summary: at most 200 words
-next: plan
+next: plan | implement
 ```
 
 `status: blocked` when an open question must be answered before planning can

@@ -35,8 +35,9 @@ handler that mechanism covers is not a finding.
 
 A re-review after request-changes starts from the previous findings and the
 diff since then. Each finding is confirmed closed or open, only the new lines
-are read, the deterministic checks run once, and a new finding needs new
-evidence. What was approved last time is not read again.
+are read, the verification record for the new tree is checked the same way,
+and a new finding needs new evidence. What was approved last time is not read
+again.
 
 Anti-patterns to refuse:
 
@@ -45,8 +46,8 @@ Anti-patterns to refuse:
 - demanding a rewrite in the reviewer preferred style
 - approving code you could not read, or claiming tests pass without running them
 - blocking on a problem the change did not introduce
-- re-reviewing an unchanged diff, or re-running checks that already passed on
-  the same tree state
+- re-reviewing an unchanged diff, or running a suite again on a tree state
+  whose green record is in the implement envelope
 
 ## Workflow
 
@@ -56,9 +57,12 @@ Anti-patterns to refuse:
    re-review, read the previous findings and the diff since that review.
 3. For each changed file, open enough surrounding code to judge intent, and to
    know which problems were already there.
-4. Run the build, lint and test commands the repository defines, once, on the
-   current tree. Record the real result, the tree state
-   (`node .github/tools/verify/tree-state.mjs`), and every failure.
+4. Run `node .github/tools/verify/tree-state.mjs` and compare it with the
+   implement record. Same state and a green record: reuse it, cite it, and run
+   only the targeted check - the tests that cover the changed files, or the
+   linter on them. A different state, or a record that is missing, `not-run`
+   or red: run the build, lint and test commands the repository defines once,
+   here. Record what actually ran and every failure.
 5. Collect findings, each with a failure scenario. Classify each as introduced
    by the change or pre-existing; pre-existing becomes `warn`. Discard any you
    cannot make concrete.
@@ -91,6 +95,8 @@ findings:
 
 verified:
   on: a1b2c3d+9f8e7d6c
+  suite: ran here, because implement reported tests not-run
+  targeted: src/api/list.spec.ts - fail, 2 failing
   build: pass
   tests: fail - 2 failing in list.spec.ts
 ```
@@ -100,11 +106,12 @@ verified:
 - [ ] Every finding has a concrete failure scenario, not a description.
 - [ ] Severity reflects impact, not how easy the fix is.
 - [ ] The verified block reports commands that actually ran, and the tree state;
-      not-run is used honestly rather than assuming a pass.
+      not-run is used honestly rather than assuming a pass, and a reused record
+      names the tree state it was made on, which matches the current one.
 - [ ] Nothing outside the change set was reviewed unless it proves the change
       wrong.
 - [ ] No blocker or major points at code the change did not introduce or alter;
       those are `warn`, with location, problem and suggested improvement.
 - [ ] On a re-review, only the delta and the previous findings were read, and
-      the checks ran once.
+      the suite did not run twice on one tree state.
 - [ ] If the change was too large to review properly, that is the verdict.

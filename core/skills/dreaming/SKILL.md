@@ -1,6 +1,6 @@
 ---
 name: dreaming
-description: Turn what closed sessions can be read to say into candidate decisions. Use when the session context carries pending consolidation material.
+description: Turn what closed sessions can be read to say into candidate decisions. Use when a session reaches done with consolidation material pending, or on /dream; never before the request.
 version: 1.0.0
 sfa: "scope: the sessions closed since the last pass | format: candidate blocks in _dreams.md | audience: the human who promotes or discards them, and every session after that"
 stacks: []
@@ -17,9 +17,11 @@ the step that stops that: reread what closed, find what repeats, and write it
 down where the next session will see it.
 
 It happens **between** sessions, not during one. The collector runs when a
-session stops and gathers the evidence; the next session start injects it and
-asks for extraction. Nothing here costs a session of its own, and nothing runs
-while nothing has closed.
+session stops and gathers the evidence; the next session start names what is
+waiting and leaves it alone, and the extraction runs when that session reaches
+`done`, or when a person asks with `/dream`. A quick fix never pays for it
+before its own request. Nothing here costs a session of its own, and nothing
+runs while nothing has closed.
 
 **Candidates, not memory.** Extraction writes to `_dreams.md`. Only a person
 moves an entry to `_decisions.md`, through `harness dream --promote=<id>`. A
@@ -66,16 +68,18 @@ means anything.
 
 ## Workflow
 
-1. Read the pending material in the session context. It lists the sessions
-   that closed, what escalated, what ran twice, what was left uncovered.
+1. Read `.harness/dream-pending.json`. It lists the sessions that closed, what
+   escalated, what ran twice, what was left uncovered.
 2. Group the signals by shape, not by session. A group of one is dropped here.
 3. For each group of two or more, write the claim in one sentence.
 4. Check it against the existing decisions the material carries. If it
    contradicts one, say which; if it repeats one, drop it.
 5. Name the rejected reading of the same evidence.
 6. Append the block to `_dreams.md`, allocating the next `D-NNN`.
-7. Say in one line how many candidates were written, and stop. Do not promote
-   anything, and do not act on a candidate in the same session that wrote it.
+7. Run `node .github/hooks/scripts/dream-collect.mjs --consume`, so the same
+   material is not named again, and say in one line how many candidates were
+   written. Do not promote anything, and do not act on a candidate in the same
+   session that wrote it.
 
 ## Output
 
