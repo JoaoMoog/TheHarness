@@ -40,6 +40,25 @@ export function repoRoot(cwd = process.cwd()) {
   return git(['rev-parse', '--show-toplevel'], { cwd }).trim();
 }
 
+/** The repository root in one git call, or null outside a work tree. */
+export function repoRootOrNull(cwd = process.cwd()) {
+  try {
+    return repoRoot(cwd) || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * What every tool guardrail needs to know about where it runs, resolved once
+ * per process: the root to keep state under, and whether git can answer at
+ * all. Outside a repository the cwd stands in for the root.
+ */
+export function hookContext(cwd = process.cwd()) {
+  const root = repoRootOrNull(cwd);
+  return { root: root ?? cwd, inRepo: root !== null };
+}
+
 /** NUL-separated so filenames with spaces, quotes or non-ASCII survive intact. */
 export function stagedFiles(cwd = process.cwd()) {
   const out = git(['diff', '--cached', '--name-only', '-z', '--diff-filter=ACMR'], { cwd });

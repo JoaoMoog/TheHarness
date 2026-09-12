@@ -615,6 +615,58 @@ console.log('\nformat: only an edit reaches the formatter');
   check('an edit does', fs.existsSync(marker), true);
 }
 
+/* tool-hooks: VS Code runs every PreToolUse and PostToolUse hook on every
+   tool call and ignores matchers, so the eight tool guardrails run in one
+   process per event, in a fixed order, with one stdin read and one git
+   lookup. Their answers combine the way the runtime combines them. */
+console.log('\ntool-hooks: one process per tool event');
+
+{
+  const { dir } = sandbox();
+  const pre = (tool_name, tool_input, extra = {}) =>
+    runHook('tool-hooks', { hook_event_name: 'PreToolUse', session_id: 'th-' + process.pid, tool_name, tool_input, ...extra }, dir);
+  const decision = (r) => r.hookSpecificOutput?.permissionDecision;
+  write(dir, 'a.txt', 'plain\n');
+
+  const plain = pre('readFile', { filePath: path.join(dir, 'a.txt') });
+  check('a plain read is allowed with no message', decision(plain) === 'allow' && plain.systemMessage === undefined, true);
+  write(dir, '.env', 'TOKEN=abc\n');
+  check('deny wins: read-guard refuses a .env read through the dispatcher', decision(pre('readFile', { filePath: path.join(dir, '.env') })), 'deny');
+  check('ask propagates: destructive-git asks before a force push', decision(pre('runCommands', { command: 'git push --force origin main' })), 'ask');
+  check('deny outranks ask when both fire on one call', decision(pre('runCommands', { command: 'git push --force origin main && az repos pr update --status completed' })), 'deny');
+  const warned = pre('editFiles', { filePath: path.join(dir, 'x.ts'), content: 'const k = "' + FAKE_AWS_ID + '";' });
+  check('an allow keeps its warning: the secret-block message comes through', decision(warned) === 'allow' && /looks like a AWS access key id/.test(warned.systemMessage ?? ''), true);
+  check('policy-gate denies through the dispatcher too', decision(pre('editFiles', { filePath: path.join(dir, 'infra', 'terraform.tfstate') })), 'deny');
+
+  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
+  const sid = 'th-ctk-' + process.pid;
+  check('the Cross TK gate holds through the dispatcher', decision(pre('readFile', { filePath: path.join(dir, 'a.txt') }, { session_id: sid })), 'deny');
+  check(
+    'and a Cross TK call opens it for the reads that follow',
+    decision(pre('cross-tk/read', {}, { session_id: sid })) === 'allow' && decision(pre('readFile', { filePath: path.join(dir, 'a.txt') }, { session_id: sid })) === 'allow',
+    true
+  );
+  fs.rmSync(path.join(dir, '.mcp.json'));
+
+  write(dir, 'b.txt', 'same\n');
+  const post = () =>
+    runHook('tool-hooks', { hook_event_name: 'PostToolUse', session_id: 'th-post-' + process.pid, tool_name: 'readFile', tool_input: { filePath: path.join(dir, 'b.txt') } }, dir);
+  post();
+  post();
+  const third = post();
+  check('PostToolUse runs burn-detect: the third unchanged read warns', /read 3 times/.test(third.systemMessage ?? ''), true);
+  check('and a PostToolUse carries no permission decision', third.hookSpecificOutput?.permissionDecision, undefined);
+
+  const noEvent = spawnSync(process.execPath, [script('tool-hooks')], {
+    input: '{"tool_name":"readFile"}',
+    encoding: 'utf8',
+    cwd: dir,
+    env: { ...process.env, HARNESS_HOOK_MODE: 'vscode' },
+  });
+  check('a payload without an event exits clean and silent', noEvent.status === 0 && noEvent.stdout.trim() === '', true);
+  check('an event it does not own is ignored', Object.keys(runHook('tool-hooks', { hook_event_name: 'SessionStart' }, dir)).length, 0);
+}
+
 /* tree-state: one short line per state of the tree, so a verification result
    can be tied to the tree it ran on and reused only while that holds. */
 console.log('\ntree-state: one line per state of the tree');

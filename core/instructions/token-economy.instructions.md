@@ -36,12 +36,13 @@ reused, not re-derived.
 ## Verify in proportion
 
 A verification result holds until the tree changes. Record what ran and the
-tree state it ran on (`node .github/tools/verify/tree-state.mjs`). A later step
-reuses that record unless its contract requires an independent run: the
-reviewer's first pass does; rubric scoring, deliver and retries do not.
+tree state it ran on (`node .github/tools/verify/tree-state.mjs`). Later steps
+reuse a green record for the same state; review adds the targeted check on the
+changed files, and runs the suite itself only when the state differs or the
+record is missing, `not-run` or red.
 
 Inside a loop, re-run the check that failed first. The full build, lint and
-suite run once, on the final tree, before success is reported.
+suite run once per tree state, on the final tree, before success is reported.
 
 Done is done: every check passed on the final tree and the request is
 satisfied. Another round needs a new failure, an open finding or an unchecked

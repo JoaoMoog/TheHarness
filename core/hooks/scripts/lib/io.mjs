@@ -7,9 +7,61 @@
  *    hard block the model sees, any other non-zero exit is a warning.
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 export const EXIT_OK = 0;
 export const EXIT_REFUSE = 1;
 export const EXIT_BLOCK = 2;
+
+/**
+ * Whether the module at `url` is the script Node was started with. Every
+ * guardrail is both a CLI (git pre-commit, Kiro, the self-test) and a function
+ * the tool-hooks dispatcher imports; the guard keeps the CLI path from running
+ * on import. Both sides are resolved through symlinks, because the scripts are
+ * reached through the .github/hooks junction and Node resolves the main module
+ * to its real path while argv keeps the junction.
+ */
+export function isMain(url) {
+  try {
+    if (!process.argv[1]) return false;
+    const real = (p) => {
+      try {
+        return fs.realpathSync(p);
+      } catch {
+        return p;
+      }
+    };
+    return real(path.resolve(process.argv[1])) === real(fileURLToPath(url));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * A guardrail's answer as a value rather than an emitted line, so several can
+ * run in one process. `null` means "not my concern"; a message on an allow is
+ * the advisory the model sees.
+ */
+export const verdict = {
+  allow: (systemMessage = undefined) => ({ decision: 'allow', ...(systemMessage ? { systemMessage } : {}) }),
+  ask: (reason) => ({ decision: 'ask', reason }),
+  deny: (reason) => ({ decision: 'deny', reason }),
+};
+
+/**
+ * How the runtime combines several hooks on one call, done once here instead:
+ * the most restrictive decision wins, and every message survives.
+ */
+export function combine(results) {
+  const real = results.filter(Boolean);
+  const messages = real.map((r) => r.systemMessage).filter(Boolean);
+  const systemMessage = messages.length > 0 ? messages.join('\n\n') : undefined;
+  const top = real.find((r) => r.decision === 'deny') ?? real.find((r) => r.decision === 'ask');
+  const out = top ? { decision: top.decision, reason: top.reason } : { decision: 'allow' };
+  return systemMessage ? { ...out, systemMessage } : out;
+}
 
 const STDIN_LIMIT = 4 * 1024 * 1024;
 const STDIN_TIMEOUT_MS = 2000;
@@ -81,26 +133,47 @@ export function emit(json) {
   process.stdout.write(`${JSON.stringify(json)}\n`);
 }
 
-export function deny(eventName, reason) {
-  emit({
+export function deny(eventName, reason, systemMessage = undefined) {
+  const out = {
     hookSpecificOutput: {
       hookEventName: eventName,
       permissionDecision: 'deny',
       permissionDecisionReason: reason,
     },
-  });
+  };
+  if (systemMessage) out.systemMessage = systemMessage;
+  emit(out);
   return EXIT_OK;
 }
 
-export function ask(eventName, reason) {
-  emit({
+export function ask(eventName, reason, systemMessage = undefined) {
+  const out = {
     hookSpecificOutput: {
       hookEventName: eventName,
       permissionDecision: 'ask',
       permissionDecisionReason: reason,
     },
-  });
+  };
+  if (systemMessage) out.systemMessage = systemMessage;
+  emit(out);
   return EXIT_OK;
+}
+
+/**
+ * Emits a verdict value in the runtime's format. A PostToolUse carries no
+ * permission decision, only what the model should hear.
+ */
+export function emitVerdict(eventName, v) {
+  if (eventName === 'PostToolUse') {
+    const out = { hookSpecificOutput: { hookEventName: eventName } };
+    if (v?.systemMessage) out.systemMessage = v.systemMessage;
+    emit(out);
+    return EXIT_OK;
+  }
+  const decision = v?.decision ?? 'allow';
+  if (decision === 'deny') return deny(eventName, v.reason, v.systemMessage);
+  if (decision === 'ask') return ask(eventName, v.reason, v.systemMessage);
+  return allow(eventName, v?.systemMessage);
 }
 
 /** An allow may carry a warning the model sees; an advisory guardrail is one that uses it. */

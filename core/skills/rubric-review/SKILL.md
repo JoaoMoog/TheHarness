@@ -23,9 +23,10 @@ drifts, and nobody can tell whether last month was stricter.
 **The generator never scores its own work.** Self-assessment converges on
 self-agreement rather than on quality, and it is the single most common way an
 automated review becomes theatre. The scoring pass runs with its own context
-for the spec and the review. The pull request body is the exception in cost,
-not in principle: the orchestrator scores it, because it did not write it and
-a sub-agent for four questions over a screen of text costs more than the body.
+for the feature spec and the review. The `fix` spec and the pull request body
+are the exceptions in cost, not in principle: the orchestrator scores them,
+because it wrote neither, and a sub-agent for a failing test or for four
+questions over a screen of text costs more than the artifact.
 
 Every score below 4 names the concrete failure: the input or state,
 and the wrong result. A number with no evidence is a preference that learned to

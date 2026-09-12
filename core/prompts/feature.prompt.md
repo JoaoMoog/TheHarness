@@ -14,8 +14,10 @@ Before anything else:
    `.harness/crosstk.json` with the server and tool names before any read.
    The harness refuses a built-in read before that, and so does the
    orchestrator.
-1. If `specs/_context.md` does not exist, say so and offer to run the
-   `codebase-inventory` skill first. Every session after that one is cheaper for it.
+1. If `specs/_context.md` does not exist, say so in one line and continue:
+   the implementer and the reviewer use the scripts the repository manifest
+   defines. Offer the `codebase-inventory` skill only when the track chosen
+   below is feature or refactor; every session after that one is cheaper for it.
 2. If other sessions are open, list them with their phase and work branch and
    continue: this session gets the next id and its own work branch, and a
    person doing two unrelated adjustments in two chats has two sessions. Say
@@ -35,9 +37,11 @@ track** to its agent - `specifier` for fix, feature and spike, `planner` for
 refactor, `implementer` for patch and incident - passing the request and the
 repository context. Do not write the specification yourself.
 
-When it returns, append its summary to `session.md`, set the phase status, and
-report: what the specification says, what is still open, and where the file is.
-Then stop at the approval gate. Advancing is the human's action.
+When it returns, record it in `session.md` in one edit - summary, status,
+scores and warnings together - and report: what the phase produced, what is
+still open, and where the file is. Then stop at the approval gate; advancing is
+the human's action, except that on patch and incident the review starts as soon
+as implement returns complete.
 
 If it returns `blocked` or `escalated`, say why and stop. Do not re-prompt it
 with a different question hoping for a different status.

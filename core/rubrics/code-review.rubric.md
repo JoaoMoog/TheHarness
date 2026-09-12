@@ -57,5 +57,9 @@ handling already covers is not a failure-handling gap.
 On a track with no specification - patch, incident, refactor - C2 is scored
 against the request as stated, and the traceability matrix is not required.
 
+C4 is scored on the tests and what they assert, not on who ran them. A green
+implement record reused on the same tree state is valid evidence for it; the
+reviewer's own run is the targeted check on the changed files.
+
 The agent that produced the change never scores it. Self-assessment converges on
 self-agreement, not on quality.

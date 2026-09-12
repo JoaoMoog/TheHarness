@@ -64,8 +64,9 @@ of raising it again.
 | phase | agent | model | tokens | duration |
 |---|---|---|---|---|
 
-Filled from the telemetry hook. If a phase costs several times its neighbours,
-that is the phase to look at first.
+Not filled by hand: `harness budget --sessions` reads what the telemetry hook
+recorded. If a phase costs several times its neighbours, that is the phase to
+look at first.
 
 ## Summaries
 

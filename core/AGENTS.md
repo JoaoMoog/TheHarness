@@ -67,7 +67,7 @@ the work belongs in skills.
 
 Multi-step work runs as a session, started with `/feature` and owned by
 `@orchestrator`. A session runs a **track** - an ordered subset of the phases, chosen before the
-first phase - so a typo does not earn a specification. Within it the phases are and a human approves each transition:
+first phase - so a typo does not earn a specification. A human approves each transition:
 
 ```
 specify -> plan -> tasks -> implement -> review -> deliver -> done
@@ -103,22 +103,24 @@ returns a summary of at most 200 words. Detail stays in the artifact on disk.
 That split is what keeps a long session affordable: the transcript is resent
 every turn, so a parent holding every artifact grows faster than the work.
 
-Run `codebase-inventory` once per repository first. It writes
-`<specs>/_context.md`, which every later session reads instead of rediscovering
-the codebase.
+Run `codebase-inventory` once per repository, before the first feature or
+refactor; a patch or fix continues without it, on the manifest's own scripts.
+It writes `<specs>/_context.md`, which every later session reads instead of
+rediscovering the codebase.
 
 When a session closes, `dream-collect` gathers what it can be read to say. The
-next session start injects that material and asks for candidates in
-`<specs>/_dreams.md`. Nothing reaches `<specs>/_decisions.md` without
-`harness dream --promote`.
+next session start names that material; the session consolidates it into
+`<specs>/_dreams.md` at `done` or on `/dream`, never before its own request.
+Nothing reaches `<specs>/_decisions.md` without `harness dream --promote`.
 
 ## Proportional verification
 
 A verification result holds until the tree changes. The implement envelope
 records what ran and the tree state (`node .github/tools/verify/tree-state.mjs`);
-review runs its own checks once, because an independent run is its contract;
-scoring, deliver and retries reuse the record. Inside the verify loop only the
-failed check is re-run, and the full suite runs once on the final tree.
+review reuses a green record for the same state and runs only the targeted
+check on the changed files; scoring, deliver and retries reuse it too. Inside
+the verify loop only the failed check is re-run, and the full suite runs once
+per tree state.
 
 Findings point at what the change introduced or altered. A problem that
 predates it is a `warn`: recorded in `session.md`, carried to the pull request,

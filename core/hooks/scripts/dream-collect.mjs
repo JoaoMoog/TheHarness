@@ -5,9 +5,11 @@
  *
  * This half is deliberately dumb. It runs no model, makes no judgement and
  * writes nothing into the repository - it only assembles the evidence and drops
- * it in .harness/dream-pending.json. The next SessionStart injects that material
- * and asks for candidates. The work therefore happens between one session and
- * the next, which is the whole point, and costs nothing while nothing is new.
+ * it in .harness/dream-pending.json. The next SessionStart names that material;
+ * the extraction runs when that session closes or on /dream, and --consume
+ * removes the file once the candidates are written. The work therefore happens
+ * between one session and the next, which is the whole point, never before a
+ * request, and costs nothing while nothing is new.
  *
  * Silence is the normal outcome. A hook that speaks every session gets turned
  * off, and then none of this runs at all.
@@ -30,6 +32,9 @@ const STATE_KEEP = 100;
 
 /** Invoked without --hook means a person ran it, and a person expects output. */
 const DIRECT = !process.argv.includes('--hook');
+
+/** The extraction step ends with --consume: the material was read and its candidates written. */
+const CONSUME = process.argv.includes('--consume');
 
 /** The status word that means a phase could not finish on its own. */
 const ESCALATED = new Set(['escalated']);
@@ -197,6 +202,14 @@ function collect() {
   fs.writeFileSync(statePath, `${JSON.stringify(nextState, null, 2)}\n`, 'utf8');
 
   return { wrote: true, file: pendingPath, sessions: fresh.length, window: closed.length };
+}
+
+if (CONSUME) {
+  const file = path.join(repoRoot(), '.harness', 'dream-pending.json');
+  const existed = fs.existsSync(file);
+  fs.rmSync(file, { force: true });
+  console.log(existed ? `Consumed ${file}: the next session start will not name it again.` : 'Nothing pending to consume.');
+  process.exit(EXIT_OK);
 }
 
 if (DIRECT) {

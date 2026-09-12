@@ -26,8 +26,10 @@ and may invoke several in parallel when the tasks are marked parallel.
   read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages`, `problems` - to work inside existing code
 - `editFiles` - source and tests, limited to the files the task names
-- `runCommands` - restricted to the commands listed in `specs/_context.md`. A
-  command that is not sanctioned there is not run
+- `runCommands` - restricted to the commands listed in `specs/_context.md`, or,
+  while that file does not exist, to the scripts the repository manifest
+  defines (`package.json` scripts, the solution's build and test commands),
+  named in the envelope. Anything else is not run
 
 ## Scope
 
