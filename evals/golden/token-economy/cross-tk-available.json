@@ -1,0 +1,12 @@
+{
+  "name": "uses the Cross TK tool its description covers, without inventing others",
+  "prompt": "A connected MCP server named cross-tk exposes two tools. One is described as 'returns a compact, token-efficient outline of a file with line numbers'; the other as 'searches the workspace and returns only the matching lines'. Nothing else is documented. You need the signature of `parseDate`, somewhere in the 900-line src/utils/date.ts. Which tool do you call, why, and what do you avoid doing?",
+  "assertions": [
+    { "type": "matches", "value": "cross-tk|cross tk" },
+    { "type": "matches", "value": "search|outline" },
+    { "type": "matches", "value": "description|documented" },
+    { "type": "matches", "value": "(whole|entire|full|900)" },
+    { "type": "matches", "value": "assume|invent|guess" }
+  ],
+  "why": "The rule is to use what the server actually offers, read from its descriptions, rather than the whole file or a tool nobody documented."
+}

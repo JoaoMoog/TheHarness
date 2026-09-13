@@ -3,14 +3,18 @@
  * Guardrail: blocks files that must never enter history regardless of content,
  * plus oversized blobs that usually mean a build artifact was staged by mistake.
  *
- * Runs as a git pre-commit hook and as a VS Code PreToolUse hook on writes.
+ * Runs as a git pre-commit hook, inside tool-hooks.mjs on every tool call, and
+ * on its own for Kiro and the self-test.
  */
 import path from 'node:path';
 import * as git from './lib/git.mjs';
 import {
-  readHookInput, isHookMode, toolFilePath, deny, allow, failSecure,
+  readHookInput, isHookMode, toolFilePath, verdict, emitVerdict, failSecure, isMain,
   EXIT_OK, EXIT_REFUSE,
 } from './lib/io.mjs';
+
+/** A guardrail that cannot run must not approve: the dispatcher turns a crash here into a deny. */
+export const failsSecure = true;
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const ALLOW_MARKER = 'harness:allow-file';
@@ -76,27 +80,29 @@ function checkIndex() {
   return violations;
 }
 
-function runHook(input) {
+/** A deny when the tool would write a file that must never enter history; null otherwise. */
+export function decide(input) {
   const file = toolFilePath(input);
-  if (!file) return allow('PreToolUse');
+  if (!file) return null;
   const rule = ruleFor(path.posix.normalize(String(file).split(path.sep).join('/')), () => null);
-  if (!rule) return allow('PreToolUse');
-  return deny(
-    'PreToolUse',
+  if (!rule) return null;
+  return verdict.deny(
     `Blocked: ${path.basename(String(file))} is a ${rule.why} and must not be written into the repository.`
   );
 }
 
-const input = await readHookInput();
-try {
-  if (isHookMode(input)) process.exit(runHook(input));
-  const violations = checkIndex();
-  if (violations.length === 0) process.exit(EXIT_OK);
-  console.error('\nharness policy-gate: refused\n');
-  for (const v of violations) console.error(`  ${v}`);
-  console.error(`\nUnstage the file. If it is genuinely safe, add the comment ${ALLOW_MARKER} to it.`);
-  console.error('Do not reach for --no-verify: that bypasses every guardrail at once.\n');
-  process.exit(EXIT_REFUSE);
-} catch (err) {
-  process.exit(failSecure('policy-gate', err, isHookMode(input)));
+if (isMain(import.meta.url)) {
+  const input = await readHookInput();
+  try {
+    if (isHookMode(input)) process.exit(emitVerdict('PreToolUse', decide(input)));
+    const violations = checkIndex();
+    if (violations.length === 0) process.exit(EXIT_OK);
+    console.error('\nharness policy-gate: refused\n');
+    for (const v of violations) console.error(`  ${v}`);
+    console.error(`\nUnstage the file. If it is genuinely safe, add the comment ${ALLOW_MARKER} to it.`);
+    console.error('Do not reach for --no-verify: that bypasses every guardrail at once.\n');
+    process.exit(EXIT_REFUSE);
+  } catch (err) {
+    process.exit(failSecure('policy-gate', err, isHookMode(input)));
+  }
 }

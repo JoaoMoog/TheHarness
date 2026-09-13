@@ -3,8 +3,11 @@
  * Guardrail: asks a human before a git command that destroys work. These are
  * the operations CONSTITUTION.md requires an explicit instruction for, so the
  * decision is escalated rather than denied outright.
+ *
+ * Runs inside tool-hooks.mjs on every tool call, and on its own for Kiro and
+ * the self-test.
  */
-import { readHookInput, isHookMode, collectStrings, ask, allow, EXIT_OK } from './lib/io.mjs';
+import { readHookInput, isHookMode, collectStrings, verdict, emitVerdict, isMain, EXIT_OK } from './lib/io.mjs';
 
 const DESTRUCTIVE = [
   { re: /\bgit\s+push\b.*--force(?!-with-lease)/s, why: 'a force push overwrites remote history for everyone' },
@@ -17,14 +20,17 @@ const DESTRUCTIVE = [
   { re: /\bgit\s+(checkout|restore)\b.*--\s/s, why: 'it discards local changes to the named paths' },
 ];
 
-const input = await readHookInput();
-if (!isHookMode(input)) process.exit(EXIT_OK);
+/** An ask when the command destroys work; null otherwise. */
+export function decide(input) {
+  const command = collectStrings(input.tool_input).join('\n');
+  const hit = DESTRUCTIVE.find((d) => d.re.test(command));
+  return hit
+    ? verdict.ask(`Confirm before running this: ${hit.why}. State what will be lost and why that is acceptable.`)
+    : null;
+}
 
-const command = collectStrings(input.tool_input).join('\n');
-const hit = DESTRUCTIVE.find((d) => d.re.test(command));
-
-process.exit(
-  hit
-    ? ask('PreToolUse', `Confirm before running this: ${hit.why}. State what will be lost and why that is acceptable.`)
-    : allow('PreToolUse')
-);
+if (isMain(import.meta.url)) {
+  const input = await readHookInput();
+  if (!isHookMode(input)) process.exit(EXIT_OK);
+  process.exit(emitVerdict('PreToolUse', decide(input)));
+}

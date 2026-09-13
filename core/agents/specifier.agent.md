@@ -3,9 +3,8 @@ name: specifier
 description: Turns a request into acceptance criteria in EARS syntax. First phase of a session.
 version: 1.0.0
 user-invocable: false
-tools: [codebase, search, usages, editFiles]
+allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: []
-model: [Claude Opus 4.5, GPT-5.2, Claude Sonnet 4.5]
 ---
 
 # specifier
@@ -21,6 +20,8 @@ It is an internal phase agent. Users do not call it; the orchestrator does.
 
 ## Tools
 
+- Cross TK, whenever its MCP server is connected - the first tool for every
+  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages` - to check whether the behaviour already exists
   and to get the domain vocabulary right
 - `editFiles` - restricted to `specs/**`. It writes the specification and its
@@ -37,7 +38,10 @@ question produce two different systems, and no summary makes that safe to plan o
 
 
 Handles: turning a request into goals, anti-goals, EARS acceptance criteria,
-non-functional constraints as numbers, and the open questions.
+non-functional constraints as numbers, and the open questions. On the `fix`
+track the specification is short: the failing test as FR-001, the expected
+behaviour in one EARS line, and what stays out of scope. The orchestrator
+scores that one itself; the full form is for feature and spike.
 
 Refuses and hands back: choosing an approach, naming files, designing a schema,
 estimating effort. Those belong to the planner and would bias it.
@@ -62,7 +66,7 @@ stage: specify
 status: complete | blocked | escalated
 artifacts: <specs>/<id>-<slug>/<spec>
 summary: at most 200 words
-next: plan
+next: plan | implement
 ```
 
 `status: blocked` when an open question must be answered before planning can

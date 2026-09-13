@@ -11,6 +11,7 @@ const COMMANDS = {
   cost: () => import('../src/commands/cost.mjs'),
   improve: () => import('../src/commands/improve.mjs'),
   dream: () => import('../src/commands/dream.mjs'),
+  secrets: () => import('../src/commands/secrets.mjs'),
   eval: () => import('../src/commands/eval.mjs'),
   new: () => import('../src/commands/new.mjs'),
 };
@@ -27,11 +28,13 @@ ${c.bold('harness')} - portable agentic harness for GitHub Copilot and Kiro
   ${c.cyan('cost')}                   Report cost per delivered outcome, by track and agent
   ${c.cyan('improve')}                Read the telemetry and propose harness changes
   ${c.cyan('dream')} [repo]           Review what consolidation extracted between sessions
+  ${c.cyan('secrets')} [repo]         Credential warnings the scan recorded; mark the false positives
   ${c.cyan('eval')}                   Run structural evals against the authored artifacts
   ${c.cyan('new')} <kind> <name>      Scaffold a skill, agent or instruction
 
 Flags: --all  --force  --mode=link|vendor  --target=copilot|kiro  --verbose  --json
 Dream:  --collect  --promote=<id>  --discard=<id> --why="<reason>"
+Secrets: --allow=<id> --why="<reason>"  --allow-path=<glob> --why="<reason>"
 
 Docs: README.md   Rules: CONSTITUTION.md
 `;

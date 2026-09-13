@@ -9,11 +9,14 @@ export const SKILL_FRONTMATTER = ['name', 'description', 'version', 'sfa'];
 
 export const AGENT_SECTIONS = ['Identity', 'Tools', 'Scope', 'Contracts', 'Skills', 'Escalation'];
 /**
- * `tools` is required, not optional. An agent whose tool manifest is implicit
- * has unbounded blast radius, and the previous contract asked for the manifest
- * in prose while never checking that one existed.
+ * A manifest is explicit or deliberately open, never absent. `tools` lists
+ * what the agent may call; `allTools` opens everything and carries the reason
+ * in its value, the way `alwaysApply` needs a justification. The harness opens
+ * its own agents so the Cross TK MCP server can be found on the first run
+ * without its tool names ever being written down; the hooks stay the gate.
  */
-export const AGENT_FRONTMATTER = ['name', 'description', 'version', 'tools'];
+export const AGENT_FRONTMATTER = ['name', 'description', 'version'];
+export const AGENT_ALL_TOOLS = 'allTools';
 
 export const INSTRUCTION_FRONTMATTER = ['applyTo'];
 export const PROMPT_FRONTMATTER = ['description', 'version'];
@@ -42,8 +45,13 @@ export const BUDGETS = {
  */
 export const AGENT_SKILL_RATIO = { min: 6, max: 14 };
 
-/** Universal instruction coverage that real-world repositories usually lack. */
-export const REQUIRED_INSTRUCTIONS = ['security', 'performance', 'testing', 'routing'];
+/**
+ * Universal instruction coverage that real-world repositories usually lack.
+ * token-economy is required because the rules it carries - verify once per
+ * tree state, warn rather than fix what predates the change, use a token-saving
+ * MCP server when one is connected - are the ones every phase drifts from.
+ */
+export const REQUIRED_INSTRUCTIONS = ['security', 'performance', 'testing', 'routing', 'token-economy'];
 
 export const LOOP_REQUIRED_KEYS = ['maxIterations', 'stopCriterion', 'tokenBudget'];
 
@@ -114,6 +122,13 @@ export const HANDOFF_STATUSES = ['complete', 'blocked', 'escalated'];
 
 /** MCP servers must declare who owns them and what they can reach. */
 export const MCP_SERVER_FIELDS = ['owner', 'trust', 'scope', 'version'];
+
+/**
+ * A disabled server may carry TODO placeholders, because the file is also the
+ * template for enabling one. An enabled server may not: a placeholder command
+ * does not start, and a placeholder owner means nobody answers for it.
+ */
+export const MCP_PLACEHOLDER = /\bTODO\b/;
 
 /** Text the scaffolder writes that must be replaced before the contract holds. */
 export const PLACEHOLDER_MARKERS = [

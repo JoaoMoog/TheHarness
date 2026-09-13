@@ -4,9 +4,8 @@ description: Opens and updates pull requests, comments with structure and queues
 version: 1.0.0
 argument-hint: what to deliver, or the pull request number to act on
 user-invocable: true
-tools: [codebase, search, runCommands]
+allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
 agents: []
-model: [Claude Sonnet 4.5, GPT-5.2]
 ---
 
 # azure-devops
@@ -36,11 +35,19 @@ writes that through `pr-create.mjs --description-file`.
 
 ## Scope
 
-Before writing the body it runs `node .agents/tools/spec/traceability.mjs
---spec=<the session spec> --base=<target branch>` and pastes the matrix into the
-body. A GAP is either closed or explained there; an open `[NEEDS CLARIFICATION]`
-means there is no pull request to open yet. On the incident track the body links
+On a track that has a specification it runs `node
+.agents/tools/spec/traceability.mjs --spec=<the session spec> --base=<target
+branch>` before writing the body and pastes the matrix into it. A GAP is either
+closed or explained there; an open `[NEEDS CLARIFICATION]` means there is no
+pull request to open yet. Patch, incident and refactor have no specification:
+the body says so and lists the tests that ran, instead of a matrix. On the incident track the body links
 the runbook and the follow-up `fix` session, and it refuses to open without both.
+The Warnings recorded in the session file go into the body's out-of-scope
+section as written: they are what the review saw in touched files and this
+change deliberately left alone, so nobody rediscovers them or expects this
+change to fix them. The body is in Brazilian Portuguese and summarises what
+was done; the pull request targets the base branch recorded in the session
+file.
 
 
 Handles: creating and updating pull requests, publishing a pull request once a

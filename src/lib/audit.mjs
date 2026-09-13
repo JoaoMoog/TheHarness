@@ -3,13 +3,13 @@ import path from 'node:path';
 import { harnessPath } from './paths.mjs';
 import { parseFrontmatter, headings } from './frontmatter.mjs';
 import { estimateTokens } from './tokens.mjs';
-import { auditAgents, auditRatio } from './audit-graph.mjs';
+import { auditAgents, auditRatio, loadAgents } from './audit-graph.mjs';
 import {
   SKILL_SECTIONS, SKILL_FRONTMATTER, INSTRUCTION_FRONTMATTER, PROMPT_FRONTMATTER,
   SFA_KEYS, BUDGETS, REQUIRED_INSTRUCTIONS, LOOP_REQUIRED_KEYS, MCP_SERVER_FIELDS,
   SESSION_PHASES, SESSION_TRACKS, MANDATORY_PHASE,
   RUBRIC_SECTIONS, RUBRIC_FRONTMATTER, RUBRIC_REQUIRED_PHASES,
-  PLACEHOLDER_MARKERS,
+  PLACEHOLDER_MARKERS, MCP_PLACEHOLDER,
 } from './contracts.mjs';
 
 const listDir = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }) : []);
@@ -196,8 +196,36 @@ export function auditMcp(report) {
     if (literal.length > 0) {
       report.fail(`mcp ${name}: a credential looks inlined; read it from the environment instead`);
     }
-    if (missingKeys.length === 0 && literal.length === 0) {
+    // The disabled block doubles as the template, so an entry moved into
+    // servers with its TODOs intact would be enabled without a real command
+    // or a real owner.
+    const unfilled = ['command', 'args', 'owner', 'version'].filter((k) => MCP_PLACEHOLDER.test(JSON.stringify(server[k] ?? '')));
+    if (unfilled.length > 0) {
+      report.fail(`mcp ${name}: enabled with a TODO placeholder in ${unfilled.join(', ')}; fill it in before enabling`);
+    }
+    if (missingKeys.length === 0 && literal.length === 0 && unfilled.length === 0) {
       report.pass(`mcp ${name}: owner ${server.owner}, scope ${server.scope}`);
+    }
+  }
+  auditCrossTkReach(report, servers.map(([name]) => name));
+}
+
+/**
+ * The rule is "Cross TK first", and a rule an agent's manifest does not let it
+ * follow is decoration: a Copilot agent with a tools list can only call what
+ * is on it. So once the server is enabled, every agent that reads code must
+ * name one of its tools. Warned rather than failed, because the tool names are
+ * only known once the server is.
+ */
+const CROSS_TK = /cross[-_ ]?tk/i;
+
+function auditCrossTkReach(report, enabledServers) {
+  if (!enabledServers.some((name) => CROSS_TK.test(name))) return;
+  // An open manifest can call every tool of the server; only a list can leave it out.
+  const readers = loadAgents().filter((a) => !a.allTools && a.tools.some((t) => /^(codebase|search)$/.test(String(t))));
+  for (const agent of readers) {
+    if (!agent.tools.some((t) => CROSS_TK.test(String(t)))) {
+      report.warn(`agent ${agent.id}: cross-tk is enabled but no cross-tk tool is in its tools list, so it cannot put it first`);
     }
   }
 }
@@ -400,7 +428,7 @@ export function auditSelf(report) {
  */
 export function diagnose({ skills = 0, agentList = [], installed = null, lockExists = false } = {}) {
   const invocable = agentList.filter((a) => a.userInvocable);
-  const withTools = agentList.filter((a) => a.tools.length > 0);
+  const withTools = agentList.filter((a) => a.tools.length > 0 || a.allTools);
   const delegating = agentList.filter((a) => a.subagents.length > 0 || a.wildcard);
   const versioned = agentList.length > 0 && agentList.every((a) => Boolean(a.data.version));
 
@@ -412,10 +440,10 @@ export function diagnose({ skills = 0, agentList = [], installed = null, lockExi
       why: 'no skills are defined',
     },
     {
-      question: 'Does every custom agent declare its tools explicitly?',
+      question: 'Does every custom agent declare its tools, or open them all with a written reason?',
       answer: agentList.length > 0 && withTools.length === agentList.length,
       blocking: true,
-      why: `${agentList.length - withTools.length} agent(s) declare no tools, so their blast radius is unbounded`,
+      why: `${agentList.length - withTools.length} agent(s) declare no tools and give no reason, so their blast radius is unbounded by accident`,
     },
     {
       question: 'Is there an orchestrator that can actually delegate?',

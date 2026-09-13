@@ -14,6 +14,9 @@ then does implementation code get written.
 If a test passes the first time you run it against unchanged code, it is not
 testing what you think it is. Make it fail deliberately before you trust it.
 
+A change with no observable behaviour — text, a version, formatting, dead
+code — has no test to write. Say so and move on; do not invent one.
+
 ## Structure
 
 Arrange, act, assert — with a blank line between the three. One behaviour per

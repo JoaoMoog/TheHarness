@@ -45,3 +45,8 @@ requirement without a number is not a requirement.
 A specification that names a library, a table or an endpoint is scoring low on
 S1 for the wrong reason: it has leaked implementation, and it will stop being
 true the moment the stack moves.
+
+On the `fix` track the specification is the failing test and the expected
+behaviour. S3 is scored on the out-of-scope line and S5 on the reproduction
+itself, because the defect is the unwanted condition. Anti-goals and a sweep of
+further failure cases are not required there, and their absence lowers nothing.

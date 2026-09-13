@@ -22,11 +22,24 @@ drifts, and nobody can tell whether last month was stricter.
 
 **The generator never scores its own work.** Self-assessment converges on
 self-agreement rather than on quality, and it is the single most common way an
-automated review becomes theatre. The scoring pass runs with its own context.
+automated review becomes theatre. The scoring pass runs with its own context
+for the feature spec and the review. The `fix` spec and the pull request body
+are the exceptions in cost, not in principle: the orchestrator scores them,
+because it wrote neither, and a sub-agent for a failing test or for four
+questions over a screen of text costs more than the artifact.
 
 Every score below 4 names the concrete failure: the input or state,
 and the wrong result. A number with no evidence is a preference that learned to
 count.
+
+The deterministic checks run once per tree state. When the review pass already
+ran them on this tree, the scoring pass cites that result and its tree state
+instead of running again; a new run is owed only when the tree changed.
+
+Score what the change introduced or altered. A gap that predates the change
+does not lower a criterion; it is a `warn` finding beside the scores. A track
+with no specification - patch, incident, refactor - scores requirement fit
+against the request as stated, without a matrix.
 
 **Do not average.** The threshold is per criterion. One criterion at 2 blocks
 the work even when the other four are at 5, because averaging is exactly how a
@@ -43,8 +56,8 @@ Anti-patterns to refuse:
 
 ## Workflow
 
-1. Run the deterministic checks. If any fails, stop and report that. There is
-   nothing to score yet.
+1. Run the deterministic checks, or cite the run already made on this tree
+   state. If any fails, stop and report that. There is nothing to score yet.
 2. Load the rubric whose `appliesTo` matches this phase, from
    `.github/rubrics/`. Note its version.
 3. Score each criterion against its level descriptions, in order.
@@ -72,7 +85,9 @@ verdict: request-changes
 
 ## Validation
 
-- [ ] The deterministic checks ran first and passed.
+- [ ] The deterministic checks passed on this tree state: run once here, or
+      cited from the review pass.
+- [ ] No score was lowered for a problem the change did not introduce.
 - [ ] The rubric was loaded from a file, and its version is in the output.
 - [ ] Every criterion has a score.
 - [ ] Every score below the top level has concrete evidence.

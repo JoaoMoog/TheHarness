@@ -1,6 +1,6 @@
 ---
 name: spec-writing
-description: Turn a feature request into acceptance criteria in EARS syntax that are individually testable, including the unwanted-condition cases. Use in the specify phase, before any planning or code.
+description: Turn a request into individually testable EARS acceptance criteria, unwanted conditions included; on fix, the failing test is the spec. Use in the specify phase, before any planning or code.
 version: 1.0.0
 sfa: "scope: one feature request | format: a spec.md with numbered EARS criteria | audience: the planner and whoever reviews the spec"
 stacks: []
@@ -44,6 +44,13 @@ cannot tell an omission from an oversight unless you say which it is.
 An ambiguity where two readings produce materially different systems is an open
 question, not a choice to make quietly. Record it and stop.
 
+On the `fix` track the specification is the defect, not a feature. FR-001 is
+the failing test that reproduces it, FR-002 states the expected behaviour in
+one EARS line, and one line says what stays out of scope. No anti-goals section
+and no sweep of further unwanted conditions: the defect is the unwanted
+condition, and the test is its criterion. A fix that needs more than that has
+outgrown the track, and says so.
+
 Anti-patterns to refuse:
 
 - proposing a solution, a schema or a file layout; that is the planner's job
@@ -62,6 +69,9 @@ Anti-patterns to refuse:
 6. Add non-functional constraints as numbers, not adjectives.
 7. List the open questions. If any would change the shape of the result, stop
    and escalate rather than assuming.
+
+On `fix`, steps 3, 5 and 6 are skipped: FR-001 is the reproduction, FR-002 the
+expected behaviour, and an out-of-scope line replaces the anti-goals.
 
 ## Output
 
@@ -88,8 +98,9 @@ FR-004  The system SHALL respond within 3 seconds at p95 for 10,000 rows.
 ## Validation
 
 - [ ] Every criterion uses one EARS pattern and is individually testable.
-- [ ] At least one unwanted-condition criterion exists.
-- [ ] Anti-goals are stated.
+- [ ] At least one unwanted-condition criterion exists; on fix, the reproduction
+      is it.
+- [ ] Anti-goals are stated, or on fix the out-of-scope line.
 - [ ] Non-functional constraints are numbers.
 - [ ] No solution, schema or file layout appears anywhere.
 - [ ] Open questions are listed, and the session stops if one is blocking.

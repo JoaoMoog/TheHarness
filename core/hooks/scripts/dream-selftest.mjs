@@ -157,10 +157,22 @@ check(
 );
 check('and names the skill that governs it', /dreaming/.test(injected.stdout));
 check('and states the spec layout', /Spec layout/.test(injected.stdout));
-check('the material is consumed, not re-injected', !fs.existsSync(pendingPath));
+check(
+  'but asks for it at done or on /dream, never before the request',
+  /reaches `done`/.test(injected.stdout) && /\/dream/.test(injected.stdout) && !/Before anything else/.test(injected.stdout),
+  injected.stdout.slice(0, 200)
+);
+check('and injects the notice, not the material', !/"closed"/.test(injected.stdout) && /4 closed sessions/.test(injected.stdout));
+check('the material stays until it is consumed', fs.existsSync(pendingPath));
 
 const again = runContext();
-check('a second start carries no consolidation section', !/Consolidation pending/.test(again.stdout));
+check('a second start still names the pending material', /Consolidation pending/.test(again.stdout));
+
+const consume = () => spawnSync(process.execPath, [collector, '--consume'], { cwd: root, encoding: 'utf8' });
+const consumed = consume();
+check('--consume removes the material and says so', !fs.existsSync(pendingPath) && /^Consumed/.test(consumed.stdout), consumed.stdout.trim());
+check('a start after that carries no consolidation section', !/Consolidation pending/.test(runContext().stdout));
+check('--consume with nothing pending says so', /nothing pending/i.test(consume().stdout));
 
 // A Kiro repository consolidates into the Kiro spec directory.
 fs.mkdirSync(path.join(root, '.kiro', 'harness'), { recursive: true });

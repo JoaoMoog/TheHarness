@@ -27,8 +27,11 @@ Never buy tokens with correctness.
 
 - Read a file before editing it.
 - Reproduce a bug as a failing test before fixing it.
-- Run the repository's own build, lint and tests; report the real output.
+- Run the repository's own build, lint and tests once on the final tree; report
+  the real output.
 - State explicitly what you left out and why.
+- What predates the change is a WARN, not a fix.
+- Cross TK first for reads, searches and summaries; built-ins are the fallback.
 
 ## Escalate to a human
 
@@ -45,4 +48,4 @@ different readings produce different systems.
 - `.github/prompts/` - `/feature` starts a session, `/resume` continues one.
 
 Load hot always, warm on match, cold on demand. Past the relevance threshold,
-more context measurably lowers quality.
+more context lowers quality.

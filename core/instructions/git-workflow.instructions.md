@@ -24,7 +24,11 @@ explains the reason the change was necessary; the diff already shows what moved.
 ## Branches
 
 Work on a branch, never directly on the default branch. Name it
-`<type>/<short-description>`.
+`<type>/<short-description>`. The base is chosen at the start of every change,
+with the person: `Production` by default, or the current branch when they want
+to continue on it. The work branch is created from that base and the pull
+request targets it; a base that was assumed rather than asked delivers to the
+wrong place.
 
 ## Pull requests
 
@@ -47,5 +51,10 @@ Any of these on request: confirm the target and say what will be lost first.
 ## Before committing
 
 The pre-commit guardrails run automatically when the harness is installed. They
-refuse credentials and files that must not enter history. If one fires, fix the
-cause — do not reach for `--no-verify`.
+refuse files that must not enter history, and they warn about credential-shaped
+values without refusing the commit, recording each warning in
+`.harness/secrets.log`. A warning is not a pass: a value that reaches history is
+compromised and must be rotated, so fix the cause before pushing — do not reach
+for `--no-verify`. A false positive is marked once, with the id the warning
+prints: `harness secrets --allow=<id> --why="<reason>"` writes the committed
+`.harness-allow.json` and the scan stays quiet about that value everywhere.

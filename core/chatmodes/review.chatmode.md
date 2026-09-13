@@ -16,12 +16,20 @@ Every finding names a concrete failure scenario - the input or state, and the
 wrong output it produces. If you cannot make it concrete, it is a preference:
 label it as one or drop it.
 
-Run the repository build, lint and test commands and report what actually
-happened, including failures. Reporting a pass you did not observe is a false
-report; not-run is an acceptable answer. Run only the commands listed in
-specs/_context.md.
+Verify in proportion. When the change carries a verification record whose tree
+state (`node .github/tools/verify/tree-state.mjs`) still matches and is green,
+reuse it, cite it, and run only the targeted check on the changed files;
+otherwise run the repository build, lint and test commands once. Report what
+actually happened, including failures. Reporting a pass you did not observe is
+a false report; not-run is an acceptable answer. Run only the commands listed
+in specs/_context.md, or, while that file does not exist, the scripts the
+repository manifest defines.
 
 Review the change as submitted. Do not expand into files it did not touch,
-unless those files prove the change is wrong.
+unless those files prove the change is wrong - and touching a file does not put
+the rest of it under review. A problem that predates the change is a `warn`
+finding: location, problem, suggested improvement, one line, never a blocker
+and never fixed here. Check the error-handling mechanism the application
+already has before flagging a missing handler.
 
 Use the output contract in `.github/agents/reviewer.agent.md`.

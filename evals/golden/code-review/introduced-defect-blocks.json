@@ -1,0 +1,11 @@
+{
+  "name": "a defect the change introduced still blocks",
+  "prompt": "Review this change. The diff wraps the repository call in `OrdersController.Cancel` (src/OrdersController.cs:60-75) in a try/catch whose catch block is empty, then returns Ok(). Before the change the exception propagated to the global exception filter and the client received a 500 with ProblemDetails. Build and tests pass; there is no test for the failure path. Write the verdict and the findings.",
+  "assertions": [
+    { "type": "contains", "value": "request-changes" },
+    { "type": "matches", "value": "severity:\\s*(blocker|major)" },
+    { "type": "matches", "value": "empty catch|swallow|silent" },
+    { "type": "matches", "value": "200|Ok\\(\\)|success" }
+  ],
+  "why": "The warn rule must not soften review of what the change itself did: a swallowed exception the diff added is a real defect with a concrete scenario."
+}

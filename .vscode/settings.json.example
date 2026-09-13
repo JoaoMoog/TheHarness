@@ -1,8 +1,8 @@
 {
   "//": "Example, not installed. The harness never overwrites your editor settings; copy what you want into your own settings.json.",
 
-  "//maxRequests": "The real ceiling on an agent loop. The loops in loops/ declare their caps in prose so an agent can read them; this is the one the runtime enforces regardless of what the agent intends.",
-  "chat.agent.maxRequests": 25,
+  "//maxRequests": "Every stop at this ceiling waits for a person to click continue. A session of three to five sub-agents makes 100 to 200 requests, so 25 turned a quick fix into a series of stalls. The loops in loops/ and the burn-detect hook are what catch a runaway; this is the backstop, not the brake.",
+  "chat.agent.maxRequests": 80,
 
   "//instructionFiles": "Turn off if you want the harness instructions ignored for a session, rather than deleting the junction.",
   "github.copilot.chat.codeGeneration.useInstructionFiles": true,

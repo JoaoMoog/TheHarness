@@ -41,8 +41,13 @@ Anti-patterns to refuse:
 4. Search history for the value, not just the current tree.
 5. If it was ever committed: stop, report it, and request rotation before
    anything else. Say plainly that the value is compromised.
-6. Confirm the guardrail catches it - stage the change and let the pre-commit
-   secret scan run.
+6. Confirm the guardrail sees it - stage the change and let the pre-commit
+   scan run. It warns and records in `.harness/secrets.log` rather than
+   refusing, so read the warning: a quiet run is the confirmation, a warning
+   means the value is still in the change. A warning about a value that is
+   genuinely not a credential is marked, never argued around: `harness secrets
+   --allow=<id> --why="<reason>"` with the id the warning printed, or
+   `--allow-path=<glob>` for a fixture directory. Marked means quiet, not safe.
 
 ## Output
 
