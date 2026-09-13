@@ -3,7 +3,7 @@ name: specifier
 description: Turns a request into acceptance criteria in EARS syntax. First phase of a session.
 version: 1.0.0
 user-invocable: false
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [codebase, search, usages, editFiles]
 agents: []
 ---
 
@@ -20,8 +20,6 @@ It is an internal phase agent. Users do not call it; the orchestrator does.
 
 ## Tools
 
-- Cross TK, whenever its MCP server is connected - the first tool for every
-  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages` - to check whether the behaviour already exists
   and to get the domain vocabulary right
 - `editFiles` - restricted to `specs/**`. It writes the specification and its

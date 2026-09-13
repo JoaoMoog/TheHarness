@@ -1,0 +1,10 @@
+{
+  "name": "a green record on the same tree state is reused instead of re-run",
+  "prompt": "The session file records: `verified: on a1b2c3d; build pass; tests pass`. The tree state is still a1b2c3d, and the change under review touches src/Orders/Cancel.cs only. You are the reviewer. Which checks do you run before writing the verdict, and why?",
+  "assertions": [
+    { "type": "matches", "value": "reuse|already|still (holds|valid)|same (tree )?state|unchanged" },
+    { "type": "matches", "value": "targeted|changed file|Cancel|scope" },
+    { "type": "matches", "value": "(do not|don't|no need to|without) re-?run(ning)? the (full|whole|entire) (suite|build)" }
+  ],
+  "why": "A verification result holds until the tree changes. Re-running a green suite on an unchanged tree is the single most expensive habit the instruction exists to stop."
+}

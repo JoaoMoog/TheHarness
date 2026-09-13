@@ -15,53 +15,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { contextFile, openSessions, clip, specsDir, layoutFor } from './lib/session.mjs';
-import { crossTkServer, isMandatory, DISCOVERY_FILE } from './lib/crosstk.mjs';
 import * as git from './lib/git.mjs';
 import { readHookInput, isHookMode, context, EXIT_OK } from './lib/io.mjs';
 
 const CONTEXT_LIMIT = 6000;
 const SESSION_LIMIT = 4000;
-const TOOLS_SHOWN = 12;
-
-/**
- * Whether a Cross TK server is declared here, said once so the agent does not
- * spend a turn probing for it, and said as the obligation it is: the first
- * read of the session goes through it, and crosstk-first refuses a built-in
- * read before that. Discovery is by name and never by an assumed tool.
- */
-function crossTkSection(root) {
-  const server = crossTkServer(root);
-  if (!server) {
-    return (
-      '## Cross TK\n\nNo server matching cross-tk is configured in this repository or in your user profile, ' +
-      'and no first run has recorded one in `' + DISCOVERY_FILE + '`. Look for it in your tool list now, as ' +
-      '`token-economy.instructions.md` says: found, record it there and use it first; not found, say so ' +
-      'once, use the built-in tools, and do not probe or retry for it.'
-    );
-  }
-  const record = server.discovered;
-  const known =
-    server.scope === 'record'
-      ? '`' + server.name + '` was recorded in `' + DISCOVERY_FILE + '`' + (record?.discoveredAt ? ' on ' + record.discoveredAt : '')
-      : server.scope === 'user'
-        ? '`' + server.name + '` is configured in your user profile, `' + server.file + '`, so it is connected in ' +
-          'every workspace' + (record ? ', and recorded in `' + DISCOVERY_FILE + '`' : '')
-        : '`' + server.name + '` is configured in `' + server.file + '`' +
-          (record ? ', and recorded in `' + DISCOVERY_FILE + '`' : '');
-  const tools =
-    record && record.tools.length > 0
-      ? ' Its tools, as your runtime shows them: ' + record.tools.slice(0, TOOLS_SHOWN).join(', ') +
-        (record.tools.length > TOOLS_SHOWN ? ', +' + (record.tools.length - TOOLS_SHOWN) + ' more' : '') + '.'
-      : '';
-  const gate = isMandatory(server)
-    ? 'The first built-in read or search of this session is refused until a Cross TK tool has been used.'
-    : 'The first built-in read of this session gets a reminder; the rule still stands.';
-  return (
-    '## Cross TK\n\n' + known + '. Mandatory, before anything else: use it first. Read its tools from their ' +
-    'descriptions once, then every read, search and summary it covers goes through it, and the built-in tools ' +
-    'are the fallback, as `token-economy.instructions.md` says.' + tools + ' ' + gate
-  );
-}
 
 const input = await readHookInput();
 if (!isHookMode(input)) process.exit(EXIT_OK);
@@ -100,7 +58,7 @@ function dreamNotice(file) {
     'Material from ' + count + ' is waiting in `.harness/dream-pending.json`. Not now: consolidate it when',
     'this session reaches `done`, as the last step, or on request with `/dream`. Both apply the `dreaming`',
     'skill, write candidates to `' + specs + '/_dreams.md`, and end with',
-    '`node .github/hooks/scripts/dream-collect.mjs --consume`. Nothing reaches `' + specs + '/_decisions.md`',
+    '`node .agents/hooks/scripts/dream-collect.mjs --consume`. Nothing reaches `' + specs + '/_decisions.md`',
     'without `harness dream --promote`.',
   ].join('\n');
 }
@@ -123,8 +81,6 @@ parts.push(
     'Write those names. Any other name is a file nothing reads.',
   ].join('\n')
 );
-
-parts.push(crossTkSection(root));
 
 const inventory = contextFile(root);
 if (fs.existsSync(inventory)) {

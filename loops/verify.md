@@ -33,7 +33,7 @@ iterated on.
    tests - the reproduction, and the tests of the files changed. Later
    iterations: re-run the check that failed, then anything the fix could have
    affected. Record real output and the tree state it ran on
-   (`node .github/tools/verify/tree-state.mjs`).
+   (`node .agents/tools/verify/tree-state.mjs`).
 3. **Judge.** Something failed: continue. Everything passed: run the full
    build, lint and suite once, on this final tree. Green means stop and report.
    A new failure means one more iteration, starting from that failure.

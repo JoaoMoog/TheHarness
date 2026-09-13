@@ -27,17 +27,23 @@ const under = (prefix, sources) =>
 /**
  * One path for content that no tool discovers on its own.
  *
- * Skills, tools and rubrics are referred to by path from inside agent and skill
- * prose - `node .agents/tools/spec/traceability.mjs`. That text is linked, not
- * generated, so every target reads the same bytes, and a target-specific prefix
- * inside it would be wrong everywhere but one. This is where that path
- * resolves, and every target links it in addition to its own native locations.
+ * Skills, tools, rubrics and hook scripts are referred to by path from inside
+ * agent and skill prose - `node .agents/tools/spec/traceability.mjs`. That text
+ * is linked, not generated, so every target reads the same bytes, and a
+ * target-specific prefix inside it would be wrong everywhere but one. This is
+ * where that path resolves, and every target links it in addition to its own
+ * native locations.
+ *
+ * Hooks are here for the prose, not for the runtime: each target still points
+ * its own generated manifest at its own native hooks location. A skill that
+ * tells an agent to run `dream-collect` by hand needs one path that resolves
+ * under all three, the same way a tool script does.
  *
  * It is not `.harness/`: that name already belongs to the runtime state the
  * hooks write (RUNTIME_DIRS in paths.mjs). `.agents/` is also where the Codex
  * CLI looks for project skills, which the next target gets for free.
  */
-const SHARED_PATH = under('.agents', ['core/skills', 'core/tools', 'core/rubrics']);
+const SHARED_PATH = under('.agents', ['core/skills', 'core/tools', 'core/rubrics', 'core/hooks']);
 
 export const TARGETS = {
   copilot: {

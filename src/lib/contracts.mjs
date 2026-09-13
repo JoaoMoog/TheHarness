@@ -11,9 +11,9 @@ export const AGENT_SECTIONS = ['Identity', 'Tools', 'Scope', 'Contracts', 'Skill
 /**
  * A manifest is explicit or deliberately open, never absent. `tools` lists
  * what the agent may call; `allTools` opens everything and carries the reason
- * in its value, the way `alwaysApply` needs a justification. The harness opens
- * its own agents so the Cross TK MCP server can be found on the first run
- * without its tool names ever being written down; the hooks stay the gate.
+ * in its value, the way `alwaysApply` needs a justification. Every agent the
+ * harness ships lists its tools; `allTools` is there for one a team writes
+ * whose tools are not known until the runtime connects them.
  */
 export const AGENT_FRONTMATTER = ['name', 'description', 'version'];
 export const AGENT_ALL_TOOLS = 'allTools';

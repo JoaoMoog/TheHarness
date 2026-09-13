@@ -31,7 +31,6 @@ Never buy tokens with correctness.
   the real output.
 - State explicitly what you left out and why.
 - What predates the change is a WARN, not a fix.
-- Cross TK first for reads, searches and summaries; built-ins are the fallback.
 
 ## Escalate to a human
 

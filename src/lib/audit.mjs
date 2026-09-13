@@ -207,27 +207,6 @@ export function auditMcp(report) {
       report.pass(`mcp ${name}: owner ${server.owner}, scope ${server.scope}`);
     }
   }
-  auditCrossTkReach(report, servers.map(([name]) => name));
-}
-
-/**
- * The rule is "Cross TK first", and a rule an agent's manifest does not let it
- * follow is decoration: a Copilot agent with a tools list can only call what
- * is on it. So once the server is enabled, every agent that reads code must
- * name one of its tools. Warned rather than failed, because the tool names are
- * only known once the server is.
- */
-const CROSS_TK = /cross[-_ ]?tk/i;
-
-function auditCrossTkReach(report, enabledServers) {
-  if (!enabledServers.some((name) => CROSS_TK.test(name))) return;
-  // An open manifest can call every tool of the server; only a list can leave it out.
-  const readers = loadAgents().filter((a) => !a.allTools && a.tools.some((t) => /^(codebase|search)$/.test(String(t))));
-  for (const agent of readers) {
-    if (!agent.tools.some((t) => CROSS_TK.test(String(t)))) {
-      report.warn(`agent ${agent.id}: cross-tk is enabled but no cross-tk tool is in its tools list, so it cannot put it first`);
-    }
-  }
 }
 
 /**

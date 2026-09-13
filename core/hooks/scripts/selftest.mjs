@@ -15,7 +15,6 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { valueId, addAllow, globToRegExp } from './lib/allowlist.mjs';
-import { userMcpFiles } from './lib/crosstk.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const script = (name) => path.join(HERE, name + '.mjs');
@@ -486,130 +485,6 @@ console.log('\nburn-detect: repetition that does and does not mean circling');
   check('the tenth warns again, because it is still circling', typeof outputs[9].systemMessage === 'string', true);
 }
 
-/* session-context: whether a token-saving server is configured is said once,
-   by name, so no turn is spent probing for it. */
-console.log('\nsession-context: Cross TK discovery by name');
-
-{
-  const { dir } = sandbox();
-  const context = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
-  check('reports that no cross-tk server is configured', /No server matching cross-tk/.test(context()), true);
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
-  check('reports a configured cross-tk server by name and file', /`cross-tk` is configured in `\.mcp\.json`/.test(context()), true);
-  write(dir, '.mcp.json', JSON.stringify({ servers: {}, disabled: { 'cross-tk': { command: 'x' } } }));
-  check('a server left in the disabled block counts as absent', /No server matching cross-tk/.test(context()), true);
-  write(dir, '.mcp.json', JSON.stringify({ mcpServers: { CrossTK: { command: 'x', disabled: true } } }));
-  check('a Kiro-style server marked disabled counts as absent', /No server matching cross-tk/.test(context()), true);
-  write(dir, '.mcp.json', JSON.stringify({ mcpServers: { crosstk: { command: 'x' } } }));
-  check('any spelling of the name is found', /`crosstk` is configured/.test(context()), true);
-  write(dir, '.mcp.json', '{ not json');
-  fs.mkdirSync(path.join(dir, '.vscode'), { recursive: true });
-  write(dir, '.vscode/mcp.json', JSON.stringify({ servers: { 'cross_tk': { command: 'x' } } }));
-  check('a file that does not parse is skipped and the next one is read', /`cross_tk` is configured in `\.vscode\/mcp\.json`/.test(context()), true);
-}
-
-/* crosstk-first: with a Cross TK server declared, the first built-in read of a
-   session is refused until a Cross TK tool has been used; without one, or once
-   it has been used, everything passes. The rule is only worth having if the
-   runtime enforces it. */
-console.log('\ncrosstk-first: the first read goes through Cross TK');
-
-{
-  const { dir } = sandbox();
-  const session = 'ctk-' + process.pid;
-  const call = (tool_name, extra = {}, sid = session) =>
-    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name, tool_input: { filePath: path.join(dir, 'a.ts') }, ...extra }, dir);
-  const decision = (out) => out.hookSpecificOutput?.permissionDecision;
-
-  check('no server declared: a read passes', decision(call('readFile')), 'allow');
-
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
-  const refused = call('readFile');
-  check('server declared: the first built-in read is refused', decision(refused), 'deny');
-  check('the refusal names the server and says what to do', /Cross TK first: `cross-tk`/.test(refused.hookSpecificOutput?.permissionDecisionReason ?? '') && /descriptions/.test(refused.hookSpecificOutput?.permissionDecisionReason ?? ''), true);
-  check('a search is refused too', decision(call('textSearch')), 'deny');
-  check('an edit is not a read, so it passes', decision(call('editFiles')), 'allow');
-  check('delegating to a sub-agent passes', decision(call('agent')), 'allow');
-  check('a Cross TK tool, named after the server, passes and unlocks the session', decision(call('mcp_cross-tk_outline')), 'allow');
-  check('after that, a built-in read passes as the fallback', decision(call('readFile')), 'allow');
-  check('a different session is gated on its own', decision(call('readFile', {}, session + '-other')), 'deny');
-
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', tools: ['compact_read'] } } }));
-  const fresh = session + '-declared';
-  check('an unknown tool name is not gated, so an unrecorded Cross TK tool can never lock the session out', decision(call('compact_read_file', {}, fresh)), 'allow');
-  check('while a built-in read handed over with its source prefix still is', decision(call('search/codebase', {}, fresh)), 'deny');
-  check('but the declared tool name is recognised and unlocks', decision(call('compact_read', {}, fresh)) === 'allow' && decision(call('readFile', {}, fresh)) === 'allow', true);
-
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', mandatoryFirst: false } } }));
-  const advisory = session + '-advisory';
-  const first = call('readFile', {}, advisory);
-  check('mandatoryFirst false: the first read passes with a reminder', decision(first) === 'allow' && /advisory/.test(first.systemMessage ?? ''), true);
-  check('and the reminder is said once', call('readFile', {}, advisory).systemMessage === undefined, true);
-
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
-  const kiro = session + '-kiro';
-  const viaEnv = decision(runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: kiro, tool_name: 'readFile', tool_input: {} }, dir));
-  const viaArgv = decision(runKiroHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: kiro + '2', tool_name: 'readFile', tool_input: {} }, dir));
-  check('the same refusal comes out under the vscode mode and --hook-mode=kiro', viaEnv === 'deny' && viaArgv === 'deny', true);
-
-  const start = runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
-  check('the session start says the first read is mandatory', /Mandatory, before anything else/.test(start) && /refused until/.test(start), true);
-}
-
-/* The first run records what the agent saw in its tool list, in
-   .harness/crosstk.json: no declaration in the repository is needed, no tool
-   name is written anywhere shared, and from then on the gate arms and the
-   calls are recognised by the recorded names, whole or by last segment. */
-{
-  const { dir } = sandbox();
-  const session = 'ctk-rec-' + process.pid;
-  const call = (tool_name, sid = session) =>
-    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name, tool_input: {} }, dir).hookSpecificOutput?.permissionDecision;
-  const start = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
-
-  check('nothing known: the session start asks for the first-run discovery', /no first run has recorded one/.test(start()) && /Look for it in your tool list/.test(start()), true);
-  check('nothing known: reads pass', call('readFile'), 'allow');
-
-  write(dir, '.harness/crosstk.json', JSON.stringify({ server: 'acme-tk', tools: ['acme/acme-tk/outline_file', 'acme/acme-tk/search_lines'], discoveredAt: '2026-09-10' }));
-  check('a record without any declaration arms the gate', call('readFile'), 'deny');
-  check('the session start names the recorded server and its tools', /`acme-tk` was recorded in `\.harness\/crosstk\.json` on 2026-09-10/.test(start()) && /outline_file, acme\/acme-tk\/search_lines/.test(start()), true);
-  check('a recorded name handed to the hook whole is recognised', call('acme/acme-tk/outline_file', session + '-whole'), 'allow');
-  check('a recorded name handed to the hook as its last segment is recognised', call('search_lines', session + '-seg'), 'allow');
-  check('and unlocks the reads that follow', call('readFile', session + '-seg'), 'allow');
-  check('a name that is not recorded stays a refused read', call('list_dir', session + '-other'), 'deny');
-
-  write(dir, '.harness/crosstk.json', JSON.stringify({ server: '', tools: ['x'] }));
-  check('a record without a server name records nothing', call('readFile', session + '-empty'), 'allow');
-  write(dir, '.harness/crosstk.json', '{ not json');
-  check('a record that does not parse records nothing', call('readFile', session + '-bad'), 'allow');
-}
-
-/* A server configured in the user's own VS Code or Kiro profile is connected
-   in every workspace, so it is found there too; otherwise the session start
-   would tell the agent the server does not exist while it sits next to it. */
-{
-  const { dir } = sandbox();
-  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-home-'));
-  const env = { HOME: home, USERPROFILE: home, APPDATA: home };
-  const session = 'ctk-user-' + process.pid;
-  const start = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir, env).hookSpecificOutput?.additionalContext ?? '';
-  const read = (sid) =>
-    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name: 'readFile', tool_input: {} }, dir, env).hookSpecificOutput?.permissionDecision;
-
-  check('an empty profile: nothing is found and reads pass', /No server matching cross-tk/.test(start()) && read(session) === 'allow', true);
-  const [defaultProfile] = userMcpFiles({ home, appData: home });
-  fs.mkdirSync(path.dirname(defaultProfile), { recursive: true });
-  fs.writeFileSync(defaultProfile, JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
-  check('a server in the VS Code user profile is found and said to be global', /`cross-tk` is configured in your user profile/.test(start()) && /every workspace/.test(start()), true);
-  check('and it arms the gate with no file in the repository', read(session + '-2'), 'deny');
-  fs.writeFileSync(defaultProfile, JSON.stringify({ servers: { 'cross-tk': { command: 'x', disabled: true } } }));
-  check('disabled in the profile counts as absent', read(session + '-3'), 'allow');
-  const kiro = userMcpFiles({ home, appData: home }).at(-1);
-  fs.mkdirSync(path.dirname(kiro), { recursive: true });
-  fs.writeFileSync(kiro, JSON.stringify({ mcpServers: { crosstk: { command: 'x' } } }));
-  check('a server in the Kiro user settings is found too', /`crosstk` is configured in your user profile/.test(start()), true);
-}
-
 /* format: as an agent hook it fires after every tool call, and only an edit
    can leave something to format, so a read must cost nothing. */
 console.log('\nformat: only an edit reaches the formatter');
@@ -655,15 +530,6 @@ console.log('\ntool-hooks: one process per tool event');
   check('an allow keeps its warning: the secret-block message comes through', decision(warned) === 'allow' && /looks like a AWS access key id/.test(warned.systemMessage ?? ''), true);
   check('policy-gate denies through the dispatcher too', decision(pre('editFiles', { filePath: path.join(dir, 'infra', 'terraform.tfstate') })), 'deny');
 
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
-  const sid = 'th-ctk-' + process.pid;
-  check('the Cross TK gate holds through the dispatcher', decision(pre('readFile', { filePath: path.join(dir, 'a.txt') }, { session_id: sid })), 'deny');
-  check(
-    'and a Cross TK call opens it for the reads that follow',
-    decision(pre('cross-tk/read', {}, { session_id: sid })) === 'allow' && decision(pre('readFile', { filePath: path.join(dir, 'a.txt') }, { session_id: sid })) === 'allow',
-    true
-  );
-  fs.rmSync(path.join(dir, '.mcp.json'));
 
   write(dir, 'b.txt', 'same\n');
   const post = () =>

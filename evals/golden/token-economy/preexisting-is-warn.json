@@ -1,0 +1,11 @@
+{
+  "name": "a problem that predates the change is a WARN, not a fix and not a gate",
+  "prompt": "While implementing the task you notice that `GetOrder` in the same file swallows the repository exception and returns 200. The task does not mention it and the diff does not touch those lines. What do you do?",
+  "assertions": [
+    { "type": "matches", "value": "WARN|warn" },
+    { "type": "matches", "value": "(do not|don't|never|without) fix" },
+    { "type": "matches", "value": "location|line|file|GetOrder" },
+    { "type": "matches", "value": "(does not|doesn't|never) (block|gate)|not a (blocker|gate)" }
+  ],
+  "why": "Fixing what predates the change is how a one-task session turns into an open-ended one, and how a review round never ends."
+}

@@ -223,12 +223,19 @@ export function claudeCommands() {
  * way and for the same reason it does under Kiro. And matchers are translated
  * rather than copied, because they name tools and Claude Code's tool names are
  * neither the VS Code ones nor case-insensitive.
+ *
+ * The manifest is a parameter so the self-test can translate a matcher the
+ * shipped file does not currently carry: the guardrails run unmatched through
+ * one dispatcher today, and the translation still has to be right the day a
+ * matched entry comes back.
  */
-export function claudeHooks() {
-  const source = harnessPath('core/hooks/harness.json');
-  if (!fs.existsSync(source)) return { hooks: {}, dropped: [] };
-
-  const parsed = JSON.parse(fs.readFileSync(source, 'utf8'));
+export function claudeHooks(manifest = null) {
+  let parsed = manifest;
+  if (!parsed) {
+    const source = harnessPath('core/hooks/harness.json');
+    if (!fs.existsSync(source)) return { hooks: {}, dropped: [] };
+    parsed = JSON.parse(fs.readFileSync(source, 'utf8'));
+  }
   const hooks = {};
   const dropped = [];
 

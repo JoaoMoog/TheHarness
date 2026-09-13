@@ -76,7 +76,7 @@ means anything.
    contradicts one, say which; if it repeats one, drop it.
 5. Name the rejected reading of the same evidence.
 6. Append the block to `_dreams.md`, allocating the next `D-NNN`.
-7. Run `node .github/hooks/scripts/dream-collect.mjs --consume`, so the same
+7. Run `node .agents/hooks/scripts/dream-collect.mjs --consume`, so the same
    material is not named again, and say in one line how many candidates were
    written. Do not promote anything, and do not act on a candidate in the same
    session that wrote it.

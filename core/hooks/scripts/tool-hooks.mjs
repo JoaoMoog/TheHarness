@@ -17,7 +17,6 @@
  */
 import { readHookInput, isHookMode, combine, emitVerdict, verdict, EXIT_OK } from './lib/io.mjs';
 import { hookContext } from './lib/git.mjs';
-import * as crosstkFirst from './crosstk-first.mjs';
 import * as readGuard from './read-guard.mjs';
 import * as secretBlock from './secret-block.mjs';
 import * as policyGate from './policy-gate.mjs';
@@ -28,7 +27,6 @@ import * as burnDetect from './burn-detect.mjs';
 
 const CHECKS = {
   PreToolUse: [
-    ['crosstk-first', crosstkFirst],
     ['read-guard', readGuard],
     ['secret-block', secretBlock],
     ['policy-gate', policyGate],

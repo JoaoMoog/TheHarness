@@ -57,7 +57,7 @@ Anti-patterns to refuse:
    re-review, read the previous findings and the diff since that review.
 3. For each changed file, open enough surrounding code to judge intent, and to
    know which problems were already there.
-4. Run `node .github/tools/verify/tree-state.mjs` and compare it with the
+4. Run `node .agents/tools/verify/tree-state.mjs` and compare it with the
    implement record. Same state and a green record: reuse it, cite it, and run
    only the targeted check - the tests that cover the changed files, or the
    linter on them. A different state, or a record that is missing, `not-run`

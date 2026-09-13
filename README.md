@@ -207,7 +207,7 @@ carregada em todo turno, e nos contratos do `implementer`, do `reviewer` e do
 `orchestrator`.
 
 - **Um resultado vale até a árvore mudar.** O `implementer` registra o que
-  rodou e em qual estado da árvore (`node .github/tools/verify/tree-state.mjs`,
+  rodou e em qual estado da árvore (`node .agents/tools/verify/tree-state.mjs`,
   uma linha determinística). Dentro do loop de verificação só o check que
   falhou roda de novo; a suíte completa roda uma vez, na árvore final. O
   `reviewer` roda a dele uma vez, porque revisão independente é o contrato; a
@@ -249,67 +249,6 @@ direto ao implementer. Um `patch` fica em três sub-agentes e três gates
 humanos. O exemplo de settings sobe `chat.agent.maxRequests` de 25 para 80,
 porque cada parada nesse teto espera alguém clicar em continuar; os budgets
 dos loops e o `burn-detect` são o que segura um loop de verdade.
-
-## Cross TK
-
-Regra geral, não preferência: quando o servidor MCP chamado `cross-tk`
-(qualquer grafia) está conectado, toda leitura, busca e resumo que ele cobre
-passa por ele, e as ferramentas nativas são o fallback para o que ele não
-cobre. A regra está no hot tier (`copilot-instructions.md`, carregado em todo
-turno), na `CONSTITUTION.md` como protocolo, nas regras básicas do `AGENTS.md`,
-na instrução `token-economy` e no manifesto de ferramentas de cada agente que
-lê código. Os agentes descobrem o que ele oferece pelas descrições das
-ferramentas, uma vez por sessão; o harness não presume nomes nem assinaturas.
-
-**Obrigatório antes de começar, e o runtime cobra.** Com o servidor declarado
-no repositório (`.mcp.json`, `.vscode/mcp.json` ou `.kiro/settings/mcp.json`),
-o hook `crosstk-first` recusa a primeira leitura ou busca nativa da sessão até
-uma ferramenta do Cross TK ter sido usada; depois disso as nativas abrem como
-fallback. Regra só em prosa é a que o agente pula quando está com pressa. O
-início da sessão diz que o servidor está declarado e que a primeira leitura é
-obrigatória; sem servidor declarado não há gate, e o agente diz isso uma vez e
-segue com as nativas. Dois ajustes na entrada do servidor: `tools` lista os
-nomes das ferramentas como o runtime os mostra, só necessário quando eles não
-carregam o nome do servidor; `mandatoryFirst: false` troca a recusa por um
-lembrete único.
-
-**Nenhum nome confidencial entra no repositório, e nada é configurado à mão.**
-O harness encontra o servidor onde ele estiver e aprende as ferramentas na
-primeira execução:
-
-1. O início da sessão procura o servidor em três lugares: os arquivos MCP do
-   repositório, o `mcp.json` do seu perfil do VS Code (perfis nomeados
-   incluídos) e das configurações do Kiro, e o registro `.harness/crosstk.json`.
-   Um servidor configurado "globalmente" no VS Code é encontrado e dito como
-   tal; antes, olhar só o repositório fazia o agente responder que o servidor
-   não existia enquanto ele estava do lado.
-2. Os agentes não listam ferramentas: cada um declara `allTools:` com o motivo,
-   que é exatamente este. Um agente do Copilot com lista `tools:` só enxerga
-   o que está nela, e as ferramentas do seu servidor não podem estar numa
-   lista commitada. O `doctor` continua exigindo manifesto explícito ou
-   `allTools` com motivo, nunca ausente; os hooks seguem sendo o gate real.
-3. Na primeira execução, o agente que enxergar o servidor na lista de
-   ferramentas grava `.harness/crosstk.json` com o nome do servidor e os nomes
-   das ferramentas como o runtime os mostra. O arquivo é local da máquina e
-   nunca é commitado.
-4. Daí em diante o início da sessão nomeia o servidor e suas ferramentas, e o
-   hook `crosstk-first` reconhece as chamadas pelos nomes gravados, inteiros
-   ou pelo último segmento, e recusa a primeira leitura nativa até uma delas
-   ter sido usada. Só as leituras nativas conhecidas são seguradas; uma
-   ferramenta de nome desconhecido passa, para uma chamada do Cross TK nunca
-   ser recusada como leitura.
-
-Se em algum repositório você preferir manifesto fechado, troque `allTools:`
-por `tools: [...]` e liste as ferramentas do servidor; o `doctor` avisa se o
-servidor estiver habilitado e a lista não o incluir.
-
-Para habilitar em todos os repositórios, preencha a entrada `cross-tk` em
-`core/mcp.json` com o comando real e mova-a para `servers`. O `doctor` recusa
-um servidor habilitado enquanto houver `TODO` no comando, nos argumentos, no
-dono ou na versão. Com o servidor habilitado, ele também avisa de cada agente
-cujo `tools:` não lista uma ferramenta do Cross TK: um agente do Copilot só
-chama o que está no manifesto, e uma regra que o manifesto não deixa cumprir é
-decoração.
 
 ## Comandos
 
@@ -396,10 +335,10 @@ quer dizer silencioso, não seguro: um valor real que chegou ao histórico
 continua precisando de rotação.
 
 ```bash
-npm run selftest          # 140 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 101 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 32 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
-npm run selftest:claude   # 130 casos do target Claude, instalando de verdade
+npm run selftest:claude   # 133 casos do target Claude, instalando de verdade
 ```
 
 Os guardrails recebem o evento por STDIN no VS Code, no Kiro e no Claude Code. O
@@ -412,7 +351,7 @@ três portas.
 `PreToolUse` e `PostToolUse` em toda chamada de ferramenta e ignora o campo
 `matcher` (está na documentação oficial). Oito scripts registrados eram oito
 processos Node e cinco spawns de git por chamada: 402 ms de hooks numa leitura
-simples, medidos aqui. Por isso os oito guardrails de ferramenta rodam dentro
+simples, medidos aqui. Por isso os guardrails de ferramenta rodam dentro
 de `tool-hooks.mjs`, um processo por evento, na mesma ordem, com uma leitura de
 stdin e uma consulta ao git, e a resposta é combinada como o próprio runtime
 combinaria: deny vence ask, que vence allow, e toda mensagem é preservada.

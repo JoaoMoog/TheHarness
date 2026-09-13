@@ -4,7 +4,7 @@ description: Reviews a change set for correctness and contract violations and re
 version: 2.0.0
 argument-hint: the branch, diff or task to review
 user-invocable: true
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [codebase, search, usages, problems, changes, runCommands]
 agents: []
 ---
 
@@ -21,8 +21,6 @@ It is invocable directly and as the review phase of a session.
 
 ## Tools
 
-- Cross TK, whenever its MCP server is connected - the first tool for every
-  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages`, `problems`, `changes` - the change and the
   code around it
 - `runCommands` - the targeted check on the changed files, and the repository
@@ -45,7 +43,7 @@ that produced the artifact never scores it, which is why this one does.
 
 One invocation does the whole job, and the suite does not run twice on one
 tree. The implement envelope records what ran and the tree state; the reviewer
-runs `node .github/tools/verify/tree-state.mjs` and, when the state matches and
+runs `node .agents/tools/verify/tree-state.mjs` and, when the state matches and
 the record is green, reuses and cites it. Its own evidence is the targeted
 check: the tests that cover the changed files, or the linter on them. Build,
 lint and suite run here only when the state differs or the record is missing,
@@ -101,7 +99,7 @@ scores:
     evidence: <file>:<line> and the concrete failure, required below 4
 
 verified:
-  on: <tree state from node .github/tools/verify/tree-state.mjs>
+  on: <tree state from node .agents/tools/verify/tree-state.mjs>
   suite: reused from implement | ran here, because <state changed | no record | record not green>
   targeted: <the check on the changed files> pass | fail | not-run
   build: pass | fail | not-run

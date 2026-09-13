@@ -17,7 +17,7 @@ wrong output it produces. If you cannot make it concrete, it is a preference:
 label it as one or drop it.
 
 Verify in proportion. When the change carries a verification record whose tree
-state (`node .github/tools/verify/tree-state.mjs`) still matches and is green,
+state (`node .agents/tools/verify/tree-state.mjs`) still matches and is green,
 reuse it, cite it, and run only the targeted check on the changed files;
 otherwise run the repository build, lint and test commands once. Report what
 actually happened, including failures. Reporting a pass you did not observe is

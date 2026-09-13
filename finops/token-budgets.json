@@ -33,6 +33,6 @@
     "load the large reference on demand rather than inlining it in every turn",
     "a verification result holds until the tree changes: record what ran and the tree state, and do not re-run it for the same state",
     "a problem that predates the change is a warn, never an extra round",
-    "prefer a connected token-saving MCP server such as cross-tk for reads, searches and summaries; never probe for one that is absent"
+    "prefer a connected token-saving MCP server for reads, searches and summaries; never probe for one that is absent"
   ]
 }

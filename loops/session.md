@@ -37,7 +37,7 @@ real conflict is two sessions changing the same files, and the session start
 says so before the first phase.
 
 The implement envelope carries its verification record: what ran, the result,
-and the tree state from `node .github/tools/verify/tree-state.mjs`. Review
+and the tree state from `node .agents/tools/verify/tree-state.mjs`. Review
 reuses that record while the tree state matches and the record is green, and
 adds its own evidence with the targeted check on the changed files; it runs the
 build, lint and suite itself only when the state differs or the record is

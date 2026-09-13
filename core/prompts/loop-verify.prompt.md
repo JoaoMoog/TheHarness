@@ -16,7 +16,7 @@ Before the first iteration, state:
 
 Then loop: implement, verify, judge, fix. Announce the iteration number at the
 start of each pass and report the real output of every command you run, with
-the tree state it ran on (`node .github/tools/verify/tree-state.mjs`).
+the tree state it ran on (`node .agents/tools/verify/tree-state.mjs`).
 
 Spend each iteration on the failure that caused it: re-run the check that
 failed, not the ones that passed on an unchanged tree, and do not re-read files

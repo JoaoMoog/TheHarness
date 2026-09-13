@@ -13,6 +13,6 @@ reading, and append the candidates to `<specs>/_dreams.md` following
 `templates/dreams.md`. Nothing is written to `<specs>/_decisions.md`; promotion
 is `harness dream --promote`, a human action.
 
-Then run `node .github/hooks/scripts/dream-collect.mjs --consume`, so the same
+Then run `node .agents/hooks/scripts/dream-collect.mjs --consume`, so the same
 material is not named again, and report in one line how many candidates were
 written. Zero is a valid answer.

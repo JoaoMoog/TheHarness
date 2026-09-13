@@ -20,6 +20,7 @@ import {
   unmappedTools,
   agentsWithUnmappedTools,
   frontMatterValue,
+  modelAlias,
   TOOL_MAP,
 } from './claude-gen.mjs';
 import fs from 'node:fs';
@@ -62,10 +63,25 @@ console.log('agents: front matter is translated, the body is not');
     /\ntools: Read, Grep, Glob, Bash\r?\n/.test(reviewer ?? ''),
     (reviewer ?? '').split('\n').find((l) => l.startsWith('tools:'))
   );
+  // No agent the harness ships pins a model - the one selected in the chat
+  // runs every phase, and doctor warns about any file that pins one again. So
+  // the generated file carries no model field at all. The translation below it
+  // stays live for a warned file that pins one anyway: it must still come out
+  // as a Claude alias rather than a VS Code model name.
+  check(
+    'a shipped agent gets no model field, because the harness pins none',
+    !/\nmodel:/.test(reviewer ?? ''),
+    (reviewer ?? '').split('\n').find((l) => l.startsWith('model:'))
+  );
   check(
     'a model list picks the first Claude alias it contains',
-    /\nmodel: sonnet\r?\n/.test(reviewer ?? ''),
-    (reviewer ?? '').split('\n').find((l) => l.startsWith('model:'))
+    modelAlias(['GPT-5.2', 'Claude Opus 4.5', 'Claude Sonnet 4.5']) === 'opus',
+    modelAlias(['GPT-5.2', 'Claude Opus 4.5', 'Claude Sonnet 4.5'])
+  );
+  check(
+    'a list with no Claude model gets no field, not an invented one',
+    modelAlias(['GPT-5.2']) === null,
+    String(modelAlias(['GPT-5.2']))
   );
   check('the six sections pass through untouched', (reviewer ?? '').includes('## Identity'));
   check(
@@ -123,18 +139,32 @@ console.log('\nhooks: every harness event, in the shape Claude Code reads');
     'the mode rides in argv, because a hook entry has no env field',
     entries.every((e) => e.command.includes('--hook-mode=claude') && !('env' in e))
   );
-  check(
-    'a shell matcher becomes the Bash tool',
-    (hooks.PreToolUse ?? []).some((g) => g.matcher === 'Bash'),
-    (hooks.PreToolUse ?? []).map((g) => g.matcher).join(' / ')
-  );
+  // The shipped manifest carries no matcher: the tool guardrails run unmatched
+  // through one dispatcher, and VS Code ignores matchers anyway. The
+  // translation still has to be right, so it is fed a matched manifest here
+  // rather than asserted against a file that no longer exercises it.
+  const matchers = (
+    claudeHooks({
+      hooks: {
+        PreToolUse: [
+          { type: 'command', command: 'node .github/hooks/scripts/a.mjs', matcher: 'runCommands|runInTerminal|bash|shell' },
+          { type: 'command', command: 'node .github/hooks/scripts/b.mjs', matcher: 'editFiles|createFile|str_replace|write|edit' },
+          { type: 'command', command: 'node .github/hooks/scripts/c.mjs', matcher: 'readFile|read_file|read|view|open|cat|fetch|textSearch|fileSearch' },
+        ],
+      },
+    }).hooks.PreToolUse ?? []
+  ).map((g) => g.matcher);
+  check('a shell matcher becomes the Bash tool', matchers.includes('Bash'), matchers.join(' / '));
   check(
     'an edit matcher becomes the editing tools, capitalised as Claude Code spells them',
-    (hooks.PreToolUse ?? []).some((g) => g.matcher === 'Edit|Write|NotebookEdit')
+    matchers.includes('Edit|Write|NotebookEdit'),
+    matchers.join(' / ')
   );
+  check('a read matcher becomes the reading tools', matchers.includes('Read|Grep|Glob|WebFetch'), matchers.join(' / '));
   check(
-    'a read matcher becomes the reading tools',
-    (hooks.PreToolUse ?? []).some((g) => g.matcher === 'Read|Grep|Glob|WebFetch')
+    'the tool guardrails ship unmatched, so every tool call reaches the dispatcher',
+    (hooks.PreToolUse ?? []).every((g) => !('matcher' in g)),
+    (hooks.PreToolUse ?? []).map((g) => g.matcher).join(' / ')
   );
   check(
     'no VS Code tool name survives in a matcher',
@@ -204,7 +234,8 @@ console.log('\nsettings.local.json: the harness is a guest in someone else\'s fi
   );
   check(
     'the harness hooks are there too',
-    merged.hooks.PreToolUse.some((g) => (g.hooks ?? []).some((h) => h.command.includes('secret-block.mjs')))
+    merged.hooks.PreToolUse.some((g) => (g.hooks ?? []).some((h) => h.command.includes('tool-hooks.mjs'))),
+    JSON.stringify(merged.hooks.PreToolUse)
   );
   check('an event only the harness writes is added', Array.isArray(merged.hooks.SessionStart));
 
@@ -383,6 +414,9 @@ console.log('\ninstall: a real repository, installed, reinstalled and removed');
 
   check('skills are linked where Claude Code reads them', exists('.claude/skills/debugging/SKILL.md'));
   check('the shared path resolves a tool script', exists('.agents/tools/spec/traceability.mjs'));
+  // Prose names a hook script by path too - `harness dream` is the human end,
+  // but the dreaming skill tells the agent to run the collector itself.
+  check('the shared path resolves a hook script', exists('.agents/hooks/scripts/dream-collect.mjs'));
   check('a subagent is written', exists('.claude/agents/reviewer.md'));
   check('a command is written', exists('.claude/commands/feature.md'));
   check('CLAUDE.md imports AGENTS.md', read('CLAUDE.md').includes('@AGENTS.md'));

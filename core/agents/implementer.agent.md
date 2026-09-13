@@ -3,7 +3,7 @@ name: implementer
 description: Executes one approved task, test first, and stops at the task boundary. Fourth phase of a session.
 version: 1.0.0
 user-invocable: false
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [codebase, search, usages, problems, editFiles, runCommands]
 agents: []
 ---
 
@@ -22,8 +22,6 @@ and may invoke several in parallel when the tasks are marked parallel.
 
 ## Tools
 
-- Cross TK, whenever its MCP server is connected - the first tool for every
-  read, search and summary it covers; the tools below are the fallback
 - `codebase`, `search`, `usages`, `problems` - to work inside existing code
 - `editFiles` - source and tests, limited to the files the task names
 - `runCommands` - restricted to the commands listed in `specs/_context.md`, or,
@@ -80,7 +78,7 @@ next: implement | review
 ```
 
 `verified` reports what actually ran, and the tree state it ran on from
-`node .github/tools/verify/tree-state.mjs`, so the next phase can tell a result
+`node .agents/tools/verify/tree-state.mjs`, so the next phase can tell a result
 that still holds from one that needs a re-run. `not-run` is an acceptable
 answer; a claimed pass that did not happen is a false report.
 

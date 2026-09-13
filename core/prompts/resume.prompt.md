@@ -6,10 +6,6 @@ version: 1.0.0
 
 Resume the session with `@orchestrator`.
 
-0. Cross TK first. If the session start names it, use it before any read; if
-   nothing has recorded it yet, look for it in your tool list and, found,
-   write `.harness/crosstk.json` first. The harness refuses a built-in read
-   before a Cross TK tool has been used.
 1. Read `specs/<id>-*/session.md`. If no id is given, use the newest session
    whose phase is not `done`.
 2. Report the current phase, the work branch, what the last summary said, and
@@ -23,7 +19,7 @@ Resume the session with `@orchestrator`.
 5. If the previous phase is `blocked` or `escalated`, report the reason and what
    is needed. Do not retry it automatically.
 6. Reuse the newest verification record in `session.md` when its tree state
-   still matches `node .github/tools/verify/tree-state.mjs`; re-run only what
+   still matches `node .agents/tools/verify/tree-state.mjs`; re-run only what
    the next phase's own contract requires. Warnings already recorded there are
    carried forward, not reopened.
 

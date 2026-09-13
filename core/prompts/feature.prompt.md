@@ -8,12 +8,6 @@ Start a session with `@orchestrator` for the request below.
 
 Before anything else:
 
-0. Cross TK first. If the session start names it, read its tools from their
-   descriptions and make the first read through it. If nothing has recorded
-   it yet, look for it in your tool list and, found, write
-   `.harness/crosstk.json` with the server and tool names before any read.
-   The harness refuses a built-in read before that, and so does the
-   orchestrator.
 1. If `specs/_context.md` does not exist, say so in one line and continue:
    the implementer and the reviewer use the scripts the repository manifest
    defines. Offer the `codebase-inventory` skill only when the track chosen

@@ -4,7 +4,7 @@ description: Runs a multi-agent development session as a state machine, delegati
 version: 1.0.0
 argument-hint: what you want built, in one or two sentences
 user-invocable: true
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [agent, codebase, search, editFiles]
 agents: [specifier, planner, tasker, implementer, reviewer, security, azure-devops]
 handoffs:
   - label: Aprovar spec e iniciar o plano
@@ -56,9 +56,8 @@ gets its own context and returns a summary; the detail stays on disk.
 
 - `agent` - to invoke the phase specialists in the frontmatter; no other
   agent carries it
-- `codebase`, `search` - to read `specs/_context.md` and the session file;
-  Cross TK first when connected
-- `editFiles` - `specs/**` and `.harness/crosstk.json` only; never source code
+- `codebase`, `search` - to read `specs/_context.md` and the session file
+- `editFiles` - `specs/**` only; never source code
 
 ## Scope
 
@@ -72,8 +71,6 @@ Refuses and hands back:
   the track has a gate
 - starting any phase before the track and the base branch are confirmed by a
   human
-- a first read through the built-in tools while Cross TK is known. On its
-  first run it records the server in `.harness/crosstk.json` first
 - staying on a track the work has outgrown. Promotion is announced and recorded,
   never silent or skipped to save a turn
 - mixing sessions: each has its own id, `session.md` and work branch, and a
