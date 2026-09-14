@@ -1,13 +1,11 @@
 {
-  "$comment": "Cold tier, and the widest blast radius in the whole configuration: an enabled server is a tool every agent can reach. Nothing is enabled by default. To enable one, move it from `disabled` into `servers` and fill in owner, trust, scope and version. harness doctor refuses an enabled server that is missing any of those, that carries a literal credential, or that still has a TODO in its command, args, owner or version.",
+  "$comment": "Cold tier, and the widest blast radius in the whole configuration: an enabled server is a tool every agent that lists it can reach, and its catalogue travels with every request of that agent. Nothing is enabled by default. To enable one, move it from `disabled` into `servers` and fill in owner, trust, scope and version. harness doctor refuses an enabled server that is missing any of those, that carries a literal credential, or that still has a TODO in its command, args, owner or version.",
   "servers": {},
   "disabled": {
     "cross-tk": {
-      "$comment": "The token-saving server every agent uses first, by rule: once it is declared, the first read of a session goes through it and the crosstk-first hook refuses a built-in read before that. Its launch command is not known to the harness, so this entry is a template: fill in command, args and version from the Cross TK documentation your team uses before moving it into servers. Discovery is by name - the session start reports whether a server matching cross-tk is declared here, and the agents read its real tools from their descriptions at runtime. `tools` lists the tool names as the runtime shows them, only needed when they do not carry the server name; `mandatoryFirst: false` turns the refusal into a one-time reminder.",
+      "$comment": "The token-saving server the agents use where it returns less than a whole read: one symbol out of a large file, a workspace search, a summary. Its launch command is not known to the harness, so this entry is a template: fill in command, args and version from the Cross TK documentation your team uses before moving it into servers, and keep the name cross-tk, which is what the agent manifests (cross-tk/*) and the hooks match. The session start reports whether a server matching the name is declared here or in the user's profile; the crosstk-nudge hook reminds the agent once per large file that the server returns less; the crosstk-run hook routes tests, diffs and listings through the crosstk binary when it is on PATH. Nothing is mandatory and no tool name is written down.",
       "command": "TODO: the Cross TK launch command",
       "args": [],
-      "tools": [],
-      "mandatoryFirst": true,
       "owner": "TODO: the team that answers for this server",
       "trust": "TODO: state what it reads and writes; a token-saving server usually reads the workspace and returns compact views of it",
       "scope": "workspace only, read paths only; anything that writes files or reaches the network needs its own line here",

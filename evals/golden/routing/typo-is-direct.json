@@ -1,0 +1,10 @@
+{
+  "name": "a typo is a direct change, not a session",
+  "prompt": "The request is: the export button label says 'Exprot' in src/ui/ExportButton.tsx. The repository has the harness installed, with /feature and @orchestrator available, and a UI lint script in package.json. How do you handle it, step by step?",
+  "assertions": [
+    { "type": "matches", "value": "(direct|right here|in (the|this) chat|without a session|no session)" },
+    { "type": "matches", "value": "(lint|check|diff)" },
+    { "type": "matches", "value": "(not|no|without|never)[^.]{0,60}(session|orchestrator|sub-agent|track|/feature)" }
+  ],
+  "why": "A session pays for a track confirmation, three contexts and a pull request before the edit; a one-word label pays for the edit and the lint that proves it."
+}

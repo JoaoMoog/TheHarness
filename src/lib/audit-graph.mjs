@@ -104,7 +104,9 @@ export function auditAgents(report) {
     if (agent.tools.length > 0 && agent.allTools) {
       report.fail(`${label}: has both a tools list and ${AGENT_ALL_TOOLS}; one of them is not what runs`);
     }
-    const hasTool = (name) => agent.allTools || agent.tools.includes(name);
+    // A tool may be listed short (`codebase`) or qualified (`search/codebase`); both name the same tool.
+    const lastSegment = (t) => String(t).split('/').pop();
+    const hasTool = (name) => agent.allTools || agent.tools.some((t) => lastSegment(t) === name);
 
     const missingSections = missing(AGENT_SECTIONS, agent.sections);
     if (missingSections.length > 0) {
@@ -118,11 +120,12 @@ export function auditAgents(report) {
       }
     }
 
-    // The model is the user's choice in the chat, never the file's: a pinned
-    // model goes stale the day a newer one ships and silently overrides what
-    // the person selected.
-    if (agent.data.model !== undefined) {
-      report.warn(`${label}: pins a model (${asArray(agent.data.model).join(', ')}); remove it, the one selected in the chat runs`);
+    // The model is the user's choice in the chat, never the file's: a single
+    // pinned name goes stale the day a newer one ships and silently overrides
+    // what the person selected. A prioritised list survives a retirement, so
+    // a fork that wants the coordinator-and-worker pattern may carry one.
+    if (typeof agent.data.model === 'string') {
+      report.warn(`${label}: pins one model (${agent.data.model}); a name goes stale, list fallbacks or leave the choice to the chat`);
     }
 
     // Delegation graph. These are the checks that make an orchestrator real
@@ -139,7 +142,7 @@ export function auditAgents(report) {
     if (delegates && !hasTool('agent')) {
       report.fail(`${label}: lists sub-agents but has no "agent" tool, so it cannot invoke them`);
     }
-    if (!delegates && agent.tools.includes('agent')) {
+    if (!delegates && hasTool('agent') && !agent.allTools) {
       report.warn(`${label}: carries the "agent" tool but delegates to nobody`);
     }
 

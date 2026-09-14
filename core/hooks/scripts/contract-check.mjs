@@ -9,7 +9,7 @@
  *   stage: specify
  *   status: complete
  *   artifacts: specs/007-export-csv/spec.md
- *   summary: one paragraph, at most 200 words
+ *   summary: one paragraph, at most 120 words
  *   next: plan
  *   ```
  *
@@ -22,7 +22,7 @@ import { readHookInput, isHookMode, emit, EXIT_OK } from './lib/io.mjs';
 
 const REQUIRED = ['stage', 'status', 'summary'];
 const FENCE = /```harness-handoff\s*\n([\s\S]*?)```/g;
-const MAX_SUMMARY_WORDS = 200;
+const MAX_SUMMARY_WORDS = 120;
 
 function lastEnvelope(text) {
   let match;

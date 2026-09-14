@@ -10,6 +10,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readHookInput, isHookMode, context, EXIT_OK } from './lib/io.mjs';
+import { hookContext } from './lib/git.mjs';
+import { bumpUsage } from './lib/usage.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const BUDGETS = path.resolve(HERE, '..', '..', '..', 'loops', 'budgets.json');
@@ -18,6 +20,15 @@ const TRIGGERS = /\b(loop|iterate|keep going|until it passes|repeat until|autono
 
 const input = await readHookInput();
 if (!isHookMode(input)) process.exit(EXIT_OK);
+
+// Every prompt is a model call with the whole context behind it, so it is
+// counted for `harness cost` here, where the runtime hands it over.
+try {
+  const cwd = typeof input.cwd === 'string' && fs.existsSync(input.cwd) ? input.cwd : process.cwd();
+  bumpUsage(hookContext(cwd).root, input.session_id, { prompts: 1 });
+} catch {
+  // Counting never blocks a prompt.
+}
 
 const prompt = String(input.prompt ?? input.user_prompt ?? '');
 if (!TRIGGERS.test(prompt)) process.exit(EXIT_OK);

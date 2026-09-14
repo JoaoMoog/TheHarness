@@ -54,12 +54,12 @@ function runHook(name, payload, cwd = undefined, extraEnv = {}) {
   }
 }
 
-function runKiroHook(name, payload, cwd = undefined) {
+function runKiroHook(name, payload, cwd = undefined, extraEnv = {}) {
   const r = spawnSync(process.execPath, [script(name), '--hook-mode=kiro'], {
     input: JSON.stringify(payload),
     encoding: 'utf8',
     cwd,
-    env: { ...process.env, HARNESS_HOOK_MODE: '' },
+    env: { ...process.env, ...extraEnv, HARNESS_HOOK_MODE: '' },
   });
   try {
     return JSON.parse(r.stdout || '{}');
@@ -350,7 +350,7 @@ console.log('\nVS Code hook protocol');
       /- 001-export-label \(phase: implement, work branch: patch\/export-label\)/.test(out) &&
       /- 002-retry-policy \(phase: review, work branch: fix\/retry-policy\)/.test(out),
     true);
-  check('the newest is shown in full and a closed one is not listed', /### Newest: 002-retry-policy/.test(out) && !/003-closed/.test(out), true);
+  check('no session body is pasted, /resume reads it; a closed one is not listed', !/### Newest/.test(out) && /`\/resume <id>` continues one of them and reads its `session.md`/.test(out) && !/003-closed/.test(out), true);
   check('the start never forbids a second session', !/Do not start a new session/.test(out) && /\/feature starts another/.test(out), true);
 }
 
@@ -491,80 +491,122 @@ console.log('\nsession-context: Cross TK discovery by name');
   check('a file that does not parse is skipped and the next one is read', /`cross_tk` is configured in `\.vscode\/mcp\.json`/.test(context()), true);
 }
 
-/* crosstk-first: with a Cross TK server declared, the first built-in read of a
-   session is refused until a Cross TK tool has been used; without one, or once
-   it has been used, everything passes. The rule is only worth having if the
-   runtime enforces it. */
-console.log('\ncrosstk-first: the first read goes through Cross TK');
+/* crosstk-nudge: with a Cross TK server declared, a whole read of a large
+   file gets one reminder that the server returns less; a small file, a ranged
+   read, a second read of the same file, or no server at all passes in
+   silence. It never denies: a refused read costs a model round trip to redo,
+   and a server declared but not in the tool picker used to cost a human turn. */
+console.log('\ncrosstk-nudge: a whole read of a large file is pointed at Cross TK, once');
 
 {
   const { dir } = sandbox();
   const session = 'ctk-' + process.pid;
-  const call = (tool_name, extra = {}, sid = session) =>
-    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name, tool_input: { filePath: path.join(dir, 'a.ts') }, ...extra }, dir);
+  write(dir, 'small.ts', 'export const a = 1;\n');
+  write(dir, 'big.ts', Array.from({ length: 400 }, (_, i) => 'export const v' + i + ' = ' + i + ';').join('\n') + '\n');
+  const call = (tool_name, file, extra = {}, sid = session) =>
+    runHook('crosstk-nudge', { hook_event_name: 'PreToolUse', session_id: sid, tool_name, tool_input: { filePath: path.join(dir, file), ...extra } }, dir);
   const decision = (out) => out.hookSpecificOutput?.permissionDecision;
+  const nudged = (out) => decision(out) === 'allow' && /Cross TK/.test(out.systemMessage ?? '');
+  const silent = (out) => decision(out) === 'allow' && out.systemMessage === undefined;
 
-  check('no server declared: a read passes', decision(call('readFile')), 'allow');
+  check('no server declared: a large read passes in silence', silent(call('readFile', 'big.ts')), true);
+  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
+  check('server declared: a small file is read in silence', silent(call('readFile', 'small.ts')), true);
+  const first = call('readFile', 'big.ts');
+  check('a whole read of a large file is allowed with one reminder that names the server and the size', nudged(first) && /`cross-tk`/.test(first.systemMessage) && /~400 lines/.test(first.systemMessage), true);
+  check('the reminder is never a refusal', decision(first), 'allow');
+  check('the second read of the same file is silent', silent(call('readFile', 'big.ts')), true);
+  check('a ranged read is already targeted, so it is silent', silent(call('readFile', 'big.ts', { startLine: 10, endLine: 40 }, session + '-range')), true);
+  check('a search is not a whole read', silent(call('textSearch', 'big.ts', {}, session + '-search')), true);
+  check('an edit is not a read', silent(call('editFiles', 'big.ts', {}, session + '-edit')), true);
+  check('a Cross TK call passes untouched', silent(call('mcp_cross-tk_get_function', 'big.ts', {}, session + '-ctk')), true);
+  check("a file that does not exist is not this hook's business", silent(call('readFile', 'missing.ts', {}, session + '-missing')), true);
+  const kiro = runKiroHook('crosstk-nudge', { hook_event_name: 'PreToolUse', session_id: session + '-kiro', tool_name: 'readFile', tool_input: { filePath: path.join(dir, 'big.ts') } }, dir);
+  check('the same reminder comes out under --hook-mode=kiro', nudged(kiro), true);
+  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', disabled: true } } }));
+  check('a server marked disabled counts as absent', silent(call('readFile', 'big.ts', {}, session + '-disabled')), true);
 
   write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
-  const refused = call('readFile');
-  check('server declared: the first built-in read is refused', decision(refused), 'deny');
-  check('the refusal names the server and says what to do', /Cross TK first: `cross-tk`/.test(refused.hookSpecificOutput?.permissionDecisionReason ?? '') && /descriptions/.test(refused.hookSpecificOutput?.permissionDecisionReason ?? ''), true);
-  check('a search is refused too', decision(call('textSearch')), 'deny');
-  check('an edit is not a read, so it passes', decision(call('editFiles')), 'allow');
-  check('delegating to a sub-agent passes', decision(call('agent')), 'allow');
-  check('a Cross TK tool, named after the server, passes and unlocks the session', decision(call('mcp_cross-tk_outline')), 'allow');
-  check('after that, a built-in read passes as the fallback', decision(call('readFile')), 'allow');
-  check('a different session is gated on its own', decision(call('readFile', {}, session + '-other')), 'deny');
-
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', tools: ['compact_read'] } } }));
-  const fresh = session + '-declared';
-  check('an unknown tool name is not gated, so an unrecorded Cross TK tool can never lock the session out', decision(call('compact_read_file', {}, fresh)), 'allow');
-  check('while a built-in read handed over with its source prefix still is', decision(call('search/codebase', {}, fresh)), 'deny');
-  check('but the declared tool name is recognised and unlocks', decision(call('compact_read', {}, fresh)) === 'allow' && decision(call('readFile', {}, fresh)) === 'allow', true);
-
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x', mandatoryFirst: false } } }));
-  const advisory = session + '-advisory';
-  const first = call('readFile', {}, advisory);
-  check('mandatoryFirst false: the first read passes with a reminder', decision(first) === 'allow' && /advisory/.test(first.systemMessage ?? ''), true);
-  check('and the reminder is said once', call('readFile', {}, advisory).systemMessage === undefined, true);
-
-  write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
-  const kiro = session + '-kiro';
-  const viaEnv = decision(runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: kiro, tool_name: 'readFile', tool_input: {} }, dir));
-  const viaArgv = decision(runKiroHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: kiro + '2', tool_name: 'readFile', tool_input: {} }, dir));
-  check('the same refusal comes out under the vscode mode and --hook-mode=kiro', viaEnv === 'deny' && viaArgv === 'deny', true);
-
   const start = runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
-  check('the session start says the first read is mandatory', /Mandatory, before anything else/.test(start) && /refused until/.test(start), true);
+  check('the session start says where the server pays, never that it is mandatory', /returns less than a whole read/.test(start) && !/Mandatory/.test(start) && !/refused/.test(start), true);
+  fs.rmSync(path.join(dir, '.mcp.json'));
+  const absent = runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
+  check('an absent server costs one line and no probing', /No server matching cross-tk/.test(absent) && /Do not probe/.test(absent) && !/tool list/.test(absent), true);
 }
 
-/* The first run records what the agent saw in its tool list, in
-   .harness/crosstk.json: no declaration in the repository is needed, no tool
-   name is written anywhere shared, and from then on the gate arms and the
-   calls are recognised by the recorded names, whole or by last segment. */
+/* crosstk-run: the output of a test run, a diff or a listing enters the
+   context whole and is resent on every model call after it. When the crosstk
+   binary is on PATH the hook rewrites such a command to `crosstk run <cmd>`,
+   deterministically and in silence; anything that is a shell program rather
+   than one command, a build, or a call a guardrail holds runs as written. */
+console.log('\ncrosstk-run: a verbose command runs through crosstk run when the binary is there');
+
 {
   const { dir } = sandbox();
-  const session = 'ctk-rec-' + process.pid;
-  const call = (tool_name, sid = session) =>
-    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name, tool_input: {} }, dir).hookSpecificOutput?.permissionDecision;
-  const start = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir).hookSpecificOutput?.additionalContext ?? '';
+  const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-bin-'));
+  fs.writeFileSync(path.join(bin, 'crosstk'), '#!/bin/sh\nexit 0\n', { mode: 0o755 });
+  const withBinary = { PATH: bin + path.delimiter + (process.env.PATH ?? '') };
+  const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-nobin-'));
+  let n = 0;
+  const sid = () => 'run-' + process.pid + '-' + n++;
+  const run = (command, env = withBinary, extra = {}) =>
+    runHook('crosstk-run', { hook_event_name: 'PreToolUse', session_id: sid(), tool_name: 'runCommands', tool_input: { command, explanation: 'x' }, ...extra }, dir, env);
+  const rewritten = (out) => out.hookSpecificOutput?.updatedInput?.command;
 
-  check('nothing known: the session start asks for the first-run discovery', /no first run has recorded one/.test(start()) && /Look for it in your tool list/.test(start()), true);
-  check('nothing known: reads pass', call('readFile'), 'allow');
+  check('npm test is rewritten', rewritten(run('npm test')), 'crosstk run npm test');
+  check('the other fields of the call survive the rewrite', run('npm test').hookSpecificOutput?.updatedInput?.explanation, 'x');
+  check('the rewrite is silent', run('npm test').systemMessage, undefined);
+  check('git diff is rewritten', rewritten(run('git diff --stat')), 'crosstk run git diff --stat');
+  check('cargo test with arguments is rewritten', rewritten(run('cargo test -- --nocapture')), 'crosstk run cargo test -- --nocapture');
+  check('a build is not: a compiler error needs its detail', rewritten(run('npm run build')), undefined);
+  check('a pipe is not', rewritten(run('npm test | tail -n 20')), undefined);
+  check('a chain is not', rewritten(run('cd api && npm test')), undefined);
+  check('a redirection is not', rewritten(run('git diff > out.txt')), undefined);
+  check('an environment assignment is not', rewritten(run('CI=1 npm test')), undefined);
+  check('a command already through crosstk is not', rewritten(run('crosstk run npm test')), undefined);
+  check('a tool that is not the terminal is not', rewritten(run('npm test', withBinary, { tool_name: 'editFiles' })), undefined);
+  check('without the binary on PATH nothing is rewritten', rewritten(run('npm test', { PATH: empty })), undefined);
+  write(dir, '.harness/crosstk-run.off', '');
+  check('the marker file switches the rewrite off', rewritten(run('npm test')), undefined);
+  fs.rmSync(path.join(dir, '.harness', 'crosstk-run.off'));
+  check('HARNESS_CROSSTK_RUN=0 switches it off too', rewritten(run('npm test', { ...withBinary, HARNESS_CROSSTK_RUN: '0' })), undefined);
+  const kiro = runKiroHook('crosstk-run', { hook_event_name: 'PreToolUse', session_id: sid(), tool_name: 'runCommands', tool_input: { command: 'npm test' } }, dir, withBinary);
+  check('under --hook-mode=kiro, which has no updatedInput, the call runs as written', rewritten(kiro), undefined);
 
-  write(dir, '.harness/crosstk.json', JSON.stringify({ server: 'acme-tk', tools: ['acme/acme-tk/outline_file', 'acme/acme-tk/search_lines'], discoveredAt: '2026-09-10' }));
-  check('a record without any declaration arms the gate', call('readFile'), 'deny');
-  check('the session start names the recorded server and its tools', /`acme-tk` was recorded in `\.harness\/crosstk\.json` on 2026-09-10/.test(start()) && /outline_file, acme\/acme-tk\/search_lines/.test(start()), true);
-  check('a recorded name handed to the hook whole is recognised', call('acme/acme-tk/outline_file', session + '-whole'), 'allow');
-  check('a recorded name handed to the hook as its last segment is recognised', call('search_lines', session + '-seg'), 'allow');
-  check('and unlocks the reads that follow', call('readFile', session + '-seg'), 'allow');
-  check('a name that is not recorded stays a refused read', call('list_dir', session + '-other'), 'deny');
+  const pre = (command) =>
+    runHook('tool-hooks', { hook_event_name: 'PreToolUse', session_id: sid(), tool_name: 'runCommands', tool_input: { command } }, dir, withBinary);
+  const viaDispatcher = pre('npm test');
+  check('the dispatcher carries the rewrite inside hookSpecificOutput', viaDispatcher.hookSpecificOutput?.permissionDecision === 'allow' && rewritten(viaDispatcher) === 'crosstk run npm test', true);
+  const held = pre('git push --force origin main');
+  check('a call a guardrail questions runs as written: ask wins and the rewrite is dropped', held.hookSpecificOutput?.permissionDecision === 'ask' && rewritten(held) === undefined, true);
+}
 
-  write(dir, '.harness/crosstk.json', JSON.stringify({ server: '', tools: ['x'] }));
-  check('a record without a server name records nothing', call('readFile', session + '-empty'), 'allow');
-  write(dir, '.harness/crosstk.json', '{ not json');
-  check('a record that does not parse records nothing', call('readFile', session + '-bad'), 'allow');
+/* usage: the runtime does not report tokens, but it hands the hooks every
+   prompt, tool call, tool result and sub-agent start, which are what drives a
+   token bill. They are counted per session and written out when it stops. */
+console.log('\nusage: what a session cost, counted where the runtime hands it over');
+
+{
+  const { dir } = sandbox();
+  const sid = 'usage-' + process.pid;
+  const usageFile = path.join(dir, '.harness', 'usage', sid + '.json');
+  const usage = () => JSON.parse(fs.readFileSync(usageFile, 'utf8'));
+  write(dir, 'a.txt', 'plain\n');
+  runHook('tool-hooks', { hook_event_name: 'PreToolUse', session_id: sid, tool_name: 'readFile', tool_input: { filePath: path.join(dir, 'a.txt') } }, dir);
+  runHook('tool-hooks', { hook_event_name: 'PreToolUse', session_id: sid, tool_name: 'mcp_cross-tk_get_function', tool_input: { name: 'main' } }, dir);
+  runHook('tool-hooks', { hook_event_name: 'PostToolUse', session_id: sid, tool_name: 'readFile', tool_input: { filePath: path.join(dir, 'a.txt') }, tool_response: 'x'.repeat(2048) }, dir);
+  check('two tool calls are counted, one of them through Cross TK, by tool name', usage().toolCalls === 2 && usage().crossTk === 1 && usage().byTool.readFile === 1, true);
+  check('the bytes a tool returned are counted', usage().toolOutputBytes, 2048);
+  runHook('loop-budget', { hook_event_name: 'UserPromptSubmit', session_id: sid, cwd: dir, prompt: 'fix the typo in the export label' }, dir);
+  check('a prompt is counted even when it starts no loop', usage().prompts, 1);
+  runHook('telemetry', { hook_event_name: 'SubagentStart', session_id: sid, agent_name: 'implementer' }, dir);
+  check('a sub-agent start is counted', usage().subagents, 1);
+  runHook('audit-log', { hook_event_name: 'Stop', session_id: sid }, dir);
+  const lines = fs.readFileSync(path.join(dir, '.harness', 'sessions.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+  const record = lines.find((l) => l.event === 'usage');
+  check('Stop writes one usage line to sessions.jsonl and clears the counters',
+    record?.session === sid && record.toolCalls === 2 && record.prompts === 1 && record.subagents === 1 && record.toolOutputBytes === 2048 && !fs.existsSync(usageFile),
+    true);
 }
 
 /* A server configured in the user's own VS Code or Kiro profile is connected
@@ -575,18 +617,19 @@ console.log('\ncrosstk-first: the first read goes through Cross TK');
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-home-'));
   const env = { HOME: home, USERPROFILE: home, APPDATA: home };
   const session = 'ctk-user-' + process.pid;
+  write(dir, 'big.ts', 'line\n'.repeat(400));
   const start = () => runHook('session-context', { hook_event_name: 'SessionStart' }, dir, env).hookSpecificOutput?.additionalContext ?? '';
   const read = (sid) =>
-    runHook('crosstk-first', { hook_event_name: 'PreToolUse', session_id: sid, tool_name: 'readFile', tool_input: {} }, dir, env).hookSpecificOutput?.permissionDecision;
+    runHook('crosstk-nudge', { hook_event_name: 'PreToolUse', session_id: sid, tool_name: 'readFile', tool_input: { filePath: path.join(dir, 'big.ts') } }, dir, env);
 
-  check('an empty profile: nothing is found and reads pass', /No server matching cross-tk/.test(start()) && read(session) === 'allow', true);
+  check('an empty profile: nothing is found and a large read passes in silence', /No server matching cross-tk/.test(start()) && read(session).systemMessage === undefined, true);
   const [defaultProfile] = userMcpFiles({ home, appData: home });
   fs.mkdirSync(path.dirname(defaultProfile), { recursive: true });
   fs.writeFileSync(defaultProfile, JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
   check('a server in the VS Code user profile is found and said to be global', /`cross-tk` is configured in your user profile/.test(start()) && /every workspace/.test(start()), true);
-  check('and it arms the gate with no file in the repository', read(session + '-2'), 'deny');
+  check('and a large read gets the reminder with no file in the repository', /Cross TK `cross-tk`/.test(read(session + '-2').systemMessage ?? ''), true);
   fs.writeFileSync(defaultProfile, JSON.stringify({ servers: { 'cross-tk': { command: 'x', disabled: true } } }));
-  check('disabled in the profile counts as absent', read(session + '-3'), 'allow');
+  check('disabled in the profile counts as absent', read(session + '-3').systemMessage, undefined);
   const kiro = userMcpFiles({ home, appData: home }).at(-1);
   fs.mkdirSync(path.dirname(kiro), { recursive: true });
   fs.writeFileSync(kiro, JSON.stringify({ mcpServers: { crosstk: { command: 'x' } } }));
@@ -639,13 +682,11 @@ console.log('\ntool-hooks: one process per tool event');
   check('policy-gate denies through the dispatcher too', decision(pre('editFiles', { filePath: path.join(dir, 'infra', 'terraform.tfstate') })), 'deny');
 
   write(dir, '.mcp.json', JSON.stringify({ servers: { 'cross-tk': { command: 'x' } } }));
+  write(dir, 'big.txt', 'line\n'.repeat(400));
   const sid = 'th-ctk-' + process.pid;
-  check('the Cross TK gate holds through the dispatcher', decision(pre('readFile', { filePath: path.join(dir, 'a.txt') }, { session_id: sid })), 'deny');
-  check(
-    'and a Cross TK call opens it for the reads that follow',
-    decision(pre('cross-tk/read', {}, { session_id: sid })) === 'allow' && decision(pre('readFile', { filePath: path.join(dir, 'a.txt') }, { session_id: sid })) === 'allow',
-    true
-  );
+  const nudge = pre('readFile', { filePath: path.join(dir, 'big.txt') }, { session_id: sid });
+  check('the Cross TK reminder comes through the dispatcher as an allow with a message', decision(nudge) === 'allow' && /Cross TK/.test(nudge.systemMessage ?? ''), true);
+  check('and a Cross TK call passes untouched', decision(pre('cross-tk/read', {}, { session_id: sid })), 'allow');
   fs.rmSync(path.join(dir, '.mcp.json'));
 
   write(dir, 'b.txt', 'same\n');

@@ -4,7 +4,7 @@ description: Reviews a change set for correctness and contract violations and re
 version: 2.0.0
 argument-hint: the branch, diff or task to review
 user-invocable: true
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [codebase, search, usages, problems, changes, runCommands, cross-tk/*]
 agents: []
 ---
 
@@ -21,8 +21,8 @@ It is invocable directly and as the review phase of a session.
 
 ## Tools
 
-- Cross TK, whenever its MCP server is connected - the first tool for every
-  read, search and summary it covers; the tools below are the fallback
+- Cross TK, when its MCP server is connected - where it returns less than a
+  whole read: one symbol from a large file, a workspace search, a summary
 - `codebase`, `search`, `usages`, `problems`, `changes` - the change and the
   code around it
 - `runCommands` - the targeted check on the changed files, and the repository
@@ -39,9 +39,10 @@ step with its own review.
 It is the harness judge, not only its code reviewer. The orchestrator invokes it
 before the gates whose artifact took a specialist to judge: `spec-quality`
 before a feature or spike spec is approved, `code-review` after implement. The
-`fix` spec and the pull request body are scored by the orchestrator, because a
-failing test and a screen of text do not earn another invocation. The agent
-that produced the artifact never scores it, which is why this one does.
+`fix` spec, the pull request body and the `patch` diff are scored by the
+orchestrator: a failing test, a screen of text and a small diff do not earn
+another context, so on `patch` this agent runs only for a sensitive area. The
+agent that produced the artifact never scores it, which is why this one does.
 
 One invocation does the whole job, and the suite does not run twice on one
 tree. The implement envelope records what ran and the tree state; the reviewer

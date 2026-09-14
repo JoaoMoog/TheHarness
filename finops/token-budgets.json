@@ -18,7 +18,7 @@
     },
     "cold": {
       "billing": "per session or event",
-      "note": "MCP tool catalogues are paid for on connection. Enable only the servers a workflow actually uses."
+      "note": "MCP tool catalogues travel with every request. Enable only the servers a workflow actually uses, and list in each agent only the tools it needs."
     }
   },
   "targets": {
@@ -33,6 +33,8 @@
     "load the large reference on demand rather than inlining it in every turn",
     "a verification result holds until the tree changes: record what ran and the tree state, and do not re-run it for the same state",
     "a problem that predates the change is a warn, never an extra round",
-    "prefer a connected token-saving MCP server such as cross-tk for reads, searches and summaries; never probe for one that is absent"
+    "use a connected token-saving MCP server such as cross-tk where it returns less than a whole read; never probe for one that is absent",
+    "the runtime bills tokens, not requests: every model call resends the context, so a small change is made in the chat without a session or a sub-agent",
+    "fewer calls, smaller reads and shorter answers come before a cheaper model; each is a lever, and they compound"
   ]
 }

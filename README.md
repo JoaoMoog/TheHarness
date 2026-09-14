@@ -125,6 +125,16 @@ node bin/harness.mjs dream <repo> --discard=D-009 --why="uma sessão só"
 
 ## No dia a dia
 
+**Mudança pequena é feita direto no chat, sem sessão.** Cabe numa frase, toca
+no máximo três arquivos e ou não muda comportamento ou tem um check existente
+que a prova (teste, build, lint): o agente lê o que precisa, edita, roda esse
+check e mostra o diff. Sem sub-agente, sem rodada de revisão, sem confirmação
+de trilha; você revisa o diff no editor e faz o commit, ou pede `/deliver`
+para abrir o pull request. Auth, crypto, pagamento, dinheiro, schema de
+produção e manifesto de dependências nunca são diretos. A regra está no hot
+tier e em `routing.instructions.md`; o `@orchestrator`, se chamado para um
+pedido desses, diz isso em uma linha e para.
+
 Trabalho de vários passos começa com `/feature` ou `@orchestrator`. Ele escolhe
 uma **trilha** — quais das seis etapas o pedido realmente precisa — e para para
 você confirmar antes de começar. Na mesma parada ele pergunta de qual branch
@@ -142,6 +152,11 @@ resposta fica gravada em `session.md`, e o pull request é aberto contra ela.
 
 Entre cada etapa aparece um botão, em português; só em `patch` e `incident` a
 revisão começa sozinha quando implement termina. Você lê o artefato e confirma.
+Na mesma confirmação da trilha o orchestrator diz a faixa de modelo que ela
+merece — baixa para `patch` e para as fases tasks e deliver, média para
+implement e review, alta só para specify e plan de feature ou spike — e a
+escolha do modelo, ou de `Auto`, é sua, no seletor do chat; nenhum nome de
+modelo é gravado no harness.
 O estado da sessão fica em `specs/NNN-slug/session.md` — ou
 `.kiro/specs/NNN-slug/session.md` num repo de Kiro — commitado, então dá para
 fechar o editor e retomar com `/resume`. O início da sessão diz qual é o layout,
@@ -189,86 +204,125 @@ conteúdo muda: reler um arquivo recém-editado não avisa; reler três vezes um
 arquivo que não mudou, avisa.
 
 **Ajuste rápido paga só o que usa.** Uma trilha omite fases, mas não pode
-manter a cerimônia de cada fase. Em `patch` e `fix`: o `security` só entra na
-revisão quando o diff toca área sensível (auth, crypto, pagamento, segredo,
-fronteira de entrada, dependência), e a sessão diz quando pulou; o corpo do
-pull request é pontuado pelo próprio orchestrator, que não o escreveu, em vez
-de uma terceira invocação do `reviewer`; e mudança sem comportamento
-observável, como texto, versão ou formatação, não ganha teste inventado. A
-suíte roda uma vez por estado da árvore: o `reviewer` reaproveita o registro
-de verificação do implement quando o estado bate e o registro está verde, e
-roda por conta própria só o check dirigido aos arquivos mudados. Em `patch` e
-`incident` a revisão começa sozinha quando implement termina; cada fase é uma
-edição só no `session.md`; sem `_context.md`, um patch segue com os scripts do
-próprio manifesto do repo; e a consolidação (dreaming) fica para o fim da
-sessão ou para `/dream`, nunca antes do pedido. No `fix`, a spec é o teste que
-falha mais o comportamento esperado, pontuada pelo orchestrator sem invocar o
-`reviewer` só para isso, e o botão "Aprovar spec e implementar a correção" vai
-direto ao implementer. Um `patch` fica em três sub-agentes e três gates
-humanos. O exemplo de settings sobe `chat.agent.maxRequests` de 25 para 80,
-porque cada parada nesse teto espera alguém clicar em continuar; os budgets
-dos loops e o `burn-detect` são o que segura um loop de verdade.
+manter a cerimônia de cada fase. Em `patch` e `fix`: em `patch` a revisão é o
+próprio orchestrator lendo o diff contra a rubrica `code-review` — ele não
+escreveu o código, o mesmo princípio da spec de `fix` e do corpo do pull
+request — e `reviewer` e `security` só entram quando o diff toca área sensível
+(auth, crypto, pagamento, segredo, fronteira de entrada, dependência); a
+sessão diz quando pulou; o corpo do pull request é pontuado pelo próprio
+orchestrator, em vez de uma terceira invocação do `reviewer`; e mudança sem
+comportamento observável, como texto, versão ou formatação, não ganha teste
+inventado. A suíte roda uma vez por estado da árvore: o `reviewer` reaproveita
+o registro de verificação do implement quando o estado bate e o registro está
+verde, e roda por conta própria só o check dirigido aos arquivos mudados. Em
+`patch` e `incident` a revisão começa sozinha quando implement termina; cada
+fase é uma edição só no `session.md`; sem `_context.md`, um patch segue com os
+scripts do próprio manifesto do repo; e a consolidação (dreaming) fica para o
+fim da sessão ou para `/dream`, nunca antes do pedido. No `fix`, a spec é o
+teste que falha mais o comportamento esperado, pontuada pelo orchestrator sem
+invocar o `reviewer` só para isso, e o botão "Aprovar spec e implementar a
+correção" vai direto ao implementer. Um `patch` fica em dois sub-agentes e
+três gates humanos. O exemplo de settings mantém `chat.agent.maxRequests` em
+80, porque cada parada nesse teto espera alguém clicar em continuar; os
+budgets dos loops e o `burn-detect` são o que segura um loop de verdade.
+
+## Créditos do Copilot (junho/2026)
+
+Desde 1º de junho de 2026 o Copilot cobra por uso: *AI Credits* (1 crédito =
+US$ 0,01), calculados por modelo × tokens — entrada, entrada em cache (cerca de
+um décimo do preço), gravação de cache e saída (várias vezes a entrada). Não
+há mais modelo incluído nem contagem por prompt. Cada chamada ao modelo dentro
+de um turno reenvia o contexto inteiro; cada resultado de tool entra nele; cada
+sub-agente abre outro contexto. Por isso uma tarefa simples podia custar
+centenas de créditos: uma sessão de três sub-agentes fazia de 100 a 200
+chamadas, cada uma carregando o hot tier, o catálogo de tools, o início de
+sessão e a saída de todos os testes anteriores.
+
+O que o harness faz a respeito, nesta ordem de impacto:
+
+1. **Faixa direta.** Mudança pequena não vira sessão (acima).
+2. **Menos contexto por chamada.** O início de sessão injeta ponteiros e os
+   comandos sancionados, não os arquivos inteiros; cada agente carrega só as
+   tools que lista; o hot tier cabe em 2 KB e o efetivo em 4,5k tokens.
+3. **Menos saída.** Resposta na forma que o passo pede — diff, saída do check
+   que importa, uma linha de status — e resumo de fase de até 120 palavras.
+4. **Saída de tools comprimida.** Testes, diffs e listagens passam por
+   `crosstk run` quando o binário existe (abaixo).
+5. **Modelo por faixa.** Nenhum nome de modelo no repositório; a confirmação
+   da trilha diz a faixa e você escolhe no chat.
+6. **Medição.** `harness cost` mostra prompts, tool calls, sub-agentes e KB
+   devolvidos por tools por sessão e por trilha; o custo em créditos você lê
+   no editor (hover na resposta, controle de contexto, dashboard na Status
+   Bar, `/chronicle:cost-tips`).
+
+O levantamento completo, com as fontes, os conceitos atualizados e a conta de
+antes e depois, está em [custo-do-copilot.html](custo-do-copilot.html) — abra
+o arquivo no navegador, ou veja
+[publicado](https://claude.ai/artifact/BCfhXKd8VkxrRX2PcSR7J4).
 
 ## Cross TK
 
-Regra geral, não preferência: quando o servidor MCP chamado `cross-tk`
-(qualquer grafia) está conectado, toda leitura, busca e resumo que ele cobre
-passa por ele, e as ferramentas nativas são o fallback para o que ele não
-cobre. A regra está no hot tier (`copilot-instructions.md`, carregado em todo
-turno), na `CONSTITUTION.md` como protocolo, nas regras básicas do `AGENTS.md`,
-na instrução `token-economy` e no manifesto de ferramentas de cada agente que
-lê código. Os agentes descobrem o que ele oferece pelas descrições das
-ferramentas, uma vez por sessão; o harness não presume nomes nem assinaturas.
+Regra: **quando compensa, não sempre.** Com o servidor MCP chamado `cross-tk`
+conectado, o agente o usa onde ele devolve menos do que a ferramenta nativa
+devolveria: um símbolo de um arquivo grande (em vez do arquivo inteiro), uma
+busca no workspace (agrupada, com teto), um resumo, a estrutura de um
+repositório sem `_context.md`. Arquivo pequeno, trecho já no contexto, arquivo
+recém-editado e faixa de linhas exata são lidos direto. A ferramenta de escrita
+dele nunca é usada (edição passa pelo editor, onde o diff é revisável e os
+guardrails rodam), e as de cache e economia não entram numa tarefa. Os agentes
+aprendem as tools pelas descrições, uma vez por sessão; o harness não presume
+nome nem assinatura, e nenhum nome de tool entra no repositório.
 
-**Obrigatório antes de começar, e o runtime cobra.** Com o servidor declarado
-no repositório (`.mcp.json`, `.vscode/mcp.json` ou `.kiro/settings/mcp.json`),
-o hook `crosstk-first` recusa a primeira leitura ou busca nativa da sessão até
-uma ferramenta do Cross TK ter sido usada; depois disso as nativas abrem como
-fallback. Regra só em prosa é a que o agente pula quando está com pressa. O
-início da sessão diz que o servidor está declarado e que a primeira leitura é
-obrigatória; sem servidor declarado não há gate, e o agente diz isso uma vez e
-segue com as nativas. Dois ajustes na entrada do servidor: `tools` lista os
-nomes das ferramentas como o runtime os mostra, só necessário quando eles não
-carregam o nome do servidor; `mandatoryFirst: false` troca a recusa por um
-lembrete único.
+A regra está na instrução `token-economy` (carregada em todo turno), no hot
+tier, na `CONSTITUTION.md` e no `AGENTS.md`. Ela substituiu o "Cross TK
+primeiro, obrigatório" de antes: com a cobrança por token, uma chamada
+obrigatória antes de qualquer leitura custava uma iteração inteira do modelo,
+e um turno humano quando o servidor estava declarado mas fora do seletor de
+tools.
 
-**Nenhum nome confidencial entra no repositório, e nada é configurado à mão.**
-O harness encontra o servidor onde ele estiver e aprende as ferramentas na
-primeira execução:
+**Dois hooks fazem a regra valer sem bloquear nada:**
 
-1. O início da sessão procura o servidor em três lugares: os arquivos MCP do
-   repositório, o `mcp.json` do seu perfil do VS Code (perfis nomeados
-   incluídos) e das configurações do Kiro, e o registro `.harness/crosstk.json`.
-   Um servidor configurado "globalmente" no VS Code é encontrado e dito como
-   tal; antes, olhar só o repositório fazia o agente responder que o servidor
-   não existia enquanto ele estava do lado.
-2. Os agentes não listam ferramentas: cada um declara `allTools:` com o motivo,
-   que é exatamente este. Um agente do Copilot com lista `tools:` só enxerga
-   o que está nela, e as ferramentas do seu servidor não podem estar numa
-   lista commitada. O `doctor` continua exigindo manifesto explícito ou
-   `allTools` com motivo, nunca ausente; os hooks seguem sendo o gate real.
-3. Na primeira execução, o agente que enxergar o servidor na lista de
-   ferramentas grava `.harness/crosstk.json` com o nome do servidor e os nomes
-   das ferramentas como o runtime os mostra. O arquivo é local da máquina e
-   nunca é commitado.
-4. Daí em diante o início da sessão nomeia o servidor e suas ferramentas, e o
-   hook `crosstk-first` reconhece as chamadas pelos nomes gravados, inteiros
-   ou pelo último segmento, e recusa a primeira leitura nativa até uma delas
-   ter sido usada. Só as leituras nativas conhecidas são seguradas; uma
-   ferramenta de nome desconhecido passa, para uma chamada do Cross TK nunca
-   ser recusada como leitura.
+- `crosstk-nudge` (PreToolUse): quando uma ferramenta nativa vai ler um
+  arquivo inteiro com mais de 300 linhas ou 12 KB e há um servidor `cross-tk`
+  declarado, a chamada passa com um lembrete de uma linha, uma vez por arquivo
+  por sessão. Leitura com faixa de linhas, arquivo pequeno ou sem servidor:
+  silêncio. Nunca recusa.
+- `crosstk-run` (PreToolUse): quando o binário `crosstk` está no PATH, o
+  comando de terminal é reescrito para `crosstk run <cmd>` — só comandos
+  simples (sem pipe, `&&`, redirecionamento) cujo primeiro termo está numa
+  lista conservadora: `git status|log|diff|show|fetch|pull|push`, `ls`, `cat`,
+  `grep`, `rg`, `findstr` e os runners de teste (`npm test`, `pnpm test`,
+  `yarn test`, `cargo test`, `dotnet test`, `pytest`, `python -m pytest`,
+  `mvn test`, `gradle test`, `go test`). Build e lint ficam de fora: o Cross TK
+  trata toda saída desses executáveis como teste e trunca o bloco de falha, e
+  erro de compilador precisa do detalhe. A lista é a constante `REWRITE_RULES`
+  em `core/hooks/scripts/crosstk-run.mjs`. Desligar: o arquivo
+  `.harness/crosstk-run.off` no repositório, ou `HARNESS_CROSSTK_RUN=0`. Só o
+  VS Code honra o `updatedInput`; no Kiro o comando roda como escrito.
 
-Se em algum repositório você preferir manifesto fechado, troque `allTools:`
-por `tools: [...]` e liste as ferramentas do servidor; o `doctor` avisa se o
-servidor estiver habilitado e a lista não o incluir.
+**Onde o servidor é encontrado.** O início da sessão procura nos arquivos MCP
+do repositório (`.mcp.json`, `.vscode/mcp.json`, `.kiro/settings/mcp.json`) e
+no `mcp.json` do seu perfil do VS Code (perfis nomeados incluídos) e das
+configurações do Kiro. Encontrado, ele diz onde e para quê; não encontrado,
+diz em uma linha que as nativas são o que há, e o agente não sonda a lista de
+tools.
+
+**Manifestos explícitos.** Cada agente lista as tools que usa e, quando lê
+código, `cross-tk/*` — a sintaxe do VS Code para todas as tools de um servidor
+pelo nome dele, sem citar nenhuma. Por isso o servidor precisa se chamar
+`cross-tk` no `.mcp.json` que o harness copia (é o nome do template em
+`core/mcp.json`); um servidor com outro nome no perfil do usuário funciona
+com os hooks, mas não alcança os manifestos — renomeie, ou troque a lista por
+`allTools:` com o motivo. O `doctor` avisa o agente leitor que não lista
+`cross-tk/*`. Confira os identificadores das tools nativas na aba Tools do
+editor de customizações do VS Code se a sua versão os mostrar qualificados
+(`search/codebase`); o `doctor` aceita as duas grafias.
 
 Para habilitar em todos os repositórios, preencha a entrada `cross-tk` em
 `core/mcp.json` com o comando real e mova-a para `servers`. O `doctor` recusa
 um servidor habilitado enquanto houver `TODO` no comando, nos argumentos, no
-dono ou na versão. Com o servidor habilitado, ele também avisa de cada agente
-cujo `tools:` não lista uma ferramenta do Cross TK: um agente do Copilot só
-chama o que está no manifesto, e uma regra que o manifesto não deixa cumprir é
-decoração.
+dono ou na versão. O índice que o Cross TK grava em `.crosstk_cache/` entra no
+`.git/info/exclude` que o harness escreve.
 
 ## Comandos
 
@@ -281,7 +335,7 @@ decoração.
 | `harness unlink --all` | Remove tudo |
 | `harness doctor` | Contratos, grafo de delegação, alcance, drift |
 | `harness budget` | Custo do contexto por tier |
-| `harness cost` | Custo por resultado entregue, por trilha e agente |
+| `harness cost` | Custo por resultado entregue, por trilha e agente; prompts, tool calls, sub-agentes e KB devolvidos por tools, por sessão |
 | `harness improve` | Lê a telemetria e aponta o que mudar no harness |
 | `harness dream <repo>` | Lista os candidatos; `--promote`, `--discard --why`, `--collect` |
 | `harness secrets <repo>` | Avisos de credencial registrados; `--allow=<id> --why`, `--allow-path=<glob> --why` |
@@ -301,7 +355,7 @@ core/                  propagado para todo repositório
   agents/         8         orchestrator, 4 de fase, reviewer, security, azure-devops
   prompts/        9         /feature, /resume, /deliver e os loops
   rubrics/        3         a régua de cada etapa que julga
-  hooks/          8 eventos guardrails de runtime, de pre-commit e o coletor do dream
+  hooks/          8 eventos guardrails de runtime, contadores de uso, pre-commit e o coletor do dream
   tools/                    scripts determinísticos: ado/, spec/ e verify/
 loops/                 os três loops e os orçamentos
 templates/             spec, plan, tasks, session, runbook, postmortem, ADR, decisions, dreams
@@ -355,7 +409,7 @@ quer dizer silencioso, não seguro: um valor real que chegou ao histórico
 continua precisando de rotação.
 
 ```bash
-npm run selftest          # 136 casos de guardrail, em repositórios descartáveis
+npm run selftest          # 147 casos de guardrail, em repositórios descartáveis
 npm run selftest:dream    # 32 casos de consolidação, com sessões sintéticas
 npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
 ```
@@ -369,10 +423,12 @@ sai igual pelas duas portas.
 `PreToolUse` e `PostToolUse` em toda chamada de ferramenta e ignora o campo
 `matcher` (está na documentação oficial). Oito scripts registrados eram oito
 processos Node e cinco spawns de git por chamada: 402 ms de hooks numa leitura
-simples, medidos aqui. Por isso os oito guardrails de ferramenta rodam dentro
-de `tool-hooks.mjs`, um processo por evento, na mesma ordem, com uma leitura de
-stdin e uma consulta ao git, e a resposta é combinada como o próprio runtime
-combinaria: deny vence ask, que vence allow, e toda mensagem é preservada.
+simples, medidos aqui. Por isso os nove guardrails de ferramenta, e os
+contadores de uso que o `harness cost` lê, rodam dentro de `tool-hooks.mjs`, um
+processo por evento, na mesma ordem, com uma leitura de stdin e uma consulta ao
+git, e a resposta é combinada como o próprio runtime combinaria: deny vence ask,
+que vence allow, toda mensagem é preservada, e uma reescrita de comando só
+segue num allow limpo.
 Medido na mesma máquina depois da mudança: 117 ms por chamada (pre e post
 juntos). Cada script continua com entrada própria para o `pre-commit` do git,
 o Kiro e o self-test, e a mesma decisão sai pelas três portas.

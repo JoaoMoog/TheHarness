@@ -21,7 +21,7 @@ previous version to declare an escalation condition that could never fire.
 | plan | `planner` | `spec.md`, session summaries | `plan.md` |
 | tasks | `tasker` | `plan.md`, session summaries | `tasks.md` |
 | implement | `implementer` | one task, its criteria, session summaries | code and tests |
-| review | `reviewer`; `security` only when the diff touches a sensitive area | the change, spec and plan summaries | a verdict |
+| review | `reviewer`, or the orchestrator itself on `patch`; `security` only when the diff touches a sensitive area | the change, spec and plan summaries | a verdict |
 | deliver | `azure-devops` | the verdict, the changed files, summaries | a draft pull request |
 
 ## What the orchestrator carries
@@ -58,7 +58,9 @@ is deliberate: the button appears, the human reads the artifact, and then it
 moves. On `patch` and `incident` the review starts as soon as implement returns
 `complete`: a one-line change has nothing for a person to read between the two
 phases, and the human reads the change and its verdict together at the review
-gate.
+gate. On `patch` the review is the orchestrator reading the diff against
+`code-review`, so the review gate and the pull request are one button;
+`reviewer` and `security` join only when the diff touches a sensitive area.
 
 The orchestrator refuses to advance when the previous phase is not complete, and
 refuses to run a Q3 or Q4 task without the confirmation that quadrant requires.
@@ -71,10 +73,21 @@ it.
 
 ## What a small change pays for
 
-A track omits phases; it must not keep every phase's ceremony. Three rules
-keep `patch` and `fix` proportional, and each is a sub-agent that no longer
-runs on a one-line change:
+A change that fits the direct lane - one sentence, at most three files, no
+behaviour change or one existing check that proves it, no sensitive area - is
+not a session at all. The chat reads, edits, runs the check and shows the
+diff; `/deliver` opens a pull request later if one is wanted. A session pays
+for a confirmation, at least two more contexts and a pull request before the
+edit, and every one of those is tokens now.
 
+A track omits phases; it must not keep every phase's ceremony. Four rules
+keep `patch` and `fix` proportional, and each is a sub-agent that no longer
+runs on a small change:
+
+- **The patch review is the orchestrator's.** It reads a diff of at most a
+  few files against `code-review`, reusing the implement record; it did not
+  write the code, so the rule that the generator never scores its own work
+  holds. `reviewer` joins only when the diff touches a sensitive area.
 - **`security` is conditional.** It joins the review only when the changed
   files touch authentication, authorisation, cryptography, payment, secrets,
   an input boundary or a dependency manifest. Otherwise the session says
@@ -89,11 +102,12 @@ runs on a one-line change:
   hunting for one. On `fix`, the failing test is the criterion and is written
   first.
 
-What that leaves for `patch`: implementer, reviewer, deliver, and three human
-gates - the track, the review, and publishing - with implement running into
-review without a stop. For `fix`: specifier, implementer, reviewer, deliver,
-and one more gate for the spec, which is the failing test and is scored by the
-orchestrator rather than by another `reviewer` invocation.
+What that leaves for `patch`: implementer, deliver, and three human gates -
+the track, the review with the pull request, and publishing - with implement
+running into the orchestrator's review without a stop. For `fix`: specifier,
+implementer, reviewer, deliver, and one more gate for the spec, which is the
+failing test and is scored by the orchestrator rather than by another
+`reviewer` invocation.
 
 ## Review rounds
 
@@ -156,8 +170,10 @@ request body is being written from the diff instead of from the summaries.
 
 ## Tracks: not every request runs six phases
 
-The phase list is the longest path, not the only one. A session picks a track
-first, and a track omits the phases that would add nothing:
+Before any track: a request the direct lane covers (`routing.instructions.md`,
+question 1) is not a session. The phase list is the longest path, not the
+only one. A session picks a track first, and a track omits the phases that
+would add nothing:
 
 | track | phases | budget |
 |---|---|---|

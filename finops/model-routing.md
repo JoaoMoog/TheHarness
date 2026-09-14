@@ -1,26 +1,53 @@
 # Model routing
 
-Routing the model to the task is the single largest cost lever in an agentic
-workflow, and it is the one most often left unpulled. Running the frontier model
-by default costs roughly five times the mid-tier for well under a tenth more
-quality on routine work.
+Copilot bills usage: tokens times the rate of the model that processed them,
+in AI credits (1 credit = US$ 0.01). Input, cached input, cache writes and
+output are priced separately, and every model call inside an agent turn
+resends the context. Routing the model to the task is still the largest
+single lever, because the rate multiplies everything else; but under
+usage-based billing the other levers are no longer free, and the order below
+is the order in which they pay for a small change.
 
-## The five levels
+## What a call costs
 
-| Level | Task | Model tier |
+- **Input** is the whole context: system prompt, instructions, tool
+  definitions, history, tool results. It is sent on every model call.
+- **Cached input** is the prefix that did not change since the previous call,
+  at roughly a tenth of the input rate. It is what makes a long agent turn
+  affordable, and it needs a byte-stable prefix and calls close enough in
+  time for the cache to hold.
+- **Cache writes** (Anthropic models) cost about a quarter more than input:
+  every new context, so every sub-agent, writes one.
+- **Output** costs several times the input rate: what the model writes, and
+  its reasoning where the model reasons.
+
+So the cost of a task is, roughly, model calls × context (mostly cached) +
+fresh tokens (tool results, hook messages) at the input rate + output. Fewer
+calls, a smaller context, less output, a cheaper model - in that order for a
+small change, because the first three are what a small change gets wrong.
+
+## Price bands, not names
+
+Names go stale the week a newer model ships, so no agent in this harness pins
+one, and the doctor warns about an agent file that pins a single name. Read
+the current table on the official page - "Models and pricing for GitHub
+Copilot" on docs.github.com - and think in bands of input price per million
+tokens:
+
+| band | input, per 1M tokens | what it is for |
 |---|---|---|
-| 1 | Completions, formatting, mechanical fixes | Small or bundled |
-| 2 | Routine edits, local refactors | Bundled |
-| 3 | The default: features, reviews, debugging, tests | Mid-tier |
-| 4 | Hard reasoning: architecture, distributed debugging | Frontier, scoped to planning |
-| 5 | Long-context forensics across a large corpus | Long-context model |
+| low | up to about US$ 1 | a patch; the tasks and deliver phases; classification, extraction, batch work |
+| mid | about US$ 2-3 | the default: implement, review, debugging, a feature's code |
+| high | US$ 5 and above | specify and plan of a feature or spike; hard reasoning, once, over a small context |
 
-Level 3 covers roughly four fifths of agentic work. Make it the default and let
-levels 4 and 5 be a deliberate choice with a reason attached.
+`Auto` is the choice when in doubt: it routes each request to a model by task
+and availability. A fork that wants the coordinator-and-worker pattern may pin
+a prioritised list (`model: [...]`) in a worker agent; the list, not a single
+name, is what survives a model's retirement.
 
-The plan-then-execute split is the practical form of this: plan with the
-frontier model, execute the plan with the mid-tier one. The expensive reasoning
-happens once, over a small context, and the cheap execution happens many times.
+The plan-then-execute split is the practical form of routing: plan with the
+high band, execute with the mid or low one. The expensive reasoning happens
+once, over a small context, and the cheap execution happens many times.
 
 ## Prompt caching
 
@@ -31,84 +58,74 @@ back nothing when it is not.
   Put the variable content last.
 - No timestamps, no request ids, no random ordering anywhere in the cached
   prefix. A single changing byte invalidates the whole thing.
-- Caching pays for itself above roughly three reads per write, so it helps most
-  in exactly the long sessions where cost hurts.
+- Keep the model, the reasoning effort and the tool set stable within a
+  session: each of them is part of the prefix.
+- A human gate longer than the cache's life re-pays the prefix on the next
+  turn; a sub-agent always does, because it is a new context.
 
-This is why `core/copilot-instructions.md` is written to be static, and why the
-harness never injects a generated header into it.
+This is why `core/copilot-instructions.md` is written to be static, why the
+harness never injects a generated header into it, and why the session start
+points at files instead of pasting them.
 
 ## Context is a concave curve
 
 More context improves output only up to a threshold, then degrades it. Adding
 noise to a prompt reliably raises cost and lowers answer quality at the same
-time — the worst possible trade.
+time - the worst possible trade. Under usage-based billing the noise is also
+resent on every call.
 
-Three levers, in the order worth applying them:
+Four levers, in the order worth applying them:
 
-1. **Compaction** — compress the history rather than resending it verbatim.
-2. **Tool-result clearing** — drop verbose tool output once the fact you needed
-   has been extracted.
-3. **Retrieval on demand** — keep the loaded surface small and fetch the large
-   reference only when the task asks for it.
+1. **Do not open a context you do not need** - the direct lane for a small
+   change, no sub-agent for what the chat can do itself.
+2. **Compress what comes back** - `crosstk run` for tests, diffs and
+   listings; a symbol instead of a file; a ranged read instead of a whole one.
+3. **Compaction** - compress the history rather than resending it verbatim;
+   `/compact` when a long session drifts.
+4. **Retrieval on demand** - keep the loaded surface small and fetch the large
+   reference only when the task asks for it, which is why skills load on
+   relevance and `alwaysApply: true` needs a written justification.
 
-That last one is why skills are loaded on relevance rather than always, and why
-`alwaysApply: true` requires a written justification in this harness.
-
-## Lean prompts
+## Lean prompts, lean answers
 
 A 700-token instruction and a 50-token instruction produce the same quality on
-most tasks. The difference is that the lean one leaves the attention budget for
-the actual code.
+most tasks. The difference is that the lean one leaves the attention budget
+for the actual code. Write the constraint, the output shape, and nothing else.
+Every sentence of encouragement is billed on every turn, forever.
 
-Write the constraint, the output shape, and nothing else. Every sentence of
-encouragement is billed on every turn, forever.
+The same holds for what the model writes, at several times the price: the
+diff, the check output that matters, one status line, the envelope a phase
+requires. A phase summary is at most 120 words.
 
 ## The cascade
 
-The levers compound, and order matters. Applied to a baseline of running the
-frontier model by default:
+Illustrative, for the smallest change the harness sees. Applied to a baseline
+of a three-sub-agent session for a one-line fix on a high-band model:
 
 | Lever | Remaining cost |
 |---|---|
-| Baseline | 1.00 |
-| Model routing, mid-tier default | 0.50 |
-| Prompt caching, stable prefix | 0.28 |
-| Compaction and tool-result clearing | 0.22 |
-| Lean prompts, progressive disclosure | 0.18 |
+| Baseline: a session for every change, high band, a mandatory tool call before any read | 1.00 |
+| The direct lane: no session, no sub-agent, one context | 0.35 |
+| Model routing by band | 0.20 |
+| Stable prefix, narrow tool sets, lean session start | 0.14 |
+| Compressed tool output, no re-reads, short answers | 0.10 |
 
-Pull them in that order. Caching a badly routed workload just makes an expensive
-mistake cheaper to repeat.
+Pull them in that order. Caching a badly routed workload just makes an
+expensive mistake cheaper to repeat, and routing a session that should not
+exist only makes it a cheaper mistake.
 
 ## Operating it
 
-- **Inform.** Know cost per feature and per user before optimising anything.
-- **Optimise.** Routing first, then caching, then compaction.
-- **Operate.** Weekly review, anomaly alerting, and a quarterly re-check when
-  model prices and tiers move.
-
-Run `harness budget` to see what this repository context surface actually costs
-per tier before assuming where the spend is.
-
-## What each tier costs, relative to the cheapest
-
-The spread between tiers is wide enough that the routing decision dominates
-every other saving. Reaching for the frontier tier on routine work costs
-twenty times the utility tier and buys almost nothing back.
-
-| Task | Tier | Relative cost |
-|---|---|---|
-| Inline completion | utility | 1x |
-| A question in chat | utility | 1x |
-| A single-file edit | mid | 4x |
-| A multi-file refactor | frontier | 20x |
-| Architectural design, hard debugging | frontier | 20x |
-
-The agents do not pin a model: the one selected in the chat is the one that
-runs, and the doctor warns about an agent file that says otherwise. This table
-is the advice for that selection. `specifier` and `planner` reason over a small
-context and earn the frontier tier; `implementer` and `tasker` execute a
-decision that was already made, and do not.
+- **Inform.** Hover a response for the credits of that turn; the context
+  window control for the session; the Copilot dashboard on the Status Bar for
+  the month; `/chronicle:cost-tips` for suggestions; Show Chat Debug View for
+  tokens and cache hits per request. `harness cost` reports prompts, tool
+  calls, sub-agents and tool output per session and per track, from the
+  hooks; `harness budget` reports what the context surface costs per tier.
+- **Optimise.** Direct lane first, then routing, then caching, then
+  compression.
+- **Operate.** Weekly review, and a re-check when model prices and tiers move.
 
 The number that matters is still cost per delivered outcome, not per token. A
-tier that costs twice as much and halves the retries is cheaper. `harness cost`
-reports the outcomes so that trade can be seen rather than assumed.
+tier that costs twice as much and halves the retries is cheaper. `harness
+cost` reports the outcomes so that trade can be seen rather than assumed.

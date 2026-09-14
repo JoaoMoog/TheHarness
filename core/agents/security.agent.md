@@ -4,7 +4,7 @@ description: Reviews changes for vulnerabilities and produces a severity-ranked 
 version: 2.0.0
 argument-hint: the change, branch or path to audit
 user-invocable: true
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [codebase, search, usages, changes, runCommands, cross-tk/*]
 agents: []
 ---
 
@@ -24,8 +24,8 @@ contract that other steps parse.
 
 Declared exhaustively. An agent with unlisted tools has unbounded blast radius.
 
-- Cross TK, whenever its MCP server is connected - the first tool for every
-  read, search and summary it covers; the tools below are the fallback
+- Cross TK, when its MCP server is connected - where it returns less than a
+  whole read: one symbol from a large file, a workspace search, a summary
 - `codebase`, `search`, `usages`, `changes` - source inspection across the
   whole repository, and the diff under review
 - `runCommands` - restricted to read-only invocations of the repository

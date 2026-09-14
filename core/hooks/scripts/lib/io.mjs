@@ -45,7 +45,11 @@ export function isMain(url) {
  * the advisory the model sees.
  */
 export const verdict = {
-  allow: (systemMessage = undefined) => ({ decision: 'allow', ...(systemMessage ? { systemMessage } : {}) }),
+  allow: (systemMessage = undefined, { updatedInput = undefined } = {}) => ({
+    decision: 'allow',
+    ...(systemMessage ? { systemMessage } : {}),
+    ...(updatedInput ? { updatedInput } : {}),
+  }),
   ask: (reason) => ({ decision: 'ask', reason }),
   deny: (reason) => ({ decision: 'deny', reason }),
 };
@@ -60,7 +64,10 @@ export function combine(results) {
   const systemMessage = messages.length > 0 ? messages.join('\n\n') : undefined;
   const top = real.find((r) => r.decision === 'deny') ?? real.find((r) => r.decision === 'ask');
   const out = top ? { decision: top.decision, reason: top.reason } : { decision: 'allow' };
-  return systemMessage ? { ...out, systemMessage } : out;
+  // A rewrite rides only on a plain allow: a call a guardrail holds or
+  // questions runs as the model wrote it, once the person has answered.
+  const updatedInput = top ? undefined : real.find((r) => r.updatedInput)?.updatedInput;
+  return { ...out, ...(systemMessage ? { systemMessage } : {}), ...(updatedInput ? { updatedInput } : {}) };
 }
 
 const STDIN_LIMIT = 4 * 1024 * 1024;
@@ -173,12 +180,18 @@ export function emitVerdict(eventName, v) {
   const decision = v?.decision ?? 'allow';
   if (decision === 'deny') return deny(eventName, v.reason, v.systemMessage);
   if (decision === 'ask') return ask(eventName, v.reason, v.systemMessage);
-  return allow(eventName, v?.systemMessage);
+  return allow(eventName, v?.systemMessage, v?.updatedInput);
 }
 
-/** An allow may carry a warning the model sees; an advisory guardrail is one that uses it. */
-export function allow(eventName, systemMessage = undefined) {
+/**
+ * An allow may carry a warning the model sees; an advisory guardrail is one
+ * that uses it. It may also carry `updatedInput`, the tool's parameters
+ * rewritten: VS Code runs the call with those instead, and ignores the field
+ * when it does not match the tool's schema, so a bad rewrite is a no-op.
+ */
+export function allow(eventName, systemMessage = undefined, updatedInput = undefined) {
   const out = { hookSpecificOutput: { hookEventName: eventName, permissionDecision: 'allow' } };
+  if (updatedInput) out.hookSpecificOutput.updatedInput = updatedInput;
   if (systemMessage) out.systemMessage = systemMessage;
   emit(out);
   return EXIT_OK;

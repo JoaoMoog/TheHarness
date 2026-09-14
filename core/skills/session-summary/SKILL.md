@@ -2,7 +2,7 @@
 name: session-summary
 description: Write the per-phase summary the orchestrator carries between agents, keeping the parent context small while losing nothing a later phase needs. Use at the end of every phase of a multi-agent session.
 version: 1.0.0
-sfa: "scope: one completed phase | format: a fixed-field handoff envelope under 200 words | audience: the orchestrator and the next phase agent"
+sfa: "scope: one completed phase | format: a fixed-field handoff envelope under 120 words | audience: the orchestrator and the next phase agent"
 stacks: []
 alwaysApply: false
 ---
@@ -24,8 +24,9 @@ the work does.
 A summary is written for the next phase, not for a human reading later. Ask what
 the next agent would otherwise have to re-derive, and write that.
 
-Two hundred words is the ceiling, and it is generous. If the summary needs more,
-the phase produced more than one decision and the extra belongs in the artifact.
+One hundred and twenty words is the ceiling. If the summary needs more, the
+phase produced more than one decision and the extra belongs in the artifact;
+every word here is resent on every call of every phase after it.
 
 Never summarise away: a decision that constrains later work, an open question, a
 deviation from what was planned, or a discovered constraint. Those four survive
@@ -70,7 +71,7 @@ complete, blocked, escalated.
 
 ## Validation
 
-- [ ] The summary is at most 200 words.
+- [ ] The summary is at most 120 words.
 - [ ] Every decision that constrains a later phase is in it.
 - [ ] Every open question is in it, with who must answer.
 - [ ] Status reflects what actually happened, not what was hoped.

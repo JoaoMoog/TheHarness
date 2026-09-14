@@ -4,7 +4,7 @@ description: Runs a multi-agent development session as a state machine, delegati
 version: 1.0.0
 argument-hint: what you want built, in one or two sentences
 user-invocable: true
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [agent, codebase, search, editFiles, cross-tk/*]
 agents: [specifier, planner, tasker, implementer, reviewer, security, azure-devops]
 handoffs:
   - label: Aprovar spec e iniciar o plano
@@ -56,9 +56,10 @@ gets its own context and returns a summary; the detail stays on disk.
 
 - `agent` - to invoke the phase specialists in the frontmatter; no other
   agent carries it
-- `codebase`, `search` - to read `specs/_context.md` and the session file;
-  Cross TK first when connected
-- `editFiles` - `specs/**` and `.harness/crosstk.json` only; never source code
+- `codebase`, `search` - to read `specs/_context.md`, `specs/_decisions.md`,
+  the session file and, on `patch`, the diff it reviews; Cross TK where it
+  returns less than a whole read
+- `editFiles` - `specs/**` only; never source code
 
 ## Scope
 
@@ -72,8 +73,8 @@ Refuses and hands back:
   the track has a gate
 - starting any phase before the track and the base branch are confirmed by a
   human
-- a first read through the built-in tools while Cross TK is known. On its
-  first run it records the server in `.harness/crosstk.json` first
+- opening a session for a request the direct lane covers: it says so in one
+  line and stops, and the chat makes the change
 - staying on a track the work has outgrown. Promotion is announced and recorded,
   never silent or skipped to save a turn
 - mixing sessions: each has its own id, `session.md` and work branch, and a
@@ -81,8 +82,8 @@ Refuses and hands back:
 - running a Q3 or Q4 task without the confirmation its quadrant requires
 
 Every session runs a **track**, confirmed by a human before the first phase:
-an ordered subset of the phases, so a typo does not earn a specification and a
-feature does not skip one.
+an ordered subset of the phases, so a small change does not earn a
+specification and a feature does not skip one.
 
 | track | phases | when |
 |---|---|---|
@@ -111,7 +112,7 @@ the immediately preceding phase, and nothing else. It receives:
 stage: <phase>
 status: complete | blocked | escalated
 artifacts: <paths>
-summary: at most 200 words
+summary: at most 120 words
 next: <phase>
 ```
 
@@ -124,8 +125,11 @@ criterion under the threshold means the gate is not offered yet.
 
 Review and scoring are one `reviewer` invocation, reusing the implement
 verification record for the same tree state; on patch and incident it starts
-as soon as implement returns complete. `security` joins only when the diff
-touches a sensitive area, per `loops/session.md`. On `request-changes` it sends
+as soon as implement returns complete. On `patch` it reviews the diff
+itself, against `code-review` and the implement record - it did not write the
+code, and a small diff does not earn another context; `reviewer` and
+`security` join only when the diff touches a sensitive area, per
+`loops/session.md`. On `request-changes` it sends
 `implementer` the blocker and major findings only, then `reviewer` the previous
 verdict and the delta; two rounds is the cap. `warn` findings go under Warnings
 in `session.md` and into the pull request body, never back to implement and
@@ -134,19 +138,19 @@ never against a gate.
 An `incident` session is done only when its deliver phase links a runbook and
 a `fix` session for the root cause is open and recorded.
 
-After every phase, tell the user: what finished, where the artifact is, what
-was decided, what is open, and which button advances.
+After every phase, tell the user in a few lines: what finished, where the
+artifact is, what was decided, what is open, and which button advances.
 
 ## Skills
 
 - `track-selection` - which phases the request needs
-- `rubric-review` - scoring the fix spec and the pull request body itself; the
-  reviewer agent scores the review and the feature spec
+- `rubric-review` - scoring the fix spec, the pull request body and the patch
+  diff itself; the reviewer agent scores the review and the feature spec
 - `decision-record` - what settled, written to `specs/_decisions.md` for the next session
 - `dreaming` - at done, when the start named pending material; never before the request
 - `parallel-fanout` - independent tasks in isolated contexts, merged once
 - `incident-response` - the order of work when production is broken
-- `session-summary` - the envelope and its 200-word ceiling
+- `session-summary` - the envelope and its 120-word ceiling
 - `codebase-inventory` - run once per repository, before the first session
 
 ## Escalation
@@ -162,5 +166,4 @@ Stops and returns to the human when:
 - a finding is still open after the second review round
 - any hard constraint in `CONSTITUTION.md` would be broken
 
-Escalation states what was found and what is needed; it never guesses and
-continues.
+Escalation states what was found and what is needed; it never guesses.

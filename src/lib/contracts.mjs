@@ -10,10 +10,11 @@ export const SKILL_FRONTMATTER = ['name', 'description', 'version', 'sfa'];
 export const AGENT_SECTIONS = ['Identity', 'Tools', 'Scope', 'Contracts', 'Skills', 'Escalation'];
 /**
  * A manifest is explicit or deliberately open, never absent. `tools` lists
- * what the agent may call; `allTools` opens everything and carries the reason
- * in its value, the way `alwaysApply` needs a justification. The harness opens
- * its own agents so the Cross TK MCP server can be found on the first run
- * without its tool names ever being written down; the hooks stay the gate.
+ * what the agent may call - the built-in tools it uses and `cross-tk/*` where
+ * it reads code, which reaches every tool of that server without naming one -
+ * so each sub-agent carries the catalogue it needs and nothing more. `allTools`
+ * opens everything and carries the reason in its value, the way `alwaysApply`
+ * needs a justification; it is the escape hatch, never the default.
  */
 export const AGENT_FRONTMATTER = ['name', 'description', 'version'];
 export const AGENT_ALL_TOOLS = 'allTools';

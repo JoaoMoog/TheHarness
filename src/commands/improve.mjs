@@ -16,6 +16,9 @@ import { log, c } from '../lib/log.mjs';
 
 const NEAR_ZERO_MS = 1500;
 const REWORK_THRESHOLD = 3;
+/** Above these, a session is paying for iterations and tool output rather than for the change. */
+const MANY_TOOL_CALLS = 80;
+const HEAVY_TOOL_OUTPUT_BYTES = 200 * 1024;
 
 /** Internal agents only: a user-invocable one may run as the parent, which the
  *  SubagentStop hook never sees, so its absence from telemetry proves nothing. */
@@ -101,6 +104,29 @@ export default function improve(args) {
     }
   }
 
+  // Tokens are billed per model call and per byte that enters the context,
+  // so a session that iterated a hundred times, or read a megabyte of test
+  // output, paid for that rather than for the change.
+  for (const session of sessions) {
+    const usage = session.usage ?? {};
+    if ((usage.toolCalls ?? 0) > MANY_TOOL_CALLS) {
+      findings.push({
+        kind: 'many tool calls',
+        subject: session.id,
+        detail: `${usage.toolCalls} tool calls, ${usage.subagents ?? 0} sub-agent(s), ${usage.prompts ?? 0} prompt(s); every call resent the context`,
+        question: 'Was this a small change that should have stayed in the direct lane, or a verify loop that did not converge?',
+      });
+    }
+    if ((usage.toolOutputBytes ?? 0) > HEAVY_TOOL_OUTPUT_BYTES && (usage.rewrites ?? 0) === 0) {
+      findings.push({
+        kind: 'heavy tool output',
+        subject: session.id,
+        detail: `${Math.round(usage.toolOutputBytes / 1024)} KB returned by tools and no command went through crosstk run`,
+        question: 'Tests, diffs and listings entered the context whole. Is the crosstk binary on PATH, or the rewrite hook switched off?',
+      });
+    }
+  }
+
   // A track that never ships is a track nobody should be choosing.
   const tracks = new Map();
   for (const session of sessions) {
@@ -136,7 +162,8 @@ export default function improve(args) {
   log.title('What this cannot see');
   log.plain(`  ${c.dim('Which skills were loaded: no hook fires on a skill match.')}`);
   log.plain(`  ${c.dim('Whether a human approved a gate: the hook sees agents stop, not clicks.')}`);
-  log.plain(`  ${c.dim('Token cost per phase, unless the runtime reports usage on SubagentStop.')}`);
+  log.plain(`  ${c.dim('Token cost per phase, unless the runtime reports usage on SubagentStop. Credits are read in the')}`);
+  log.plain(`  ${c.dim('editor: hover a response for the turn, the context control for the session, the Status Bar for the month.')}`);
   log.plain(`  ${c.dim('Every finding above is a question to investigate, not a conclusion.')}`);
 
   log.plain(`\n  ${c.dim('This command never edits anything.')}`);

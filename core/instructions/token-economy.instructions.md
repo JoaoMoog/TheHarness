@@ -1,31 +1,32 @@
 ---
 applyTo: "**"
-description: Keeps verification, re-reads and review scope proportional to the change, and says how a token-saving MCP server such as Cross TK is used when one is connected.
+description: Keeps reads, verification, review scope and the shape of the answer proportional to the change, and says where a token-saving MCP server such as Cross TK pays.
 ---
 
 # Token economy
 
+Every model call resends the whole context, every tool result enters it, and
+every sub-agent opens another one. Fewer calls, smaller reads and shorter
+answers are the saving.
+
 ## Cross TK
 
-Cross TK is the default, not an option. Whenever the MCP server whose name
-matches `cross-tk` (any spelling: `crosstk`, `cross_tk`) is connected, every
-read, search, summary, diff and token count it covers goes through it; the
-built-in tools are the fallback for what it does not cover. Learn what it
-offers from the tool descriptions, once per session. Never assume a tool name
-or a signature, and never call it only to satisfy this rule.
+When the MCP server named like `cross-tk` is connected, use it where it
+returns less than the built-in tool would, and nowhere else: one symbol out
+of a file over ~300 lines; a workspace-wide text search, grouped and capped;
+the shape of a repository with no `_context.md`, once; a summary before
+reading a large file whole.
 
-The first read of a session goes through it. Where the server is known for
-the repository, the harness refuses a built-in read or search until a Cross TK
-tool has been used, so use it before anything else, not after the first
-detour.
+Read directly: small files, files already in context, files you just edited,
+exact line ranges. Never its write tool (edits go through the editor, where
+the diff is reviewable and the guardrails run), never its cache or economy
+tools inside a task, never a call made to satisfy this rule. Learn its tools
+from their descriptions, once per session; never assume a name. Absent: one
+line if asked, no probing.
 
-First run: when `.harness/crosstk.json` does not exist, look for the server in
-your own tool list, by a name matching `cross-tk` or a description that names
-it. Found: write that file with `server`, `tools` (the names exactly as your
-tool list shows them) and `discoveredAt`, then use it first. The harness reads
-the file from then on, to state the obligation and to recognise your calls, so
-the names never have to be written anywhere else. Not found: say so once,
-write nothing, use the built-in tools, and do not probe or retry.
+Tests, `git diff`, `git log` and listings run as `crosstk run <cmd>` when the
+binary is on PATH; the harness rewrites the common ones itself. Builds and
+linters run plain: a compiler error needs its detail.
 
 ## Read once
 
@@ -60,3 +61,10 @@ handlers. A handler they cover is not a finding.
 ```
 WARN src/OrdersController.cs:88 - GetOrder swallows the repository exception and returns 200 - let it propagate to the exception filter
 ```
+
+## Shape of the answer
+
+Output costs several times what input does. Answer in the shape the step
+needs: the diff, the check output that matters, one status line, the envelope
+a phase requires. No preamble, no restating the request, no unasked
+explanation. A phase summary is at most 120 words.
