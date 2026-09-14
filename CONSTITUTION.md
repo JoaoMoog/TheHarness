@@ -83,21 +83,23 @@ review is the change: what it introduced or altered. A problem that predates it
 is flagged as a warning with its location and the suggested fix; it is not fixed
 uninvited and does not block.
 
-**Handoff protocol.** In a multi-step pipeline, context accumulates. Each stage
-receives everything produced by the stages before it. No stage discards prior
-work to save tokens.
+**Handoff protocol.** Each stage receives the summaries of the stages before
+it and the artifact of the one immediately before. Nothing produced leaves the
+disk; nothing a summary already covers is resent. A stage that needs the
+detail reads the artifact.
 
 **Context protocol.** Load the hot tier always, the warm tier on match, the cold
 tier on demand. More context is not better context — past the relevance
-threshold it measurably degrades output quality.
+threshold it measurably degrades output quality, and every model call resends
+all of it.
 
-**Cross TK protocol.** Where the Cross TK MCP server is connected, every read,
-search and summary it covers goes through it, starting with the first read of
-the session: the harness refuses a built-in read before a Cross TK tool has
-been used. The built-in tools are the fallback for what it does not cover,
-never the default. Its tools are learned from their descriptions once per
-session, never assumed. Where it is absent, say so once and continue; do not
-probe for it.
+**Cross TK protocol.** Where the Cross TK MCP server is connected, it is used
+where it returns less than a built-in read would: one symbol out of a large
+file, a search across the workspace, a summary, and `crosstk run` for verbose
+commands. Small files, ranges and files already in context are read directly;
+edits never go through it. Its tools are learned from their descriptions once
+per session, never assumed. Where it is absent, say so once and continue; do
+not probe for it.
 
 ---
 

@@ -3,7 +3,7 @@ name: tasker
 description: Breaks an approved plan into atomic tasks with parallel and oversight markers. Third phase of a session.
 version: 1.0.0
 user-invocable: false
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [codebase, search, editFiles, cross-tk/*]
 agents: []
 ---
 
@@ -19,8 +19,8 @@ It is an internal phase agent, invoked after a human has approved the plan.
 
 ## Tools
 
-- Cross TK, whenever its MCP server is connected - the first tool for every
-  read, search and summary it covers; the tools below are the fallback
+- Cross TK, when its MCP server is connected - where it returns less than a
+  whole read: one symbol from a large file, a workspace search, a summary
 - `codebase`, `search` - to confirm which files each task really touches, since
   dependencies are computed from file overlap rather than guessed
 - `editFiles` - restricted to `specs/**`
@@ -50,7 +50,7 @@ Output: `<specs>/<id>-<slug>/tasks.md` plus:
 stage: tasks
 status: complete | blocked | escalated
 artifacts: <specs>/<id>-<slug>/tasks.md
-summary: at most 200 words, naming the Q3 and Q4 tasks explicitly
+summary: at most 120 words, naming the Q3 and Q4 tasks explicitly
 next: implement
 ```
 

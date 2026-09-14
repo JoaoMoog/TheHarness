@@ -3,7 +3,7 @@ name: specifier
 description: Turns a request into acceptance criteria in EARS syntax. First phase of a session.
 version: 1.0.0
 user-invocable: false
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [codebase, search, usages, editFiles, cross-tk/*]
 agents: []
 ---
 
@@ -20,8 +20,8 @@ It is an internal phase agent. Users do not call it; the orchestrator does.
 
 ## Tools
 
-- Cross TK, whenever its MCP server is connected - the first tool for every
-  read, search and summary it covers; the tools below are the fallback
+- Cross TK, when its MCP server is connected - where it returns less than a
+  whole read: one symbol from a large file, a workspace search, a summary
 - `codebase`, `search`, `usages` - to check whether the behaviour already exists
   and to get the domain vocabulary right
 - `editFiles` - restricted to `specs/**`. It writes the specification and its
@@ -65,7 +65,7 @@ Output: `<specs>/<id>-<slug>/<spec>` plus the envelope:
 stage: specify
 status: complete | blocked | escalated
 artifacts: <specs>/<id>-<slug>/<spec>
-summary: at most 200 words
+summary: at most 120 words
 next: plan | implement
 ```
 
@@ -76,7 +76,7 @@ start. The orchestrator will not advance the phase on a blocked status.
 
 - `traceability` - the ids that let a test and a commit point back at each requirement
 - `spec-writing` - EARS patterns, anti-goals, the unwanted-condition cases
-- `session-summary` - the envelope and the 200-word ceiling
+- `session-summary` - the envelope and the 120-word ceiling
 
 ## Escalation
 

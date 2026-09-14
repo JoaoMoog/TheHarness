@@ -179,7 +179,7 @@ fs.mkdirSync(path.join(root, '.kiro', 'harness'), { recursive: true });
 const kiroContext = runContext();
 check(
   'a Kiro repository is told to write requirements.md, not spec.md',
-  /requirements\.md/.test(kiroContext.stdout) && /kiro..specs/.test(kiroContext.stdout),
+  /requirements\.md/.test(kiroContext.stdout) && /\.kiro\/specs\/NNN-slug/.test(kiroContext.stdout),
   kiroContext.stdout.slice(0, 220)
 );
 fs.rmSync(path.join(root, '.kiro'), { recursive: true, force: true });

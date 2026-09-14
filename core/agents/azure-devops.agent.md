@@ -4,7 +4,7 @@ description: Opens and updates pull requests, comments with structure and queues
 version: 1.0.0
 argument-hint: what to deliver, or the pull request number to act on
 user-invocable: true
-allTools: opens every tool so the Cross TK MCP server is found on the first run without its names ever being written down; the hooks stay the gate
+tools: [codebase, search, runCommands]
 agents: []
 ---
 
@@ -78,7 +78,7 @@ Output:
 stage: deliver
 status: complete | blocked | escalated
 artifacts: specs/<id>-<slug>/pr-body.md
-summary: at most 200 words
+summary: at most 120 words
 pullRequest: { id: <n>, url: <url>, draft: true | false }
 pipelineRun: { id: <n>, url: <url>, status: <status> } | null
 next: done

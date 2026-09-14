@@ -1,26 +1,23 @@
 /**
- * Whether a Cross TK MCP server is known for this repository, and how a call to
- * it is recognised. Shared by the session start, which says it, and by
- * crosstk-first, which enforces it.
+ * Whether a Cross TK MCP server is declared for this repository, and how a
+ * call to it is recognised. Shared by the session start, which says it, by
+ * crosstk-nudge, which points at it when a whole read would cost more, and by
+ * the usage counters.
  *
- * Three sources, any one enough. A declaration in one of the repository's MCP
+ * Two sources, either enough. A declaration in one of the repository's MCP
  * files. A declaration in the user's own VS Code or Kiro profile, which is
  * where a server configured "globally" lives - looking only at the repository
- * told the agent the server did not exist while it sat next to it. Or the
- * record the first agent of a session writes when it finds the server in its
- * own tool list: .harness/crosstk.json, with the server name and the tool names
- * exactly as the runtime showed them. The record is machine-local and never
- * committed, which is what lets a team keep those names out of the repository.
+ * told the agent the server did not exist while it sat next to it.
  *
  * Discovery is by name and never by an assumed tool: what the server offers is
- * read from its tool descriptions once it is connected.
+ * read from its tool descriptions once it is connected, and no tool name has
+ * to be written anywhere.
  */
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
 export const CROSS_TK = /cross[-_ ]?tk/i;
-export const DISCOVERY_FILE = '.harness/crosstk.json';
 
 /**
  * Where a repository declares MCP servers, per tool. The harness copies its
@@ -69,66 +66,34 @@ function declaredIn(file) {
   return name ? { name, entry: servers[name] ?? {} } : null;
 }
 
-/** What the first run recorded, or null. A record without a server name records nothing. */
-export function discovered(root) {
-  try {
-    const raw = JSON.parse(fs.readFileSync(path.join(root, ...DISCOVERY_FILE.split('/')), 'utf8'));
-    if (!raw || typeof raw.server !== 'string' || raw.server.trim() === '') return null;
-    return {
-      server: raw.server.trim(),
-      tools: Array.isArray(raw.tools) ? raw.tools.map(String).filter(Boolean) : [],
-      discoveredAt: typeof raw.discoveredAt === 'string' ? raw.discoveredAt : null,
-      mandatoryFirst: raw.mandatoryFirst,
-    };
-  } catch {
-    return null;
-  }
-}
-
 /**
- * The known server: its name, where it is known from (`scope` is repository,
- * user or record), its entry, and the record if any.
+ * The declared server: its name, where it is declared from (`scope` is
+ * repository or user), its file and its entry. Null when nothing declares one.
  */
 export function crossTkServer(root, userFiles = userMcpFiles()) {
-  const record = discovered(root);
   for (const rel of MCP_FILES) {
     const found = declaredIn(path.join(root, ...rel.split('/')));
-    if (found) return { ...found, file: rel, scope: 'repository', discovered: record };
+    if (found) return { ...found, file: rel, scope: 'repository' };
   }
   for (const file of userFiles) {
     const found = declaredIn(file);
-    if (found) return { ...found, file, scope: 'user', discovered: record };
-  }
-  if (record) {
-    return {
-      name: record.server,
-      file: DISCOVERY_FILE,
-      scope: 'record',
-      entry: { tools: record.tools, mandatoryFirst: record.mandatoryFirst },
-      discovered: record,
-    };
+    if (found) return { ...found, file, scope: 'user' };
   }
   return null;
 }
 
-/** Mandatory unless the entry or the record says `"mandatoryFirst": false`, which turns the gate into a one-time reminder. */
-export const isMandatory = (server) =>
-  server?.entry?.mandatoryFirst !== false && server?.discovered?.mandatoryFirst !== false;
-
 /**
- * The runtime shows a tool as `source/server/tool` in one place and may hand
- * the hook only `tool` in another, so names match whole or by last segment.
- * A collision with a built-in name would only ever let a read through: the
- * failure is a missed reminder, never a block.
+ * A call that went through Cross TK: the runtime shows an MCP tool as
+ * `source/server/tool` in one place and `mcp_server_tool` in another, and
+ * either carries the server name. A team whose runtime shows bare names can
+ * list them under `tools` in the server entry; the match is whole or by last
+ * segment. Nothing here ever refuses a call, so a miss costs a count, not a read.
  */
 const last = (name) => String(name).split('/').pop();
-const sameTool = (a, b) => String(a) === String(b) || last(a) === last(b);
-
-/** A call that went through Cross TK: by the server name in the tool name, or by a recorded or declared tool name. */
-export function isCrossTkTool(toolName, server) {
+export function isCrossTkTool(toolName, server = null) {
   const name = String(toolName ?? '');
   if (name === '') return false;
   if (CROSS_TK.test(name)) return true;
-  const known = [...(Array.isArray(server?.entry?.tools) ? server.entry.tools : []), ...(server?.discovered?.tools ?? [])];
-  return known.some((t) => sameTool(t, name));
+  const declared = Array.isArray(server?.entry?.tools) ? server.entry.tools : [];
+  return declared.some((t) => String(t) === name || last(t) === last(name));
 }

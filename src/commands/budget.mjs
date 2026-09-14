@@ -37,7 +37,8 @@ function reportSessions() {
     if (!fs.existsSync(file)) continue;
     for (const line of fs.readFileSync(file, 'utf8').split('\n').filter(Boolean)) {
       try {
-        rows.push({ repo: name, ...JSON.parse(line) });
+        const row = JSON.parse(line);
+        if (row.agent) rows.push({ repo: name, ...row }); // usage lines belong to `harness cost`
       } catch {
         // A truncated last line is expected while a session is running.
       }

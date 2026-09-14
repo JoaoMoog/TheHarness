@@ -1,6 +1,6 @@
 ---
 applyTo: "**"
-description: The decision tree that decides whether work goes to a session, a specialist agent, a skill, or the generalist. Replaces routing by intuition.
+description: The decision tree that decides whether work is done directly in the chat, goes to a session, a specialist agent, a skill, or the generalist. Replaces routing by intuition.
 ---
 
 # Routing
@@ -13,46 +13,46 @@ first yes.
 Yes, start an `incident` session with `@orchestrator`. Mitigation comes before
 understanding, and it ends with a runbook and a follow-up `fix`.
 
-Every session picks a **track** before its first phase - patch, incident, fix,
-refactor, feature or spike - so a one-word change does not earn a specification.
-The `track-selection` skill owns that choice; the question below decides only
-whether a session is needed at all.
+## 1. Is this a small change?
 
-## 1. Is this multi-step work that needs a spec, a plan and a review?
+One sentence to state, at most three files, and either no behaviour change or
+one existing check that proves it: a test, the build, the linter. Yes: **do it
+here.** Read what you need, edit, run that check, show the diff and its result.
+No session, no sub-agent, no review round: the person reviews the diff in the
+editor, then commits or asks for `/deliver`. Never here: auth, crypto,
+payment, money, a production schema, a dependency manifest.
+
+## 2. Is this multi-step work that needs a spec, a plan and a review?
 
 A feature, a non-trivial bug fix, a refactor that spans files, anything where
 getting the requirement wrong is expensive.
 
-Yes: **`@orchestrator`**, via `/feature`. It creates the session, delegates each
-phase to a specialist, and stops at a human gate between phases. Do not run the
-phases by hand; the session file is what makes the work resumable and reviewable.
+Yes: **`@orchestrator`**, via `/feature`. It creates the session, picks a
+**track** - patch, incident, fix, refactor, feature or spike, so a small change
+that wants a pull request does not earn a specification - delegates each phase
+to a specialist, and stops at a human gate between phases. Do not run the
+phases by hand; the session file is what makes the work resumable and
+reviewable. The `track-selection` skill owns the choice of track.
 
-## 2. Does this need tools only a specialist holds?
+## 3. Does this need tools only a specialist holds?
 
 A scanner, a command runner, an MCP server the generalist does not have.
 
 Yes: use the **agent whose tool manifest lists them**. If none does, say so
 rather than granting the generalist the tool.
 
-## 3. Does this need a fixed output contract another step will parse?
+## 4. Does this need a fixed output contract another step will parse?
 
 A severity scale, a verdict, a schema.
 
 Yes: use that **agent**. The contract lives in its `## Contracts` section.
 
-## 4. Does a skill already cover this domain?
+## 5. Does a skill already cover this domain?
 
 Search `.github/skills/` by description before assuming it does not exist.
 
-Yes: **generalist plus that skill**. No: **generalist alone** — and if the same
+Yes: **generalist plus that skill**. No: **generalist alone** - and if the same
 kind of request comes back a third time, write the skill.
-
-## What this rule buys
-
-Routing by intuition produces different handling for the same request on
-different days. A generalist working without a matching skill also costs
-materially more per task, because it rediscovers context the skill would have
-supplied.
 
 ## What not to do
 

@@ -44,7 +44,19 @@ function readRecords(file) {
         return null;
       }
     })
-    .filter((r) => r && r.agent);
+    .filter((r) => r && (r.agent || r.event === 'usage'));
+}
+
+/** What the hooks count per session: the drivers of a token bill the runtime does not report. */
+export const USAGE_KEYS = ['prompts', 'toolCalls', 'crossTk', 'rewrites', 'subagents', 'toolOutputBytes'];
+
+export const emptyUsage = () => Object.fromEntries([...USAGE_KEYS.map((k) => [k, 0]), ['lines', 0]]);
+
+/** Sums a usage line into a session's totals; Stop may fire once per turn, so a session can have several. */
+export function addUsage(total, record) {
+  for (const key of USAGE_KEYS) total[key] += Number(record[key] ?? 0) || 0;
+  total.lines += 1;
+  return total;
 }
 
 /**
@@ -63,9 +75,11 @@ export function groupSessions(records) {
     // would fabricate a session that spans days. It is counted, not grouped.
     if (!record.session) continue;
     const id = `${record.repo ?? ''}:${record.session}`;
-    if (!sessions.has(id)) sessions.set(id, { id, agents: [], first: record.at, last: record.at });
+    if (!sessions.has(id)) sessions.set(id, { id, agents: [], usage: emptyUsage(), first: record.at, last: record.at });
     const session = sessions.get(id);
-    session.agents.push(record);
+    // A usage line is the session's counters, not an agent that ran.
+    if (record.event === 'usage') addUsage(session.usage, record);
+    else session.agents.push(record);
     if (record.at < session.first) session.first = record.at;
     if (record.at > session.last) session.last = record.at;
   }
@@ -76,15 +90,19 @@ export function groupSessions(records) {
     const phaseAgents = [...names].filter((n) => PHASE_AGENT[n]);
     const onlyJudges = phaseAgents.length > 0 && phaseAgents.every((n) => n === 'reviewer' || n === 'security');
     const onlyDelivery = phaseAgents.length === 1 && phaseAgents[0] === 'azure-devops';
-    const outcome = onlyJudges
-      ? 'standalone review'
-      : onlyDelivery
-        ? 'standalone delivery'
-        : names.has('azure-devops')
-      ? 'delivered'
-      : names.has('reviewer') || names.has('security')
-        ? 'reviewed, not delivered'
-        : 'stopped before review';
+    // No sub-agent at all is the direct lane: the chat did the work itself.
+    const direct = session.agents.length === 0;
+    const outcome = direct
+      ? 'direct'
+      : onlyJudges
+        ? 'standalone review'
+        : onlyDelivery
+          ? 'standalone delivery'
+          : names.has('azure-devops')
+            ? 'delivered'
+            : names.has('reviewer') || names.has('security')
+              ? 'reviewed, not delivered'
+              : 'stopped before review';
 
     return {
       ...session,
@@ -93,10 +111,20 @@ export function groupSessions(records) {
       outcome,
       durationMs: session.agents.reduce((sum, a) => sum + (a.durationMs ?? 0), 0),
       tokens: session.agents.reduce((sum, a) => sum + (a.tokens ?? 0), 0),
-      track: guessTrack([...new Set(phases)]),
+      track: direct ? 'direct' : guessTrack([...new Set(phases)]),
     };
   });
 }
+
+/** The usage counters summed over a set of sessions. */
+export function usageTotals(sessions) {
+  const total = emptyUsage();
+  for (const session of sessions) for (const key of USAGE_KEYS) total[key] += session.usage?.[key] ?? 0;
+  total.lines = sessions.filter((s) => (s.usage?.lines ?? 0) > 0).length;
+  return total;
+}
+
+export const formatKb = (bytes) => (bytes >= 1024 ? `${Math.round(bytes / 1024)} KB` : `${bytes} B`);
 
 /** The narrowest track whose phases contain everything this session ran. */
 function guessTrack(phases) {
@@ -110,6 +138,7 @@ function guessTrack(phases) {
 export function byAgent(records) {
   const agents = new Map();
   for (const record of records) {
+    if (!record.agent) continue; // a usage line, not a run
     if (!agents.has(record.agent)) agents.set(record.agent, { agent: record.agent, runs: 0, durations: [], tokens: 0 });
     const entry = agents.get(record.agent);
     entry.runs += 1;
@@ -133,4 +162,4 @@ export function median(values) {
 export const formatMs = (ms) =>
   ms === null || ms === undefined ? '-' : ms < 1000 ? `${ms}ms` : ms < 60000 ? `${(ms / 1000).toFixed(1)}s` : `${(ms / 60000).toFixed(1)}m`;
 
-export const unattributed = (records) => records.filter((r) => !r.session).length;
+export const unattributed = (records) => records.filter((r) => r.agent && !r.session).length;

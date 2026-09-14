@@ -1,15 +1,11 @@
 ---
 mode: agent
 description: Resume an open multi-agent session from its recorded state.
-version: 1.0.0
+version: 1.1.0
 ---
 
 Resume the session with `@orchestrator`.
 
-0. Cross TK first. If the session start names it, use it before any read; if
-   nothing has recorded it yet, look for it in your tool list and, found,
-   write `.harness/crosstk.json` first. The harness refuses a built-in read
-   before a Cross TK tool has been used.
 1. Read `specs/<id>-*/session.md`. If no id is given, use the newest session
    whose phase is not `done`.
 2. Report the current phase, the work branch, what the last summary said, and

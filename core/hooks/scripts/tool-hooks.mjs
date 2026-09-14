@@ -8,32 +8,41 @@
  * plain read, measured. This runs the same checks in one process, in the same
  * order, sharing one stdin read and one repository lookup, and combines their
  * answers the way the runtime would: deny over ask over allow, every message
- * kept. Each check keeps its own CLI entry for the git pre-commit path, Kiro
- * and the self-test, so nothing about a single guardrail changed but where it
- * runs.
+ * kept, and a rewrite of the call only on a plain allow. Each check keeps its
+ * own CLI entry for the git pre-commit path, Kiro and the self-test, so
+ * nothing about a single guardrail changed but where it runs.
  *
  * A check that crashes is said, not hidden: advisory ones allow the call with
  * a message, and one that fails secure (policy-gate) denies it.
+ *
+ * The same process counts the call for `harness cost`: which tool, whether it
+ * went through Cross TK, whether it was rewritten, and how many bytes came
+ * back. Those are the drivers of a token bill that the runtime does not
+ * report, and counting them here costs one small file write.
  */
 import { readHookInput, isHookMode, combine, emitVerdict, verdict, EXIT_OK } from './lib/io.mjs';
 import { hookContext } from './lib/git.mjs';
-import * as crosstkFirst from './crosstk-first.mjs';
+import { isCrossTkTool } from './lib/crosstk.mjs';
+import { bumpUsage, responseBytes } from './lib/usage.mjs';
 import * as readGuard from './read-guard.mjs';
 import * as secretBlock from './secret-block.mjs';
 import * as policyGate from './policy-gate.mjs';
 import * as destructiveGit from './destructive-git.mjs';
 import * as adoGate from './ado-gate.mjs';
+import * as crosstkNudge from './crosstk-nudge.mjs';
+import * as crosstkRun from './crosstk-run.mjs';
 import * as format from './format.mjs';
 import * as burnDetect from './burn-detect.mjs';
 
 const CHECKS = {
   PreToolUse: [
-    ['crosstk-first', crosstkFirst],
     ['read-guard', readGuard],
     ['secret-block', secretBlock],
     ['policy-gate', policyGate],
     ['destructive-git', destructiveGit],
     ['ado-gate', adoGate],
+    ['crosstk-nudge', crosstkNudge],
+    ['crosstk-run', crosstkRun],
   ],
   PostToolUse: [
     ['format', format],
@@ -62,4 +71,21 @@ for (const [name, check] of CHECKS[event]) {
   }
 }
 
-process.exit(emitVerdict(event, combine(results)));
+const combined = combine(results);
+
+try {
+  if (event === 'PreToolUse') {
+    bumpUsage(ctx.root, input.session_id, {
+      toolCalls: 1,
+      tool: input.tool_name,
+      crossTk: isCrossTkTool(input.tool_name) ? 1 : 0,
+      rewrites: combined.updatedInput ? 1 : 0,
+    });
+  } else {
+    bumpUsage(ctx.root, input.session_id, { toolOutputBytes: responseBytes(input) });
+  }
+} catch {
+  // A counter that cannot be written must not touch the verdict.
+}
+
+process.exit(emitVerdict(event, combined));
