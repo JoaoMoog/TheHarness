@@ -11,8 +11,8 @@ alwaysApply: false
 
 ## Rules
 
-Deterministic checks come first and are not negotiable: the build, the linter,
-the test suite, the traceability matrix. A rubric never overrides a red test. It
+Applicable deterministic checks come first: targeted tests for direct changes;
+build, lint, integration and traceability where structured scope requires them. A rubric never overrides a red test. It
 answers the second question — *is it good* — only after the first one, *did it
 work*, already said yes.
 

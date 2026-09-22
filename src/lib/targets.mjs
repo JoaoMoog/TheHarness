@@ -19,6 +19,8 @@ const SHARED_DIRS = [
   'core/rubrics',
   'core/tools',
   'core/hooks',
+  'templates',
+  'loops',
 ];
 
 const under = (prefix, sources) =>
@@ -37,14 +39,13 @@ export const TARGETS = {
     fileSurfaces: [
       { source: 'core/copilot-instructions.md', target: '.github/copilot-instructions.md' },
       { source: 'core/AGENTS.md', target: 'AGENTS.md' },
-      { source: 'core/mcp.json', target: '.mcp.json' },
     ],
     /** Nothing is generated: every surface is in the shape Copilot already reads. */
-    generators: [],
+    generators: ['mcp'],
     /** Every harness event has a Copilot equivalent. */
     unmappedEvents: [],
     /** Directories unlink removes once they are empty again. */
-    prunable: ['.github'],
+    prunable: ['.github', '.vscode'],
     hooksAt: '.github/hooks',
     specs: { dir: 'specs', layout: 'harness' },
   },
@@ -58,13 +59,13 @@ export const TARGETS = {
      * directly, because steering is a flat list of markdown files and the
      * harness ships directories. The generated steering files point here.
      */
-    dirSurfaces: under('.kiro/harness', SHARED_DIRS),
+    dirSurfaces: under('.kiro/harness', SHARED_DIRS.filter(s => !['core/skills','templates','loops'].includes(s))),
+
     fileSurfaces: [
       // Kiro reads AGENTS.md natively, from the workspace root.
       { source: 'core/AGENTS.md', target: 'AGENTS.md' },
-      { source: 'core/mcp.json', target: '.kiro/settings/mcp.json' },
     ],
-    generators: ['steering', 'hooks'],
+    generators: ['steering', 'skills', 'agents', 'hooks', 'mcp'],
     /**
      * Kiro has no equivalent for these three. They are dropped and reported,
      * never remapped onto a nearby event: a guardrail that fires at the wrong
@@ -73,9 +74,9 @@ export const TARGETS = {
     unmappedEvents: ['SubagentStart', 'SubagentStop', 'PreCompact'],
     // Excluding each generated file by name would put fifty lines in the git
     // exclude block; these two directories hold nothing else.
-    excludeExtra: ['.kiro/steering', '.kiro/hooks'],
+    excludeExtra: [],
     // .kiro itself is Kiro's, not the harness's, so it stays even when empty.
-    prunable: ['.kiro/harness', '.kiro/steering', '.kiro/hooks', '.kiro/settings'],
+    prunable: ['.kiro/harness', '.kiro/steering', '.kiro/hooks', '.kiro/settings', '.kiro/skills', '.kiro/agents'],
     hooksAt: '.kiro/harness/hooks',
     specs: { dir: '.kiro/specs', layout: 'kiro' },
   },

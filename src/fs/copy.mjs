@@ -13,7 +13,7 @@ export function copyFile(sourceFile, targetFile, { knownHash = null, force = fal
 
   if (currentHash === sourceHash) return { status: 'already-correct', hash: sourceHash };
 
-  if (currentHash !== null && !force) {
+  if (currentHash !== null && currentHash !== knownHash && !force) {
     // Two different refusals: a file we never installed must not be clobbered,
     // and one we did install but that someone has since edited is local work.
     const weInstalledIt = knownHash !== null;

@@ -1,3 +1,4 @@
+import { contextBudget } from './context-budget.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { harnessPath } from './paths.mjs';
@@ -33,32 +34,16 @@ export function auditHotTier(report) {
  * Measuring only copilot-instructions.md understated the real per-turn cost
  * several times over.
  */
-export function effectiveHotTokens() {
-  const hot = harnessPath('core/copilot-instructions.md');
-  let total = fs.existsSync(hot) ? estimateTokens(fs.readFileSync(hot, 'utf8'), 'hot.md') : 0;
-  const root = harnessPath('core/instructions');
-  const always = [];
-  for (const entry of listDir(root)) {
-    if (!entry.isFile() || !entry.name.endsWith('.instructions.md')) continue;
-    const file = path.join(root, entry.name);
-    const { data, body } = parseFrontmatter(fs.readFileSync(file, 'utf8'));
-    const applyTo = String(data.applyTo ?? '').trim().replace(/["']/g, '');
-    if (applyTo !== '**') continue;
-    always.push(entry.name);
-    total += estimateTokens(body, file);
-  }
-  return { tokens: total, files: always };
+export function effectiveHotTokens(target = 'copilot') {
+  const report = contextBudget(target);
+  return { tokens: report.maxActiveEstimatedTokens, files: report.files.map(f => f.path) };
 }
 
 export function auditEffectiveHot(report) {
-  const { tokens, files } = effectiveHotTokens();
-  const count = files.length + 1;
-  if (tokens > BUDGETS.effectiveHotTokens) {
-    report.fail(
-      `effective hot tier is about ${tokens} tokens across ${count} always-loaded files, over the ${BUDGETS.effectiveHotTokens} budget`
-    );
-  } else {
-    report.pass(`effective hot tier about ${tokens} of ${BUDGETS.effectiveHotTokens} tokens across ${count} files`);
+  for (const target of ['copilot', 'kiro']) {
+    const { tokens, files } = effectiveHotTokens(target);
+    const message = target + ': permanent instructions including AGENTS.md and expanded includes ~' + tokens + '/' + BUDGETS.effectiveHotTokens + ' tokens';
+    if (tokens > BUDGETS.effectiveHotTokens) report.fail(message); else report.pass(message);
   }
 }
 
@@ -230,7 +215,7 @@ function auditCrossTkReach(report, knownServers) {
   // An open manifest can call every tool of the server; only a list can leave
   // it out. A code reader is an agent that inspects code (usages, problems,
   // changes) or reads it to write an artifact (codebase with editFiles); one
-  // that only reads the session files, like the deliver agent, has no use for it.
+  // that only reads session metadata has no use for it.
   const inspects = (a) => a.tools.some((t) => /^(usages|problems|changes)$/.test(last(t)));
   const readsToWrite = (a) => a.tools.some((t) => last(t) === 'codebase') && a.tools.some((t) => last(t) === 'editFiles');
   const readers = loadAgents().filter((a) => !a.allTools && (inspects(a) || readsToWrite(a)));
@@ -274,8 +259,8 @@ export function auditTracks(report) {
       report.fail(`track ${name}: has no phases`);
       continue;
     }
-    if (track.phases.includes('deliver') && !track.phases.includes(MANDATORY_PHASE)) {
-      report.fail(`track ${name}: delivers without ${MANDATORY_PHASE}, nothing ships unreviewed`);
+    if (track.phases.includes('implement') && !track.phases.includes(MANDATORY_PHASE)) {
+      report.fail(`track ${name}: implements without ${MANDATORY_PHASE}, nothing ships unreviewed`);
       continue;
     }
     if (track.promoteTo !== null && !SESSION_TRACKS[track.promoteTo]) {
@@ -356,19 +341,7 @@ export function auditReach(report) {
   const agents = agentBodies();
   const allAgentText = agents.map((a) => a.text).join('\n');
 
-  // Every skill that is not stack-scoped must be named by some agent.
-  const skillsRoot = harnessPath('core/skills');
-  for (const dir of listDir(skillsRoot).filter((e) => e.isDirectory())) {
-    const file = path.join(skillsRoot, dir.name, 'SKILL.md');
-    if (!fs.existsSync(file)) continue;
-    const { data } = parseFrontmatter(fs.readFileSync(file, 'utf8'));
-    const stackScoped = Array.isArray(data.stacks) && data.stacks.length > 0;
-    if (stackScoped) continue;
-    if (!allAgentText.includes('`' + dir.name + '`')) {
-      report.fail(`skill ${dir.name}: no agent names it, so nothing in a session can reach it`);
-    }
-  }
-
+  // Native clients discover skills by name/description, without agent backlinks.
   // Every rubric must be scored by an agent that carries rubric-review.
   const judges = agents.filter((a) => a.text.includes('`rubric-review`'));
   if (judges.length === 0) {
@@ -413,7 +386,7 @@ export function auditReach(report) {
     report.fail(`finops/token-budgets.json says agentTokens ${declared}, contracts.mjs says ${BUDGETS.agentTokens}`);
   }
 
-  report.pass('reach: every skill, rubric and track is named by the agent that would use it');
+  report.pass('reach: native skills are discoverable; rubric and track references agree');
 }
 
 export function auditSelf(report) {

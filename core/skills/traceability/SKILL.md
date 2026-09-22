@@ -31,7 +31,7 @@ run says which requirement broke without anyone opening the file.
 
 Never weaken a test to close a gap. The spec is read-only ground truth during
 implementation; if a requirement turns out untestable as written, that is a
-finding for the specify phase, not something to edit around.
+finding for the planning pass, not something to edit around.
 
 Anti-patterns to refuse:
 

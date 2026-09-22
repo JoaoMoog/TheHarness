@@ -76,4 +76,4 @@ Mapping: FR-001 -> export.spec.ts:12 | FR-002 -> export.spec.ts:28 |
 - [ ] Unwanted-condition criteria are covered, not just the happy paths.
 - [ ] Tests assert on behaviour, not on internals.
 - [ ] The criterion-to-test mapping is recorded.
-- [ ] The full suite passes and the real result is reported.
+- [ ] The applicable tests pass and the real result is reported.

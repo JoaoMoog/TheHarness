@@ -57,12 +57,11 @@ Anti-patterns to refuse:
    re-review, read the previous findings and the diff since that review.
 3. For each changed file, open enough surrounding code to judge intent, and to
    know which problems were already there.
-4. Run `node .github/tools/verify/tree-state.mjs` and compare it with the
-   implement record. Same state and a green record: reuse it, cite it, and run
-   only the targeted check - the tests that cover the changed files, or the
-   linter on them. A different state, or a record that is missing, `not-run`
-   or red: run the build, lint and test commands the repository defines once,
-   here. Record what actually ran and every failure.
+4. Use the verification runner's --reuse option with the exact command, inputs
+   and environment label. A matching passed record needs no second run.
+   Missing, failed or stale evidence requires the appropriate targeted check.
+   Structured changes also run applicable build, lint and integration checks.
+   A content hash alone never proves configuration or environment compatibility.
 5. Collect findings, each with a failure scenario. Classify each as introduced
    by the change or pre-existing; pre-existing becomes `warn`. Discard any you
    cannot make concrete.

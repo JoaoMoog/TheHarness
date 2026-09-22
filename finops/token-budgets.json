@@ -1,19 +1,19 @@
 {
   "version": 1,
-  "rationale": "Budgets are gates, not estimates. They are enforced by harness doctor and harness budget so that a limit which is only documented cannot quietly decay.",
+  "rationale": "Estimated context limits per client, including AGENTS.md and expanded permanent instructions. Provider usage is reported separately.",
   "tiers": {
     "hot": {
       "bytes": 2048,
-      "billing": "every turn",
-      "note": "Single-file manifests stop being read reliably past roughly 3000 tokens. Keep this one small enough that it is always fully honoured.",
-      "effectiveHotTokens": 4500
+      "billing": "estimate, not billing",
+      "note": "Ceiling for permanently loaded harness instructions, measured by client.",
+      "effectiveHotTokens": 2000
     },
     "warm": {
       "skillBodyTokens": 2000,
       "instructionTokens": 1200,
       "agentTokens": 1400,
-      "billing": "on glob or relevance match",
-      "note": "A skill over budget is a signal to split it, not to raise the number. Payload reduction of about a third is typically available with no measurable quality loss.",
+      "billing": "estimate, not billing",
+      "note": "Load only relevant procedures; move long references out of skill bodies.",
       "promptTokens": 700
     },
     "cold": {
@@ -21,20 +21,14 @@
       "note": "MCP tool catalogues travel with every request. Enable only the servers a workflow actually uses, and list in each agent only the tools it needs."
     }
   },
-  "targets": {
-    "wellDesignedInvocationTokens": 4160,
-    "poorlyDesignedInvocationTokens": 30000,
-    "note": "The gap between these two numbers is context engineering, not model choice."
-  },
   "rules": [
     "alwaysApply true requires a written justification in the skill frontmatter",
     "no timestamp, request id or generated header in the cached prefix",
     "prefer one focused skill over a large one that activates on a broad glob",
     "load the large reference on demand rather than inlining it in every turn",
-    "a verification result holds until the tree changes: record what ran and the tree state, and do not re-run it for the same state",
+    "reuse evidence only for compatible content, command, configuration and environment",
     "a problem that predates the change is a warn, never an extra round",
     "use a connected token-saving MCP server such as cross-tk where it returns less than a whole read; never probe for one that is absent",
-    "the runtime bills tokens, not requests: every model call resends the context, so a small change is made in the chat without a session or a sub-agent",
     "fewer calls, smaller reads and shorter answers come before a cheaper model; each is a lever, and they compound"
   ]
 }

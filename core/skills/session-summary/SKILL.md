@@ -13,7 +13,7 @@ alwaysApply: false
 
 The envelope has a fixed core - `stage`, `status`, `artifacts`, `summary`, `next` -
 and phases add typed fields to it: `verified` from implement and review, `scores`
-from any judged phase, `pullRequest` and `pipelineRun` from deliver. The core is
+from any judged phase. The core is
 what the orchestrator reads to advance; the extensions are what it records.
 
 The parent keeps summaries; the children keep detail. The orchestrator never
@@ -56,14 +56,14 @@ Anti-patterns to refuse:
 Every phase agent ends its response with exactly this block:
 
 ```harness-handoff
-stage: specify
+stage: plan
 status: complete
 artifacts: specs/007-export-csv/spec.md
 summary: Six EARS criteria cover the happy path, an empty result set and a
   permission failure. Export is scoped to the current filter, not the whole
   table, because the table can exceed a million rows. Open: whether the file
   name must include the tenant, which changes the storage path.
-next: plan
+next: implement
 ```
 
 Fields: `stage`, `status`, `artifacts`, `summary`, `next`. Status is one of

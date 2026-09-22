@@ -1,449 +1,231 @@
 # TheHarness
 
-Uma configuração de agentes para **GitHub Copilot e Kiro** que vive em **um
-repositório** e vale para **todos os outros**. Você clona ao lado dos seus projetos, roda o
-bootstrap, e cada repositório passa a ter os mesmos agentes, skills, regras e
-guardrails — sem copiar arquivo e sem sujar o git de ninguém.
+Harness portátil para **GitHub Copilot no VS Code** e **Kiro IDE 1.x**.
+A tarefa termina com alterações locais verificadas. Preparar o índice, fazer
+commit, push, abrir PR e publicar são ações manuais.
 
-Duas leituras do mesmo ciclo:
+## Execução proporcional
 
-- **Para aprender do zero**, treze cenas com uma pergunta cada: [ciclo-passo-a-passo.html](ciclo-passo-a-passo.html) — abra o arquivo direto no navegador, ou veja [publicado](https://claude.ai/code/artifact/7624f992-367b-49b5-806a-5cd00ec04ab0).
-- **Para consultar**, os diagramas por inteiro: [Ciclos de Desenvolvimento](https://claude.ai/code/artifact/b98e7796-a8fc-49c1-9dd5-8df74d6703de).
-
-## Começar
-
-```bash
-git clone https://github.com/voce/TheHarness.git
-cd TheHarness
-./bootstrap.sh
-```
-
-No Windows: `.\bootstrap.ps1`. Sem admin. Requisito único: Node 18 ou mais novo.
-
-## O que o bootstrap faz
-
-Ele é um script fino. Toda a lógica está em `bin/harness.mjs`; o bootstrap só
-encadeia quatro passos:
-
-| passo | comando | o que acontece |
+| Caminho | Quando | Execução |
 |---|---|---|
-| 0 | checa o Node | Para com uma mensagem clara se não houver Node 18+ |
-| 1 | `harness scan ..` | Percorre a pasta que contém o harness, até dois níveis, e anota cada repositório git, a stack e a ferramenta detectadas em `harness.config.json` |
-| 2 | `harness link --all` | Instala em cada repositório encontrado |
-| 3 | `harness doctor` | Confere que tudo ficou no lugar |
+| Direto | Objetivo claro, alteração localizada e teste direcionado, incluindo regressão nova | Agente atual; sem sessão documental, subagentes ou aprovação de fase |
+| Estruturado | Vários componentes, contratos públicos ou requisitos significativos | plan → implement → review → done |
+| Sensível | Auth, autorização, pagamentos, criptografia, dados de produção ou operação destrutiva | Confirmação específica antes do escopo sensível; autorização existente vale |
 
-Para apontar outras pastas: `./bootstrap.sh /caminho/a /caminho/b`.
+O planejamento estruturado produz requisitos, desenho e tarefas em uma execução,
+com uma aprovação antes da implementação. Revisão independente ao final, no máximo
+duas rodadas de correção restritas aos achados. Quantidade de arquivos é um sinal,
+não uma regra exclusiva. As trilhas patch/fix/refactor/feature/incident/spike
+continuam disponíveis quando há sessão; uma correção simples não precisa delas.
 
-**O que o passo 2 escreve em cada repositório**, e só isso:
+Nenhum fluxo publica automaticamente. A antiga fase delivery, agente Azure DevOps,
+comandos de PR/commit/comentários/pipelines e rubrica de PR foram removidos.
+Sessões antigas em delivery retomam review/verificação; o histórico permanece.
+Só marcar done após evidência atual. Spike termina com uma resposta documentada,
+sem alegar validação de código.
 
-- **Links de diretório** para `.github/instructions`, `skills`, `prompts`,
-  `agents`, `chatmodes`, `hooks`, `tools` e `rubrics`, apontando para a fonte
-  dentro do harness. No Windows são junctions, que não exigem elevação e
-  atravessam volumes. Editar uma skill no harness vale na hora em todo repo.
-- **Três cópias com hash**: `.github/copilot-instructions.md`, `AGENTS.md` e
-  `.mcp.json`. Cópia porque link de arquivo único no Windows exigiria admin;
-  hash para o `doctor` acusar se alguém editar a cópia.
-- **Uma entrada em `.git/info/exclude`**, que é o ignore local do git e nunca é
-  commitado. Por isso `git status` fica limpo e o time não vê nada.
-- **Um `pre-commit`** que roda os guardrails. Se já existir um hook de outra
-  ferramenta, o harness não sobrescreve: avisa e segue.
+## Instalação e atualização manual
 
-Nada é sobrescrito. Se o repositório já tem um `AGENTS.md` próprio ou um
-`.github/instructions` real, aquele item é recusado e o resto é instalado.
+Requer Node.js 18+ e Git; desenvolvimento/CI usam Node 22. Não é necessário instalar
+Playwright para instalar o harness em outro projeto.
 
-**Para desfazer tudo:** `node bin/harness.mjs unlink --all`. Guiado pelo lock,
-deixa cada repositório byte-idêntico ao que era, incluindo os diretórios que a
-instalação criou e ninguém mais usa.
+Crie um checkout isolado antes de editar a fonte: links propagam mudanças imediatamente.
+Na pasta da fonte, use:
 
-## Copilot e Kiro
+~~~sh
+node bin/harness.mjs scan ../projetos
+node bin/harness.mjs link nome-do-piloto --target=copilot
+node bin/harness.mjs link nome-do-piloto --target=kiro
+node bin/harness.mjs doctor
+~~~
 
-O `scan` olha o repositório e decide: `.github/` presente vira alvo `copilot`,
-`.kiro/` vira `kiro`, os dois viram os dois. `--target=kiro` força.
+Cada --target substitui a seleção nessa instalação. Para os dois, use
+--target=copilot,kiro. Grave também targets no harness.config.json para manter
+a seleção nas próximas atualizações. Exemplo:
 
-O princípio é o mesmo nos dois: **linkar o conteúdo real, gerar só o que muda
-de formato**. No Kiro o conteúdo é linkado em `.kiro/harness/`, e o que se
-gera são arquivos finos de steering, um por instruction e um por skill, com
-uma linha `#[[file:...]]` apontando para o original. Editar uma skill no
-harness continua valendo na hora, sem regerar nada.
+~~~json
+{
+  "version": 1,
+  "roots": ["../projetos"],
+  "defaults": { "mode": "link", "gitHooks": true },
+  "repos": {
+    "piloto": {
+      "path": "../projetos/piloto",
+      "stacks": ["node-ts"],
+      "targets": ["copilot", "kiro"]
+    }
+  }
+}
+~~~
 
-| | Copilot | Kiro |
+- link: junctions no Windows, links simbólicos no Linux; adaptadores são gerados.
+- vendor: cópias versionáveis, com filtro das instruções de stack.
+- Reexecute link ou vendor para atualizar somente o piloto.
+- unlink nome-do-piloto remove apenas conteúdo gerenciado e intacto.
+- Atualização e remoção comparam hashes e destinos dos links. Arquivos externos,
+  personalizados e conflitos são preservados e reportados. Não há substituição
+  destrutiva por --force. Resolva cada conflito no diff e reinstale.
+- Hooks Git também são protegidos por hash. Um hook legado sem registro de hash
+  é preservado como conflito, inclusive quando contém o marcador do harness.
+- Guarde harness.lock.json: ele registra a propriedade dos arquivos. Se perdido,
+  arquivos existentes são tratados como externos, mesmo com conteúdo idêntico.
+- Ao mudar de fonte isolada, leve a configuração e o lock da instalação anterior
+  para que a atualização reconheça arquivos antigos. Não apague personalizações.
+- Instalações antigas com arquivos de entrega intactos são limpas pela atualização.
+  Uma cópia personalizada é preservada como conflito; remova-a manualmente após
+  revisar seu conteúdo antes de retomar o agente.
+
+O CI permanece para validar seus futuros commits/PRs; o agente não o aciona.
+
+## Formatos por cliente
+
+| Recurso | Copilot / VS Code | Kiro IDE 1.x |
 |---|---|---|
-| conteúdo | `.github/` | `.kiro/harness/` |
-| instruções | `applyTo` no frontmatter | steering com `inclusion: fileMatch` |
-| skills | lidas por relevância | steering `inclusion: manual`, uma por skill |
-| hooks | `core/hooks/harness.json` | `.kiro/hooks/harness.json`, gerado |
-| MCP | `.mcp.json` | `.kiro/settings/mcp.json` |
-| specs | `specs/NNN-slug/spec.md`, `plan.md` | `.kiro/specs/NNN-slug/requirements.md`, `design.md` |
+| Base | AGENTS.md + .github/copilot-instructions.md | AGENTS.md |
+| Condicionais | .github/instructions | .kiro/steering, fileMatch |
+| Skills | .github/skills | .kiro/skills nativas |
+| Agentes | .github/agents/*.agent.md | .kiro/agents/*.json |
+| MCP | .vscode/mcp.json, servers, variável env:VAR | .kiro/settings/mcp.json, mcpServers, variável VAR |
+| Comandos | .github/prompts | .kiro/steering com inclusion: manual |
+| Hooks | .github/hooks/harness.json | .kiro/hooks/harness.json, v1 |
+| Ferramentas/templates | .github/tools, .github/templates | .kiro/harness/tools, .kiro/harness/templates |
 
-Os arquivos gerados entram no lock com hash, então o `doctor` acusa se alguém
-editar um deles à mão ou se a fonte tiver mudado desde a última instalação.
+Os adaptadores preservam timeout, convertem variáveis de ambiente e separam
+catálogo de ferramentas por agente. Kiro inclui somente servidores explicitamente
+declarados para cada agente; includeMcpJson e includePowers ficam desativados.
+Cross TK é opcional, nunca instalado nem obrigatório. Habilite um servidor em
+core/mcp.json e atualize manualmente o piloto para usá-lo nos agentes gerados.
 
-**Duas lacunas reais, documentadas e não contornadas.** O Kiro não tem
-equivalente para `SubagentStart`, `SubagentStop` e `PreCompact`. Num repo só de
-Kiro, a telemetria de sub-agente, a validação do envelope de handoff e o
-resgate antes da compactação não rodam. O `doctor` avisa. Mapear esses eventos
-para outros próximos seria pior: um guardrail que dispara na hora errada é pior
-que um que todo mundo sabe que falta.
+Kiro não possui equivalentes de SubagentStart, SubagentStop e PreCompact nesta
+matriz. doctor reporta a limitação por cliente, mesmo quando ambos estão instalados.
+Um ask de ferramenta sensível no Kiro bloqueia e explica a confirmação necessária;
+seu protocolo não oferece o mesmo permissionDecision do VS Code.
+Hooks são guardrails de comandos reconhecidos, não uma sandbox universal.
 
-Em compensação o Kiro tem `PostTaskExecution`, que fecha exatamente uma tarefa
-de spec. O coletor do dream roda ali também.
+Os formatos foram conferidos com documentação oficial em setembro de 2026.
+Reconhecimento na interface, catálogo conectado e permissões devem ser confirmados
+no editor real durante o piloto; CLIs não estão na matriz de compatibilidade.
+Não se deve confundir um code.cmd do Cursor com VS Code.
 
-## Dreaming
+## Contexto e custo
 
-Uma sessão termina e leva junto tudo o que aprendeu. A próxima começa do mesmo
-lugar e faz o mesmo desvio. O ciclo abaixo é o que corta isso, e ele acontece
-**entre** sessões, sem custo de sessão extra e sem daemon. A extração nunca
-vem antes do pedido: um ajuste rápido não paga pela memória da sessão anterior.
+~~~sh
+node bin/harness.mjs budget --json
+node bin/harness.mjs budget --target=kiro --repo=C:/projetos/piloto --json
+node bin/harness.mjs cost --repo=C:/projetos/piloto --json
+node bin/harness.mjs improve
+~~~
 
-| quando | quem | o que faz |
-|---|---|---|
-| a sessão fecha | `dream-collect`, em Node | Lê os `session.md` fechados e grava o que é mecanicamente observável em `.harness/dream-pending.json` |
-| a sessão seguinte abre | `session-context` | Avisa que há material pendente e segue direto para o pedido |
-| essa sessão fecha, ou `/dream` | a skill `dreaming` | Escreve candidatos em `_dreams.md` e consome o pendente |
-| quando você quiser | `harness dream` | Lista, promove ou descarta |
+Teto: 2.000 tokens **estimados** de instruções permanentes por cliente.
+O relatório inclui AGENTS.md, instruções globais, inclusões expandidas e o pior
+caso com prompt de agente ativo. No Kiro, AGENTS.md explícito no recurso do agente
+é contado novamente conservadoramente. Não há deduplicação artificial.
+Catálogos de skills, ferramentas e contexto do projeto aparecem separadamente.
+A estimativa usa caracteres por token, não o tokenizer de um provedor.
 
-O coletor não roda modelo nenhum e sai calado quando nada fechou desde a última
-passada. Ele repara em coisas que só aparecem olhando várias sessões: a mesma
-fase escalando, uma fase rodando duas vezes, trilhas promovidas do mesmo ponto,
-requisitos que ficaram sem teste, um critério de rubrica sempre no fundo.
+cost agrupa resultados explícitos: validated, failed, blocked, not-run ou unknown
+(telemetria antiga sem resultado). Duração total exige início e resultado.
+Tempos de ferramentas só aparecem quando o runtime os informa; hooks registram
+duração por check. A soma do tempo dos agentes pode sobrepor a duração total.
+Espera por aprovação e tokens reais permanecem null quando indisponíveis.
+Contagem de chamadas e bytes são observações; não representam cobrança.
+Um evento provider-usage com total tokens medidos deve vir de exportação do cliente,
+nunca de uma estimativa do agente. approval-wait exige uma duração realmente medida.
 
-**Candidato não é memória.** A extração escreve em `_dreams.md`. Só uma pessoa
-move para `_decisions.md`, com `harness dream --promote=<id>`. A separação é o
-ponto: um erro de extração em `_dreams.md` é uma sugestão que ninguém aceita, e
-o mesmo erro em `_decisions.md` é uma regra que toda sessão futura herda.
+## Evidência reutilizável
 
-Duas regras decidem quase tudo: **um padrão precisa de duas sessões**, e todo
-candidato cita as sessões em que se apoia. O `doctor` reprova o que não citar,
-e o `--promote` recusa. Descartar exige `--why`, senão o mesmo candidato volta
-no mês que vem.
+Nos exemplos abaixo, substitua .github por .kiro/harness no Kiro.
 
-```bash
-node bin/harness.mjs dream <repo>
-node bin/harness.mjs dream <repo> --promote=D-007
-node bin/harness.mjs dream <repo> --discard=D-009 --why="uma sessão só"
-```
+~~~sh
+node .github/tools/verify/run.mjs --argv='["node","--test","tests/regression.test.mjs"]' --reuse
+node .github/tools/verify/outcome.mjs --session=tarefa-001 --status=validated --records='[".harness/verification/IDENTIDADE.json"]'
+~~~
 
-## No dia a dia
+PowerShell pode exigir a forma de passagem de aspas suportada pela sua versão.
+A API JavaScript exportada de run.mjs aceita argv como array sem shell.
+Para npm no Windows o runner resolve a entrada JS local, sem interpolar comandos.
 
-**Mudança pequena é feita direto no chat, sem sessão.** Cabe numa frase, toca
-no máximo três arquivos e ou não muda comportamento ou tem um check existente
-que a prova (teste, build, lint): o agente lê o que precisa, edita, roda esse
-check e mostra o diff. Sem sub-agente, sem rodada de revisão, sem confirmação
-de trilha; você revisa o diff no editor e faz o commit, ou pede `/deliver`
-para abrir o pull request. Auth, crypto, pagamento, dinheiro, schema de
-produção e manifesto de dependências nunca são diretos. A regra está no hot
-tier e em `routing.instructions.md`; o `@orchestrator`, se chamado para um
-pedido desses, diz isso em uma linha e para.
+O runner guarda comando, identidade SHA-256 de conteúdo/ambiente, duração, status
+e log em .harness/verification. Arquivos de configuração rastreados, lockfiles,
+arquivos não rastreados e envs de teste entram na identidade. Relatórios de sessão
+e .harness ficam fora. Use --inputs para configuração ignorada adicional e
+--environment para versão do browser/servidor/dados ou outros estados externos.
+Nunca reutilize evidência de servidor remoto sem uma identidade verificável dele.
 
-Trabalho de vários passos começa com `/feature` ou `@orchestrator`. Ele escolhe
-uma **trilha** — quais das seis etapas o pedido realmente precisa — e para para
-você confirmar antes de começar. Na mesma parada ele pergunta de qual branch
-partir: `Production` por padrão, ou continuar na branch que já está aberta. A
-resposta fica gravada em `session.md`, e o pull request é aberto contra ela.
+Somente uma evidência passed, estável e ainda compatível pode sustentar validated.
+Escopo estruturado também requer --track=feature e --review=approve
+(ou approve-with-comments) após revisão independente. Registre todos os checks
+necessários. Falha/bloqueio exige --reason; comando que não executou nunca é passed.
+A ferramenta verifica os registros; não decide sozinha quais testes cobrem o requisito.
 
-| trilha | etapas | teto |
-|---|---|---|
-| `patch` | implement → review → deliver | 115k |
-| `incident` | implement → review → deliver, mais runbook e um `fix` de follow-up | 115k |
-| `fix` | specify → implement → review → deliver | 145k |
-| `spike` | specify → plan | 80k |
-| `refactor` | plan → tasks → implement → review → deliver | 190k |
-| `feature` | as seis | 220k |
+Formatação é explícita e em lote, antes da validação:
 
-Entre cada etapa aparece um botão, em português; só em `patch` e `incident` a
-revisão começa sozinha quando implement termina. Você lê o artefato e confirma.
-Na mesma confirmação da trilha o orchestrator diz a faixa de modelo que ela
-merece — baixa para `patch` e para as fases tasks e deliver, média para
-implement e review, alta só para specify e plan de feature ou spike — e a
-escolha do modelo, ou de `Auto`, é sua, no seletor do chat; nenhum nome de
-modelo é gravado no harness.
-O estado da sessão fica em `specs/NNN-slug/session.md` — ou
-`.kiro/specs/NNN-slug/session.md` num repo de Kiro — commitado, então dá para
-fechar o editor e retomar com `/resume`. O início da sessão diz qual é o layout,
-para ninguém ter que adivinhar.
+~~~sh
+node .github/hooks/scripts/format.mjs --files='["src/example.js"]' --argv='["node","node_modules/prettier/bin/prettier.cjs","--write"]'
+~~~
 
-Mais de uma sessão pode ficar aberta ao mesmo tempo: dois ajustes sem relação
-em dois chats são duas sessões, cada uma com id, arquivo e branch de trabalho
-próprios. O início da sessão lista todas, `/resume <id>` continua uma delas e
-`/feature` abre outra ao lado. O único conflito real é duas sessões mexendo
-nos mesmos arquivos, e isso é dito antes da primeira etapa.
+Use o formatter real do projeto; o exemplo não instala pacotes.
+O harness não chama git add e preserva conteúdo já preparado no índice.
 
-Para abrir um pull request de um branch pronto, sem sessão: `/deliver` ou
-`@azure-devops`. O corpo do pull request sai em português do Brasil, como um
-resumo do que foi feito — o que mudou, por quê, o que foi verificado de fato e
-o que ficou de fora — e não como a lista dos arquivos tocados.
+## Playwright
 
-## Verificação proporcional e WARN
+A skill playwright-testing detecta configuração existente, reutiliza gerenciador
+de pacotes, servidor e fixtures e valida o fluxo afetado. Quando falta Playwright,
+inclui a configuração no plano antes de alterar dependências do projeto.
+Playwright CLI é opcional para exploração; não há MCP de navegador permanente.
 
-Três regras cortam o custo das etapas de `fix` e `patch` sem tirar verificação
-do caminho. Elas vivem em `core/instructions/token-economy.instructions.md`,
-carregada em todo turno, e nos contratos do `implementer`, do `reviewer` e do
-`orchestrator`.
+No próprio TheHarness:
 
-- **Um resultado vale até a árvore mudar.** O `implementer` registra o que
-  rodou e em qual estado da árvore (`node .github/tools/verify/tree-state.mjs`,
-  uma linha determinística). Dentro do loop de verificação só o check que
-  falhou roda de novo; a suíte completa roda uma vez, na árvore final. O
-  `reviewer` roda a dele uma vez, porque revisão independente é o contrato; a
-  pontuação da rubrica, o deliver e os retries reaproveitam o registro. Uma nova
-  rodada precisa de uma falha nova, um finding aberto ou um risco não checado.
-- **Problema preexistente é WARN, não correção.** A revisão aponta o que a
-  mudança introduziu ou alterou. O que já existia no arquivo tocado vira uma
-  linha `WARN local - problema - melhoria sugerida`, gravada em `session.md`,
-  levada ao corpo do pull request, e nunca bloqueia um gate nem abre outra
-  rodada. Antes de apontar falta de tratamento de erro, o revisor olha o que a
-  aplicação já tem: um controller atrás de um exception filter global não é
-  finding.
-- **Duas rodadas de revisão.** `request-changes` manda ao `implementer` só os
-  blockers e majors, e a re-revisão lê só o delta e confirma cada finding. Um
-  finding ainda aberto na segunda rodada escala: o problema está antes da
-  correção.
+~~~sh
+npm ci
+npx playwright install chromium
+npm run test:e2e
+npx playwright install firefox webkit
+npm run test:e2e:full
+~~~
 
-O hook `burn-detect` conta releituras por caminho e zera o contador quando o
-conteúdo muda: reler um arquivo recém-editado não avisa; reler três vezes um
-arquivo que não mudou, avisa.
+Playwright Test está fixado em 1.63.0. O padrão é Chromium; full inclui Firefox
+e WebKit. A suíte cobre os três guias: carregamento, navegação, teclado,
+reprodução/pausa, limites das cenas, âncoras, links locais, viewport pequeno e
+erros JavaScript. Screenshot nas falhas; trace na primeira repetição do CI.
+O servidor aceita somente arquivos dos guias. Prometeu não faz parte da suíte.
 
-**Ajuste rápido paga só o que usa.** Uma trilha omite fases, mas não pode
-manter a cerimônia de cada fase. Em `patch` e `fix`: em `patch` a revisão é o
-próprio orchestrator lendo o diff contra a rubrica `code-review` — ele não
-escreveu o código, o mesmo princípio da spec de `fix` e do corpo do pull
-request — e `reviewer` e `security` só entram quando o diff toca área sensível
-(auth, crypto, pagamento, segredo, fronteira de entrada, dependência); a
-sessão diz quando pulou; o corpo do pull request é pontuado pelo próprio
-orchestrator, em vez de uma terceira invocação do `reviewer`; e mudança sem
-comportamento observável, como texto, versão ou formatação, não ganha teste
-inventado. A suíte roda uma vez por estado da árvore: o `reviewer` reaproveita
-o registro de verificação do implement quando o estado bate e o registro está
-verde, e roda por conta própria só o check dirigido aos arquivos mudados. Em
-`patch` e `incident` a revisão começa sozinha quando implement termina; cada
-fase é uma edição só no `session.md`; sem `_context.md`, um patch segue com os
-scripts do próprio manifesto do repo; e a consolidação (dreaming) fica para o
-fim da sessão ou para `/dream`, nunca antes do pedido. No `fix`, a spec é o
-teste que falha mais o comportamento esperado, pontuada pelo orchestrator sem
-invocar o `reviewer` só para isso, e o botão "Aprovar spec e implementar a
-correção" vai direto ao implementer. Um `patch` fica em dois sub-agentes e
-três gates humanos. O exemplo de settings mantém `chat.agent.maxRequests` em
-80, porque cada parada nesse teto espera alguém clicar em continuar; os
-budgets dos loops e o `burn-detect` são o que segura um loop de verdade.
+## Validação e piloto
 
-## Créditos do Copilot (junho/2026)
+~~~sh
+npm test
+npm run selftest
+npm run selftest:dream
+npm run selftest:spec
+npm run validate
+npm run eval
+node bin/harness.mjs eval --trace=trace-real.json
+node evals/pilot.mjs docs/pilot-samples.json
+~~~
 
-Desde 1º de junho de 2026 o Copilot cobra por uso: *AI Credits* (1 crédito =
-US$ 0,01), calculados por modelo × tokens — entrada, entrada em cache (cerca de
-um décimo do preço), gravação de cache e saída (várias vezes a entrada). Não
-há mais modelo incluído nem contagem por prompt. Cada chamada ao modelo dentro
-de um turno reenvia o contexto inteiro; cada resultado de tool entra nele; cada
-sub-agente abre outro contexto. Por isso uma tarefa simples podia custar
-centenas de créditos: uma sessão de três sub-agentes fazia de 100 a 200
-chamadas, cada uma carregando o hot tier, o catálogo de tools, o início de
-sessão e a saída de todos os testes anteriores.
+Os testes automatizados exercitam instalação/atualização/remoção, preservação de
+arquivos, adapters, cache, resultado explícito, índice Git e guardrails.
+CI contém Windows e Linux; a validação local não substitui uma execução Linux.
+Evals textuais continuam disponíveis via --emit e --check. --trace valida ações,
+aprovações, artefatos e resultados observados, sem confundir resposta com execução.
 
-O que o harness faz a respeito, nesta ordem de impacto:
+[Protocolo do piloto](docs/pilot.md) define 36 execuções, em dois clientes,
+com três tarefas e três repetições antes/depois. O comparador recusa amostras
+incompletas ou não equivalentes. Sem dados reais, o resultado é pending.
+Metas: menos 50% no tempo mediano, menos 40% em tokens medidos, critérios
+funcionais e guardrails preservados. São metas experimentais, não promessas.
 
-1. **Faixa direta.** Mudança pequena não vira sessão (acima).
-2. **Menos contexto por chamada.** O início de sessão injeta ponteiros e os
-   comandos sancionados, não os arquivos inteiros; cada agente carrega só as
-   tools que lista; o hot tier cabe em 2 KB e o efetivo em 4,5k tokens.
-3. **Menos saída.** Resposta na forma que o passo pede — diff, saída do check
-   que importa, uma linha de status — e resumo de fase de até 120 palavras.
-4. **Saída de tools comprimida.** Testes, diffs e listagens passam por
-   `crosstk run` quando o binário existe (abaixo).
-5. **Modelo por faixa.** Nenhum nome de modelo no repositório; a confirmação
-   da trilha diz a faixa e você escolhe no chat.
-6. **Medição.** `harness cost` mostra prompts, tool calls, sub-agentes e KB
-   devolvidos por tools por sessão e por trilha; o custo em créditos você lê
-   no editor (hover na resposta, controle de contexto, dashboard na Status
-   Bar, `/chronicle:cost-tips`).
+Coleta e consolidação de memória ocorrem somente por /dream ou
+harness dream --collect. Nada roda automaticamente no encerramento comum.
 
-O levantamento completo, com as fontes, os conceitos atualizados e a conta de
-antes e depois, está em [custo-do-copilot.html](custo-do-copilot.html) — abra
-o arquivo no navegador, ou veja
-[publicado](https://claude.ai/artifact/BCfhXKd8VkxrRX2PcSR7J4).
+## Referências
 
-## Cross TK
+- [GitHub: instruções e skills](https://docs.github.com/en/copilot/reference/customization-cheat-sheet)
+- [VS Code: agentes](https://code.visualstudio.com/docs/agent-customization/custom-agents)
+- [Kiro: skills](https://kiro.dev/docs/skills/) e [agentes](https://kiro.dev/docs/custom-agents/configuration-reference/)
+- [Kiro: MCP](https://kiro.dev/docs/mcp/configuration/) e [hooks](https://kiro.dev/docs/hooks/)
+- [Playwright: boas práticas](https://playwright.dev/docs/best-practices/) e [CLI](https://github.com/microsoft/playwright-cli)
+- [Agentic DevOps Hub](https://agenticdevopsplatform.ai/pt-br/#start) e [Awesome Copilot](https://github.com/github/awesome-copilot)
 
-Regra: **quando compensa, não sempre.** Com o servidor MCP chamado `cross-tk`
-conectado, o agente o usa onde ele devolve menos do que a ferramenta nativa
-devolveria: um símbolo de um arquivo grande (em vez do arquivo inteiro), uma
-busca no workspace (agrupada, com teto), um resumo, a estrutura de um
-repositório sem `_context.md`. Arquivo pequeno, trecho já no contexto, arquivo
-recém-editado e faixa de linhas exata são lidos direto. A ferramenta de escrita
-dele nunca é usada (edição passa pelo editor, onde o diff é revisável e os
-guardrails rodam), e as de cache e economia não entram numa tarefa. Os agentes
-aprendem as tools pelas descrições, uma vez por sessão; o harness não presume
-nome nem assinatura, e nenhum nome de tool entra no repositório.
-
-A regra está na instrução `token-economy` (carregada em todo turno), no hot
-tier, na `CONSTITUTION.md` e no `AGENTS.md`. Ela substituiu o "Cross TK
-primeiro, obrigatório" de antes: com a cobrança por token, uma chamada
-obrigatória antes de qualquer leitura custava uma iteração inteira do modelo,
-e um turno humano quando o servidor estava declarado mas fora do seletor de
-tools.
-
-**Dois hooks fazem a regra valer sem bloquear nada:**
-
-- `crosstk-nudge` (PreToolUse): quando uma ferramenta nativa vai ler um
-  arquivo inteiro com mais de 300 linhas ou 12 KB e há um servidor `cross-tk`
-  declarado, a chamada passa com um lembrete de uma linha, uma vez por arquivo
-  por sessão. Leitura com faixa de linhas, arquivo pequeno ou sem servidor:
-  silêncio. Nunca recusa.
-- `crosstk-run` (PreToolUse): quando o binário `crosstk` está no PATH, o
-  comando de terminal é reescrito para `crosstk run <cmd>` — só comandos
-  simples (sem pipe, `&&`, redirecionamento) cujo primeiro termo está numa
-  lista conservadora: `git status|log|diff|show|fetch|pull|push`, `ls`, `cat`,
-  `grep`, `rg`, `findstr` e os runners de teste (`npm test`, `pnpm test`,
-  `yarn test`, `cargo test`, `dotnet test`, `pytest`, `python -m pytest`,
-  `mvn test`, `gradle test`, `go test`). Build e lint ficam de fora: o Cross TK
-  trata toda saída desses executáveis como teste e trunca o bloco de falha, e
-  erro de compilador precisa do detalhe. A lista é a constante `REWRITE_RULES`
-  em `core/hooks/scripts/crosstk-run.mjs`. Desligar: o arquivo
-  `.harness/crosstk-run.off` no repositório, ou `HARNESS_CROSSTK_RUN=0`. Só o
-  VS Code honra o `updatedInput`; no Kiro o comando roda como escrito.
-
-**Onde o servidor é encontrado.** O início da sessão procura nos arquivos MCP
-do repositório (`.mcp.json`, `.vscode/mcp.json`, `.kiro/settings/mcp.json`) e
-no `mcp.json` do seu perfil do VS Code (perfis nomeados incluídos) e das
-configurações do Kiro. Encontrado, ele diz onde e para quê; não encontrado,
-diz em uma linha que as nativas são o que há, e o agente não sonda a lista de
-tools.
-
-**Manifestos explícitos.** Cada agente lista as tools que usa e, quando lê
-código, `cross-tk/*` — a sintaxe do VS Code para todas as tools de um servidor
-pelo nome dele, sem citar nenhuma. Por isso o servidor precisa se chamar
-`cross-tk` no `.mcp.json` que o harness copia (é o nome do template em
-`core/mcp.json`); um servidor com outro nome no perfil do usuário funciona
-com os hooks, mas não alcança os manifestos — renomeie, ou troque a lista por
-`allTools:` com o motivo. O `doctor` avisa o agente leitor que não lista
-`cross-tk/*`. Confira os identificadores das tools nativas na aba Tools do
-editor de customizações do VS Code se a sua versão os mostrar qualificados
-(`search/codebase`); o `doctor` aceita as duas grafias.
-
-Para habilitar em todos os repositórios, preencha a entrada `cross-tk` em
-`core/mcp.json` com o comando real e mova-a para `servers`. O `doctor` recusa
-um servidor habilitado enquanto houver `TODO` no comando, nos argumentos, no
-dono ou na versão. O índice que o Cross TK grava em `.crosstk_cache/` entra no
-`.git/info/exclude` que o harness escreve.
-
-## Comandos
-
-| comando | faz |
-|---|---|
-| `harness scan <pasta> [--depth=N]` | Descobre repositórios e detecta a stack |
-| `harness link --all` | Instala em todos |
-| `harness link <repo> --force` | Reinstala um, sobrescrevendo edições locais |
-| `harness vendor <repo>` | Instala como cópias commitáveis, para times que preferem assim |
-| `harness unlink --all` | Remove tudo |
-| `harness doctor` | Contratos, grafo de delegação, alcance, drift |
-| `harness budget` | Custo do contexto por tier |
-| `harness cost` | Custo por resultado entregue, por trilha e agente; prompts, tool calls, sub-agentes e KB devolvidos por tools, por sessão |
-| `harness improve` | Lê a telemetria e aponta o que mudar no harness |
-| `harness dream <repo>` | Lista os candidatos; `--promote`, `--discard --why`, `--collect` |
-| `harness secrets <repo>` | Avisos de credencial registrados; `--allow=<id> --why`, `--allow-path=<glob> --why` |
-| `harness eval` | Evals estruturais; `--emit` e `--check` para as comportamentais |
-| `harness new agent\|skill\|instruction <nome>` | Scaffold com todas as seções obrigatórias |
-
-Execute com `node bin/harness.mjs <comando>`.
-
-## O que vai dentro
-
-```
-core/                  propagado para todo repositório
-  copilot-instructions.md   sempre carregado, teto de 2 KB
-  AGENTS.md                 o contrato de agentes e sessões
-  instructions/  18         regras por tipo de arquivo
-  skills/        37         procedimentos, por relevância
-  agents/         8         orchestrator, 4 de fase, reviewer, security, azure-devops
-  prompts/        9         /feature, /resume, /deliver e os loops
-  rubrics/        3         a régua de cada etapa que julga
-  hooks/          8 eventos guardrails de runtime, contadores de uso, pre-commit e o coletor do dream
-  tools/                    scripts determinísticos: ado/, spec/ e verify/
-loops/                 os três loops e os orçamentos
-templates/             spec, plan, tasks, session, runbook, postmortem, ADR, decisions, dreams
-```
-
-O conteúdo de `core/` está em inglês de propósito: custa cerca de 25% menos
-tokens que português, e é cobrado a cada turno.
-
-## O que o doctor cobra
-
-Toda skill com cinco seções e todo agente com seis. Todo sub-agente existe e
-quem delega tem a ferramenta para isso. Toda skill é alcançável por algum
-agente, toda rubrica tem um juiz, toda trilha é conhecida por quem escolhe
-trilhas. O tier quente cabe em 2 KB. Nenhuma trilha entrega sem revisão. Roda no
-CI a cada push.
-
-## Guardrails
-
-Os mesmos scripts rodam como hooks do VS Code durante a sessão e como
-`pre-commit` no git. Eles leem o índice (não a árvore de trabalho) e cobrem os
-formatos reais de credencial: `.env`, YAML sem aspas, tfvars, Secret do
-Kubernetes, `Default` de CloudFormation. Um `.env` também não pode ser **lido**
-para dentro do contexto.
-
-Dois níveis de resposta. Um **arquivo** que nunca deve entrar no histórico
-(`.env`, chave privada, `tfstate`, kubeconfig) é recusado pelo `policy-gate`,
-que falha fechado quando o git não responde. Um **valor** com cara de
-credencial dentro de um arquivo comum gera aviso, não bloqueio: o
-`secret-block` deixa o commit seguir, imprime o achado com o valor redigido e
-grava uma linha em `.harness/secrets.log` no repositório, fora do git. O aviso
-diz o que o bloqueio não dizia: o valor que chegou ao histórico está
-comprometido e precisa ser rotacionado, remover a linha não resolve.
-
-**Falso positivo se marca uma vez.** Cada aviso imprime um `id` de 16
-caracteres, derivado do valor e não do arquivo, então o mesmo falso positivo
-tem o mesmo id em qualquer arquivo, commit ou máquina. Marcar é um comando, e
-o próprio aviso já mostra qual:
-
-```bash
-node bin/harness.mjs secrets <repo>                                   # lista o que avisou
-node bin/harness.mjs secrets <repo> --allow=<id> --why="fixture de teste"
-node bin/harness.mjs secrets <repo> --allow-path="tests/fixtures/**" --why="dados sintéticos"
-```
-
-Isso escreve `.harness-allow.json` na raiz do repositório, que se commita: é
-a lista do time, lida a cada commit e a cada chamada de ferramenta, e nunca
-contém o valor, só o id e o motivo. `--why` é obrigatório, e o `doctor`
-reprova entrada sem motivo, pelo mesmo princípio do `dream --discard`. Para
-uma linha só, o comentário `harness:allow-secret` continua valendo. Marcado
-quer dizer silencioso, não seguro: um valor real que chegou ao histórico
-continua precisando de rotação.
-
-```bash
-npm run selftest          # 147 casos de guardrail, em repositórios descartáveis
-npm run selftest:dream    # 32 casos de consolidação, com sessões sintéticas
-npm run selftest:spec     # 19 casos de rastreabilidade, nos dois layouts
-```
-
-Os guardrails recebem o evento por STDIN no VS Code e no Kiro. O modo vem do
-`env` no primeiro e de `--hook-mode=kiro` no argv no segundo, porque o schema de
-hook do Kiro não tem campo `env`. O self-test confere caso a caso que a decisão
-sai igual pelas duas portas.
-
-**Um processo por evento de ferramenta.** O VS Code roda todo hook de
-`PreToolUse` e `PostToolUse` em toda chamada de ferramenta e ignora o campo
-`matcher` (está na documentação oficial). Oito scripts registrados eram oito
-processos Node e cinco spawns de git por chamada: 402 ms de hooks numa leitura
-simples, medidos aqui. Por isso os nove guardrails de ferramenta, e os
-contadores de uso que o `harness cost` lê, rodam dentro de `tool-hooks.mjs`, um
-processo por evento, na mesma ordem, com uma leitura de stdin e uma consulta ao
-git, e a resposta é combinada como o próprio runtime combinaria: deny vence ask,
-que vence allow, toda mensagem é preservada, e uma reescrita de comando só
-segue num allow limpo.
-Medido na mesma máquina depois da mudança: 117 ms por chamada (pre e post
-juntos). Cada script continua com entrada própria para o `pre-commit` do git,
-o Kiro e o self-test, e a mesma decisão sai pelas três portas.
-
-## Estender para a sua stack
-
-```bash
-node bin/harness.mjs new agent aws-infra --internal
-node bin/harness.mjs new skill cloudformation-changeset
-```
-
-O esqueleto sai com as seções obrigatórias. O `doctor` recusa enquanto o texto
-de exemplo não for substituído — de propósito. Para entrar na sessão, some o
-nome à lista de sub-agentes do `orchestrator`.
-
-## Licença
-
-MIT.
+Adoção seletiva: contexto progressivo, rotas por risco, teste reproduzível e
+medição por resultado. Nenhum catálogo externo foi importado integralmente.

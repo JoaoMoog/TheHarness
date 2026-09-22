@@ -17,7 +17,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { stateFile, loadState, saveState } from './state.mjs';
 
-export const COUNTERS = ['prompts', 'toolCalls', 'crossTk', 'rewrites', 'subagents', 'toolOutputBytes'];
+export const COUNTERS = ['prompts', 'toolCalls', 'crossTk', 'rewrites', 'subagents', 'toolOutputBytes', 'hookDurationMs', 'toolDurationMs'];
 
 /** Adds to the session's counters; `tool` names the tool of a call, counted by its last segment. */
 export function bumpUsage(root, sessionId, patch = {}) {
@@ -25,6 +25,11 @@ export function bumpUsage(root, sessionId, patch = {}) {
   const state = loadState(file);
   for (const key of COUNTERS) {
     if (patch[key]) state[key] = (state[key] ?? 0) + Number(patch[key]);
+  }
+  if (Number.isFinite(patch.toolDurationMs)) state.toolTimingSamples = (state.toolTimingSamples ?? 0) + 1;
+  if (patch.checkDurations) {
+    state.checkDurations ??= {};
+    for (const [key, ms] of Object.entries(patch.checkDurations)) state.checkDurations[key] = (state.checkDurations[key] ?? 0) + ms;
   }
   if (patch.tool) {
     const name = String(patch.tool).split('/').pop();
@@ -55,6 +60,10 @@ export function usageRecord(state, sessionId) {
     subagents: state.subagents ?? 0,
     toolOutputBytes: state.toolOutputBytes ?? 0,
     byTool: state.byTool ?? {},
+    hookDurationMs: state.hookDurationMs ?? null,
+    toolDurationMs: state.toolTimingSamples === state.toolCalls ? state.toolDurationMs ?? 0 : null,
+    toolTimingSamples: state.toolTimingSamples ?? 0,
+    checkDurations: state.checkDurations ?? {},
   };
 }
 

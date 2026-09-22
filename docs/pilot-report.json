@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "status": "pending",
+  "results": [
+    {
+      "client": "copilot",
+      "task": "text",
+      "complete": true,
+      "comparable": false,
+      "quality": false,
+      "ceremony": false,
+      "duration": null,
+      "tokens": null,
+      "accepted": false,
+      "timeGoal": null,
+      "tokenGoal": null
+    },
+    {
+      "client": "copilot",
+      "task": "regression",
+      "complete": true,
+      "comparable": false,
+      "quality": false,
+      "ceremony": false,
+      "duration": null,
+      "tokens": null,
+      "accepted": false,
+      "timeGoal": null,
+      "tokenGoal": null
+    },
+    {
+      "client": "copilot",
+      "task": "web",
+      "complete": true,
+      "comparable": false,
+      "quality": false,
+      "ceremony": false,
+      "duration": null,
+      "tokens": null,
+      "accepted": false,
+      "timeGoal": null,
+      "tokenGoal": null
+    },
+    {
+      "client": "kiro",
+      "task": "text",
+      "complete": true,
+      "comparable": false,
+      "quality": false,
+      "ceremony": false,
+      "duration": null,
+      "tokens": null,
+      "accepted": false,
+      "timeGoal": null,
+      "tokenGoal": null
+    },
+    {
+      "client": "kiro",
+      "task": "regression",
+      "complete": true,
+      "comparable": false,
+      "quality": false,
+      "ceremony": false,
+      "duration": null,
+      "tokens": null,
+      "accepted": false,
+      "timeGoal": null,
+      "tokenGoal": null
+    },
+    {
+      "client": "kiro",
+      "task": "web",
+      "complete": true,
+      "comparable": false,
+      "quality": false,
+      "ceremony": false,
+      "duration": null,
+      "tokens": null,
+      "accepted": false,
+      "timeGoal": null,
+      "tokenGoal": null
+    }
+  ],
+  "problems": [
+    "copilot/text: incomplete, incomparable or missing quality evidence",
+    "copilot/regression: incomplete, incomparable or missing quality evidence",
+    "copilot/web: incomplete, incomparable or missing quality evidence",
+    "kiro/text: incomplete, incomparable or missing quality evidence",
+    "kiro/regression: incomplete, incomparable or missing quality evidence",
+    "kiro/web: incomplete, incomparable or missing quality evidence"
+  ],
+  "note": "Targets are experimental goals. Null is unavailable, never zero or an inferred bill."
+}

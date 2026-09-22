@@ -1,6 +1,6 @@
 ---
 name: dreaming
-description: Turn what closed sessions can be read to say into candidate decisions. Use when a session reaches done with consolidation material pending, or on /dream; never before the request.
+description: Turn what closed sessions can be read to say into candidate decisions. Use only on an explicit /dream request; ordinary session completion never collects or consolidates memory.
 version: 1.0.0
 sfa: "scope: the sessions closed since the last pass | format: candidate blocks in _dreams.md | audience: the human who promotes or discards them, and every session after that"
 stacks: []
@@ -16,12 +16,8 @@ the same place, makes the same detour, and hits the same wall. Consolidation is
 the step that stops that: reread what closed, find what repeats, and write it
 down where the next session will see it.
 
-It happens **between** sessions, not during one. The collector runs when a
-session stops and gathers the evidence; the next session start names what is
-waiting and leaves it alone, and the extraction runs when that session reaches
-`done`, or when a person asks with `/dream`. A quick fix never pays for it
-before its own request. Nothing here costs a session of its own, and nothing
-runs while nothing has closed.
+It runs only on an explicit `/dream` request. Collect closed-session evidence,
+then consolidate candidates. Ordinary session start and completion do no memory work.
 
 **Candidates, not memory.** Extraction writes to `_dreams.md`. Only a person
 moves an entry to `_decisions.md`, through `harness dream --promote=<id>`. A
@@ -123,7 +119,7 @@ Status: open
 
 Evidence: 041 (review escalated, implement ran twice), 043 (same pattern, same phase)
 
-Proposes: the tasker names the test file for each task, and implement is not complete until those files exist
+Proposes: the planner names the test file for each task, and implement is not complete until those files exist
 
 Rejected: raising the review threshold - the reviewer was right both times, so the bar is not the problem
 

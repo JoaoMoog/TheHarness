@@ -6,9 +6,11 @@ import { linksTo, inspect } from '../fs/link.mjs';
 import { hasManagedBlock, isGitRepo } from '../fs/gitexclude.mjs';
 import { auditSelf, diagnose } from '../lib/audit.mjs';
 import { generatedFiles } from '../lib/kiro-gen.mjs';
-import { unmappedEvents } from '../lib/targets.mjs';
+import { contextBudget } from '../lib/context-budget.mjs';
+import { unmappedEvents, getTarget } from '../lib/targets.mjs';
 import { readDreams, openOnes, isTemplate } from '../lib/dreams.mjs';
 import { loadAllowlist, entryProblems, ALLOW_FILE } from '../../core/hooks/scripts/lib/allowlist.mjs';
+import { resolveHooksDir } from './githook.mjs';
 import { createReport, log, c } from '../lib/log.mjs';
 
 const VENDOR_SAMPLE = 400;
@@ -39,6 +41,7 @@ function auditRepos(report) {
       continue;
     }
     installed += 1;
+    repo.settings = {...repo.settings, targets: entry.targets ?? repo.settings.targets};
 
     for (const [target, source] of Object.entries(entry.links ?? {})) {
       const full = path.join(repo.dir, target);
@@ -74,7 +77,21 @@ function auditRepos(report) {
     }
 
     checkGenerated(report, repo, entry);
+    if(entry.gitHookHash) {
+      try {
+        const actual=hashFile(path.join(resolveHooksDir(repo.dir).dir,'pre-commit'));
+        if(actual!==entry.gitHookHash) report.fail(repo.name+': managed pre-commit is missing or modified');
+        else report.pass(repo.name+': managed pre-commit matches its recorded hash');
+      } catch(error) { report.fail(repo.name+': cannot inspect pre-commit: '+error.message); }
+    }
     checkTargetGaps(report, repo);
+    for (const target of repo.settings.targets ?? ['copilot']) {
+      try {
+        const count=contextBudget(target,repo.dir).maxActiveEstimatedTokens;
+        if(count>2000) report.fail(repo.name+'/'+target+': permanent context '+count+' exceeds 2000');
+        else report.pass(repo.name+'/'+target+': permanent context '+count+' estimated tokens');
+      } catch(error) { report.fail(repo.name+'/'+target+': '+error.message); }
+    }
     checkDreams(report, repo);
     checkAllowlist(report, repo);
 
@@ -97,9 +114,11 @@ function auditRepos(report) {
  */
 function checkGenerated(report, repo, entry) {
   const recorded = Object.entries(entry.generated ?? {});
-  if (recorded.length === 0) return;
 
-  const expected = new Map(generatedFiles().map((file) => [file.path, sha256(file.content)]));
+
+  const expected = new Map(generatedFiles(repo.settings.targets ?? ['copilot']).map((file) => [file.path, sha256(file.content)]));
+  for (const target of expected.keys()) if (!recorded.some(([p]) => p === target)) report.fail(`${repo.name}/${target}: missing generated surface`);
+  for (const item of entry.conflicts ?? []) report.fail(`${repo.name}/${item.path}: unresolved installation conflict`);
   const stale = recorded.filter(([target, hash]) => {
     const onDisk = hashFile(path.join(repo.dir, target));
     return onDisk === null || onDisk !== hash || expected.get(target) !== hash;
@@ -174,12 +193,10 @@ function checkAllowlist(report, repo) {
  * them to a nearby event - fires a guardrail at the wrong moment.
  */
 function checkTargetGaps(report, repo) {
-  const missing = unmappedEvents(repo.settings.targets ?? ['copilot']);
-  if (missing.length === 0) return;
-  report.warn(
-    `${repo.name}: no target here fires ${missing.join(', ')}, so sub-agent telemetry, ` +
-      'handoff validation and compaction rescue do not run'
-  );
+  for(const id of repo.settings.targets ?? ['copilot']) {
+    const missing=getTarget(id).unmappedEvents;
+    if(missing.length) report.warn(repo.name+'/'+id+': unsupported events '+missing.join(', ')+'. No automatic subagent telemetry or compaction rescue on this client.');
+  }
 }
 
 export default function doctor(args) {

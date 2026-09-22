@@ -15,6 +15,7 @@
  * on /dream, never before the request that opened the chat.
  */
 import fs from 'node:fs';
+
 import path from 'node:path';
 import { contextFile, openSessions, clip, specsDir, layoutFor } from './lib/session.mjs';
 import { crossTkServer } from './lib/crosstk.mjs';
@@ -89,33 +90,7 @@ function decisionsSection(root, specs) {
   const entries = (fs.readFileSync(file, 'utf8').match(/^## (?!<)/gm) ?? []).length;
   return (
     '## Decisions\n\n`' + specs + '/_decisions.md` holds ' + entries + ' recorded decision' + (entries === 1 ? '' : 's') +
-    '. Read it before specify or plan on a feature, refactor or spike; a direct change or a patch does not need it.'
-  );
-}
-
-/**
- * Consolidation is named here and done later. The material is about sessions
- * that already closed, so nothing in it is urgent, and asking for the
- * extraction before the request made every quick fix pay for the previous
- * session's memory first. The file stays until `dream-collect --consume`
- * removes it, once the candidates are written: at this session's done, or on
- * /dream. Candidates, never memory: a wrong extraction written straight into
- * the decisions file is inherited by every later session.
- */
-function dreamNotice(file, specs) {
-  let sessions = 0;
-  try {
-    const pending = JSON.parse(fs.readFileSync(file, 'utf8'));
-    sessions = Array.isArray(pending.closed) ? pending.closed.length : 0;
-  } catch {
-    // Unreadable material is still pending; only the count is lost.
-  }
-  const count = sessions > 0 ? sessions + ' closed session' + (sessions === 1 ? '' : 's') : 'closed sessions';
-  return (
-    '## Consolidation pending (dreaming)\n\nMaterial from ' + count + ' is waiting in `.harness/dream-pending.json`. ' +
-    'Not now: consolidate it when this session reaches `done`, or on `/dream`, with the `dreaming` skill, ending with ' +
-    '`node .github/hooks/scripts/dream-collect.mjs --consume`. Nothing reaches `' + specs + '/_decisions.md` without ' +
-    '`harness dream --promote`.'
+    '. Read it during planning on a feature, refactor or spike; a direct change or a patch does not need it.'
   );
 }
 
@@ -129,8 +104,13 @@ try {
   root = process.cwd();
 }
 
+try {
+  const dir=path.join(root,'.harness');
+  fs.mkdirSync(dir,{recursive:true});
+  fs.appendFileSync(path.join(dir,'sessions.jsonl'),JSON.stringify({event:'session-start',at:new Date().toISOString(),session:input.session_id ?? null})+'\n');
+} catch {}
 const layout = layoutFor(root);
-const specs = specsDir(root).replace(root, '.');
+const specs = ('./' + path.relative(root,specsDir(root)).split(path.sep).join('/'));
 
 const parts = [];
 
@@ -156,12 +136,6 @@ parts.push(inventorySection(root, specs));
 
 const decisions = decisionsSection(root, specs);
 if (decisions) parts.push(decisions);
-
-// Material exists only when a session closed since the last pass, so on an
-// ordinary morning this section is simply absent. It is named, not consumed:
-// the file goes when the candidates are written.
-const pending = path.join(root, '.harness', 'dream-pending.json');
-if (fs.existsSync(pending)) parts.push(dreamNotice(pending, specs));
 
 // Every open session, not only the newest: two unrelated adjustments in two
 // chats are two sessions, and a start that names one and forbids the other

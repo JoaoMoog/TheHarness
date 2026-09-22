@@ -1,5 +1,5 @@
 ---
-applyTo: "**"
+applyTo: "**/*.{js,mjs,ts,tsx,jsx,py,cs,go,rs,java,cpp,c,h,vue}"
 description: Language-agnostic conventions for structure, naming and change size. Repository conventions win where they differ.
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: spec-writing
-description: Turn a request into individually testable EARS acceptance criteria, unwanted conditions included; on fix, the failing test is the spec. Use in the specify phase, before any planning or code.
+description: Turn a request into individually testable EARS acceptance criteria, unwanted conditions included; on fix, the failing test is the spec. Use during consolidated planning for structured work.
 version: 1.0.0
 sfa: "scope: one feature request | format: a spec.md with numbered EARS criteria | audience: the planner and whoever reviews the spec"
 stacks: []

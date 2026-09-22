@@ -51,7 +51,7 @@ Anti-patterns to refuse:
    boundary, one assertion, one breakpoint. Run it.
 7. If the hypothesis survives, narrow it. If it dies, write the next one.
 8. State the root cause in one sentence, then fix the cause.
-9. Run the full suite and report the real result.
+9. Run the affected tests; broaden to integration or the full suite when the changed behavior requires it and report the real result.
 
 ## Output
 
@@ -80,4 +80,4 @@ Suite after: 214 passing.
 - [ ] Each hypothesis was recorded and either confirmed or falsified.
 - [ ] The stated root cause explains every symptom observed.
 - [ ] The fix addresses the cause, not the symptom.
-- [ ] The full suite result is reported, failures included.
+- [ ] The applicable verification result is reported, failures included.

@@ -1,14 +1,14 @@
 {
-  "version": 2,
-  "rationale": "Agent cost grows faster than linearly because the whole history is resent each turn. A loop without a cap is a hard constraint violation, not a style preference. The session entry is a state machine rather than a loop, so its cap is on the whole run.",
+  "version": 3,
+  "rationale": "Estimated planning ceilings; token enforcement requires provider usage. Direct tasks have no session or subagents.",
   "defaults": {
     "onBudgetExceeded": "stop and escalate to a human with the partial result",
     "onNoProgress": "stop after two consecutive iterations with no measurable change"
   },
   "loops": {
     "verify": {
-      "maxIterations": 3,
-      "stopCriterion": "every applicable item in the governing checklist passes and the repository build, lint and tests pass once on the final tree",
+      "maxIterations": 2,
+      "stopCriterion": "All required checks for the changed behavior pass; structured work also runs applicable build, lint and integration checks.",
       "tokenBudget": 60000,
       "escalateWhen": "the same check fails twice in a row, or the suite is red for a reason outside the change",
       "iterationRequires": "a new failure, an open finding or an unchecked risk; a check that passed is not re-run until the tree changes, and a file that was read is not re-read until it is edited"
@@ -22,52 +22,43 @@
     "session": {
       "maxIterations": 1,
       "stopCriterion": "the review verdict is approve or approve-with-comments and the test stage reports a real pass; warn findings never hold a gate",
-      "tokenBudget": 220000,
+      "tokenBudget": 125000,
       "escalateWhen": "any phase returns blocked or escalated, the same phase returns blocked twice, or a finding is still open after the second review round",
-      "maxParallel": 3,
+      "maxParallel": 1,
       "maxReviewRounds": 2,
       "reviewRoundRationale": "request-changes sends the blocker and major findings back to implement, then a re-review scoped to those findings and the delta. A finding still open after two rounds is upstream of the fix, not a reason for a third.",
       "phases": {
-        "specify": {
-          "tokenBudget": 30000
-        },
         "plan": {
-          "tokenBudget": 50000
-        },
-        "tasks": {
-          "tokenBudget": 25000
+          "tokenBudget": 30000
         },
         "implement": {
           "tokenBudget": 60000
         },
         "review": {
           "tokenBudget": 35000
-        },
-        "deliver": {
-          "tokenBudget": 20000
         }
       },
       "tracks": {
         "patch": {
-          "tokenBudget": 115000
+          "tokenBudget": 95000
         },
         "fix": {
-          "tokenBudget": 145000
+          "tokenBudget": 125000
         },
         "refactor": {
-          "tokenBudget": 190000
+          "tokenBudget": 125000
         },
         "feature": {
-          "tokenBudget": 220000
+          "tokenBudget": 125000
         },
         "spike": {
-          "tokenBudget": 80000
+          "tokenBudget": 30000
         },
         "incident": {
-          "tokenBudget": 115000
+          "tokenBudget": 95000
         }
       },
-      "rationale": "A track budget is the sum of the phase budgets it runs, so the cap and the phases agree. Implement is 60k because it works one task at a time; a task that needs more is two tasks."
+      "rationale": "One planning execution produces all needed artifacts; one approval; implementation and independent review. Stop after local validation."
     }
   }
 }

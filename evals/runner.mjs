@@ -2,7 +2,7 @@
  * Behavioural evals without an API key.
  *
  * Everything here runs through GitHub Copilot on the machine, so there is no
- * key to call and nothing to bill. The split is:
+ * API key here; the client still consumes its own usage allowance. The split is:
  *
  *   --emit   prints the golden cases as a prompt to paste into a Copilot agent
  *   --check  reads that agent answers back and runs the assertions in Node

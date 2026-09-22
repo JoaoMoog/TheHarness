@@ -1,165 +1,79 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { harnessPath } from './paths.mjs';
-import { SESSION_TRACKS } from './contracts.mjs';
 import { loadLock } from './lock.mjs';
-
 export const SESSIONS_FILE = harnessPath('.harness', 'sessions.jsonl');
-
-/** Phase agents, in the order the machine runs them. */
-const PHASE_AGENT = {
-  specifier: 'specify',
-  planner: 'plan',
-  tasker: 'tasks',
-  implementer: 'implement',
-  reviewer: 'review',
-  security: 'review',
-  'azure-devops': 'deliver',
-};
-
-/** The hook writes into each target repository, so the reader has to look there. */
 export function telemetryFiles() {
-  const lock = loadLock();
-  const dirs = [harnessPath('.'), ...Object.values(lock.repos ?? {}).map((e) => e.dir)];
-  return [...new Set(dirs)]
-    .map((dir) => ({ repo: path.basename(dir), file: path.join(dir, '.harness', 'sessions.jsonl') }))
-    .filter((f) => fs.existsSync(f.file));
+  return [...new Set([harnessPath('.'), ...Object.values(loadLock().repos ?? {}).map(e => e.dir)])]
+    .map(dir => ({ repo: path.basename(dir), file: path.join(dir, '.harness/sessions.jsonl') })).filter(e => fs.existsSync(e.file));
 }
-
 export function loadRecords(file = null) {
-  const sources = file ? [{ repo: path.basename(path.dirname(path.dirname(file))), file }] : telemetryFiles();
-  return sources.flatMap((s) => readRecords(s.file).map((r) => ({ ...r, repo: s.repo })));
-}
-
-function readRecords(file) {
-  if (!fs.existsSync(file)) return [];
-  return fs
-    .readFileSync(file, 'utf8')
-    .split(/\r?\n/)
-    .filter(Boolean)
-    .map((line) => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        return null;
-      }
-    })
-    .filter((r) => r && (r.agent || r.event === 'usage'));
-}
-
-/** What the hooks count per session: the drivers of a token bill the runtime does not report. */
-export const USAGE_KEYS = ['prompts', 'toolCalls', 'crossTk', 'rewrites', 'subagents', 'toolOutputBytes'];
-
-export const emptyUsage = () => Object.fromEntries([...USAGE_KEYS.map((k) => [k, 0]), ['lines', 0]]);
-
-/** Sums a usage line into a session's totals; Stop may fire once per turn, so a session can have several. */
-export function addUsage(total, record) {
-  for (const key of USAGE_KEYS) total[key] += Number(record[key] ?? 0) || 0;
-  total.lines += 1;
-  return total;
-}
-
-/**
- * Groups agent completions into sessions and infers how far each one got.
- *
- * Inference, not record: the telemetry hook sees agents starting and stopping,
- * not phases being approved. A session that invoked azure-devops delivered; one
- * that reached reviewer and stopped was judged and not shipped; one that never
- * reached reviewer was abandoned before anything verified it. Those three are
- * what the data actually supports, and nothing here should claim more.
- */
-export function groupSessions(records) {
-  const sessions = new Map();
-  for (const record of records) {
-    // A run with no session id cannot be attributed; fusing it into one bucket
-    // would fabricate a session that spans days. It is counted, not grouped.
-    if (!record.session) continue;
-    const id = `${record.repo ?? ''}:${record.session}`;
-    if (!sessions.has(id)) sessions.set(id, { id, agents: [], usage: emptyUsage(), first: record.at, last: record.at });
-    const session = sessions.get(id);
-    // A usage line is the session's counters, not an agent that ran.
-    if (record.event === 'usage') addUsage(session.usage, record);
-    else session.agents.push(record);
-    if (record.at < session.first) session.first = record.at;
-    if (record.at > session.last) session.last = record.at;
-  }
-
-  return [...sessions.values()].map((session) => {
-    const names = new Set(session.agents.map((a) => a.agent));
-    const phases = [...names].map((n) => PHASE_AGENT[n]).filter(Boolean);
-    const phaseAgents = [...names].filter((n) => PHASE_AGENT[n]);
-    const onlyJudges = phaseAgents.length > 0 && phaseAgents.every((n) => n === 'reviewer' || n === 'security');
-    const onlyDelivery = phaseAgents.length === 1 && phaseAgents[0] === 'azure-devops';
-    // No sub-agent at all is the direct lane: the chat did the work itself.
-    const direct = session.agents.length === 0;
-    const outcome = direct
-      ? 'direct'
-      : onlyJudges
-        ? 'standalone review'
-        : onlyDelivery
-          ? 'standalone delivery'
-          : names.has('azure-devops')
-            ? 'delivered'
-            : names.has('reviewer') || names.has('security')
-              ? 'reviewed, not delivered'
-              : 'stopped before review';
-
-    return {
-      ...session,
-      names: [...names],
-      phases: [...new Set(phases)],
-      outcome,
-      durationMs: session.agents.reduce((sum, a) => sum + (a.durationMs ?? 0), 0),
-      tokens: session.agents.reduce((sum, a) => sum + (a.tokens ?? 0), 0),
-      track: direct ? 'direct' : guessTrack([...new Set(phases)]),
-    };
+  return (file ? [{repo: path.basename(path.dirname(path.dirname(file))), file}] : telemetryFiles()).flatMap(s => {
+    if (!fs.existsSync(s.file)) return [];
+    return fs.readFileSync(s.file, 'utf8').split(/\r?\n/).flatMap(line => {
+      try { const r = JSON.parse(line); return r && (r.event || r.agent) ? [{...r, repo:s.repo}] : []; } catch { return []; }
+    });
   });
 }
-
-/** The usage counters summed over a set of sessions. */
+export const USAGE_KEYS = ['prompts','toolCalls','crossTk','rewrites','subagents','toolOutputBytes'];
+export const emptyUsage = () => Object.fromEntries([...USAGE_KEYS.map(k => [k,0]), ['lines',0]]);
+export function addUsage(total, r) { for (const k of USAGE_KEYS) total[k] += Number(r[k] ?? 0) || 0; total.lines++; return total; }
+const sumAvailable = values => values.length && values.every(v => Number.isFinite(v)) ? values.reduce((a,b) => a+b,0) : null;
+// Outcomes must be explicit. A tool or reviewer invocation never proves success.
+export function groupSessions(records) {
+  const grouped = new Map();
+  for (const r of records) {
+    if (!r.session) continue;
+    const id = (r.repo ?? '') + ':' + r.session;
+    if (!grouped.has(id)) grouped.set(id, []);
+    grouped.get(id).push(r);
+  }
+  return [...grouped].map(([id, rows]) => {
+    rows.sort((a,b) => String(a.at).localeCompare(String(b.at)));
+    const agents = rows.filter(r => r.agent), usage = emptyUsage();
+    const usageRows = rows.filter(r => r.event === 'usage');
+    usageRows.forEach(r => addUsage(usage,r));
+    const outcome = rows.filter(r => r.event === 'outcome').at(-1);
+    const started = rows.find(r => r.event === 'session-start');
+    const end = outcome?.at;
+    const provider = rows.filter(r => r.event === 'provider-usage').at(-1);
+    const names = [...new Set(agents.map(a => a.agent))];
+    return {id, agents, usage, names, first: rows[0].at, last: rows.at(-1).at,
+      outcome: outcome?.status ?? 'unknown', evidence: outcome?.evidence ?? [], reason: outcome?.reason ?? null,
+      track: outcome?.track ?? 'unknown',
+      phases: [...new Set(names.map(n => ({planner:'plan',implementer:'implement',reviewer:'review',security:'review'})[n]).filter(Boolean))],
+      durationMs: started && end ? Math.max(0, Date.parse(end)-Date.parse(started.at)) : null,
+      agentDurationMs: sumAvailable(agents.map(a => a.durationMs)),
+      approvalWaitMs: sumAvailable(rows.filter(r => r.event === 'approval-wait').map(r => r.durationMs)),
+      hookDurationMs: sumAvailable(usageRows.map(r => r.hookDurationMs)),
+      toolDurationMs: sumAvailable(usageRows.map(r => r.toolDurationMs)),
+      tokens: Number.isFinite(provider?.tokens) ? provider.tokens : null,
+      tokenMeasurement: Number.isFinite(provider?.tokens) ? 'measured-provider' : 'unavailable',
+      estimatedTokens: null};
+  });
+}
 export function usageTotals(sessions) {
   const total = emptyUsage();
-  for (const session of sessions) for (const key of USAGE_KEYS) total[key] += session.usage?.[key] ?? 0;
-  total.lines = sessions.filter((s) => (s.usage?.lines ?? 0) > 0).length;
+  for (const s of sessions) for (const k of USAGE_KEYS) total[k] += s.usage?.[k] ?? 0;
+  total.lines = sessions.filter(s => s.usage?.lines > 0).length;
   return total;
 }
-
-export const formatKb = (bytes) => (bytes >= 1024 ? `${Math.round(bytes / 1024)} KB` : `${bytes} B`);
-
-/** The narrowest track whose phases contain everything this session ran. */
-function guessTrack(phases) {
-  if (phases.length === 0) return null;
-  const candidates = Object.entries(SESSION_TRACKS)
-    .filter(([, t]) => phases.every((p) => t.phases.includes(p)))
-    .sort((a, b) => a[1].phases.length - b[1].phases.length);
-  return candidates[0]?.[0] ?? null;
-}
-
 export function byAgent(records) {
-  const agents = new Map();
-  for (const record of records) {
-    if (!record.agent) continue; // a usage line, not a run
-    if (!agents.has(record.agent)) agents.set(record.agent, { agent: record.agent, runs: 0, durations: [], tokens: 0 });
-    const entry = agents.get(record.agent);
-    entry.runs += 1;
-    if (record.durationMs !== null && record.durationMs !== undefined) entry.durations.push(record.durationMs);
-    entry.tokens += record.tokens ?? 0;
+  const groups = new Map();
+  for (const r of records.filter(r => r.agent)) {
+    if (!groups.has(r.agent)) groups.set(r.agent, []);
+    groups.get(r.agent).push(r);
   }
-  return [...agents.values()].map((a) => ({
-    ...a,
-    medianMs: median(a.durations),
-    totalMs: a.durations.reduce((s, d) => s + d, 0),
-  }));
+  return [...groups].map(([agent, rows]) => ({agent, runs:rows.length,
+    durations:rows.map(r => r.durationMs).filter(Number.isFinite),
+    medianMs:median(rows.map(r => r.durationMs).filter(Number.isFinite)),
+    totalMs:sumAvailable(rows.map(r => r.durationMs)), tokens:sumAvailable(rows.map(r => r.tokens))}));
 }
-
 export function median(values) {
-  if (values.length === 0) return null;
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
+  if (!values.length) return null;
+  const sorted=[...values].sort((a,b)=>a-b), mid=Math.floor(sorted.length/2);
+  return sorted.length%2 ? sorted[mid] : (sorted[mid-1]+sorted[mid])/2;
 }
-
-export const formatMs = (ms) =>
-  ms === null || ms === undefined ? '-' : ms < 1000 ? `${ms}ms` : ms < 60000 ? `${(ms / 1000).toFixed(1)}s` : `${(ms / 60000).toFixed(1)}m`;
-
-export const unattributed = (records) => records.filter((r) => r.agent && !r.session).length;
+export const formatMs = ms => ms == null ? 'unavailable' : ms < 1000 ? ms+'ms' : (ms/1000).toFixed(1)+'s';
+export const formatKb = bytes => bytes >= 1024 ? Math.round(bytes/1024)+' KB' : bytes+' B';
+export const unattributed = records => records.filter(r => r.agent && !r.session).length;

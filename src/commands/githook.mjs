@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { HARNESS_ROOT } from '../lib/paths.mjs';
+import { hashFile } from '../lib/lock.mjs';
 import { log } from '../lib/log.mjs';
 
 const MARKER = '# the-harness managed pre-commit hook';
@@ -32,8 +32,8 @@ export function resolveHooksDir(repoDir) {
   return { dir: path.resolve(repoDir, common, 'hooks'), managedByGit: true };
 }
 
-function hookBody() {
-  const scripts = posix(path.join(HARNESS_ROOT, 'core', 'hooks', 'scripts'));
+function hookBody(repoDir) {
+  const scripts = fs.existsSync(path.join(repoDir,'.github/hooks/scripts')) ? '.github/hooks/scripts' : '.kiro/harness/hooks/scripts';
   return [
     '#!/bin/sh',
     MARKER,
@@ -50,9 +50,6 @@ function hookBody() {
     '# tell you about the ones a guardrail refused.',
     'node "$HARNESS_SCRIPTS/audit-log.mjs" || true',
     '',
-    '# Normalise before scanning, so what is scanned is what gets committed.',
-    'node "$HARNESS_SCRIPTS/format.mjs" || true',
-    '',
     '# The credential scan is advisory: it warns and records in .harness/secrets.log,',
     '# and the commit goes ahead. Only a scanner that failed to start is worth a line.',
     'node "$HARNESS_SCRIPTS/secret-block.mjs" || echo "harness: secret-block did not run; check the commit for credentials yourself" >&2',
@@ -63,13 +60,13 @@ function hookBody() {
   ].join('\n');
 }
 
-export function installGitHook(repoDir) {
+export function installGitHook(repoDir, knownHash = null) {
   let target;
   try {
     target = resolveHooksDir(repoDir);
   } catch (err) {
     log.warn(`${path.basename(repoDir)}: cannot resolve the hooks directory (${err.message.split('\n')[0]})`);
-    return 'unresolved';
+    return {status:'unresolved'};
   }
 
   if (!target.managedByGit) {
@@ -77,35 +74,35 @@ export function installGitHook(repoDir) {
       `${path.basename(repoDir)}: core.hooksPath points at ${posix(target.dir)}; ` +
         'a hook manager owns this repository, so the guardrails were not installed. Add them to that manager.'
     );
-    return 'delegated';
+    return {status:'delegated'};
   }
 
   const file = path.join(target.dir, 'pre-commit');
-  if (fs.existsSync(file) && !fs.readFileSync(file, 'utf8').includes(MARKER)) {
+  if (fs.existsSync(file) && (fs.lstatSync(file).isSymbolicLink() || !knownHash || hashFile(file)!==knownHash)) {
     log.warn(`${path.basename(repoDir)}: a pre-commit hook already exists and is not ours, left untouched`);
-    return 'foreign';
+    return {status:'foreign'};
   }
 
   fs.mkdirSync(target.dir, { recursive: true });
-  fs.writeFileSync(file, hookBody(), 'utf8');
+  fs.writeFileSync(file, hookBody(repoDir), 'utf8');
   try {
     fs.chmodSync(file, 0o755);
   } catch {
     // chmod is a no-op on some Windows filesystems; the hook still runs.
   }
-  return 'installed';
+  return {status:'installed',hash:hashFile(file)};
 }
 
-export function removeGitHook(repoDir) {
+export function removeGitHook(repoDir, knownHash = null) {
   let target;
   try {
     target = resolveHooksDir(repoDir);
   } catch {
-    return 'unresolved';
+    return {status:'unresolved'};
   }
   const file = path.join(target.dir, 'pre-commit');
-  if (!fs.existsSync(file)) return 'absent';
-  if (!fs.readFileSync(file, 'utf8').includes(MARKER)) return 'foreign';
+  if (!fs.existsSync(file)) return {status:'absent'};
+  if (!target.managedByGit || !knownHash || fs.lstatSync(file).isSymbolicLink() || hashFile(file) !== knownHash) return {status:'foreign'};
   fs.rmSync(file);
-  return 'removed';
+  return {status:'removed'};
 }

@@ -2,7 +2,7 @@
 name: spec-quality
 description: How a specification is scored before planning is allowed to start.
 version: 1.0.0
-appliesTo: specify
+appliesTo: plan
 threshold: 3
 ---
 

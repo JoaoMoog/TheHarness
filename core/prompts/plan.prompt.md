@@ -5,7 +5,7 @@ version: 2.0.0
 ---
 
 Produce an implementation plan for the specification below using the
-`plan-writing` skill and `templates/plan.md`. Write no code.
+`plan-writing` skill and `.github/templates/plan.md`. Write no code.
 
 Search the repository for existing functions, modules and utilities before
 proposing anything new, and record what you found. Finding nothing is a result

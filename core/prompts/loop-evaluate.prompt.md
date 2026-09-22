@@ -4,7 +4,7 @@ mode: agent
 description: Run the bounded generator and evaluator loop against a rubric declared up front, capped at four iterations.
 ---
 
-Run the evaluate loop defined in `loops/evaluate.md` for the work described
+Run the evaluate loop defined in `.github/loops/evaluate.md` for the work described
 below.
 
 First, before generating anything:

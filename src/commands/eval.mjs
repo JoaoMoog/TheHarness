@@ -3,6 +3,7 @@ import path from 'node:path';
 import { harnessPath } from '../lib/paths.mjs';
 import { auditSelf } from '../lib/audit.mjs';
 import { parseFrontmatter } from '../lib/frontmatter.mjs';
+import { checkTrace } from '../../evals/trace.mjs';
 import { createReport, log, c } from '../lib/log.mjs';
 
 const MIN_DESCRIPTION = 30;
@@ -115,6 +116,10 @@ async function evalBehavioural(report, args) {
 }
 
 export default async function evaluate(args) {
+  if(args.trace) {
+    const result=checkTrace(JSON.parse(fs.readFileSync(args.trace,'utf8')));
+    console.log(JSON.stringify(result,null,2)); return result.ok?0:1;
+  }
   const report = createReport('Harness evals (tier A: structural)');
   auditSelf(report);
   evalDescriptions(report);

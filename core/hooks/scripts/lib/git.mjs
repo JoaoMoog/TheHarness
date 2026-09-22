@@ -6,6 +6,8 @@
  *     edited out and refuse a clean hunk because of an unstaged one.
  *  2. Never fail open. If git cannot answer, the caller must refuse, not pass.
  */
+import fs from 'node:fs';
+import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 const QUIET = ['-c', 'core.quotePath=false'];
@@ -55,8 +57,13 @@ export function repoRootOrNull(cwd = process.cwd()) {
  * all. Outside a repository the cwd stands in for the root.
  */
 export function hookContext(cwd = process.cwd()) {
-  const root = repoRootOrNull(cwd);
-  return { root: root ?? cwd, inRepo: root !== null };
+  let dir=path.resolve(cwd);
+  while(true) {
+    // Worktrees use a .git file; normal repositories use a directory.
+    if(fs.existsSync(path.join(dir,'.git'))) return {root:dir,inRepo:true};
+    const parent=path.dirname(dir); if(parent===dir) break; dir=parent;
+  }
+  return {root:cwd,inRepo:false};
 }
 
 /** NUL-separated so filenames with spaces, quotes or non-ASCII survive intact. */

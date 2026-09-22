@@ -50,18 +50,6 @@
       "trust": "acts as the named AWS profile; whatever that role can do, an agent can do",
       "scope": "use a read-only role for review work; a role that can apply infrastructure needs the Q4 quadrant and a human at the keyboard",
       "version": "pin an exact version before enabling"
-    },
-    "azure-devops": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@azure-devops/mcp",
-        "${env:AZURE_DEVOPS_ORG}"
-      ],
-      "owner": "TODO: the team that answers for this server",
-      "trust": "reads work items, repositories, pull requests, pipelines and wiki for every project the signed-in identity can see",
-      "scope": "reading only. Writes go through core/tools/ado/*.mjs, which build the command, support --dry-run and redact secrets. Enabling a write path here would move those actions back into the model territory",
-      "version": "pin an exact version before enabling"
     }
   }
 }

@@ -14,7 +14,7 @@ import { hookContext } from './lib/git.mjs';
 import { bumpUsage } from './lib/usage.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const BUDGETS = path.resolve(HERE, '..', '..', '..', 'loops', 'budgets.json');
+const BUDGETS = [path.resolve(HERE,'../../runtime/budgets.json'),path.resolve(HERE,'../../../loops/budgets.json')].find(fs.existsSync);
 
 const TRIGGERS = /\b(loop|iterate|keep going|until it passes|repeat until|autonomous|orchestrat|\/feature|\/resume)\b/i;
 

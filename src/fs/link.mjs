@@ -45,6 +45,7 @@ export function createLink(sourceDir, linkPath, { force = false } = {}) {
   const info = inspect(linkPath);
   if (info.state === 'link' || info.state === 'broken-link') {
     if (linksTo(linkPath, sourceDir)) return { status: 'already-correct' };
+    if (!force) return { status: 'refused', reason: 'foreign link left untouched' };
     removeLink(linkPath);
   } else if (info.state !== 'absent') {
     if (!force) {

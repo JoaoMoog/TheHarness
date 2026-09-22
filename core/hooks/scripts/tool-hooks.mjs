@@ -27,25 +27,23 @@ import { bumpUsage, responseBytes } from './lib/usage.mjs';
 import * as readGuard from './read-guard.mjs';
 import * as secretBlock from './secret-block.mjs';
 import * as policyGate from './policy-gate.mjs';
+import * as localOnly from './local-only.mjs';
 import * as destructiveGit from './destructive-git.mjs';
-import * as adoGate from './ado-gate.mjs';
 import * as crosstkNudge from './crosstk-nudge.mjs';
 import * as crosstkRun from './crosstk-run.mjs';
-import * as format from './format.mjs';
 import * as burnDetect from './burn-detect.mjs';
 
 const CHECKS = {
   PreToolUse: [
+    ['local-only', localOnly],
     ['read-guard', readGuard],
     ['secret-block', secretBlock],
     ['policy-gate', policyGate],
     ['destructive-git', destructiveGit],
-    ['ado-gate', adoGate],
     ['crosstk-nudge', crosstkNudge],
     ['crosstk-run', crosstkRun],
   ],
   PostToolUse: [
-    ['format', format],
     ['burn-detect', burnDetect],
   ],
 };
@@ -58,7 +56,10 @@ if (!CHECKS[event]) process.exit(EXIT_OK);
 
 const ctx = hookContext();
 const results = [];
+const checkDurations = {};
+const startedAt = performance.now();
 for (const [name, check] of CHECKS[event]) {
+  const start = performance.now();
   try {
     results.push((check.decide ?? check.observe)(input, ctx));
   } catch (err) {
@@ -68,7 +69,7 @@ for (const [name, check] of CHECKS[event]) {
         ? verdict.deny(`harness ${name}: cannot verify - ${why}. A guardrail that cannot run must not approve.`)
         : verdict.allow(`harness ${name}: the check failed (${why}); the call was allowed unchecked.`)
     );
-  }
+  } finally { checkDurations[name] = performance.now() - start; }
 }
 
 const combined = combine(results);
@@ -77,12 +78,13 @@ try {
   if (event === 'PreToolUse') {
     bumpUsage(ctx.root, input.session_id, {
       toolCalls: 1,
+      hookDurationMs: performance.now() - startedAt, checkDurations,
       tool: input.tool_name,
       crossTk: isCrossTkTool(input.tool_name) ? 1 : 0,
       rewrites: combined.updatedInput ? 1 : 0,
     });
   } else {
-    bumpUsage(ctx.root, input.session_id, { toolOutputBytes: responseBytes(input) });
+    bumpUsage(ctx.root, input.session_id, { toolOutputBytes: responseBytes(input), hookDurationMs: performance.now() - startedAt, checkDurations, toolDurationMs: input.duration_ms ?? input.tool_duration_ms });
   }
 } catch {
   // A counter that cannot be written must not touch the verdict.

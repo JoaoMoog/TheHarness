@@ -5,7 +5,7 @@
 
 /** Section 1 is the frontmatter itself; these are the four required headings. */
 export const SKILL_SECTIONS = ['Rules', 'Workflow', 'Output', 'Validation'];
-export const SKILL_FRONTMATTER = ['name', 'description', 'version', 'sfa'];
+export const SKILL_FRONTMATTER = ['name', 'description'];
 
 export const AGENT_SECTIONS = ['Identity', 'Tools', 'Scope', 'Contracts', 'Skills', 'Escalation'];
 /**
@@ -32,7 +32,7 @@ export const BUDGETS = {
    * hot in every sense except the name. Measuring only copilot-instructions.md
    * understated the real per-turn cost by roughly seven times.
    */
-  effectiveHotTokens: 4500,
+  effectiveHotTokens: 2000,
   skillBodyTokens: 2000,
   instructionTokens: 1200,
   agentTokens: 1400,
@@ -68,33 +68,33 @@ export const LOOP_REQUIRED_KEYS = ['maxIterations', 'stopCriterion', 'tokenBudge
  */
 export const SESSION_TRACKS = {
   patch: {
-    phases: ['implement', 'review', 'deliver'],
+    phases: ['implement', 'review'],
     when: 'no behaviour changes: text, a version bump, formatting, dead code',
     promoteTo: 'fix',
   },
   fix: {
-    phases: ['specify', 'implement', 'review', 'deliver'],
-    when: 'a reported defect; specify produces the failing test that reproduces it',
+    phases: ['plan', 'implement', 'review'],
+    when: 'a reported defect; planning defines the failing regression test',
     promoteTo: 'feature',
   },
   refactor: {
-    phases: ['plan', 'tasks', 'implement', 'review', 'deliver'],
-    when: 'structure changes and behaviour does not, so there is nothing to specify',
+    phases: ['plan', 'implement', 'review'],
+    when: 'structure changes and behaviour does not, so planning preserves existing behavior',
     promoteTo: 'feature',
   },
   feature: {
-    phases: ['specify', 'plan', 'tasks', 'implement', 'review', 'deliver'],
+    phases: ['plan', 'implement', 'review'],
     when: 'behaviour the system does not have yet',
     promoteTo: null,
   },
   incident: {
-    phases: ['implement', 'review', 'deliver'],
+    phases: ['implement', 'review'],
     when: 'production is broken; you stanch the bleeding before you understand it',
     promoteTo: 'fix',
     requiresArtifact: 'runbook',
   },
   spike: {
-    phases: ['specify', 'plan'],
+    phases: ['plan'],
     when: 'a question rather than a change; ends in an answer, never in a pull request',
     promoteTo: 'feature',
   },
@@ -109,13 +109,13 @@ export const RUBRIC_SECTIONS = ['Criteria', 'Levels', 'Threshold'];
 export const RUBRIC_FRONTMATTER = ['name', 'description', 'version', 'appliesTo', 'threshold'];
 
 /** A phase that produces a judgement must have a rubric to judge against. */
-export const RUBRIC_REQUIRED_PHASES = ['specify', 'review', 'deliver'];
+export const RUBRIC_REQUIRED_PHASES = ['plan', 'review'];
 
 /** The one phase no track may omit: nothing ships unreviewed. */
 export const MANDATORY_PHASE = 'review';
 
 /** The ordered phases of a session. An agent may not skip forward. */
-export const SESSION_PHASES = ['specify', 'plan', 'tasks', 'implement', 'review', 'deliver', 'done'];
+export const SESSION_PHASES = ['plan', 'implement', 'review', 'done'];
 
 /** Fields every phase agent must return so the orchestrator can advance. */
 export const HANDOFF_FIELDS = ['stage', 'status', 'summary'];

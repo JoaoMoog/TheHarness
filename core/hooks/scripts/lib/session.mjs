@@ -6,9 +6,9 @@
  *
  *   <specs>/_context.md          precomputed repository inventory, one per repo
  *   <specs>/NNN-slug/session.md  the state machine and the per-phase summaries
- *   <specs>/NNN-slug/<spec>      produced by the specifier
+ *   <specs>/NNN-slug/<spec>      produced by the planner
  *   <specs>/NNN-slug/<plan>      produced by the planner
- *   <specs>/NNN-slug/tasks.md    produced by the tasker
+ *   <specs>/NNN-slug/tasks.md    produced by the planner
  *
  * The names in angle brackets depend on the layout, which is resolved from the
  * repository itself rather than passed in - a hook is handed a directory and
@@ -17,7 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const PHASES = ['specify', 'plan', 'tasks', 'implement', 'review', 'deliver', 'done'];
+export const PHASES = ['plan', 'implement', 'review', 'done'];
 
 /**
  * Two layouts for the same four artifacts. Kiro's spec panel reads
@@ -111,7 +111,8 @@ const PHASE_LINE = /^phase:\s*([a-z]+)\s*$/im;
 export function currentPhase(text) {
   const match = PHASE_LINE.exec(text);
   const phase = match?.[1]?.toLowerCase();
-  return PHASES.includes(phase) ? phase : 'specify';
+  if (phase === 'deliver') return 'review'; // Legacy sessions must be verified, not silently completed.
+  return PHASES.includes(phase) ? phase : 'plan';
 }
 
 export function readSession(root) {

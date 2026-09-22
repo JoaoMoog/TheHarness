@@ -1,75 +1,37 @@
 # Session <NNN>-<slug>
 
 id: <NNN>
-feature: <one line, what the user asked for>
+feature: <requested outcome>
 track: <patch | incident | fix | refactor | feature | spike>
-promoted from: <none, or the track this session started on and why>
-track reason: <one line, and what the omitted phases would have added>
-base branch: <Production by default, or the branch the person chose; the pull request targets it>
-work branch: <type/slug created from the base, or the current branch when the person chose to stay on it>
-phase: <first phase of the track>
+track reason: <scope and risk>
+work branch: <current branch>
+phase: plan
 started: <YYYY-MM-DD>
-
-The orchestrator reads this file and nothing else between phases. Everything a
-later phase needs must be written here, in the summary of the phase that
-produced it. Detail lives in the phase artifact; this file holds the state and
-the summaries.
+plan approval: <pending | existing authorization with reference | approved>
 
 ## Phases
 
-| phase | status | approved by | artifact | summary |
-|---|---|---|---|---|
-| specify | pending | | spec.md | |
-| plan | blocked | | plan.md | |
-| tasks | blocked | | tasks.md | |
-| implement | blocked | | code + tests | |
-| review | blocked | | verdict | |
-| deliver | blocked | | pull request | |
-
-## Scores
-
-One line per judged phase: the rubric and its version, the score per
-criterion, and the lowest one. Filled by the reviewer, never by the phase that
-produced the work.
-
-| phase | rubric | scores | lowest |
+| phase | status | artifact | summary |
 |---|---|---|---|
+| plan | pending | requirements/design/tasks as needed | |
+| implement | pending | code and checks | |
+| review | pending | verdict and evidence | |
 
-A phase that is not in this track is marked skipped, with the track as the
-reason. Status is one of: pending, running, complete, blocked, escalated,
-skipped.
-A phase moves out of blocked only when the phase before it is complete and a
-human has approved it. Approval is recorded here by name, not assumed.
+Only the consolidated plan has an approval gate. Preserve legacy history.
 
 ## Decisions
 
-Choices made during this session that a later phase must not silently reverse.
-One line each, with the reason.
-
 ## Open questions
-
-Anything ambiguous enough that two readings produce different systems. The
-session does not advance past specify with an unanswered question here.
 
 ## Warnings
 
-Problems that already existed in files this session touched, out of its scope.
-One line each: `file:line - problem - suggested improvement`. They never hold a
-gate, are never sent back to implement, and go into the pull request body under
-out of scope. A later phase that meets one of these again reads it here instead
-of raising it again.
+Pre-existing issues with location/evidence; outside this change.
 
-## Budget
+## Verification
 
-| phase | agent | model | tokens | duration |
-|---|---|---|---|---|
-
-Not filled by hand: `harness budget --sessions` reads what the telemetry hook
-recorded. If a phase costs several times its neighbours, that is the phase to
-look at first.
+Actual tools/verify/run.mjs JSON record paths and required checks, including
+blocked/not-run checks. Outcome must be explicit, never inferred from phases.
 
 ## Summaries
 
-Appended by each phase as it completes. At most 200 words each: this is the
-context the orchestrator carries forward, so it is the one place where being
-terse actually pays for itself.
+At most 120 words per phase. Detail stays in artifacts.

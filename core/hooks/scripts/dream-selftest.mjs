@@ -150,23 +150,10 @@ const runContext = () =>
   });
 
 const injected = runContext();
-check(
-  'session start injects the consolidation section',
-  /Consolidation pending/.test(injected.stdout),
-  injected.stdout.slice(0, 160)
-);
-check('and names the skill that governs it', /dreaming/.test(injected.stdout));
-check('and states the spec layout', /Spec layout/.test(injected.stdout));
-check(
-  'but asks for it at done or on /dream, never before the request',
-  /reaches `done`/.test(injected.stdout) && /\/dream/.test(injected.stdout) && !/Before anything else/.test(injected.stdout),
-  injected.stdout.slice(0, 200)
-);
-check('and injects the notice, not the material', !/"closed"/.test(injected.stdout) && /4 closed sessions/.test(injected.stdout));
-check('the material stays until it is consumed', fs.existsSync(pendingPath));
-
-const again = runContext();
-check('a second start still names the pending material', /Consolidation pending/.test(again.stdout));
+check('ordinary start does not inject consolidation work', !/Consolidation pending|consolidate it when|4 closed sessions/.test(injected.stdout));
+check('ordinary start still states the spec layout', /Spec layout/.test(injected.stdout));
+check('pending material stays until explicitly consumed', fs.existsSync(pendingPath));
+check('repeated starts do not schedule memory work', !/Consolidation pending/.test(runContext().stdout));
 
 const consume = () => spawnSync(process.execPath, [collector, '--consume'], { cwd: root, encoding: 'utf8' });
 const consumed = consume();
@@ -196,7 +183,7 @@ const dreams = [
   '',
   'Evidence: 041 (escalated at review), 043 (same shape)',
   '',
-  'Proposes: the tasker names the test file for each task',
+  'Proposes: the planner names the test file for each task',
   '',
   'Rejected: raising the review threshold, because the reviewer was right both times',
   '',
@@ -216,7 +203,7 @@ const parsed = parseDreams(dreams);
 check('both candidates are parsed', parsed.length === 2, JSON.stringify(parsed.map((c) => c.id)));
 check('the well-evidenced one cites two sessions', parsed[0].sessions.length === 2, JSON.stringify(parsed[0].sessions));
 check('the thin one cites one', parsed[1].sessions.length === 1, JSON.stringify(parsed[1].sessions));
-check('fields are read off the block', parsed[0].fields.proposes?.startsWith('the tasker'), parsed[0].fields.proposes);
+check('fields are read off the block', parsed[0].fields.proposes?.startsWith('the planner'), parsed[0].fields.proposes);
 
 const promoted = setStatus(dreams, 'D-001', 'promoted 2026-09-05');
 check(

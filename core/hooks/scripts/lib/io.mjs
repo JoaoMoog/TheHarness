@@ -111,11 +111,19 @@ export async function readHookInput() {
     process.stdin.on("error", () => done(null));
   });
 
-  if (!raw || !raw.trim()) return null;
+  if (!raw || !raw.trim()) {
+    if(hookMode()==='kiro' && process.argv.includes('--hook-event=PreToolUse')) throw new Error('Cannot verify tool: missing hook payload');
+    return null;
+  }
   try {
     const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" && parsed.hook_event_name ? parsed : null;
-  } catch {
+    if (!parsed || typeof parsed !== 'object') return null;
+    const declared=process.argv.find(a=>a.startsWith('--hook-event='))?.slice(13);
+    const event=parsed.hook_event_name ?? declared;
+    const names={PromptSubmit:'UserPromptSubmit',AgentStop:'Stop'};
+    return event ? {...parsed,hook_event_name:names[event] ?? event} : null;
+  } catch (error) {
+    if(hookMode()==='kiro' && process.argv.includes('--hook-event=PreToolUse')) throw new Error('Cannot verify tool: malformed hook payload');
     return null;
   }
 }
@@ -150,6 +158,7 @@ export function deny(eventName, reason, systemMessage = undefined) {
   };
   if (systemMessage) out.systemMessage = systemMessage;
   emit(out);
+  if (hookMode() === 'kiro') { console.error(reason); return EXIT_BLOCK; }
   return EXIT_OK;
 }
 
@@ -163,6 +172,7 @@ export function ask(eventName, reason, systemMessage = undefined) {
   };
   if (systemMessage) out.systemMessage = systemMessage;
   emit(out);
+  if (hookMode() === 'kiro') { console.error('Confirmation required: '+reason); return EXIT_BLOCK; }
   return EXIT_OK;
 }
 

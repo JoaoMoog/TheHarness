@@ -6,7 +6,7 @@
  * Every phase agent must end its response with a fenced block:
  *
  *   ```harness-handoff
- *   stage: specify
+ *   stage: plan
  *   status: complete
  *   artifacts: specs/007-export-csv/spec.md
  *   summary: one paragraph, at most 120 words

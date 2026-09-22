@@ -1,5 +1,5 @@
 ---
-applyTo: "**"
+applyTo: "**/*.test.*,**/*.spec.*,**/tests/**,**/test/**,**/e2e/**,**/playwright.config.*"
 description: How tests are written and when they are required, including the failing-test-first rule for bug fixes.
 ---
 

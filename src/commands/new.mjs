@@ -12,7 +12,7 @@ const SKILL_HINTS = {
   Rules: 'Domain rules, naming conventions and the anti-patterns to refuse. Be specific; a rule that could apply to any codebase teaches nothing.',
   Workflow: '1. First step.\n2. Second step.\n3. Third step.\n\nNumbered and reproducible: two runs on the same input should produce the same shape of output.',
   Output: 'A concrete example of the expected output, not a description of it.',
-  Validation: '- [ ] A check that must pass before delivery.\n- [ ] Another check.\n- [ ] What to do when a check fails.',
+  Validation: '- [ ] A check that must pass before local validation.\n- [ ] Another check.\n- [ ] What to do when a check fails.',
 };
 
 const AGENT_HINTS = {

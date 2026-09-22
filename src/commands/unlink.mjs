@@ -1,8 +1,8 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { loadLock, saveLock, forgetRepo } from '../lib/lock.mjs';
-import { removeLink } from '../fs/link.mjs';
-import { removeCopy } from '../fs/copy.mjs';
+import { removeLink, linksTo } from '../fs/link.mjs';
+import { managedPath, removeManaged, pruneEmpty as pruneManaged } from '../fs/managed.mjs';
 import { clearExclude } from '../fs/gitexclude.mjs';
 import { removeGitHook } from './githook.mjs';
 import { prunableDirs } from '../lib/targets.mjs';
@@ -11,56 +11,36 @@ import { log, c } from '../lib/log.mjs';
 /** Locks written before targets were recorded were all Copilot. */
 const LEGACY_TARGETS = ['copilot'];
 
-/** Removes a directory only when every level of it is already empty. */
-function pruneEmpty(dir) {
-  let entries;
-  try {
-    entries = fs.readdirSync(dir, { withFileTypes: true });
-  } catch {
-    return;
-  }
-  for (const entry of entries) {
-    if (entry.isDirectory()) pruneEmpty(path.join(dir, entry.name));
-  }
-  try {
-    if (fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
-  } catch {
-    // Not empty, or already gone. Either way, leave it alone.
-  }
-}
-
 /** Reverses exactly what the lock says was installed, and nothing else. */
-function uninstallRepo(name, entry) {
+export function uninstallRepo(name, entry) {
   const dir = entry.dir;
   const removed = [];
   const kept = [];
 
   for (const target of Object.keys(entry.links ?? {})) {
-    const result = removeLink(path.join(dir, target));
+    if (!linksTo(managedPath(dir, target), entry.links[target])) { kept.push(target + ' (replaced link, kept)'); continue; }
+    const result = removeLink(managedPath(dir, target));
     if (result === 'removed') removed.push(target);
     else if (result === 'not-a-link') kept.push(`${target} (real directory, kept)`);
   }
 
   for (const [target, hash] of Object.entries(entry.files ?? {})) {
-    const result = removeCopy(path.join(dir, target), hash);
+    const result = (removeManaged(dir, target, hash) ? 'removed' : 'modified-kept');
     if (result === 'removed') removed.push(target);
     else if (result === 'modified-kept') kept.push(`${target} (locally modified, kept)`);
   }
 
   // Vendored files are hashed, so a file the team has since edited is theirs
   // now and is left in place rather than silently deleted.
-  // Generated files are the harness's own output, so they go without a hash
-  // check: there is nothing of the user's in them to preserve.
-  for (const target of Object.keys(entry.generated ?? {})) {
-    const full = path.join(entry.dir, target);
-    if (fs.existsSync(full)) {
-      fs.rmSync(full, { force: true });
-      removed.push(target);
-    }
+  // Generated files also require a matching hash; user edits are preserved.
+  for (const [target, hash] of Object.entries(entry.generated ?? {})) {
+    const result = (removeManaged(dir, target, hash) ? 'removed' : 'modified-kept');
+    if (result === 'removed') removed.push(target);
+    else if (result === 'modified-kept') kept.push(target + ' (locally modified, kept)');
   }
 
   for (const [target, hash] of Object.entries(entry.vendored ?? {})) {
-    const result = removeCopy(path.join(dir, target), hash);
+    const result = (removeManaged(dir, target, hash) ? 'removed' : 'modified-kept');
     if (result === 'removed') removed.push(target);
     else if (result === 'modified-kept') kept.push(`${target} (locally modified, kept)`);
   }
@@ -68,10 +48,11 @@ function uninstallRepo(name, entry) {
   // Only directories the install itself created. Locks written before that
   // was recorded fall back to the old behaviour of pruning any of them.
   const created = entry.createdDirs ?? prunableDirs(entry.targets ?? LEGACY_TARGETS);
-  for (const prunable of created) pruneEmpty(path.join(dir, prunable));
+  for (const prunable of created) pruneManaged(dir, prunable);
 
   clearExclude(dir);
-  removeGitHook(dir);
+  const hook=removeGitHook(dir,entry.gitHookHash);
+  if(hook?.status==='foreign') kept.push('pre-commit (unowned or modified, kept)');
 
   log.ok(`${name.padEnd(32)} ${removed.length} removed${kept.length ? c.yellow(`, ${kept.length} kept`) : ''}`);
   for (const k of kept) log.info(`  ${k}`);
@@ -112,6 +93,6 @@ export default function unlink(args) {
   }
 
   log.plain('');
-  log.ok('Removal complete. Target repositories are back to their original state.');
+  log.ok('Removal complete. Locally modified files were preserved.');
   return 0;
 }

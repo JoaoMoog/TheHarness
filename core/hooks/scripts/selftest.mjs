@@ -354,25 +354,6 @@ console.log('\nVS Code hook protocol');
   check('the start never forbids a second session', !/Do not start a new session/.test(out) && /\/feature starts another/.test(out), true);
 }
 
-/* The Azure DevOps quadrant gate: the decision has to come from the command,
-   not from the agent remembering the rule. */
-const adoGate = (command) =>
-  runHook('ado-gate', {
-    hook_event_name: 'PreToolUse',
-    tool_name: 'runCommands',
-    tool_input: { command },
-  }).hookSpecificOutput?.permissionDecision;
-
-{
-  check('a draft pull request runs without asking', adoGate('node .github/tools/ado/pr-create.mjs --title=x --description-file=b.md'), 'allow');
-  check('a comment runs without asking', adoGate('node .github/tools/ado/pr-comment.mjs --pr=1 --content=x'), 'allow');
-  check('publishing a pull request asks first', adoGate('node .github/tools/ado/pr-create.mjs --title=x --description-file=b.md --publish'), 'ask');
-  check('queueing a validation pipeline asks first', adoGate('node .github/tools/ado/pipeline-run.mjs --name=\"billing-api CI\"'), 'ask');
-  check('a release pipeline is denied', adoGate('node .github/tools/ado/pipeline-run.mjs --name=\"Release prod\"'), 'deny');
-  check('completing a merge is denied', adoGate('az repos pr update --id 5 --status completed'), 'deny');
-  check('a dry run needs no gate', adoGate('node .github/tools/ado/pipeline-run.mjs --name=\"Release prod\" --dry-run'), 'allow');
-}
-
 /* read-guard: a credential file must not enter the context, on either path style.
    The content rule is exercised too: a public certificate in a .pem is allowed. */
 {
@@ -578,7 +559,7 @@ console.log('\ncrosstk-run: a verbose command runs through crosstk run when the 
   const viaDispatcher = pre('npm test');
   check('the dispatcher carries the rewrite inside hookSpecificOutput', viaDispatcher.hookSpecificOutput?.permissionDecision === 'allow' && rewritten(viaDispatcher) === 'crosstk run npm test', true);
   const held = pre('git push --force origin main');
-  check('a call a guardrail questions runs as written: ask wins and the rewrite is dropped', held.hookSpecificOutput?.permissionDecision === 'ask' && rewritten(held) === undefined, true);
+  check('publication is denied and the rewrite is dropped', held.hookSpecificOutput?.permissionDecision === 'deny' && rewritten(held) === undefined, true);
 }
 
 /* usage: the runtime does not report tokens, but it hands the hooks every
@@ -655,7 +636,7 @@ console.log('\nformat: only an edit reaches the formatter');
   call('readFile');
   check('a read does not run the formatter', fs.existsSync(marker), false);
   call('editFiles');
-  check('an edit does', fs.existsSync(marker), true);
+  check('an edit no longer runs an automatic formatter', fs.existsSync(marker), false);
 }
 
 /* tool-hooks: VS Code runs every PreToolUse and PostToolUse hook on every
@@ -675,7 +656,7 @@ console.log('\ntool-hooks: one process per tool event');
   check('a plain read is allowed with no message', decision(plain) === 'allow' && plain.systemMessage === undefined, true);
   write(dir, '.env', 'TOKEN=abc\n');
   check('deny wins: read-guard refuses a .env read through the dispatcher', decision(pre('readFile', { filePath: path.join(dir, '.env') })), 'deny');
-  check('ask propagates: destructive-git asks before a force push', decision(pre('runCommands', { command: 'git push --force origin main' })), 'ask');
+  check('deny propagates for agent publication', decision(pre('runCommands', { command: 'git push --force origin main' })), 'deny');
   check('deny outranks ask when both fire on one call', decision(pre('runCommands', { command: 'git push --force origin main && az repos pr update --status completed' })), 'deny');
   const warned = pre('editFiles', { filePath: path.join(dir, 'x.ts'), content: 'const k = "' + FAKE_AWS_ID + '";' });
   check('an allow keeps its warning: the secret-block message comes through', decision(warned) === 'allow' && /looks like a AWS access key id/.test(warned.systemMessage ?? ''), true);
@@ -723,7 +704,7 @@ console.log('\ntree-state: one line per state of the tree');
   check('a clean tree is the short commit alone', /^[0-9a-f]{7,}$/.test(clean), true);
   write(dir, 'a.txt', 'two\n');
   const dirty = state(dir).stdout.trim();
-  check('an uncommitted edit adds a suffix to the commit', dirty.startsWith(clean + '+') && dirty.length > clean.length + 1, true);
+  check('an uncommitted edit changes the content identity', /^[0-9a-f]{64}$/.test(dirty) && dirty !== clean, true);
   check('the same edit reports the same state', state(dir).stdout.trim(), dirty);
   write(dir, 'b.txt', 'new\n');
   const withUntracked = state(dir).stdout.trim();

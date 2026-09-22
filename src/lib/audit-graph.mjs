@@ -204,6 +204,6 @@ export function auditRatio(report, agents, skillCount) {
   const text = `${invocable.length} user-invocable agents (+${internal} internal) : ${skillCount} skills (1:${ratio.toFixed(1)})`;
 
   if (ratio < min) report.fail(`${text} - below 1:${min}; this work belongs in skills`);
-  else if (ratio > max) report.warn(`${text} - above 1:${max}; consider another specialist agent`);
+  else if (ratio > max) report.pass(`${text} - discovery is on demand; no extra agent required`);
   else report.pass(text);
 }

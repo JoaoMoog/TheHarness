@@ -49,7 +49,7 @@ Ambiguity is marked, never guessed:
 
 `[NEEDS CLARIFICATION: does the export filename need the tenant name?]`
 
-The session does not leave the specify phase while one of these is open. That
+The session does not leave the planning pass while one of these is open. That
 is the whole point of writing it down rather than picking an answer quietly.
 
 ## Traceability

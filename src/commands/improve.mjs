@@ -73,7 +73,7 @@ export default function improve(args) {
 
   // Where sessions die tells you which phase contract is failing.
   const deaths = new Map();
-  for (const session of sessions.filter((s) => s.outcome === 'stopped before review')) {
+  for (const session of sessions.filter((s) => ['failed','blocked'].includes(s.outcome))) {
     const last = session.agents.slice().sort((a, b) => String(a.at).localeCompare(String(b.at))).at(-1);
     if (last) deaths.set(last.agent, (deaths.get(last.agent) ?? 0) + 1);
   }
@@ -82,7 +82,7 @@ export default function improve(args) {
       findings.push({
         kind: 'sessions die here',
         subject: agent,
-        detail: `${count} session(s) stopped after ${agent} and never reached review`,
+        detail: `${count} session(s) stopped after ${agent} with an explicit failed/blocked result`,
         question: 'Either the phase before hands over something unusable, or the escalation rules are too broad.',
       });
     }
@@ -131,17 +131,17 @@ export default function improve(args) {
   const tracks = new Map();
   for (const session of sessions) {
     const key = session.track ?? 'unknown';
-    if (!tracks.has(key)) tracks.set(key, { runs: 0, delivered: 0 });
+    if (!tracks.has(key)) tracks.set(key, { runs: 0, validated: 0 });
     tracks.get(key).runs += 1;
-    if (session.outcome === 'delivered') tracks.get(key).delivered += 1;
+    if (session.outcome === 'validated') tracks.get(key).validated += 1;
   }
   for (const [name, entry] of tracks) {
-    if (entry.runs >= 3 && entry.delivered === 0 && name !== 'spike') {
+    if (entry.runs >= 3 && entry.validated === 0 && !['spike','unknown'].includes(name)) {
       findings.push({
-        kind: 'track never ships',
+        kind: 'track has no recorded validation',
         subject: name,
-        detail: `${entry.runs} runs, none delivered`,
-        question: 'Either the selection criteria send the wrong work here, or its phases are missing something.',
+        detail: `${entry.runs} runs, none validated`,
+        question: 'Check explicit failures, blockers and missing outcome records before changing routing.',
       });
     }
   }

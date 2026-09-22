@@ -24,15 +24,16 @@ ${c.bold('harness')} - portable agentic harness for GitHub Copilot and Kiro
   ${c.cyan('vendor')} <repo>|--all    Install as committable copies instead of links
   ${c.cyan('unlink')} <repo>|--all    Remove the harness, restoring the original state
   ${c.cyan('doctor')} [--self]        Audit harness contracts and installation health
-  ${c.cyan('budget')} [--self]        Report context token cost per tier against budgets
-  ${c.cyan('cost')}                   Report cost per delivered outcome, by track and agent
+  ${c.cyan('budget')} [--json]        Report context estimates per client, including AGENTS.md
+  ${c.cyan('cost')}                   Report explicit local outcomes, measured usage and unavailable values
   ${c.cyan('improve')}                Read the telemetry and propose harness changes
   ${c.cyan('dream')} [repo]           Review what consolidation extracted between sessions
   ${c.cyan('secrets')} [repo]         Credential warnings the scan recorded; mark the false positives
   ${c.cyan('eval')}                   Run structural evals against the authored artifacts
   ${c.cyan('new')} <kind> <name>      Scaffold a skill, agent or instruction
 
-Flags: --all  --force  --mode=link|vendor  --target=copilot|kiro  --verbose  --json
+Flags: --all  --mode=link|vendor  --target=copilot|kiro  --verbose  --json
+Budget/cost: --repo=<path>  Evals: --trace=<exported-trace.json>
 Dream:  --collect  --promote=<id>  --discard=<id> --why="<reason>"
 Secrets: --allow=<id> --why="<reason>"  --allow-path=<glob> --why="<reason>"
 

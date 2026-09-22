@@ -52,7 +52,7 @@ Anti-patterns to refuse:
 
 ## Output
 
-Follow `templates/context.md`. The sections a script cannot fill look like this:
+Follow `.github/templates/context.md`. The sections a script cannot fill look like this:
 
 ```
 ## What this repository is

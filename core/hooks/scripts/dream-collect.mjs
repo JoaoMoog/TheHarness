@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Stop / AgentStop: gathers what the closed sessions can be read to say, so the
+ * Explicit /dream: gathers what the closed sessions can be read to say, so the
  * next session can consolidate it into memory.
  *
  * This half is deliberately dumb. It runs no model, makes no judgement and
@@ -208,7 +208,7 @@ if (CONSUME) {
   const file = path.join(repoRoot(), '.harness', 'dream-pending.json');
   const existed = fs.existsSync(file);
   fs.rmSync(file, { force: true });
-  console.log(existed ? `Consumed ${file}: the next session start will not name it again.` : 'Nothing pending to consume.');
+  console.log(existed ? `Consumed ${file}: the next explicit collection can start fresh.` : 'Nothing pending to consume.');
   process.exit(EXIT_OK);
 }
 
