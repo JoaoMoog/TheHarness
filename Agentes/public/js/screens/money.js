@@ -1,8 +1,10 @@
 // Money screens in the Nexo Banking style: pay a service, Pix, receipt, finance (both sides) and statement by day.
-import { CHECKOUT_INSTALLMENTS, payableCents } from "../actions/index.js";
+import { CHECKOUT_INSTALLMENTS, chosenCardPlan, payableCents } from "../actions/index.js";
+import { CARD_RULES, cardBlockedReason, cardPlans } from "../domain/card.js";
+import { pendingCount } from "../domain/split.js";
 import { parseDdMm } from "../domain/dates.js";
 import {
-  account, availableLimitCents, canSee, contractById, isClientOf, creditBlockedReason, custodyCents, draft, installmentCents, isNexoConnected, lateInstallments,
+  account, availableLimitCents, canSee, cardAvailableCents, contractById, isClientOf, creditBlockedReason, custodyCents, draft, installmentCents, isNexoConnected, lateInstallments,
   limitOf, myContracts, myInstallments, myName, myParticipant, outstandingCents, role,
 } from "../store.js";
 import { appbar, btn, card, chip, circle, empty, esc, icon, kv, money, note, option, screen, timeline } from "../ui.js";
@@ -27,18 +29,40 @@ function blockedHelp(blocked, id) {
   return "";
 }
 
+const planText = (p) => `${p.count}x de ${money(p.installmentCents)}${p.interestFree ? " sem juros" : ""}`;
+
+/** Card option plus, when picked, the installment pills and what the plan costs. */
+function cardChoice(s, id, amount, selected) {
+  const available = cardAvailableCents(s);
+  const plan = chosenCardPlan(s, id, amount);
+  const blocked = cardBlockedReason({ totalCents: plan.totalCents, availableCents: available, connected: isNexoConnected(s) });
+  const sub = blocked === "noAccount" ? "Conecte a conta Nexo para usar o cartão" : `Até ${CARD_RULES.maxCount}x · ${CARD_RULES.interestFreeUpTo}x sem juros · limite livre ${money(available)}`;
+  const head = option({ title: "Cartão de crédito Nexo", sub, value: selected && !blocked ? money(plan.totalCents) : "", selected, disabled: blocked === "noAccount", action: "choosePayMethod", data: { id, method: "card" } });
+  if (!selected || blocked === "noAccount") return head;
+  const pills = cardPlans(amount).map((p) => `<button type="button" class="pill-option ${p.count === plan.count ? "on" : ""}" data-action="chooseCardCount" data-id="${esc(id)}" data-count="${p.count}">${esc(planText(p))}</button>`).join("");
+  const cost = plan.interestFree ? "Sem juros" : `${money(plan.totalCents - amount)} de juros (${String(CARD_RULES.monthlyRate * 100).replace(".", ",")}% ao mês)`;
+  return `${head}<div class="choice-list wrap">${pills}</div>
+    ${card(`${kv("Parcelas", planText(plan))}${kv("Total no cartão", money(plan.totalCents))}${kv("Custo", cost)}`)}
+    ${blocked === "limit" ? note("O limite livre do cartão não cobre este plano. Escolha menos parcelas ou outra forma.", "warn", "warning-circle") : note("O valor entra inteiro na custódia hoje. O prestador recebe cada etapa quando você aprovar.", "info", "credit-card")}`;
+}
+
 function pagar(s, { id }) {
   const c = contractById(s, id);
   if (!c || !isClientOf(c, s)) return screen({ header: appbar({ title: "Pagar" }), body: empty("Nada a pagar neste serviço.") });
   const amount = payableCents(c, s);
+  if (c.kind === "collective" && (pendingCount(c.participants) || myParticipant(c, s)?.status === "pending")) {
+    return screen({ header: appbar({ title: "Pagar serviço" }), body: note("O pagamento abre quando todos os convidados responderem ao convite. Se alguém recusar, as partes são recalculadas.", "info", "clock"), footer: btn("Ver quem divide", { go: `#/coletivo/${id}` }) });
+  }
   const blocked = creditBlockedReason(s, amount);
   const reserved = isNexoConnected(s) ? account(s)?.reservedCredit : null;
   const method = draft(`pay.${id}`, reserved ? "reserved" : blocked ? "pix" : "credit");
   const inst = installmentCents(amount, CHECKOUT_INSTALLMENTS);
   const premium = c.insurance && !c.insurance.paid ? c.insurance.premiumCents : 0;
   const reservedRest = reserved ? Math.max(0, amount - reserved.remainingCents) : 0;
+  const plan = method === "card" ? chosenCardPlan(s, id, amount) : null;
   const footerLabel = method === "reserved" && reserved
     ? `Pagar com o crédito aprovado${reservedRest ? ` + ${money(reservedRest)} no Pix` : ""}`
+    : plan ? `Pagar em ${plan.count}x no cartão`
     : method === "credit" && !blocked ? `Pagar ${money(amount)} em ${CHECKOUT_INSTALLMENTS}x` : `Pagar ${money(amount)} com Pix`;
   return screen({
     header: appbar({ title: "Pagar serviço" }),
@@ -46,8 +70,9 @@ function pagar(s, { id }) {
       <h3>Como você quer pagar?</h3>
       ${reserved ? option({ title: `Crédito aprovado ${reserved.creditId}`, sub: `${money(reserved.remainingCents)} disponíveis · ${reserved.count}x de ${money(reserved.installmentCents)}${reservedRest ? ` · o restante vai no Pix` : ""}`, selected: method === "reserved", action: "choosePayMethod", data: { id, method: "reserved" } }) : ""}
       ${option({ title: "Parcelado no crédito Aval", sub: creditSub(s, blocked, inst), value: blocked ? "" : money(inst * CHECKOUT_INSTALLMENTS), selected: method === "credit" && !blocked, disabled: Boolean(blocked), action: "choosePayMethod", data: { id, method: "credit" }, extra: blocked ? "" : chip(`Limite disponível ${money(availableLimitCents(s))}`, "pos") })}
+      ${cardChoice(s, id, amount, method === "card")}
       ${option({ title: "À vista com Pix", sub: isNexoConnected(s) ? "Saldo da conta Nexo ou outro banco" : "Pix de qualquer banco", value: money(amount), selected: method === "pix" || (Boolean(blocked) && method === "credit"), action: "choosePayMethod", data: { id, method: "pix" } })}
-      ${blockedHelp(blocked, id)}
+      ${method === "card" ? "" : blockedHelp(blocked, id)}
       ${method === "credit" && !blocked ? note("A primeira parcela vence em 30 dias. O prestador recebe cada etapa no dia da aprovação.") : ""}
       ${!blocked && !reserved ? btn("Simular outro prazo ou carência", { kind: "text", action: "startCreditFor", data: { id } }) : ""}`,
     footer: btn(footerLabel, { action: "confirmPay", data: { id } }),
@@ -83,7 +108,7 @@ function pago(s, { id }) {
       title: "Pagamento confirmado", when: `Feito em ${fullDate()}`, valueCents,
       parties: [
         { label: "Para", name: "Custódia Aval", lines: [`Contrato ${c.id}`, "Banco Nexo S.A."] },
-        { label: "De", name: myName(s), lines: [isNexoConnected(s) ? account(s).nexo.label : "Pix de outro banco"] },
+        { label: "De", name: myName(s), lines: [c.payment?.method === "card" ? `${c.payment.label} · ${c.payment.count}x de ${money(c.payment.valueCents)}` : isNexoConnected(s) ? account(s).nexo.label : "Pix de outro banco"] },
       ],
       facts: [["Serviço", c.title], ["Situação", situation]], auth: authCode(`pago:${id}:${valueCents}`),
     })}${c.insurance?.paid ? `<div class="bk-pad">${note(`Seguro Aval ${c.insurance.policy} ativo.`, "pos", "shield-check")}</div>` : ""}`,

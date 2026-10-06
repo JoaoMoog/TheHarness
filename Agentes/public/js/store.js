@@ -1,10 +1,10 @@
 // Demo state shared by every profile. Synthetic data only.
 import { BASE_DATE, fmtDate, parseDdMm, shiftDate } from "./domain/dates.js";
-import { CLIENT, DEFAULTS, PEOPLE, PROVIDER, PROVIDERS, makeStage, seed } from "./seed.js";
+import { DEFAULTS, PEOPLE, SELF, freshAccount, makeStage, seed } from "./seed.js";
 
-export { CLIENT, DEFAULTS, PEOPLE, PROVIDER, PROVIDERS, makeStage, fmtDate, parseDdMm };
+export { DEFAULTS, PEOPLE, SELF, freshAccount, makeStage, fmtDate, parseDdMm };
 
-const STORAGE_KEY = "aval-demo-v6";
+const STORAGE_KEY = "aval-demo-v8";
 const MONTHLY_CET = Math.pow(1.2905, 1 / 12) - 1;
 
 let state = load() ?? seed();
@@ -67,19 +67,49 @@ export const isDue = (ddmm, s = state) => parseDdMm(ddmm).getTime() <= now(s).ge
 
 // Identity: one person, two modes (hiring and providing), plus the bank console
 const asState = (s) => (s && typeof s === "object" && s.session ? s : state);
-export const person = (s = state) => PEOPLE[asState(s).session.person] ?? null;
+/** The fixed people (Marina, Carlos) plus whoever signed up in this presentation. */
+export const peopleOf = (s = state) => ({ ...PEOPLE, ...(asState(s).people ?? {}) });
+export const person = (s = state) => peopleOf(s)[asState(s).session.person] ?? null;
 export const role = (s = state) => (asState(s).session.person === "banco" ? "banco" : asState(s).session.mode);
 export const account = (s = state, id = asState(s).session.person) => asState(s).accounts[id] ?? null;
+/** What is still free on the person's Nexo credit card. */
+export const cardAvailableCents = (s = state) => {
+  const card = account(s)?.card;
+  return card ? Math.max(0, card.limitCents - card.usedCents) : 0;
+};
 export const myName = (s = state) => (role(s) === "prestador" ? person(s)?.providerName : person(s)?.clientName) ?? "";
 export const myNames = (s = state) => new Set(person(s) ? [person(s).clientName, person(s).providerName] : []);
-export const personOfName = (name) => Object.values(PEOPLE).find((p) => p.clientName === name || p.providerName === name) ?? null;
+/** The person in the presentation who owns this mobile number or e-mail, if any. */
+export const personOfContact = (contact, s = state) => Object.values(peopleOf(s)).find((p) => p.phone === contact || p.email === contact) ?? null;
+export const personOfName = (name, s = state) => Object.values(peopleOf(s)).find((p) => p.clientName === name || p.providerName === name) ?? null;
+/** Everyone who can be hired: each person on their providing side. */
+export const providerList = (s = state) => Object.values(peopleOf(s)).map((p) => ({ name: p.providerName, doc: p.providerDoc, rating: p.rating ?? "nova conta", activity: p.activity }));
+/** Everyone who can hire: each person on their hiring side. */
+export const clientList = (s = state) => Object.values(peopleOf(s)).map((p) => p.clientName);
 
 export const contractById = (s, id) => s.contracts.find((c) => c.id === id);
-export const clientParty = (c) => (c.kind === "collective" ? CLIENT : c.client);
+export const clientParty = (c) => c.client;
 export const myParticipant = (c, s = state) => c.participants?.find((p) => p.name === person(s)?.clientName) ?? null;
+/** Where an invite to pay together lives (a service invite or already a contract) and the invited person. */
+export function splitInviteOf(s, token) {
+  for (const holder of [...s.contracts, ...s.invites]) {
+    const participant = holder.participants?.find((p) => p.token === token);
+    if (participant) return { holder, participant, isContract: s.contracts.includes(holder), declined: false };
+    const gone = holder.declined?.find((p) => p.token === token);
+    if (gone) return { holder, participant: gone, isContract: s.contracts.includes(holder), declined: true };
+  }
+  return null;
+}
+/** Invites to pay together that the current person still has to answer. */
+export function mySplitInvites(s) {
+  const me = person(s)?.clientName;
+  if (!me) return [];
+  return [...s.invites.filter((i) => i.status === "sent"), ...s.contracts]
+    .flatMap((holder) => (holder.participants ?? []).filter((p) => p.name === me && p.status === "pending").map((participant) => ({ holder, participant })));
+}
 export const isClientOf = (c, s) => {
   const p = person(asState(s));
-  return Boolean(p) && (c.client === p.clientName || Boolean(c.participants?.some((x) => x.name === p.clientName)));
+  return Boolean(p) && (c.client === p.clientName || Boolean(c.participants?.some((x) => x.name === p.clientName && x.status !== "pending")));
 };
 export const isProviderOf = (c, s) => c.provider === person(asState(s))?.providerName;
 /** A person only sees contracts where they are one of the parties. */

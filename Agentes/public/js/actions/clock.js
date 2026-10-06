@@ -1,11 +1,10 @@
 // Demo clock: moving time forward runs the contract rules in code (tacit approval, collections, credit analysis, dispute SLA).
 import { daysBetween, fmtDate, parseDdMm, shiftDate } from "../domain/dates.js";
-import { PEOPLE, addDays, addLedger, contractById, notify, notifyBank, notifyClient, notifyProvider, now, personOfName, today, update } from "../store.js";
+import { peopleOf, addDays, addLedger, contractById, notify, notifyBank, notifyClient, notifyProvider, now, personOfName, today, update } from "../store.js";
 import { money } from "../ui.js";
 import { actions as A, ok } from "./core.js";
 import { decideCredit } from "./credit.js";
 import { releaseStage } from "./delivery.js";
-import { deliverIncomingQuotes } from "./market.js";
 
 const LATE_FEE_RATE = 0.003;
 const REMINDER_DAYS = 3;
@@ -26,7 +25,7 @@ function tacitApprovals(s, events) {
 /** Collections ladder: reminder three days before, late fee and paused credit after the due date. */
 function collections(s, events) {
   for (const inst of s.installments.filter((i) => i.status === "open")) {
-    const owner = PEOPLE[inst.owner]?.clientName ?? "";
+    const owner = peopleOf(s)[inst.owner]?.clientName ?? "";
     const left = daysBetween(now(s), parseDdMm(inst.due));
     if (left === REMINDER_DAYS) {
       notify(s, owner, `Parcela ${inst.n} vence em ${REMINDER_DAYS} dias`, `${money(inst.valueCents)} · ative o Pix Automático`, "clock", "#/financeiro", "contratante");
@@ -104,7 +103,6 @@ A.advanceClock = ({ days }) => {
       collections(s, todays);
       creditAnalyses(s, todays);
       disputeSla(s, todays);
-      deliverIncomingQuotes(s, todays);
     }, { silent: true });
     events.push(...todays.map((text) => ({ at: today(), text })));
   }

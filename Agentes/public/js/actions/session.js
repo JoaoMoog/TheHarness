@@ -1,6 +1,7 @@
 // Session, profiles, notifications and account opening.
-import { judge } from "../api.js";
-import { PEOPLE, draft, getState, isNexoConnected, notifyBank, reset, setDraft, today, update } from "../store.js";
+import { isValidCpf, maskCpf } from "../domain/cpf.js";
+import { CONSENT_SCOPES } from "./account.js";
+import { SELF, draft, freshAccount, getState, isNexoConnected, notifyBank, peopleOf, reset, setDraft, today, update } from "../store.js";
 import { actions as A, go, ok, warn } from "./core.js";
 
 A.back = () => (history.length > 1 ? history.back() : go("#/inicio"));
@@ -8,13 +9,14 @@ A.closeSheet = () => update((s) => { s.ui.sheet = null; });
 
 /** Presenter switch: Marina, Carlos or the bank. Each person keeps both modes. */
 A.switchRole = ({ role }) => {
+  const registered = role !== SELF || Boolean(getState().people?.[SELF]);
   update((s) => {
     s.session.person = role;
-    s.session.mode = PEOPLE[role]?.defaultMode ?? s.session.mode;
-    s.session.loggedIn = true;
+    s.session.mode = peopleOf(s)[role]?.defaultMode ?? s.session.mode;
+    s.session.loggedIn = registered;
     s.ui.sheet = null;
   });
-  go(role === "banco" ? "#/banco/visao" : "#/inicio");
+  go(role === "banco" ? "#/banco/visao" : registered ? "#/inicio" : "#/cadastro");
 };
 A.setMode = ({ mode }) => {
   if (getState().session.mode === mode) return;
@@ -33,7 +35,6 @@ A.biometricOk = () => {
   go(isNexoConnected(getState()) ? "#/inicio" : "#/conectar");
 };
 A.logout = () => { update((s) => { s.session.loggedIn = false; }); go("#/entrada"); };
-A.toggleAi = () => update((s) => { s.settings.aiEnabled = !s.settings.aiEnabled; });
 A.downloadData = () => ok("Pedido registrado. O arquivo chega em até 48 horas.");
 
 /** Opening a notification switches to the side of the account it belongs to. */
@@ -47,20 +48,42 @@ A.readNotification = ({ id, target }) => {
   if (target) go(target);
 };
 
-// Account opening (fraud signals always reach a bank analyst)
-A.markCapture = ({ field }) => setDraft(`signup.${field}`, true, false);
-A.submitSignup = async () => {
-  const name = draft("signup.name").trim();
-  const documentName = draft("signup.documentName").trim();
-  const services = draft("signup.services").trim();
-  if (!name || !documentName || !services) return warn("Preencha nome, nome no documento e serviços.");
-  if (!draft("signup.doc") || !draft("signup.selfie")) return warn("Envie a foto do documento e a selfie.");
+// Opening the Aval with the Nexo account: redirect to the Nexo app, the person authorizes there with biometrics,
+// and comes back with the bank's customer data. Nothing is typed in the Aval.
+const DEMO_CUSTOMER = Object.freeze({
+  name: "Ana Ribeiro", cpf: "529.982.247-25", phone: "(11) 97777-3003", email: "ana.ribeiro@exemplo.com",
+  address: "Rua Harmonia, 410 · Vila Madalena · São Paulo", account: "Conta corrente PF · ag 0001 · cc 7.310.552-8",
+});
+
+/** What the bank shares with the Aval after the authorization. Synthetic in this presentation: one demo customer. */
+export const importedCustomer = () => ({ ...DEMO_CUSTOMER, doc: maskCpf(DEMO_CUSTOMER.cpf) });
+
+/** In the Nexo app: the person authorizes with biometrics and is sent back to the Aval. */
+A.nexoAuthorize = () => {
+  setDraft("login.authorized", { at: today(), shareLimit: draft("conectar.limit", true) }, true);
+  go("#/cadastro/dados");
+};
+A.importNexoAccount = () => {
+  const auth = draft("login.authorized");
+  if (!auth) return go("#/cadastro");
   if (!draft("signup.arbitration")) return warn("Aceite os termos e a cláusula compromissória para continuar.");
-  const fraud = await judge("fraudSignals", { accountName: name, documentName, serviceText: services }, "signup");
+  const customer = importedCustomer();
+  if (!isValidCpf(customer.cpf)) return warn("O Nexo enviou um CPF inválido. Tente entrar de novo.");
+  const words = customer.name.split(/\s+/);
   update((s) => {
-    s.newAccount = { name, documentName, services, status: "review", fraud, submittedAt: today(), arbitrationAcceptedAt: today(), by: s.session.person };
-    notifyBank(s, "Conta nova em análise", name, "identification-card", "#/banco/fila/KYC-NEW");
+    s.people[SELF] = {
+      id: SELF, first: words[0], name: customer.name, initials: words.slice(0, 2).map((w) => w[0].toUpperCase()).join(""), defaultMode: "contratante",
+      clientName: customer.name, providerName: customer.name, clientDoc: customer.doc, providerDoc: customer.doc, activity: "Cliente Nexo",
+      phone: customer.phone, email: customer.email, address: customer.address,
+    };
+    const scopes = CONSENT_SCOPES.filter(([, , required]) => required || auth.shareLimit).map(([label]) => label);
+    const base = freshAccount();
+    s.accounts[SELF] = { ...base, nexo: { status: "connected", kind: "PF", label: customer.account, since: today(), scopes }, preApprovedCents: auth.shareLimit ? base.preApprovedCents : 0 };
+    s.session = { person: SELF, mode: "contratante", loggedIn: true };
+    s.ui.drafts.login = undefined;
+    s.ui.drafts.signup = undefined;
   });
-  go("#/conta-analise");
+  ok(`Olá, ${words[0]}! Sua conta Nexo está conectada ao Aval.`);
+  go("#/inicio");
 };
 A.copied = () => ok("Copiado para a área de transferência.");

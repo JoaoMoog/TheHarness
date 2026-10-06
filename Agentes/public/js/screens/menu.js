@@ -9,12 +9,7 @@ const HIRING = [
   ["Meus serviços", "briefcase", "#/servicos"], ["Novo serviço", "plus", "#/novo/1"], ["Pagar", "qr-code", "#/financeiro"],
   ["Extrato", "receipt", "#/extrato"], ["Disputas", "scales", "#/disputas"], ["Pedir crédito", "hand-coins", "#/credito"],
 ];
-const MARKET = [
-  ["Buscar serviços", "magnifying-glass", "#/buscar"], ["Fazer pedido", "megaphone", "#/pedido/novo/1"], ["Meus pedidos", "list-checks", "#/pedidos"],
-  ["Favoritos", "heart", "#/favoritos"], ["Reformas", "hammer", "#/categoria/reformas"], ["Elétrica", "lightning", "#/categoria/eletrica"],
-];
 const PROVIDING = [
-  ["Oportunidades", "megaphone", "#/oportunidades"], ["Minha vitrine", "storefront", "#/vitrine"], ["Meus anúncios", "list-checks", "#/anuncios"],
   ["Orçamento", "file-text", "#/orcamento/novo"], ["Aval Link", "link", "#/link/novo"], ["Maquininha", "device-mobile", "#/pos"],
   ["Agenda", "calendar-blank", "#/agenda"], ["Notas fiscais", "receipt", "#/notas"], ["Serviços prestados", "storefront", "#/servicos"],
 ];
@@ -30,13 +25,13 @@ function menu(s) {
     isNexoConnected(s) ? ["Conta Nexo", "bank", "#/contas"] : ["Conectar conta Nexo", "bank", "#/conectar"],
     ["Meus créditos", "piggy-bank", "#/creditos"], ["Open Finance", "arrows-left-right", "#/open-finance"],
   ];
-  const help = [["Assistente Aval", "sparkle", "#/ia"], ["Avisos", "bell", "#/avisos"], ["Arbitragem", "gavel", "#/arbitragem"], ["Perfil", "user", "#/perfil"], ["Aval Labs", "lightning", "#/labs"]];
+  const help = [["Avisos", "bell", "#/avisos"], ["Arbitragem", "gavel", "#/arbitragem"], ["Perfil", "user", "#/perfil"], ["Aval Labs", "lightning", "#/labs"]];
   const hiringFirst = s.session.mode !== "prestador";
-  const sides = [group("Contratando", HIRING, "contratante"), group("Prestando", PROVIDING, "prestador")];
+  const sides = [group("Contratante", HIRING, "contratante"), group("Prestador", PROVIDING, "prestador")];
   return screen({
     cls: "bk-menu-screen",
     header: `<header class="bk-menu-head"><h2>Menu</h2><button type="button" class="icon-btn" data-go="#/inicio" aria-label="Fechar menu">${icon("x")}</button></header>`,
-    body: `${group("Nexo Serviços", MARKET, "contratante")}${(hiringFirst ? sides : [...sides].reverse()).join("")}
+    body: `${(hiringFirst ? sides : [...sides].reverse()).join("")}
       ${group("Conta Nexo e crédito", account)}
       ${group("Ajuda e configurações", help)}
       <div class="bk-menu-foot"><button type="button" class="bk-primary" data-action="logout">Sair do app${icon("sign-out")}</button><small>${esc(person(s)?.name ?? "")} · ${APP_VERSION}</small></div>`,

@@ -1,23 +1,17 @@
 import { actions } from "./actions/index.js";
-import { health } from "./api.js";
 import { guide } from "./guide.js";
-import { PEOPLE, getState, role, setDraft, subscribe, today, update } from "./store.js";
+import { PEOPLE, SELF, getState, role, setDraft, subscribe, today, update } from "./store.js";
 import { accountRoutes } from "./screens/account.js";
 import { bankExtraRoutes } from "./screens/bank-extra.js";
 import { bankInsightRoutes } from "./screens/bank-insights.js";
 import { labsRoutes } from "./screens/labs.js";
 import { businessRoutes } from "./screens/business.js";
 import { clientActions, clientRoutes, clientSheets, liveUpdate } from "./screens/client.js";
-import { commonActions, commonRoutes } from "./screens/common.js";
+import { commonRoutes } from "./screens/common.js";
 import { creditLiveUpdate, creditRoutes } from "./screens/credit.js";
 import { disputeRoutes, disputeSheets } from "./screens/dispute.js";
 import { clientHome, providerHome } from "./screens/home.js";
 import { menuRoutes } from "./screens/menu.js";
-import { bankMarketRoutes } from "./screens/bank-market.js";
-import { marketRoutes } from "./screens/market.js";
-import { marketProfileRoutes } from "./screens/market-profile.js";
-import { marketLiveUpdate, marketProRoutes } from "./screens/market-pro.js";
-import { marketRequestRoutes } from "./screens/market-request.js";
 import { insuranceRoutes } from "./screens/insurance.js";
 import { linkRoutes } from "./screens/link.js";
 import { trustRoutes } from "./screens/trust.js";
@@ -27,21 +21,18 @@ import { webRoutes } from "./screens/web.js";
 import { esc, icon } from "./ui.js";
 
 const TOAST_MS = 3500;
-const QUEUE_REFRESH_MS = 4000;
-const HEALTH_MS = 30_000;
-const PUBLIC_ROUTES = new Set(["entrada", "biometria", "cadastro", "conta-analise", "nexo", "arbitragem", "link"]);
+const PUBLIC_ROUTES = new Set(["entrada", "biometria", "cadastro", "conta-analise", "nexo", "arbitragem", "link", "dividir"]);
 
-const ALL_ACTIONS = { ...actions, ...clientActions, ...commonActions };
+const ALL_ACTIONS = { ...actions, ...clientActions };
 const SHEETS = { ...clientSheets, ...disputeSheets };
 const ROUTES = Object.entries({
   ...commonRoutes, ...clientRoutes, ...moneyRoutes, ...creditRoutes, ...accountRoutes, ...insuranceRoutes, ...disputeRoutes, ...providerRoutes, ...businessRoutes, ...linkRoutes, ...trustRoutes,
-  ...labsRoutes, ...menuRoutes, ...marketRoutes, ...marketProfileRoutes, ...marketRequestRoutes, ...marketProRoutes, ...bankMarketRoutes, ...webRoutes, ...bankExtraRoutes, ...bankInsightRoutes,
+  ...labsRoutes, ...menuRoutes, ...webRoutes, ...bankExtraRoutes, ...bankInsightRoutes,
   inicio: (s) => (role(s) === "prestador" ? providerHome(s) : clientHome(s)),
 }).map(([pattern, view]) => ({ parts: pattern.split("/"), view, pattern }));
 
 const stage = document.getElementById("stage");
 const presenter = document.getElementById("presenter");
-let apiOnline = null;
 let lastPath = "";
 
 function match(path) {
@@ -69,12 +60,13 @@ function guard(path, s) {
 }
 
 function renderPresenter(s) {
-  const people = [["marina", PEOPLE.marina.name, "contrata e presta"], ["carlos", PEOPLE.carlos.name, "Horizonte Reformas"], ["banco", "Banco", "operações Nexo"]];
+  const self = s.people?.[SELF];
+  const people = [[SELF, self?.name ?? "Você", self ? "sua conta" : "criar conta"], ["marina", PEOPLE.marina.name, "contrata e presta"], ["carlos", PEOPLE.carlos.name, "Horizonte Reformas"], ["banco", "Banco", "operações Nexo"]];
   const current = s.session.person;
   presenter.innerHTML = `<div class="p-brand"><strong>Aval</strong><span>Protótipo navegável</span></div>
     <div class="p-roles" role="group" aria-label="Ver como">${people.map(([k, n, d]) => `<button type="button" class="${current === k ? "on" : ""}" data-action="switchRole" data-role="${k}" aria-pressed="${current === k}"><strong>${esc(n)}</strong><small>${esc(d)}</small></button>`).join("")}</div>
     <div class="p-clock" role="group" aria-label="Relógio da demonstração">${icon("calendar-blank")}<strong>Hoje ${today()}</strong><button type="button" data-action="advanceClock" data-days="1">+1 dia</button><button type="button" data-action="advanceClock" data-days="7">+7 dias</button></div>
-    <div class="p-right"><span class="api ${apiOnline ? "ok" : apiOnline === false ? "off" : ""}">${apiOnline ? "Jev conectado" : apiOnline === false ? "API fora do ar" : "Verificando API"}</span><span class="api ${s.settings.aiEnabled ? "ok" : "off"}">${s.settings.aiEnabled ? "Aval IA ligado" : "Aval IA desligado"}</span><button type="button" class="p-reset" data-action="resetDemo">${icon("arrows-left-right")}Reiniciar demo</button></div>`;
+    <div class="p-right"><button type="button" class="p-reset" data-action="resetDemo">${icon("arrows-left-right")}Reiniciar demo</button></div>`;
 }
 
 function toastHtml(s) {
@@ -90,15 +82,6 @@ function scheduleToast(s) {
   toastTimer = { id: t.id, handle: setTimeout(() => update((x) => { if (x.ui.toast?.id === t.id) x.ui.toast = null; }), TOAST_MS) };
 }
 
-function runEffects(path, s) {
-  const sh = s.ui.sheet;
-  if (sh?.name === "aprovar") {
-    const st = s.contracts.find((c) => c.id === sh.id)?.stages[sh.stage];
-    if (st && !st.coverage && !s.ui.busy[`coverage-${sh.id}-${sh.stage}`] && s.settings.aiEnabled) actions.loadCoverage({ id: sh.id, stage: sh.stage });
-  }
-  if ((path.startsWith("banco/fila") || path.startsWith("banco/ia") || path === "banco/visao") && !s.ui.busy.queue && Date.now() - (s.ui.queueLoadedAt ?? 0) > QUEUE_REFRESH_MS) actions.loadServerQueue();
-  if (path.startsWith("banco/ia") && !s.policy) actions.loadPolicy();
-}
 
 function render() {
   const s = getState();
@@ -135,7 +118,6 @@ function render() {
   if (path !== lastPath) document.title = `Aval · ${path.split("/")[0]}`;
   lastPath = path;
   scheduleToast(s);
-  runEffects(path, s);
 }
 
 document.addEventListener("click", (event) => {
@@ -163,35 +145,16 @@ document.addEventListener("input", (event) => {
   setDraft(el.dataset.bind, value, !el.dataset.rerender);
   liveUpdate(el.dataset.bind);
   creditLiveUpdate(el.dataset.bind, getState());
-  marketLiveUpdate(el.dataset.bind);
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" && event.target.id === "chat-input") {
-    event.preventDefault();
-    actions.sendChat();
-  }
   const chatBox = event.target.closest?.(".chat-input");
-  if (event.key === "Enter" && chatBox && event.target.id !== "chat-input") {
+  if (event.key === "Enter" && chatBox) {
     event.preventDefault();
     chatBox.querySelector(".send")?.click();
   }
-  if (event.key === "Enter" && event.target.id === "market-search") {
-    event.preventDefault();
-    actions.search();
-  }
   if (event.key === "Escape" && getState().ui.sheet) actions.closeSheet();
 });
-
-async function checkHealth() {
-  try {
-    await health();
-    apiOnline = true;
-  } catch {
-    apiOnline = false;
-  }
-  renderPresenter(getState());
-}
 
 subscribe(render);
 window.addEventListener("hashchange", () => {
@@ -200,5 +163,3 @@ window.addEventListener("hashchange", () => {
   render();
 });
 render();
-checkHealth();
-setInterval(checkHealth, HEALTH_MS);

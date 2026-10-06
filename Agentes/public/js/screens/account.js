@@ -7,24 +7,32 @@ import { shown } from "./chrome.js";
 
 const stepper = (n) => `<div class="steps">${[1, 2, 3].map((i) => `<span class="${i <= n ? "on" : ""}"></span>`).join("")}</div>`;
 
+const scopeLine = ([label, detail, required]) =>
+  `<div class="consent">${icon(required ? "check-circle" : "hand-coins")}<div><strong>${esc(label)}</strong><small>${esc(detail)}</small></div>${required ? chip("Obrigatório") : ""}</div>`;
+
+/** One screen to connect: which account (only asked when there is a business account too), what the Aval reads, authorize. */
 function conectar(s) {
-  const kind = draft("conectar.kind", "PF");
   const p = person(s);
+  const hasBusiness = Boolean(account(s)?.pj);
+  const kind = hasBusiness ? draft("conectar.kind", "PF") : "PF";
+  const shareLimit = draft("conectar.limit", true);
+  const accounts = hasBusiness
+    ? `<h3>Qual conta?</h3>${option({ title: "Conta pessoal", sub: `${p.name} · ${p.clientDoc}`, selected: kind === "PF", action: "chooseNexoAccount", data: { kind: "PF" } })}${option({ title: "Nexo Empresas", sub: `${p.providerName} · ${p.providerDoc}`, selected: kind === "PJ", action: "chooseNexoAccount", data: { kind: "PJ" } })}`
+    : card(`<div class="row-gap">${circle("bank", "info")}<div><strong>Conta pessoal Nexo</strong><small class="muted">${esc(p.name)} · ${esc(p.clientDoc)}</small></div></div>`);
   return screen({
     header: appbar({ title: "Conectar conta Nexo", tone: "ink" }),
-    body: `${stepper(1)}<div class="center-block"><img src="/img/btg-logo-navy.png" alt="BTG Pactual" class="logo-md"><h2>Use sua conta Nexo no Aval</h2><p class="muted">Pague, receba e financie serviços sem sair do Nexo. O Aval só faz o que você autorizar.</p></div>
-      <h3>Qual conta?</h3>
-      ${option({ title: "Conta pessoal", sub: `${p.name} · ${p.clientDoc}`, selected: kind === "PF", action: "chooseNexoAccount", data: { kind: "PF" } })}
-      ${option({ title: "Nexo Empresas", sub: `${p.providerName} · ${p.providerDoc}`, selected: kind === "PJ", action: "chooseNexoAccount", data: { kind: "PJ" } })}
-      ${note("Quem presta serviço recebe na conta PJ ou MEI; quem contrata paga pela conta pessoal. Dá para conectar as duas.", "info", "info")}`,
-    footer: `${btn("Continuar", { action: "reviewConsent" })}${btn("Não tenho conta Nexo", { kind: "text", go: "#/sem-conta" })}`,
+    body: `<div class="center-block"><img src="/img/btg-logo-navy.png" alt="BTG Pactual" class="logo-md"><h2>Use sua conta Nexo no Aval</h2><p class="muted">Pague, receba e financie serviços sem sair do Nexo. O Aval só faz o que você autorizar.</p></div>
+      ${accounts}
+      <h3>O Aval vai acessar</h3>
+      ${card(`${CONSENT_SCOPES.filter(([, , r]) => r).map(scopeLine).join("")}${checkbox("Compartilhar meu limite pré-aprovado", { bind: "conectar.limit", checked: shareLimit })}`)}
+      ${note("O Aval nunca vê sua senha e nunca move dinheiro sem sua confirmação. Você pode revogar a qualquer momento, em Perfil.", "info", "lock-simple")}`,
+    footer: `${btn("Autorizar com biometria", { action: "authorizeConnect", iconName: "fingerprint" })}${btn("Não tenho conta Nexo", { kind: "text", go: "#/sem-conta" })}`,
   });
 }
 
 function permissoes() {
   const shareLimit = draft("conectar.limit", true);
-  const scope = ([label, detail, required]) =>
-    `<div class="consent">${icon(required ? "check-circle" : "hand-coins")}<div><strong>${esc(label)}</strong><small>${esc(detail)}</small></div>${required ? chip("Obrigatório") : ""}</div>`;
+  const scope = scopeLine;
   return screen({
     header: appbar({ title: "Permissões" }),
     body: `${stepper(2)}<h2 class="title">O Aval vai acessar</h2>
@@ -141,8 +149,8 @@ function nexoBanking(s) {
       lines: [["Limite Aval para serviços", shown(s, availableLimitCents(s)), "#/financeiro"], ["Saldo Open Finance", acc?.openFinance.status === "shared" ? "Ver bancos" : "Conectar", "#/open-finance"]],
       cta: { label: "Ir para extrato", go: "#/extrato" },
     })}
-      ${bkStrip([["Pix e transferir", "qr-code", "#/nexo"], ["Nexo Serviços", "storefront", "#/inicio"], ["Pagar", "receipt", "#/nexo"], ["Cartões", "credit-card", "#/nexo"]])}
-      ${bkBanner({ text: "Precisa de um eletricista, pintor ou reforma? Encontre prestadores verificados no Nexo Serviços, com o dinheiro protegido pelo Aval.", cta: "Abrir Nexo Serviços", art: "storefront", go: "#/inicio" })}
+      ${bkStrip([["Pix e transferir", "qr-code", "#/nexo"], ["Aval", "shield-check", "#/inicio"], ["Pagar", "receipt", "#/nexo"], ["Cartões", "credit-card", "#/nexo"]])}
+      ${bkBanner({ text: "Contrate e preste serviços com o dinheiro protegido em cada etapa. Conheça o Aval.", cta: "Abrir o Aval", art: "shield-check", go: "#/inicio" })}
       ${bkSection("Atividades", activity, { aside: `<span class="bk-day">${todayLabel()}</span>`, empty: "Nenhuma atividade hoje." })}`,
   });
 }

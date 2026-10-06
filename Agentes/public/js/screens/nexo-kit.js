@@ -17,7 +17,7 @@ function modeTabs(s) {
   const { hiring, providing } = modeCounts(s);
   const tab = (key, label, count) =>
     `<button type="button" role="tab" aria-selected="${mode === key}" class="${mode === key ? "on" : ""}" data-action="setMode" data-mode="${key}">${label}<span class="bk-count">${count}</span></button>`;
-  return `<div class="bk-tabs" role="tablist" aria-label="Lado da conta">${tab("contratante", "Contratando", hiring)}${tab("prestador", "Prestando", providing)}</div>`;
+  return `<div class="bk-tabs" role="tablist" aria-label="Lado da conta">${tab("contratante", "Contratante", hiring)}${tab("prestador", "Prestador", providing)}</div>`;
 }
 
 function topBar(s) {
@@ -56,8 +56,9 @@ export function bkPageHeader(s, { title, sub = "", tabs = true }) {
 }
 
 /** Darker strip under the header with text shortcuts: [label, icon, go][]. */
+/** Shortcut strip. Each item is [label, icon, target]: a route string, or { action, data } to run an action. */
 export const bkStrip = (items) =>
-  `<nav class="bk-strip" aria-label="Atalhos">${items.map(([label, ic, go]) => `<button type="button" data-go="${esc(go)}">${icon(ic)}<span>${esc(label)}</span></button>`).join("")}</nav>`;
+  `<nav class="bk-strip" aria-label="Atalhos">${items.map(([label, ic, target]) => `<button type="button" ${typeof target === "string" ? `data-go="${esc(target)}"` : actionAttrs(target)}>${icon(ic)}<span>${esc(label)}</span></button>`).join("")}</nav>`;
 
 /** Full-width navy banner with one offer and a white button. */
 export function bkBanner({ text, cta, art = "hand-coins", go, action, data }) {
@@ -66,7 +67,7 @@ export function bkBanner({ text, cta, art = "hand-coins", go, action, data }) {
 
 /**
  * One line of the activity list: small label on top, main text, value on the right.
- * extra is trusted HTML built by the app (a Jev signal), everything else is escaped.
+ * extra is trusted HTML built by the app (a chip or value), everything else is escaped.
  */
 export function bkItem({ icon: ic = "briefcase", label = "", title, value = "", tone = "", extra = "", go, action, data }) {
   return `<button type="button" class="bk-item" ${actionAttrs({ go, action, data })}><span class="bk-ico ${tone}">${icon(ic)}</span><span class="bk-item-text">${label ? `<small class="${tone}">${esc(label)}</small>` : ""}<strong>${esc(title)}</strong>${extra}</span>${value ? `<span class="bk-value ${tone}">${esc(value)}</span>` : ""}</button>`;
@@ -136,6 +137,6 @@ export function bkReceipt({ title, when, valueCents, parties, facts = [], auth }
 export const bkLink = (label, go) => `<button type="button" class="bk-link" data-go="${esc(go)}">${esc(label)}${icon("caret-right")}</button>`;
 
 export const bkSeal = () =>
-  `<p class="bk-seal">${icon("shield-check")}<span>Protegido pelo Aval: o dinheiro fica em custódia até cada aprovação. Nexo Serviços, com custódia, crédito e seguros do Nexo.</span></p>`;
+  `<p class="bk-seal">${icon("shield-check")}<span>Dinheiro protegido até cada aprovação. Custódia, crédito e seguros operados pelo Nexo.</span></p>`;
 
 export { menuButton as bkMenuButton } from "../ui.js";
