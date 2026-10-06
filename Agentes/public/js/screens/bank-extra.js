@@ -1,6 +1,6 @@
 // Bank console: credit proposals (policy result plus logged exceptions) and the Seguro Aval book (policies and claims).
 import { COVERAGES } from "../actions/index.js";
-import { PEOPLE, availableLimitOf, contractById, monthlyDebtOf } from "../store.js";
+import { peopleOf, availableLimitOf, contractById, monthlyDebtOf } from "../store.js";
 import { btn, chip, empty, esc, icon, kv, money, percent } from "../ui.js";
 import { kpi, layout, panel, table, two } from "./web.js";
 
@@ -11,7 +11,7 @@ const REASON = { late: "Parcela atrasada", limit: "Acima do limite", income: "Co
 const RISK_BANDS = [["A · baixo", "R$ 21,4 mi", "0,8%"], ["B · médio", "R$ 12,1 mi", "2,9%"], ["C · alto", "R$ 4,7 mi", "7,6%"]];
 
 function creditPanel(s, r) {
-  const owner = PEOPLE[r.owner];
+  const owner = peopleOf(s)[r.owner];
   const d = r.decision;
   const commitment = (monthlyDebtOf(s, r.owner) + (d?.simulation.installmentCents ?? 0)) / r.incomeCents;
   const canDecide = r.status === "analysis";
@@ -28,7 +28,7 @@ function credito(s, { item }) {
   const selected = requests.find((r) => r.id === item) ?? requests[0];
   const signed = s.credits.reduce((a, c) => a + c.principalCents, 0);
   const approved = requests.filter((r) => ["approved", "approvedLower", "signed"].includes(r.status)).length;
-  const rows = requests.map((r) => [`<button type="button" class="cell-link" data-go="#/banco/credito/${esc(r.id)}">${two(r.id, PEOPLE[r.owner].name)}</button>`, `<strong>${money(r.amountCents)}</strong><small>${r.count}x · ${esc(r.purposeLabel)}</small>`, chip(DECISION[r.status][0], DECISION[r.status][1]), r.openFinanceShared ? chip("Sim", "pos") : chip("Não")]);
+  const rows = requests.map((r) => [`<button type="button" class="cell-link" data-go="#/banco/credito/${esc(r.id)}">${two(r.id, peopleOf(s)[r.owner].name)}</button>`, `<strong>${money(r.amountCents)}</strong><small>${r.count}x · ${esc(r.purposeLabel)}</small>`, chip(DECISION[r.status][0], DECISION[r.status][1]), r.openFinanceShared ? chip("Sim", "pos") : chip("Não")]);
   return layout("credito", "Crédito", `<div class="kpis">${kpi("Carteira de crédito Aval", money(BASE_BOOK_CENTS + signed), "Crédito ao contratante")}${kpi("Propostas nesta sessão", String(requests.length), `${approved} aprovada(s)`)}${kpi("Inadimplência acima de 30 dias", "2,4%", "+0,3 p.p. em 30 dias", "neg-text")}${kpi("Destino do dinheiro", "100% custódia", "Nenhum real vai direto ao cliente", "pos-text")}</div>
     <div class="split"><div class="grow">${requests.length ? table(["Proposta", "Valor", "Política", "Open Finance"], rows, requests.indexOf(selected)) : empty("Nenhuma proposta ainda. Peça crédito como Marina no app.")}
       <section class="panel grow"><h2>Carteira por faixa de risco</h2>${table(["Faixa", "Saldo", "Atraso acima de 30 dias"], RISK_BANDS.map(([a, b, c]) => [`<strong>${a}</strong>`, b, c]))}</section></div>

@@ -1,9 +1,6 @@
 import { claimEligibility, proposalFor } from "../actions/index.js";
 import { canSee, contractById, draft, isProviderOf, myContracts } from "../store.js";
-import {
-  appbar, btn, busyNote, card, chip, circle, empty, esc, field, icon, judgmentSignal, kv, listCard, money, note, percent, row,
-  screen, sheet, signal, timeline,
-} from "../ui.js";
+import { appbar, btn, card, chip, circle, empty, esc, field, icon, kv, listCard, money, note, row, screen, sheet, timeline } from "../ui.js";
 
 export const REASON_LABEL = {
   deliveryQuality: "Qualidade da entrega", delay: "Atraso", scopeChange: "Escopo", payment: "Pagamento", abandonment: "Obra abandonada", other: "Outro",
@@ -25,11 +22,10 @@ function disputas(s) {
   });
 }
 
-/** Matrix row "only timing": offer a new date instead of blocking the stage value. */
-function scheduleCard(schedule, id, stage) {
-  if (!schedule?.value) return "";
-  const sure = schedule.routing === "automatic";
-  return card(`<div class="row-between"><strong>${sure ? "Parece ser só prazo" : "Pode ser só prazo"}</strong>${signal(`Aval IA · ${percent(schedule.confidence)}`, sure ? "ok" : "review")}</div><p class="small">Pela matriz de resolução, o caminho é combinar uma nova data sem mexer no valor da etapa. Nada fica bloqueado.</p>${btn("Propor nova data", { kind: "secondary small", go: `#/nova-data/${id}/${stage}`, iconName: "calendar-blank" })}`, "soft");
+/** Matrix row "only timing": when the reason is a delay, offer a new date instead of blocking the stage value. */
+function scheduleCard(reason, id, stage) {
+  if (reason !== "delay") return "";
+  return card(`<strong>Foi só atraso?</strong><p class="small">Pela matriz de resolução, o caminho é combinar uma nova data sem mexer no valor da etapa. Nada fica bloqueado.</p>${btn("Propor nova data", { kind: "secondary small", go: `#/nova-data/${id}/${stage}`, iconName: "calendar-blank" })}`, "soft");
 }
 
 function novaDisputa(s, { id, stage }) {
@@ -37,37 +33,26 @@ function novaDisputa(s, { id, stage }) {
   const idx = Number(stage);
   const st = c?.stages[idx];
   if (!st) return screen({ header: appbar({ title: "Abrir disputa" }), body: empty("Etapa não encontrada.") });
-  const analysis = draft("disputa.analysis");
   const reason = draft("disputa.reason");
-  const suggested = analysis && !analysis.failed ? analysis.value.reason : null;
   const reasonChips = Object.entries(REASON_LABEL).map(([k, label]) =>
-    `<button type="button" class="pill-option ${reason === k ? "on" : ""}" data-action="setDisputeReason" data-reason="${k}">${k === suggested ? icon("sparkle") : ""}${esc(label)}</button>`).join("");
-  const iaCard = analysis && !analysis.failed
-    ? card(`<div class="row-between"><strong class="dest">Entendemos assim</strong>${judgmentSignal(analysis, "Aval IA")}</div><div class="chips">${chip(REASON_LABEL[analysis.value.reason], "info")}${analysis.value.providerUnresponsive ? chip("Prestador sem resposta", "info") : ""}</div><p class="small muted">Está errado? Escolha outro motivo abaixo.</p>`, "soft")
-    : "";
+    `<button type="button" class="pill-option ${reason === k ? "on" : ""}" data-action="setDisputeReason" data-reason="${k}">${esc(label)}</button>`).join("");
   return screen({
     header: appbar({ title: "Abrir disputa" }),
     body: `${card(`<strong>Etapa ${idx + 1} · ${esc(st.name)}</strong><small class="muted">${esc(c.title)} · ${money(st.valueCents)} em custódia</small>`)}
-      ${card(`${field("O que aconteceu?", { bind: "disputa.report", value: draft("disputa.report"), multiline: true, rows: 4 })}${btn("Analisar relato com Aval IA", { kind: "secondary", action: "analyzeDispute", data: { id, stage }, busy: s.ui.busy.disputa, iconName: "sparkle" })}`)}
-      ${iaCard}
-      ${scheduleCard(draft("disputa.schedule"), id, stage)}
+      ${card(field("O que aconteceu?", { bind: "disputa.report", value: draft("disputa.report"), multiline: true, rows: 4 }))}
       ${card(`<strong>Motivo</strong><div class="choice-list wrap">${reasonChips}</div>`)}
+      ${scheduleCard(reason, id, stage)}
       ${card(`${kv("Bloqueado até a decisão", money(st.valueCents), "neg-text")}${field("Suas provas (separe por vírgula)", { bind: "disputa.evidence", value: draft("disputa.evidence") })}`)}`,
     footer: btn("Abrir disputa", { kind: "danger", action: "submitDispute", data: { id, stage }, disabled: !reason }),
   });
 }
 
-function evidenceLines(s, d) {
-  const busy = s.ui.busy[`ev-${d.id}`];
-  if (busy) return busyNote("Aval IA lendo as provas");
-  const ev = d.judgments.evidence;
-  const read = (party) => ev?.value?.find((p) => p.party === party);
-  const line = (label, detail, party) => {
-    const r = read(party);
-    const sig = !r ? (party === "provider" && !d.providerStatement ? chip("Aguardando", "neutral") : "") : r.sufficient ? signal(`Suficiente · ${percent(r.probability)}`, r.routing === "automatic" ? "ok" : "review") : signal(`Incompleta · ${percent(1 - r.probability)}`, "review");
-    return `<div class="row-between line"><div><strong>${esc(label)}</strong><small class="muted">${esc(detail)}</small></div>${sig}</div>`;
+function evidenceLines(d) {
+  const line = (label, list, waiting) => {
+    const status = waiting ? chip("Aguardando", "neutral") : list.length ? chip("Com provas", "pos") : chip("Sem provas", "warn");
+    return `<div class="row-between line"><div><strong>${esc(label)}</strong><small class="muted">${esc(list.join(", ") || (waiting ? "sem resposta ainda" : "nenhuma prova"))}</small></div>${status}</div>`;
   };
-  return `${line("Contratante", d.clientEvidence.join(", ") || "sem provas", "client")}${line("Prestador", d.providerEvidence.join(", ") || "sem resposta ainda", "provider")}<p class="small muted">Leitura do Aval IA para o mediador. Não decide a disputa.</p>`;
+  return `${line("Contratante", d.clientEvidence, false)}${line("Prestador", d.providerEvidence, !d.providerStatement)}`;
 }
 
 function acompanhar(s, { id }) {
@@ -87,8 +72,8 @@ function acompanhar(s, { id }) {
     body: `${card(`<div class="row-between">${chip(label, tone)}<small class="muted">${d.slaBreached ? "Prazo vencido · prioridade alta" : `Prazo ${esc(d.deadline)}`}</small></div><h2>${money(d.amountCents)} ${d.status === "closed" ? "resolvidos" : "bloqueados"}</h2><small class="muted">${esc(c.title)} · etapa ${d.stage + 1} · ${esc(REASON_LABEL[d.reason])}</small>`)}
       <p class="quote">“${esc(d.report)}”</p>
       ${card(`<strong>Prazos da disputa</strong>${kv("Provas das duas partes", `até ${d.evidenceDeadline ?? d.deadline} · 72 horas`)}${kv("Decisão da mediação", `até ${d.slaDeadline ?? d.deadline} · 5 dias úteis`)}${d.chatCount ? kv("Conversa do contrato", `${d.chatCount} mensagens anexadas`) : ""}<p class="small muted">Quem documenta rápido tende a vencer: envie fotos e vídeos logo.</p>`)}
-      ${card(`<strong>Provas de cada lado</strong>${evidenceLines(s, d)}`)}
-      ${d.judgments.evidence ? card(`<div class="row-gap">${icon("scales")}<strong>Regra da matriz que se aplica</strong></div><p class="small">${esc(proposalFor(d).rule)}</p>`, "soft") : ""}
+      ${card(`<strong>Provas de cada lado</strong>${evidenceLines(d)}`)}
+      ${card(`<div class="row-gap">${icon("scales")}<strong>Regra da matriz que se aplica hoje</strong></div><p class="small">${esc(proposalFor(d).rule)}</p>`, "soft")}
       ${respond}
       ${card(`<strong>Andamento</strong>${timeline([...d.history, ...next])}`)}`,
     footer,
@@ -100,7 +85,6 @@ function resultado(s, { id }) {
   if (!d) return screen({ header: appbar({ title: "Resultado" }), body: empty("Disputa não encontrada.") });
   const isProvider = isProviderOf(contractById(s, d.contractId), s);
   const p = d.proposal ?? proposalFor(d);
-  const insp = d.judgments.inspection;
   const closed = d.status === "closed";
   const c = contractById(s, d.contractId);
   const insurance = closed && !isProvider ? claimEligibility(s, c) : null;
@@ -113,7 +97,7 @@ function resultado(s, { id }) {
     header: appbar({ title: "Resultado" }),
     body: `<div class="center-block">${circle(closed ? "check-circle" : "scales", closed ? "pos" : "info", 56)}<h2>${closed ? "Acordo fechado" : d.status === "proposal" ? "Proposta da mediação" : STATUS[d.status][0]}</h2><p class="muted">Disputa ${esc(d.id)} · etapa ${d.stage + 1}</p></div>
       ${card(`<strong>Divisão dos ${money(d.amountCents)}</strong><div class="split-bar"><span style="width:${p.share * 100}%"></span></div>${kv("Prestador recebe", money(p.providerCents), "pos-text")}${kv(isProvider ? "Volta para a contratante" : "Volta para você", money(p.clientCents), "dest")}<p class="small muted">Regra aplicada: ${esc(p.rule ?? proposalFor(d).rule)}.</p>`)}
-      ${card(`<div class="row-between"><strong>Perícia técnica</strong>${insp && !insp.failed ? (insp.value ? signal(`Recomendada · ${percent(insp.confidence)}`, insp.routing === "automatic" ? "ok" : "review") : signal("Não necessária", "ok")) : ""}</div><p class="small">Avaliação no local por um técnico. Custa R$ 380,00 e é paga por quem perder.</p>`)}
+      ${card(`<strong>Perícia técnica</strong><p class="small">Avaliação no local por um técnico. Custa R$ 380,00 e é paga por quem perder.</p>`)}
       ${card(`<div class="row-gap">${icon("gavel")}<strong>Sem acordo, vai para arbitragem</strong></div><p class="small">Prevista na cláusula que vocês aceitaram. A decisão é final.</p>`)}`,
     footer,
   });
@@ -129,7 +113,7 @@ function avaliar(s, { id }) {
     body: `<div class="center-block">${circle("briefcase", "info", 56)}<h2>Como foi com ${esc(c.provider)}?</h2><p class="muted">${esc(c.title)} concluído</p><div class="stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="${n <= stars ? "on" : ""}" data-action="setStars" data-n="${n}" aria-label="${n} estrela(s)">${icon("star")}</button>`).join("")}</div></div>
       ${card(`<strong>O que se destacou?</strong><div class="choice-list wrap">${["Pontualidade", "Qualidade", "Limpeza", "Comunicação", "Preço justo"].map((t) => `<button type="button" class="pill-option ${tags.includes(t) ? "on" : ""}" data-action="toggleTag" data-tag="${t}">${t}</button>`).join("")}</div>`)}
       ${card(field("Comentário", { bind: "review.comment", value: draft("review.comment"), multiline: true }))}
-      ${note("Antes de publicar, o Aval IA verifica se o comentário tem ofensas ou dados pessoais.", "info", "sparkle")}`,
+      ${note("O Nexo pode ocultar comentários com ofensas ou dados pessoais.", "info", "shield-check")}`,
     footer: btn("Publicar avaliação", { action: "publishReview", data: { id }, busy: s.ui.busy.review }),
   });
 }

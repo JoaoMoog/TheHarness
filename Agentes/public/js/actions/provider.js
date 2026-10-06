@@ -1,5 +1,5 @@
 // Provider tools: anticipation, card machine link, reminders. Plus reviews, moderated before going live.
-import { judge, toast } from "../api.js";
+import { pendingCount } from "../domain/split.js";
 import { addLedger, contractById, draft, getState, nextId, notifyBank, notifyClient, setDraft, today, update } from "../store.js";
 import { money } from "../ui.js";
 import { actions as A, go, ok, warn } from "./core.js";
@@ -47,6 +47,7 @@ A.confirmAnticipation = ({ id, stage }) => {
 };
 A.generateLink = ({ id }) => {
   const c = contractById(getState(), id);
+  if (pendingCount(c.participants ?? [])) return warn("Ainda há convidados sem responder ao convite.");
   const payer = c.participants?.find((p) => !p.paid && !p.me) ?? c.participants?.find((p) => !p.paid);
   if (!payer) return warn("Todos os participantes já pagaram.");
   setDraft("maq", { contractId: id, payer: payer.name, generatedAt: today() }, false);
@@ -75,22 +76,18 @@ A.toggleTag = ({ tag }) => {
   const tags = draft("review.tags", ["Pontualidade", "Qualidade"]);
   setDraft("review.tags", tags.includes(tag) ? tags.filter((t) => t !== tag) : [...tags, tag], false);
 };
-A.publishReview = async ({ id }) => {
+A.publishReview = ({ id }) => {
   const comment = draft("review.comment").trim();
   if (!comment) return warn("Escreva um comentário.");
-  const result = await judge("reviewModeration", { comment }, "review");
-  const publishable = Boolean(result && result.value.publishable && result.routing === "automatic");
   update((s) => {
     const c = contractById(s, id);
     s.reviews.unshift({
       id: nextId("RV-", s.reviews.map((r) => r.id)), contractId: id, provider: c.provider, stars: draft("review.stars"),
-      tags: draft("review.tags", ["Pontualidade", "Qualidade"]), comment, status: publishable ? "published" : "inReview", moderation: result,
+      tags: draft("review.tags", ["Pontualidade", "Qualidade"]), comment, status: "published",
     });
     c.reviewed = true;
-    if (!publishable) notifyBank(s, "Avaliação para revisar", c.provider, "star", "#/banco/fila");
     s.ui.drafts.review = undefined;
   });
-  if (publishable) ok("Avaliação publicada.");
-  else toast("Sua avaliação passa por uma revisão rápida antes de ser publicada.", "info");
+  ok("Avaliação publicada.");
   go("#/servicos");
 };

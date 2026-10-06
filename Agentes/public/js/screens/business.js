@@ -1,6 +1,6 @@
 // Provider business screens: quote, agenda of receivables, invoices, subcontract and Aval Link.
-import { ANTICIPATION_SHARES, QUOTE_CLIENTS, TEMPLATES, anticipationCheck, anticipationValues } from "../actions/index.js";
-import { PROVIDERS, contractById, draft, isProviderOf, myContracts, myName, parseDdMm, person } from "../store.js";
+import { ANTICIPATION_SHARES, TEMPLATES, quoteClients, anticipationCheck, anticipationValues } from "../actions/index.js";
+import { contractById, providerList, draft, isProviderOf, myContracts, myName, parseDdMm, person } from "../store.js";
 import { appbar, btn, card, checkbox, chip, circle, empty, esc, field, icon, kv, listCard, money, note, option, percent, row, screen, signal } from "../ui.js";
 
 const templatePills = (current, action) =>
@@ -8,15 +8,13 @@ const templatePills = (current, action) =>
 
 function orcamentoNovo(s) {
   const stages = draft("orc.stages", []);
-  const client = draft("orc.client", QUOTE_CLIENTS[0]);
-  const sug = draft("orc.suggestion");
+  const client = draft("orc.client", quoteClients(s)[0]);
   return screen({
     header: appbar({ title: "Novo orçamento" }),
     body: `${card(`${field("Serviço", { bind: "orc.title", value: draft("orc.title") })}${field("Descrição", { bind: "orc.description", value: draft("orc.description"), multiline: true })}${field("Valor total (R$)", { bind: "orc.total", value: draft("orc.total"), inputmode: "decimal" })}`)}
-      <h3>Para quem</h3><div class="choice-list wrap">${QUOTE_CLIENTS.filter((c) => c !== myName(s)).map((c) => `<button type="button" class="pill-option ${client === c ? "on" : ""}" data-action="chooseQuoteClient" data-name="${esc(c)}">${esc(c)}</button>`).join("")}</div>
+      <h3>Para quem</h3><div class="choice-list wrap">${quoteClients(s).map((c) => `<button type="button" class="pill-option ${client === c ? "on" : ""}" data-action="chooseQuoteClient" data-name="${esc(c)}">${esc(c)}</button>`).join("")}</div>
       <h3>Etapas</h3>${templatePills(draft("orc.template"), "chooseQuoteTemplate")}
-      ${btn("Sugerir etapas com Aval IA", { kind: "text", action: "suggestQuoteStages", busy: s.ui.busy.orc, iconName: "sparkle" })}
-      ${stages.length ? card(`${sug ? `<div class="row-between"><strong>Etapas</strong>${sug.routing === "automatic" ? signal(`Aval IA · ${percent(sug.confidence)}`) : signal("Revise", "review")}</div>` : ""}${stages.map((st, i) => kv(`${i + 1}. ${st.name} · até ${st.due}`, money(st.valueCents))).join("")}`) : note("Escolha um modelo ou peça a sugestão do Aval IA.", "info", "list-checks")}`,
+      ${stages.length ? card(`${stages.map((st, i) => kv(`${i + 1}. ${st.name} · até ${st.due}`, money(st.valueCents))).join("")}`) : note("Escolha um modelo de etapas. Você ajusta valores e prazos depois.", "info", "list-checks")}`,
     footer: btn("Enviar orçamento", { action: "sendQuote", iconName: "paper-plane-tilt", disabled: stages.length === 0 }),
   });
 }
@@ -36,7 +34,7 @@ function orcamento(s, { id }) {
   if (!q) return screen({ header: appbar({ title: "Orçamento" }), body: empty("Orçamento não encontrado.") });
   const isClient = q.client === p.clientName;
   const insured = Boolean(draft("orcamento.insurance"));
-  const provider = PROVIDERS.find((x) => x.name === q.provider);
+  const provider = providerList(s).find((x) => x.name === q.provider);
   const open = isClient && q.status === "sent";
   return screen({
     header: appbar({ title: "Orçamento" }),
@@ -91,7 +89,7 @@ function subcontratar(s, { id, stage }) {
   const st = c && isProviderOf(c, s) ? c.stages[idx] : null;
   if (!st) return screen({ header: appbar({ title: "Subcontratar" }), body: empty("Etapa não encontrada.") });
   const chosen = draft("sub.provider");
-  const options = PROVIDERS.filter((p) => ![c.provider, c.client, person(s).providerName].includes(p.name));
+  const options = providerList(s).filter((p) => ![c.provider, c.client, person(s).providerName].includes(p.name));
   return screen({
     header: appbar({ title: "Subcontratar etapa" }),
     body: `${card(`<small class="muted">${esc(c.title)} · etapa ${idx + 1}</small><h3>${esc(st.name)}</h3>${kv("Valor da etapa", money(st.valueCents))}${kv("Prazo", st.due)}`)}

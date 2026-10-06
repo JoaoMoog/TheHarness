@@ -1,4 +1,4 @@
-// Bank website tools: structured funding, collusion blocks, ELO Marketplace sandbox and the Jev threshold simulator.
+// Bank website tools: structured funding, collusion blocks and the ELO Marketplace sandbox.
 import { addDays, audit, custodyCents, getState, makeStage, nextId, notify, setDraft, today, update } from "../store.js";
 import { money } from "../ui.js";
 import { actions as A, ok, warn } from "./core.js";
@@ -51,5 +51,4 @@ A.simulateEloContract = () => {
   ok("Contrato recebido pela API. Marina já pode pagar no app.");
 };
 
-A.setThreshold = ({ judgment, value }) => setDraft(`limiar.${judgment}`, Number(value), false);
 A.setLabs = ({ key, value }) => setDraft(`labs.${key}`, Number(value), false);

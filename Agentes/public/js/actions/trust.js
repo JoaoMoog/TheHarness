@@ -1,15 +1,13 @@
-// Trust layer: contract chat (with an early mediation hint), new date proposals, evidence anti-fraud and block appeals.
-import { judge } from "../api.js";
+// Trust layer: contract chat (mediation on request), new date proposals, evidence anti-fraud rules and block appeals.
 import { addDays, audit, contractById, draft, getState, isProviderOf, notify, notifyBank, notifyClient, notifyProvider, setDraft, today, update } from "../store.js";
 import { maybeAutoAnticipate } from "./business.js";
-import { actions as A, go, ok, resolveOnServer, warn } from "./core.js";
+import { actions as A, go, ok, warn } from "./core.js";
 
-const CHAT_WINDOW = 10;
 const BIG_STAGE_CENTS = 300_000;
 export const RESCHEDULE_OPTIONS = [7, 14, 21];
 
-// Contract chat: auditable, used as evidence, read by Jev to suggest mediation before a dispute
-A.sendMessage = async ({ id }) => {
+// Contract chat: auditable and used as evidence; either side can call a mediator before a dispute
+A.sendMessage = ({ id }) => {
   const text = draft(`msg.${id}`, "").trim();
   if (!text) return;
   const s0 = getState();
@@ -21,9 +19,6 @@ A.sendMessage = async ({ id }) => {
     if (from === "client") notifyProvider(s, ct, "Nova mensagem", text.slice(0, 60), "chat-circle-text", `#/conversa/${id}`);
     else notifyClient(s, ct, "Nova mensagem", text.slice(0, 60), "chat-circle-text", `#/conversa/${id}`);
   });
-  const messages = getState().messages[id].slice(-CHAT_WINDOW).map(({ from: f, text: t }) => ({ from: f, text: t }));
-  const reading = await judge("conversationEscalation", { messages }, `chat-${id}`);
-  if (reading) update((s) => { s.chatReadings[id] = reading; });
 };
 A.askMediation = ({ id }) => {
   update((s) => {
@@ -75,23 +70,18 @@ export function evidenceFlags(s, c, idx) {
   if (st.startedAt && st.startedAt === st.delivery.sentAt && st.valueCents >= BIG_STAGE_CENTS) flags.push("Etapa grande concluída no mesmo dia em que começou");
   return flags;
 }
-/** Runs after a delivery is sent: code flags plus Jev's reading; auto anticipation only when both are clear. */
-A.checkEvidence = async ({ id, stage }) => {
+/** Runs after a delivery is sent: anti-fraud rules in code; auto anticipation only when they are clear. */
+A.checkEvidence = ({ id, stage }) => {
   const idx = Number(stage);
-  const st0 = contractById(getState(), id).stages[idx];
-  const attachments = st0.delivery.attachments.map(({ kind, caption }) => ({ kind, caption }));
-  const reading = await judge("evidenceConsistency", { stageName: st0.name, attachments }, `evid-${id}-${idx}`);
   update((s) => {
     const c = contractById(s, id);
     const flags = evidenceFlags(s, c, idx);
-    const odd = reading?.value?.inconsistentCount ?? 0;
-    c.stages[idx].fraudCheck = { flags, reading, risky: flags.length > 0 || odd > 0, at: today() };
+    c.stages[idx].fraudCheck = { flags, risky: flags.length > 0, at: today() };
     if (c.stages[idx].fraudCheck.risky) notifyBank(s, "Risco na evidência", `${c.title} · etapa ${idx + 1}`, "warning-circle", `#/banco/fila/EV-${id}-${idx}`);
     else maybeAutoAnticipate(s, c, idx);
   });
 };
-A.bankEvidenceDecision = async ({ id, stage, decision }) => {
-  const queueId = contractById(getState(), id).stages[Number(stage)].fraudCheck?.reading?.queueId;
+A.bankEvidenceDecision = ({ id, stage, decision }) => {
   update((s) => {
     const c = contractById(s, id);
     Object.assign(c.stages[Number(stage)].fraudCheck, { decision, decidedAt: today() });
@@ -99,20 +89,16 @@ A.bankEvidenceDecision = async ({ id, stage, decision }) => {
     if (decision === "block") notify(s, c.provider, "Entrega em análise de segurança", `${c.title} · o Nexo vai falar com você`, "shield-check", `#/servico/${id}`, "prestador");
   });
   ok(decision === "block" ? "Etapa bloqueada para investigação." : "Evidência liberada para a aprovação da contratante.");
-  await resolveOnServer(queueId, decision === "block" ? "Bloqueada para investigação" : "Evidência liberada");
-  await A.loadServerQueue();
 };
 
-// Appeal against an automatic block: Jev reads what is new, a person decides
-A.submitAppeal = async () => {
+// Appeal against a block: a person at the bank decides
+A.submitAppeal = () => {
   const text = draft("appeal.text").trim();
   const acc = getState().newAccount;
   if (!acc || acc.status !== "refused") return warn("Não há bloqueio para contestar.");
   if (!text) return warn("Explique o que aconteceu.");
-  const blockReason = acc.blockReason ?? "Dados do cadastro não conferem";
-  const reading = await judge("blockAppeal", { blockReason, appeal: text }, "appeal");
   update((s) => {
-    s.newAccount.appeal = { text, reading, status: "review", at: today() };
+    s.newAccount.appeal = { text, status: "review", at: today() };
     notifyBank(s, "Contestação de bloqueio", s.newAccount.name, "identification-card", "#/banco/fila/KYC-NEW");
   });
   ok("Contestação enviada. Uma pessoa do Nexo vai revisar em até 2 dias úteis.");

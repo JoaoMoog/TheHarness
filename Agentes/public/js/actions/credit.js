@@ -1,7 +1,7 @@
 // Credit journey: simulate, propose, analysis by policy (code), sign the CCB, money goes to custody only.
 import { creditDecision, rateFor, simulateCredit } from "../domain/credit.js";
 import {
-  PEOPLE, addDays, audit, availableLimitOf, contractById, draft, getState, installmentsOf, monthlyDebtOf, nextId, notify, notifyBank, outstandingOf,
+  peopleOf, addDays, audit, availableLimitOf, contractById, draft, getState, installmentsOf, monthlyDebtOf, nextId, notify, notifyBank, outstandingOf,
   parseReais, setDraft, today, update,
 } from "../store.js";
 import { money } from "../ui.js";
@@ -41,12 +41,10 @@ A.startCreditFor = ({ id }) => {
   A.setCreditPurpose({ purpose: id });
   go("#/credito");
 };
-A.creditToProposal = () => {
+/** One step: the request goes in and the credit policy (code, not AI) answers on the spot. */
+A.submitCredit = () => {
   if (!creditSimulation(getState())) return warn("Informe um valor válido, de 3 a 24 parcelas e carência de até 60 dias.");
   if (getState().accounts[getState().session.person].reservedCredit) return warn("Use o crédito já aprovado antes de pedir outro.");
-  go("#/credito/proposta");
-};
-A.submitCredit = () => {
   const inputs = creditInputs();
   const incomeCents = parseReais(draft("credito.income"));
   if (!inputs || !incomeCents) return warn("Informe o valor e a renda mensal.");
@@ -64,7 +62,8 @@ A.submitCredit = () => {
       purposeLabel: c ? c.title : "Reservado para um novo serviço", openFinanceShared: s.accounts[owner].openFinance.status === "shared",
       status: "analysis", createdAt: today(), readyAt: addDays(ANALYSIS_DAYS), decision: null,
     });
-    notifyBank(s, "Pedido de crédito", `${id} · ${PEOPLE[owner].name} · ${money(inputs.amountCents)}`, "hand-coins", "#/banco/credito");
+    notifyBank(s, "Pedido de crédito", `${id} · ${peopleOf(s)[owner].name} · ${money(inputs.amountCents)}`, "hand-coins", "#/banco/credito");
+    decideCredit(s, s.creditRequests[0]);
   });
   go(`#/credito/analise/${id}`);
 };
@@ -81,15 +80,15 @@ export function decideCredit(s, req) {
   Object.assign(req, { status: decision.status, decision, decidedAt: today() });
   audit(s, "Política de crédito", "Decisão de crédito", `${req.id} · ${decision.status}${decision.reason ? ` (${decision.reason})` : ""} · ${money(decision.approvedCents)}`, req.id);
   const label = { approved: "Crédito aprovado", approvedLower: "Crédito aprovado com valor menor", denied: "Crédito não aprovado" }[decision.status];
-  notify(s, PEOPLE[owner].clientName, label, `${req.id} · ${money(decision.approvedCents || req.amountCents)}`, "hand-coins", `#/credito/analise/${req.id}`, "contratante");
+  notify(s, peopleOf(s)[owner].clientName, label, `${req.id} · ${money(decision.approvedCents || req.amountCents)}`, "hand-coins", `#/credito/analise/${req.id}`, "contratante");
 }
 A.finishCreditAnalysis = ({ id }) => update((s) => decideCredit(s, s.creditRequests.find((r) => r.id === id)));
 A.retryCredit = ({ id }) => {
   update((s) => {
     const req = s.creditRequests.find((r) => r.id === id);
-    Object.assign(req, { status: "analysis", decision: null, readyAt: addDays(ANALYSIS_DAYS), openFinanceShared: s.accounts[req.owner].openFinance.status === "shared" });
+    Object.assign(req, { openFinanceShared: s.accounts[req.owner].openFinance.status === "shared" });
+    decideCredit(s, req);
   });
-  ok("Pedido reenviado para análise.");
 };
 A.declineCredit = ({ id }) => {
   update((s) => { s.creditRequests.find((r) => r.id === id).status = "declined"; });
@@ -149,7 +148,7 @@ A.bankCreditException = ({ id }) => {
     const simulation = simulateCredit({ amountCents: r.amountCents, count: r.count, graceDays: r.graceDays, monthlyRate });
     audit(s, "Luiza Prado · analista", "Exceção de crédito", `${r.id} · aprovado ${money(r.amountCents)} acima da política`, r.id);
     Object.assign(r, { status: "approved", exception: true, decidedAt: today(), decision: { status: "approved", reason: null, approvedCents: r.amountCents, monthlyRate, simulation } });
-    notify(s, PEOPLE[r.owner].clientName, "Crédito aprovado pelo analista", `${r.id} · ${money(r.amountCents)}`, "hand-coins", `#/credito/analise/${r.id}`, "contratante");
+    notify(s, peopleOf(s)[r.owner].clientName, "Crédito aprovado pelo analista", `${r.id} · ${money(r.amountCents)}`, "hand-coins", `#/credito/analise/${r.id}`, "contratante");
   });
   ok(`${id}: exceção aprovada e registrada na trilha de auditoria.`);
 };

@@ -1,32 +1,13 @@
 // Home screens for both sides of the account, in the Nexo Banking style: blue balance header, strip, banner and activity.
+import { pendingCount } from "../domain/split.js";
 import { anticipationValues, payableCents } from "../actions/index.js";
 import {
-  account, availableLimitCents, custodyCents, draft, isNexoConnected, lateInstallments, myContracts, myName, myParticipant, releasedCents,
+  account, availableLimitCents, custodyCents, isNexoConnected, lateInstallments, myContracts, myName, myParticipant, mySplitInvites, releasedCents,
 } from "../store.js";
-import { judgmentSignal, money, screen } from "../ui.js";
-import { rankFor } from "../actions/market.js";
-import { MAX_QUOTES } from "../domain/marketplace.js";
+import { money, screen } from "../ui.js";
 import { bkBanner, bkHeader, bkItem, bkLink, bkMenuButton, bkSeal, bkSection, bkStrip, todayLabel } from "./nexo-kit.js";
 import { shown } from "./chrome.js";
 import { contractSummary } from "./client.js";
-import { categoryGrid, categoryLabel, kmText, providerCard, searchField } from "./market-kit.js";
-import { opportunitiesFor } from "./market-pro.js";
-
-const HOME_CATEGORIES = 6;
-const NEAR_CARDS = 6;
-const HOME_OPPORTUNITIES = 2;
-
-/** Nexo Serviços entry on the hiring home: search, categories and providers near you. */
-function findSection(s) {
-  const near = rankFor(s, { sort: "relevance" }).slice(0, NEAR_CARDS);
-  return `<section class="bk-section"><div class="bk-section-head"><h3>Nexo Serviços</h3>${bkLink("Ver tudo", "#/buscar")}</div>
-    ${searchField(draft("busca.q", ""))}<div class="mk-home-cats">${categoryGrid(HOME_CATEGORIES)}</div></section>
-    <section class="bk-section"><div class="bk-section-head"><h3>Perto de você</h3></div><div class="mk-near">${near.map(providerCard).join("")}</div></section>`;
-}
-
-const requestItems = (s) => s.requests
-  .filter((r) => r.owner === s.session.person && r.status === "open" && r.quotes.length)
-  .map((r) => bkItem({ icon: "file-text", label: `Pedido ${r.id} · ${r.quotes.length} de ${MAX_QUOTES} orçamentos`, title: `Compare os orçamentos: ${r.title}`, tone: "warn", go: `#/pedido/${r.id}` }));
 
 const BASE_REVIEWS = { "Horizonte Reformas": { count: 37, avg: 4.8 }, "Marina Costa Interiores": { count: 21, avg: 4.9 } };
 const MAX_PENDING = 4;
@@ -51,7 +32,7 @@ function creditBanner(s) {
 function stageItems(c) {
   return c.stages.flatMap((st, i) => (st.status !== "awaitingApproval" ? [] : [bkItem({
     icon: "check-circle", label: `Aprovar até ${st.delivery.deadline} · ${c.provider}`, title: `Etapa ${i + 1} · ${st.name}`, value: money(st.valueCents), tone: "warn",
-    extra: judgmentSignal(st.coverage, "Entrega conferida"), action: "reviewStage", data: { id: c.id, stage: i },
+    action: "reviewStage", data: { id: c.id, stage: i },
   })]));
 }
 
@@ -60,16 +41,19 @@ function contractItems(s, c) {
   if (c.entrada?.status === "requested") items.push(bkItem({ icon: "hand-coins", label: "Decidir entrada", title: `${c.provider} pediu entrada`, value: money(c.entrada.requestedCents), tone: "warn", go: `#/entrada-decidir/${c.id}` }));
   else if (c.status === "awaitingPayment" && c.entrada?.status !== "countered") items.push(bkItem({ icon: "qr-code", label: "Convite aceito", title: `Pagar ${c.title}`, value: money(payableCents(c, s)), go: `#/pagar/${c.id}` }));
   const share = myParticipant(c, s);
-  if (c.kind === "collective" && share && !share.paid) items.push(bkItem({ icon: "users-three", label: "Sua parte no coletivo", title: c.title, value: money(share.shareCents), tone: "warn", go: `#/pagar/${c.id}` }));
+  if (c.kind === "collective" && share && !share.paid && !pendingCount(c.participants)) items.push(bkItem({ icon: "users-three", label: "Sua parte no coletivo", title: c.title, value: money(share.shareCents), tone: "warn", go: `#/pagar/${c.id}` }));
   if (c.status === "completed" && !c.reviewed) items.push(bkItem({ icon: "star", label: "Serviço concluído", title: `Avaliar ${c.provider}`, go: `#/avaliar/${c.id}` }));
   return items;
 }
+
+const splitInviteItems = (s) => mySplitInvites(s).map(({ holder, participant }) =>
+  bkItem({ icon: "users-three", label: "Convite para dividir", title: `${holder.client} · ${holder.title}`, value: money(participant.shareCents), tone: "warn", go: `#/dividir/${participant.token}` }));
 
 function clientPending(s, mine) {
   const late = lateInstallments(s).slice(0, 1).map((p) => bkItem({ icon: "warning-circle", label: "Parcela atrasada", title: `Parcela ${p.n} de ${p.of}`, value: money(p.valueCents + (p.lateFeeCents ?? 0)), tone: "neg", action: "payInstallment", data: { id: p.id } }));
   const proposals = s.disputes.filter((d) => d.status === "proposal" && mine.some((c) => c.id === d.contractId))
     .map((d) => bkItem({ icon: "scales", label: "Proposta de acordo", title: `Disputa ${d.id}`, tone: "warn", go: `#/disputa/${d.id}/resultado` }));
-  return [...late, ...proposals, ...requestItems(s), ...mine.flatMap((c) => contractItems(s, c))];
+  return [...late, ...proposals, ...splitInviteItems(s), ...mine.flatMap((c) => contractItems(s, c))];
 }
 
 const serviceItem = (c, isProvider) => {
@@ -95,8 +79,7 @@ export function clientHome(s) {
       lines: [nexoLine(s), ["Limite para serviços", limit, "#/credito"]],
       cta: { label: "Ir para extrato", go: "#/extrato" },
     })}
-    ${bkStrip([["Buscar serviços", "magnifying-glass", "#/buscar"], ["Fazer pedido", "megaphone", "#/pedido/novo/1"], ["Pagar", "qr-code", "#/financeiro"], ["Pedir crédito", "hand-coins", "#/credito"], ["Assistente Aval", "sparkle", "#/ia"], ["Disputas", "scales", "#/disputas"]])}
-    ${findSection(s)}
+    ${bkStrip([["Pagar", "qr-code", "#/financeiro"], ["Novo serviço", "plus", "#/novo/1"], ["Dividir serviço", "users-three", { action: "startSplit" }], ["Pedir crédito", "hand-coins", "#/credito"], ["Disputas", "scales", "#/disputas"]])}
     ${creditBanner(s)}
     ${bkSection("Pendências", pending.slice(0, MAX_PENDING), { aside: `<span class="bk-day">${todayLabel()}</span>`, empty: "Nenhuma pendência. Tudo em dia." })}
     ${bkSection("Serviços contratados", mine.slice(0, MAX_SERVICES).map((c) => serviceItem(c, false)), { aside: bkLink("Ver todos", "#/servicos"), empty: "Nenhum serviço ainda." })}
@@ -118,9 +101,7 @@ function providerTodo(s, mine) {
       ? [bkItem({ icon: "device-mobile", label: "Cobrar na maquininha", title: plural(c.participants.filter((p) => !p.paid).length, "participante sem pagar", "participantes sem pagar"), go: `#/maquininha/${c.id}` })]
       : []),
   ]);
-  const opportunities = opportunitiesFor(s).filter(({ r }) => !r.quotes.some((q) => q.provider === me)).slice(0, HOME_OPPORTUNITIES)
-    .map(({ r, km }) => bkItem({ icon: "megaphone", label: `Oportunidade · ${categoryLabel(r.categoryId)} · ${kmText(km)}`, title: r.title, value: `${r.quotes.length} de ${MAX_QUOTES}`, tone: "warn", go: `#/oportunidade/${r.id}` }));
-  return [...disputes, ...invites, ...opportunities, ...work];
+  return [...disputes, ...invites, ...work];
 }
 
 function reputationOf(s, me) {
@@ -154,7 +135,7 @@ export function providerHome(s) {
       lines: [["Limite de antecipação", isNexoConnected(s) ? shown(s, account(s).anticipationLimitCents) : "Indisponível", anticipateGo], nexoLine(s)],
       cta: { label: "Ir para extrato", go: "#/extrato" },
     })}
-    ${bkStrip([["Oportunidades", "megaphone", "#/oportunidades"], ["Minha vitrine", "storefront", "#/vitrine"], ["Orçamento", "file-text", "#/orcamento/novo"], ["Aval Link", "link", "#/link/novo"], ["Maquininha", "device-mobile", "#/pos"], ["Antecipar", "lightning", anticipateGo], ["Agenda", "calendar-blank", "#/agenda"], ["Notas fiscais", "receipt", "#/notas"], ["Assistente Aval", "sparkle", "#/ia"]])}
+    ${bkStrip([["Orçamento", "file-text", "#/orcamento/novo"], ["Aval Link", "link", "#/link/novo"], ["Maquininha", "device-mobile", "#/pos"], ["Antecipar", "lightning", anticipateGo], ["Agenda", "calendar-blank", "#/agenda"], ["Notas fiscais", "receipt", "#/notas"]])}
     ${providerBanner(s, anticipable, anticipateGo)}
     ${bkSection("Para fazer agora", providerTodo(s, mine), { aside: `<span class="bk-day">${todayLabel()}</span>`, empty: "Tudo em dia." })}
     ${bkSection("Serviços prestados", [...mine.slice(0, MAX_SERVICES).map((c) => serviceItem(c, true)), ...reputation], { aside: bkLink("Ver todos", "#/servicos"), empty: "Nenhum serviço ainda." })}

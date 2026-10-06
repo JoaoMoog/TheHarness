@@ -1,8 +1,8 @@
-// Credit screens: simulator, proposal, analysis, CCB signature, my credits. The policy decides; the AI does not.
+// Credit screens: request with simulator, instant decision with CCB signature, my credits. The credit policy decides.
 import { RESERVE, cetLabel, creditSimulation, payableCents, prepayValue } from "../actions/index.js";
 import { priceInstallment } from "../domain/credit.js";
 import { account, contractById, draft, isClientOf, myParticipant, parseReais, person } from "../store.js";
-import { appbar, btn, card, checkbox, chip, circle, empty, esc, field, icon, kv, listCard, money, note, option, row, screen, timeline } from "../ui.js";
+import { appbar, btn, card, checkbox, chip, circle, empty, esc, field, kv, listCard, money, note, option, row, screen, timeline } from "../ui.js";
 
 const COUNTS = [3, 6, 12, 18, 24];
 const GRACE = [0, 30, 60];
@@ -45,25 +45,11 @@ function credito(s) {
       <h3>Em quantas parcelas</h3>${pills(COUNTS, draft("credito.count"), "setCreditCount", "n", (v) => `${v}x`)}
       <h3>Carência</h3>${pills(GRACE, draft("credito.grace"), "setCreditGrace", "days", (v) => (v ? `${v} dias` : "Sem carência"))}
       <div id="credit-sim">${simCard(s)}</div>
-      ${note("O dinheiro nunca cai na sua conta: vai direto para a custódia do serviço e só chega ao prestador por etapa aprovada.", "info", "shield-check")}`,
-    footer: btn("Continuar", { action: "creditToProposal" }),
-  });
-}
-
-function proposta(s) {
-  const sim = creditSimulation(s);
-  const acc = account(s);
-  const shared = acc.openFinance.status === "shared";
-  return screen({
-    header: appbar({ title: "Sua proposta" }),
-    body: `${card(`${kv("Valor", `R$ ${draft("credito.amount")}`)}${kv("Parcelas", sim ? `${draft("credito.count")}x de ${money(sim.installmentCents)}` : "")}${kv("CET", sim ? cetLabel(sim.cetYear) : "")}${kv("Finalidade", contractById(s, draft("credito.purpose"))?.title ?? "Novo serviço")}`)}
       ${card(field("Renda mensal (R$)", { bind: "credito.income", value: draft("credito.income"), inputmode: "decimal" }))}
       <h3>Dia do vencimento</h3>${pills(DUE_DAYS, draft("credito.dueDay"), "setDueDay", "day", (v) => `Dia ${v}`)}
-      ${shared ? card(`<div class="row-between"><strong>Open Finance ativo</strong>${chip(acc.openFinance.banks.join(", "), "pos")}</div><small class="muted">Seus dados de outros bancos entram na análise.</small>`, "soft")
-        : card(`<div class="row-gap">${circle("bank", "info")}<div><strong>Traga dados de outros bancos</strong><small class="muted">Com Open Finance, a chance de aprovar o valor todo é maior.</small></div></div>${btn("Compartilhar com Open Finance", { kind: "secondary small", go: "#/open-finance" })}`)}
       ${checkbox("Autorizo a consulta ao SCR do Banco Central e a bureaus de crédito.", { bind: "credito.consent", checked: draft("credito.consent") })}
-      ${note("A decisão é da política de crédito do Nexo, com regras fixas. O Aval IA não decide crédito.", "info", "info")}`,
-    footer: btn("Enviar para análise", { action: "submitCredit" }),
+      ${note("O dinheiro nunca cai na sua conta: vai direto para a custódia do serviço. A decisão é da política de crédito do Nexo, na hora.", "info", "shield-check")}`,
+    footer: btn("Pedir crédito", { action: "submitCredit" }),
   });
 }
 
@@ -74,17 +60,20 @@ const REASON_TEXT = {
 };
 const head = (ic, tone, title, sub) => `<div class="center-block">${circle(ic, tone, 64)}<h2>${title}</h2><p class="muted">${sub}</p></div>`;
 
-function approvedView(r, id) {
+function approvedView(s, r, id) {
   const d = r.decision;
   const lower = r.status === "approvedLower";
+  const p = person(s);
   return screen({
     header: appbar({ title: "Análise de crédito" }),
-    body: `${head(lower ? "hand-coins" : "check-circle", lower ? "warn" : "pos", lower ? `Aprovamos ${money(d.approvedCents)}` : "Crédito aprovado", lower ? `Você pediu ${money(r.amountCents)}.` : `${money(d.approvedCents)} para ${esc(r.purposeLabel)}`)}
+    body: `${head(lower ? "hand-coins" : "check-circle", lower ? "warn" : "pos", lower ? `Aprovamos ${money(d.approvedCents)}` : "Crédito aprovado", lower ? `Você pediu ${money(r.amountCents)}.` : `${money(d.approvedCents)} ${r.contractId ? `para ${esc(r.purposeLabel)}` : "reservados para o seu próximo serviço"}`)}
       ${lower ? note(REASON_TEXT[d.reason], "warn", "info") : ""}
-      ${card(`${kv("Parcelas", `${r.count}x de ${money(d.simulation.installmentCents)}`)}${kv("Taxa", pct(d.monthlyRate))}${kv("CET", cetLabel(d.simulation.cetYear), "dest")}${r.exception ? kv("Decisão", "Exceção aprovada por analista") : ""}`)}
+      ${card(`<strong>Cédula de Crédito Bancário</strong>${kv("Emitente", `${p.name} · ${p.clientDoc}`)}${kv("Credor", "Banco Nexo S.A.")}${kv("Valor", money(d.approvedCents))}${kv("Parcelas", `${r.count}x de ${money(d.simulation.installmentCents)} · todo dia ${r.dueDay}`)}${kv("Taxa", pct(d.monthlyRate))}${kv("IOF", money(d.simulation.iofCents))}${kv("CET", cetLabel(d.simulation.cetYear), "dest")}${kv("Total", money(d.simulation.totalCents))}${kv("Finalidade", r.purposeLabel)}${r.exception ? kv("Decisão", "Exceção aprovada por analista") : ""}`)}
+      ${note("O valor vai para a custódia do serviço e só chega ao prestador por etapa aprovada. Dá para antecipar ou quitar quando quiser; atraso gera multa de 2% e pausa novos créditos.", "info", "lock-simple")}
+      ${checkbox("Li e aceito a Cédula de Crédito Bancário.", { bind: "credito.ccbOk", checked: draft("credito.ccbOk") })}
       ${lower && !r.openFinanceShared ? btn("Compartilhar Open Finance e pedir de novo", { kind: "text", go: "#/open-finance" }) : ""}
       ${lower ? btn("Pedir o valor inteiro de novo", { kind: "text", action: "retryCredit", data: { id } }) : ""}`,
-    footer: `${btn(`Contratar ${money(d.approvedCents)}`, { go: `#/credito/assinar/${id}` })}${btn("Não quero", { kind: "text", action: "declineCredit", data: { id } })}`,
+    footer: `${btn(`Assinar e contratar ${money(d.approvedCents)}`, { action: "signCredit", data: { id }, iconName: "fingerprint" })}${btn("Não quero", { kind: "text", action: "declineCredit", data: { id } })}`,
   });
 }
 
@@ -100,7 +89,7 @@ function analise(s, { id }) {
       footer: btn("Simular análise concluída", { action: "finishCreditAnalysis", data: { id } }),
     });
   }
-  if (r.status === "approved" || r.status === "approvedLower") return approvedView(r, id);
+  if (r.status === "approved" || r.status === "approvedLower") return approvedView(s, r, id);
   if (r.status === "denied") {
     const late = r.decision.reason === "late";
     return screen({
@@ -110,21 +99,6 @@ function analise(s, { id }) {
     });
   }
   return screen({ header: appbar({ title: "Análise de crédito" }), body: empty(r.status === "signed" ? "Crédito contratado." : "Pedido encerrado."), footer: btn("Meus créditos", { go: "#/creditos" }) });
-}
-
-function assinar(s, { id }) {
-  const r = s.creditRequests.find((x) => x.id === id && x.owner === s.session.person);
-  if (!r?.decision || !["approved", "approvedLower"].includes(r.status)) return screen({ header: appbar({ title: "Contrato" }), body: empty("Nada para assinar.") });
-  const d = r.decision;
-  const p = person(s);
-  return screen({
-    header: appbar({ title: "Cédula de Crédito Bancário" }),
-    body: `${card(`${kv("Emitente", `${p.name} · ${p.clientDoc}`)}${kv("Credor", "Banco Nexo S.A.")}${kv("Valor", money(d.approvedCents))}${kv("Prazo", `${r.count} parcelas mensais`)}${kv("Parcela", money(d.simulation.installmentCents))}${kv("Vencimento", `todo dia ${r.dueDay}`)}${kv("Taxa de juros", pct(d.monthlyRate))}${kv("IOF", money(d.simulation.iofCents))}${kv("CET", cetLabel(d.simulation.cetYear), "dest")}${kv("Total", money(d.simulation.totalCents))}${kv("Finalidade", r.purposeLabel)}`)}
-      ${card(`<div class="row-gap">${icon("lock-simple")}<strong>Destino do dinheiro</strong></div><p class="small">O valor vai para a custódia Aval do serviço. Não cai na sua conta e só é liberado ao prestador por etapa aprovada.</p>`, "soft")}
-      ${card(`<ol class="clauses"><li>Você pode antecipar parcelas ou quitar a qualquer momento, com desconto dos juros.</li><li>Atraso gera multa de 2% e juros de mora, e pausa novos créditos até o pagamento.</li><li>Se o serviço for cancelado com devolução da custódia, o valor devolvido abate o saldo devedor.</li></ol>`)}
-      ${checkbox("Li e aceito a Cédula de Crédito Bancário.", { bind: "credito.ccbOk", checked: draft("credito.ccbOk") })}`,
-    footer: btn("Assinar com biometria", { action: "signCredit", data: { id }, iconName: "fingerprint" }),
-  });
 }
 
 function contratado(s, { id }) {
@@ -169,7 +143,7 @@ function ccb(s, { id }) {
 }
 
 export const creditRoutes = {
-  credito, "credito/proposta": proposta, "credito/analise/:id": analise, "credito/assinar/:id": assinar, "credito/ok/:id": contratado,
+  credito, "credito/analise/:id": analise, "credito/ok/:id": contratado,
   creditos, "ccb/:id": ccb,
 };
 

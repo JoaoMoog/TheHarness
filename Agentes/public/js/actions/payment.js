@@ -1,7 +1,9 @@
 // Payments into custody: checkout credit, approved credit, Pix, installments and the down payment.
+import { cardBlockedReason, cardPlans } from "../domain/card.js";
+import { pendingCount } from "../domain/split.js";
 import {
-  account, addDays, addLedger, contractById, creditBlockedReason, draft, getState, installmentCents, isNexoConnected, myParticipant, nextId, notify, person,
-  notifyProvider, setDraft, today, update,
+  account, addDays, addLedger, cardAvailableCents, contractById, creditBlockedReason, draft, getState, installmentCents, isNexoConnected, myParticipant, nextId,
+  notify, person, notifyProvider, setDraft, today, update,
 } from "../store.js";
 import { money } from "../ui.js";
 import { actions as A, go, ok, warn } from "./core.js";
@@ -53,11 +55,40 @@ export function openCredit(s, { principalCents, count, installment, monthlyRate,
   return id;
 }
 
+/** The card plan count the person picked for this contract, or the longest interest-free plan available. */
+export function chosenCardPlan(s, id, amountCents) {
+  const plans = cardPlans(amountCents);
+  const fallback = plans.filter((p) => p.interestFree).at(-1).count;
+  const wanted = Number(draft(`card.${id}`, fallback));
+  return plans.find((p) => p.count === wanted) ?? plans.find((p) => p.count === fallback);
+}
+
+function payWithCard(s0, id, amount) {
+  const plan = chosenCardPlan(s0, id, amount);
+  const blocked = cardBlockedReason({ totalCents: plan.totalCents, availableCents: cardAvailableCents(s0), connected: isNexoConnected(s0) });
+  if (blocked === "noAccount") return warn("Conecte a conta Nexo para pagar com o cartão.");
+  if (blocked === "limit") return warn("O limite do cartão não cobre este valor. Escolha menos parcelas ou outra forma de pagamento.");
+  update((s) => {
+    const card = s.accounts[s.session.person].card;
+    card.usedCents += plan.totalCents;
+    const ct = contractById(s, id);
+    if (ct.kind !== "collective") ct.payment = { method: "card", label: card.label, count: plan.count, valueCents: plan.installmentCents, interestFree: plan.interestFree };
+    fund(s, ct, amount, `Cartão Nexo ${plan.count}x`);
+  });
+  return go(`#/pago/${id}`);
+}
+
 A.choosePayMethod = ({ id, method }) => setDraft(`pay.${id}`, method, false);
+A.chooseCardCount = ({ id, count }) => setDraft(`card.${id}`, Number(count), false);
 A.confirmPay = ({ id }) => {
   const s0 = getState();
   const c = contractById(s0, id);
   const amount = payableCents(c, s0);
+  if (c.kind === "collective") {
+    if (myParticipant(c, s0)?.status === "pending") return warn("Aceite o convite antes de pagar.");
+    if (pendingCount(c.participants)) return warn("O pagamento abre quando todos os convidados responderem.");
+  }
+  if (draft(`pay.${id}`, "") === "card") return payWithCard(s0, id, amount);
   const reserved = isNexoConnected(s0) ? account(s0)?.reservedCredit : null;
   const fallback = reserved && reserved.remainingCents >= amount ? "reserved" : creditBlockedReason(s0, amount) ? "pix" : "credit";
   const method = draft(`pay.${id}`, fallback);

@@ -1,4 +1,4 @@
-// Bank website, wave 4: revenue by source, structured funding, Jev threshold simulator, collusion, compliance and API.
+// Bank website, wave 4: revenue by source, structured funding, collusion, compliance and API.
 import { FUNDING, fundingBook } from "../actions/index.js";
 import { today } from "../store.js";
 import { btn, chip, empty, esc, icon, kv, money, percent } from "../ui.js";
@@ -52,34 +52,6 @@ function funding(s) {
 }
 
 // Threshold simulator: a synthetic calibration set (phase 6) plus this session's real readings
-const GATED = { deliveryCoverage: 0.8, tacitConfirmation: 0.85, disputeReason: 0.75, evidenceSufficiency: 0.7, expertInspection: 0.65, suggestedStages: 0.8, assistantIntent: 0.9, reviewModeration: 0.8, conversationEscalation: 0.7, scheduleOnly: 0.8, evidenceConsistency: 0.75 };
-const THRESHOLDS = [0.6, 0.7, 0.8, 0.9];
-const CASES_PER_JUDGMENT = 60;
-function calibration(name) {
-  let seed = [...name].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 17);
-  const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
-  return Array.from({ length: CASES_PER_JUDGMENT }, () => {
-    const confidence = 0.35 + 0.65 * Math.pow(rand(), 0.6);
-    return { confidence, correct: rand() < 0.5 + 0.5 * confidence };
-  });
-}
-function simulate(name, threshold) {
-  const cases = calibration(name);
-  const auto = cases.filter((c) => c.confidence >= threshold);
-  return { auto: auto.length / cases.length, errors: auto.filter((c) => !c.correct).length, queue: cases.length - auto.length };
-}
-
-function limiares(s) {
-  const rows = Object.entries(GATED).map(([name, policy]) => {
-    const chosen = Number(s.ui.drafts.limiar?.[name] ?? policy);
-    const r = simulate(name, chosen);
-    const pills = THRESHOLDS.map((t) => `<button type="button" class="pill-option small ${chosen === t ? "on" : ""}" data-action="setThreshold" data-judgment="${name}" data-value="${t}">${t.toFixed(1).replace(".", ",")}</button>`).join("");
-    return [`<strong>${esc(name)}</strong><small>política atual ${policy.toFixed(2).replace(".", ",")}</small>`, `<div class="choice-list wrap">${pills}</div>`, percent(r.auto), String(r.queue), r.errors ? `<strong class="neg-text">${r.errors}</strong>` : `<strong class="pos-text">0</strong>`];
-  });
-  return layout("limiares", "Simulador de limiares do Jev", `<div class="filters">${chip(`Base de calibração sintética · ${CASES_PER_JUDGMENT} casos por julgamento`, "info")}${chip(`${s.judgmentLog.length} leitura(s) reais nesta sessão`)}</div>
-    <section class="panel grow">${table(["Julgamento", "Limiar", "Automático", "Vai para pessoas", "Erros que passariam"], rows)}<p class="small muted">Subir o limiar manda mais casos para pessoas e reduz erros automáticos. Sinais de fraude e contestações ficam sempre com uma pessoa, em qualquer limiar.</p></section>`);
-}
-
 const PAIRS = [
   { pair: "Paulo Reis ↔ Volt Serviços", contracts: 14, value: "R$ 186.400", approval: "38 min", anticipation: "100%", risk: "high" },
   { pair: "Lia Torres ↔ Verde Vivo", contracts: 3, value: "R$ 9.600", approval: "2 dias", anticipation: "0%", risk: "low" },
@@ -99,9 +71,8 @@ const PLD = [["PLD-118", "Pix fracionado em 9 transferências", "Volt Serviços"
 const LGPD = [["LG-044", "Exportação de dados", "Cliente PF", "Entregue em 2 dias"], ["LG-047", "Revogação de Open Finance", "Cliente PF", "Concluída"]];
 const TRAIL_SIZE = 40;
 function compliance(s) {
-  const ai = s.judgmentLog.map((j) => ({ at: new Date(j.at).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }), actor: "Aval IA (Jev)", action: j.name, detail: `${j.routing === "automatic" ? "automático" : "revisão humana"} · confiança ${percent(j.confidence)}`, ref: j.queueId ?? "" }));
-  const trail = [...s.audit, ...ai].slice(0, TRAIL_SIZE);
-  return layout("compliance", "Compliance e auditoria", `<div class="kpis">${kpi("Decisões registradas", String(s.audit.length + s.judgmentLog.length), "Pessoa, regra ou Aval IA")}${kpi("Decisões só da IA com dinheiro", "0", "Nenhum julgamento move dinheiro sozinho", "pos-text")}${kpi("Alertas PLD abertos", "1", "Prazo regulatório em dia")}${kpi("Pedidos LGPD", "2", "Atendidos no prazo", "pos-text")}</div>
+  const trail = s.audit.slice(0, TRAIL_SIZE);
+  return layout("compliance", "Compliance e auditoria", `<div class="kpis">${kpi("Decisões registradas", String(s.audit.length), "Pessoa ou regra")}${kpi("Dinheiro movido sem pessoa ou regra", "0", "Toda liberação tem quem decidiu", "pos-text")}${kpi("Alertas PLD abertos", "1", "Prazo regulatório em dia")}${kpi("Pedidos LGPD", "2", "Atendidos no prazo", "pos-text")}</div>
     <section class="panel grow"><h2>Trilha de auditoria</h2>${trail.length ? table(["Data", "Quem decidiu", "O quê", "Detalhe", "Ref."], trail.map((a) => [esc(a.at), `<strong>${esc(a.actor)}</strong>`, esc(a.action), esc(a.detail), esc(a.ref)])) : empty("Nenhuma decisão ainda.")}</section>
     <div class="split"><section class="panel grow"><h2>Prevenção à lavagem (PLD)</h2>${table(["Alerta", "Sinal", "Cliente", "Situação"], PLD.map((r) => r.map(esc)))}</section><section class="panel grow"><h2>LGPD</h2>${table(["Pedido", "Tipo", "Titular", "Situação"], LGPD.map((r) => r.map(esc)))}</section></div>`);
 }
@@ -123,5 +94,5 @@ function api(s) {
 }
 
 export const bankInsightRoutes = {
-  "banco/receita": receita, "banco/funding": funding, "banco/limiares": limiares, "banco/conluio": conluio, "banco/compliance": compliance, "banco/api": api,
+  "banco/receita": receita, "banco/funding": funding, "banco/conluio": conluio, "banco/compliance": compliance, "banco/api": api,
 };

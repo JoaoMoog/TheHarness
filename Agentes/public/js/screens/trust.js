@@ -1,14 +1,12 @@
 // Contract chat, new date proposal and block appeal screens.
 import { RESCHEDULE_OPTIONS } from "../actions/index.js";
 import { addDays, canSee, contractById, draft, isProviderOf } from "../store.js";
-import { appbar, btn, busyNote, card, circle, empty, esc, field, icon, kv, note, percent, screen, signal } from "../ui.js";
+import { appbar, btn, card, circle, empty, esc, field, icon, kv, note, screen } from "../ui.js";
 
 function chatHint(s, id) {
-  const r = s.chatReadings[id];
-  if (!r?.value?.escalating) return "";
-  if (r.mediationAsked) return note(`Mediação Nexo convidada em ${r.mediationAsked}. Um mediador acompanha a conversa.`, "info", "scales");
-  const sure = r.routing === "automatic";
-  return card(`<div class="row-between"><strong>${sure ? "A conversa está ficando tensa" : "Parece que há um desentendimento"}</strong>${signal(`Aval IA · ${percent(r.confidence)}`, sure ? "ok" : "review")}</div><p class="small">Um mediador do Nexo pode ajudar agora, antes de virar disputa. Nada fica bloqueado.</p>${btn("Chamar a mediação Nexo", { kind: "secondary small", action: "askMediation", data: { id }, iconName: "scales" })}`, "warn-soft");
+  const asked = s.chatReadings[id]?.mediationAsked;
+  if (asked) return note(`Mediação Nexo convidada em ${asked}. Um mediador acompanha a conversa.`, "info", "scales");
+  return card(`<strong>Precisa de ajuda para se entender?</strong><p class="small">Um mediador do Nexo pode entrar na conversa antes de virar disputa. Nada fica bloqueado.</p>${btn("Chamar a mediação Nexo", { kind: "secondary small", action: "askMediation", data: { id }, iconName: "scales" })}`);
 }
 
 function conversa(s, { id }) {
@@ -24,7 +22,7 @@ function conversa(s, { id }) {
     header: appbar({ title: meProvider ? c.client : c.provider }),
     body: `${note("Conversa registrada no contrato. Em uma disputa, ela entra como prova para as duas partes.", "info", "lock-simple")}
       <div class="chat">${bubbles || empty("Nenhuma mensagem ainda.")}</div>
-      ${s.ui.busy[`chat-${id}`] ? busyNote("Aval IA lendo o tom da conversa") : chatHint(s, id)}`,
+      ${messages.length ? chatHint(s, id) : ""}`,
     footer: `<div class="chat-input"><input data-bind="msg.${esc(id)}" placeholder="Escreva para ${esc(meProvider ? c.client : c.provider)}" value="${esc(draft(`msg.${id}`, ""))}" aria-label="Mensagem"><button type="button" class="send" data-action="sendMessage" data-id="${esc(id)}" aria-label="Enviar">${icon("paper-plane-tilt")}</button></div>`,
   });
 }
@@ -52,7 +50,7 @@ function contestar(s) {
     header: appbar({ title: "Contestar decisão" }),
     body: `${card(`${kv("Decisão", "Conta não aprovada")}${kv("Motivo informado", acc.blockReason ?? "Dados do cadastro não conferem")}`)}
       ${card(field("Explique e diga o que pode enviar", { bind: "appeal.text", value: draft("appeal.text"), multiline: true, rows: 4 }))}
-      ${note("Toda decisão automática de bloqueio pode ser contestada. Uma pessoa do Nexo revisa, com apoio do Aval IA.", "info", "shield-check")}`,
+      ${note("Toda decisão automática de bloqueio pode ser contestada. Uma pessoa do Nexo revisa.", "info", "shield-check")}`,
     footer: btn("Enviar contestação", { action: "submitAppeal", busy: s.ui.busy.appeal }),
   });
 }

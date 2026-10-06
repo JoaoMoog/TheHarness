@@ -1,5 +1,5 @@
 // Nexo account connection (consent, token) and Open Finance sharing. Without a Nexo account the Aval works only in cash mode.
-import { PEOPLE, draft, getState, notify, setDraft, today, update } from "../store.js";
+import { peopleOf, draft, getState, notify, setDraft, today, update } from "../store.js";
 import { actions as A, go, ok, warn } from "./core.js";
 
 const ACCOUNT_LABEL = {
@@ -28,7 +28,7 @@ A.authorizeConnect = () => {
       scopes: CONSENT_SCOPES.filter(([, , required]) => required || shareLimit).map(([label]) => label),
     };
     if (!shareLimit) acc.preApprovedCents = 0;
-    notify(s, PEOPLE[s.session.person].clientName, "Conta Nexo conectada", ACCOUNT_LABEL[kind], "bank", "#/contas", "contratante");
+    notify(s, peopleOf(s)[s.session.person].clientName, "Conta Nexo conectada", ACCOUNT_LABEL[kind], "bank", "#/contas", "contratante");
   });
   go("#/conectar/ok");
 };

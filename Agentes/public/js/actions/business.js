@@ -1,8 +1,7 @@
 // The provider as a business: quotes, stage templates, Aval Link and card machine, auto anticipation,
 // subcontracting, invoices and Pix Automático. Money rules stay in code.
-import { judge } from "../api.js";
 import {
-  addDays, addLedger, contractById, draft, getState, makeStage, myName, nextId, notify, notifyProvider, parseReais, setDraft, today, update,
+  addDays, addLedger, clientList, contractById, draft, getState, makeStage, myName, myNames, nextId, notify, notifyProvider, parseReais, setDraft, today, update,
 } from "../store.js";
 import { money } from "../ui.js";
 import { contractFromInvite } from "./contract.js";
@@ -18,7 +17,8 @@ export const TEMPLATES = {
   interiores: ["Projeto de interiores", [["Medição e briefing", 0.25], ["Projeto 3D e memorial", 0.5], ["Acompanhamento da obra", 0.25]]],
   unica: ["Etapa única", [["Serviço completo", 1]]],
 };
-export const QUOTE_CLIENTS = ["Marina Costa", "Condomínio Jardins", "Lúcia Andrade"];
+/** Who can receive a quote: everyone in the presentation on their hiring side, except me. */
+export const quoteClients = (s) => clientList(s).filter((name) => !myNames(s).has(name));
 
 /** Splits a total by a template in whole reais; the last stage takes the rounding. */
 export function splitByTemplate(totalCents, key) {
@@ -37,22 +37,14 @@ A.chooseQuoteClient = ({ name }) => setDraft("orc.client", name, false);
 A.chooseQuoteTemplate = ({ key }) => {
   const total = parseReais(draft("orc.total"));
   if (!total) return warn("Informe o valor total.");
-  update((s) => { s.ui.drafts.orc = { ...s.ui.drafts.orc, template: key, stages: withDues(splitByTemplate(total, key)), suggestion: null }; });
-};
-A.suggestQuoteStages = async () => {
-  const description = draft("orc.description").trim();
-  const totalCents = parseReais(draft("orc.total"));
-  if (!description || !totalCents) return warn("Informe a descrição e o valor total.");
-  const result = await judge("suggestedStages", { description, totalCents }, "orc");
-  const stages = result?.value.stages.length ? result.value.stages : splitByTemplate(totalCents, "unica");
-  update((s) => { s.ui.drafts.orc = { ...s.ui.drafts.orc, template: null, stages: withDues(stages), suggestion: result ? { routing: result.routing, confidence: result.confidence } : null }; });
+  update((s) => { s.ui.drafts.orc = { ...s.ui.drafts.orc, template: key, stages: withDues(splitByTemplate(total, key)) }; });
 };
 A.sendQuote = () => {
   const title = draft("orc.title").trim();
   const description = draft("orc.description").trim();
   const totalCents = parseReais(draft("orc.total"));
   const stages = draft("orc.stages", []);
-  const client = draft("orc.client", QUOTE_CLIENTS[0]);
+  const client = draft("orc.client", quoteClients(getState())[0]);
   if (!title || !totalCents || stages.length === 0) return warn("Preencha título, valor e etapas.");
   if (client === myName(getState())) return warn("Escolha outro cliente.");
   let id = "";

@@ -1,26 +1,26 @@
-import { actions, clientServices } from "../actions/index.js";
 import { account, canSee, contractById, draft, isNexoConnected, myNotifications, person, setDraft } from "../store.js";
 import {
   actionAttrs, appbar, btn, busyNote, card, checkbox, chip, circle, empty, esc, field, icon, kv, money, note, percent, row, screen, signal, timeline,
 } from "../ui.js";
+import { CONSENT_SCOPES, importedCustomer } from "../actions/index.js";
 import { bkFacts } from "./nexo-kit.js";
 
-export const INTENT_LABEL = {
-  approveStage: "Aprovar etapa", pay: "Pagar", openDispute: "Abrir disputa", viewStatement: "Ver extrato e limite",
-  newService: "Contratar serviço", requestCredit: "Pedir crédito", other: "Outro assunto",
-};
-const NEEDS_SERVICE = ["approveStage", "pay", "openDispute"];
 
 function entrada(s) {
   const first = person(s)?.first;
-  const quick = [["Biometria", "fingerprint", { action: "login" }], ["App Nexo", "bank", { go: "#/nexo" }], ["Arbitragem", "gavel", { go: "#/arbitragem" }], ["Cadastro", "user", { go: "#/cadastro" }]];
+  const registered = Boolean(person(s));
+  const quick = registered
+    ? [["Biometria", "fingerprint", { action: "login" }], ["App Nexo", "bank", { go: "#/nexo" }], ["Arbitragem", "gavel", { go: "#/arbitragem" }]]
+    : [["Conta Nexo", "bank", { go: "#/cadastro" }], ["Arbitragem", "gavel", { go: "#/arbitragem" }]];
+  const actionsHtml = registered
+    ? `<button type="button" class="bk-white" data-action="login">Entrar</button>
+        <button type="button" class="bk-login-link" data-go="#/nexo">Entrar pelo app Nexo${icon("caret-right")}</button>`
+    : `<button type="button" class="bk-white" data-go="#/cadastro">Entrar com a conta Nexo</button>`;
   return screen({
     cls: "bk-login", dark: true,
     body: `<img src="/img/btg-logo-white.png" class="bk-login-logo" alt="BTG Pactual">
-      <div class="bk-login-copy"><h1>Que bom te ver por aqui${first ? `, ${esc(first)}` : ""}!</h1><p>Nexo Serviços: encontre, contrate e pague prestadores verificados, com o dinheiro protegido pelo Aval até cada entrega ser aprovada.</p>
-        <button type="button" class="bk-white" data-action="login">Entrar</button>
-        <button type="button" class="bk-login-link" data-go="#/nexo">Entrar pelo app Nexo${icon("caret-right")}</button>
-        <button type="button" class="bk-login-link" data-go="#/cadastro">Iniciar novo cadastro${icon("caret-right")}</button></div>
+      <div class="bk-login-copy"><h1>Que bom te ver por aqui${first ? `, ${esc(first)}` : ""}!</h1><p>Aval: contrate e preste serviços por etapa, com o dinheiro protegido pelo Nexo até cada entrega ser aprovada.</p>
+        ${actionsHtml}</div>
       <nav class="bk-login-quick" aria-label="Acesso rápido">${quick.map(([label, ic, target]) => `<button type="button" ${target.action ? `data-action="${target.action}"` : `data-go="${target.go}"`}>${icon(ic)}<span>${label}</span></button>`).join("")}</nav>`,
   });
 }
@@ -33,17 +33,31 @@ function biometria() {
   });
 }
 
-function cadastro(s) {
-  const capture = (fieldName, label, ic, done) =>
-    `<button type="button" class="capture ${done ? "done" : ""}" data-action="markCapture" data-field="${fieldName}">${icon(done ? "check-circle" : ic)}<span>${esc(label)}</span><small>${done ? "Enviado" : "Tocar para enviar"}</small></button>`;
+/** The Nexo app, opened by the redirect: the person sees what the Aval asks for and authorizes with biometrics. */
+function cadastro() {
+  const c = importedCustomer();
+  const required = CONSENT_SCOPES.filter(([, , r]) => r).map(([label, detail]) => `<div class="consent">${icon("check-circle")}<div><strong>${esc(label)}</strong><small>${esc(detail)}</small></div></div>`).join("");
   return screen({
-    header: appbar({ title: "Criar conta" }),
-    body: `<h2 class="title">Seus dados</h2>
-      ${card(`${field("Nome completo", { bind: "signup.name", value: draft("signup.name") })}${field("Nome como está no documento", { bind: "signup.documentName", value: draft("signup.documentName") })}${field("Que serviços você presta ou contrata?", { bind: "signup.services", value: draft("signup.services"), multiline: true })}`)}
-      <div class="grid-2">${capture("doc", "Foto do documento", "identification-card", draft("signup.doc"))}${capture("selfie", "Selfie com prova de vida", "camera", draft("signup.selfie"))}</div>
-      ${card(`<div class="row-gap">${icon("gavel")}<strong>Cláusula compromissória</strong></div><p class="small">Disputas que a mediação não resolver vão para arbitragem profissional, custeada pelo seguro já incluído em toda operação. <button type="button" class="link" data-go="#/arbitragem">Como funciona</button></p>${checkbox("Li e aceito os termos do Aval e a cláusula compromissória.", { bind: "signup.arbitration", checked: draft("signup.arbitration") })}`)}
-      ${note("O Nexo confere seus dados antes de liberar pagamentos e saques. Você já pode montar serviços enquanto isso.")}`,
-    footer: btn("Enviar para análise", { action: "submitSignup", busy: s.ui.busy.signup }),
+    header: `<div class="redirect-bar">${icon("lock-simple")}<span>Você está no app Nexo</span></div>${appbar({ title: "Autorizar o Aval", tone: "ink" })}`,
+    body: `<div class="center-block"><img src="/img/btg-logo-navy.png" alt="BTG Pactual" class="logo-md"><h2>O Aval quer acessar a sua conta</h2><p class="muted">Ao autorizar, você volta para o Aval com os seus dados. Não precisa digitar nada.</p></div>
+      ${card(`<div class="row-gap">${circle("user", "info")}<div><strong>${esc(c.name)}</strong><small class="muted">${esc(c.account)}</small></div></div>`)}
+      <h3>O Aval vai acessar</h3>
+      ${card(`${required}${checkbox("Compartilhar meu limite pré-aprovado", { bind: "conectar.limit", checked: draft("conectar.limit", true) })}`)}
+      ${note("O Aval nunca vê a sua senha e nunca move dinheiro sem a sua confirmação. Dá para revogar a qualquer momento.", "info", "lock-simple")}`,
+    footer: `${btn("Autorizar com biometria", { action: "nexoAuthorize", iconName: "fingerprint" })}${btn("Cancelar e voltar ao Aval", { kind: "text", go: "#/entrada" })}`,
+  });
+}
+
+/** Back in the Aval: the data that came from the Nexo, and the Aval's own terms. */
+function cadastroDados(s) {
+  if (!draft("login.authorized")) return screen({ header: appbar({ title: "Conta Nexo" }), body: empty("Entre com a sua conta Nexo primeiro."), footer: btn("Entrar com a conta Nexo", { go: "#/cadastro" }) });
+  const c = importedCustomer();
+  return screen({
+    header: appbar({ title: "Dados importados" }),
+    body: `<div class="center-block">${circle("seal-check", "pos", 56)}<h2>Dados importados do Nexo</h2><p class="muted">Confira e aceite os termos do Aval para começar.</p></div>
+      ${card(`${kv("Nome", c.name)}${kv("CPF", c.doc.replace("CPF ", ""))}${kv("Celular", c.phone)}${kv("E-mail", c.email)}${kv("Endereço", c.address)}${kv("Conta", c.account)}`)}
+      ${card(`<div class="row-gap">${icon("gavel")}<strong>Cláusula compromissória</strong></div><p class="small">Disputas que a mediação não resolver vão para arbitragem profissional, custeada pelo seguro já incluído em toda operação.</p>${btn("Como funciona", { kind: "text small", go: "#/arbitragem" })}${checkbox("Li e aceito os termos do Aval e a cláusula compromissória.", { bind: "signup.arbitration", checked: draft("signup.arbitration") })}`)}`,
+    footer: btn("Começar a usar o Aval", { action: "importNexoAccount" }),
   });
 }
 
@@ -79,7 +93,7 @@ function contaAnalise(s) {
 
 function avisos(s) {
   const mine = myNotifications(s);
-  const side = (n) => (n.mode === "prestador" ? "Prestando" : n.mode === "contratante" ? "Contratando" : "Aval");
+  const side = (n) => (n.mode === "prestador" ? "Prestador" : n.mode === "contratante" ? "Contratante" : "Aval");
   const item = (n) => `<button type="button" class="bk-note ${n.read ? "" : "unread"}" ${actionAttrs({ action: "readNotification", data: { id: n.id, target: n.go ?? "" } })}><strong>${esc(n.text)}</strong>${n.detail ? `<span>${esc(n.detail)}</span>` : ""}<small>${esc(side(n))}</small></button>`;
   const group = (title, list, aside = "") => (list.length ? `<section class="bk-notes"><div class="bk-notes-head"><span>${title}</span>${aside}</div>${list.map(item).join("")}</section>` : "");
   const settings = `<button type="button" class="bk-link dark" data-go="#/perfil">${icon("gear")}Configurar</button>`;
@@ -99,7 +113,6 @@ const setting = (title, { detail = "", go, action } = {}) => {
 
 function perfil(s) {
   const p = person(s);
-  const on = s.settings.aiEnabled;
   const acc = account(s);
   return screen({
     cls: "bk-paper", header: appbar({ title: "Perfil" }),
@@ -109,38 +122,9 @@ function perfil(s) {
       ${setting("Gestão de contas", { detail: isNexoConnected(s) ? acc.nexo.label : "Conectar conta Nexo", go: "#/contas" })}${setting("Open Finance", { detail: acc.openFinance.status === "shared" ? acc.openFinance.banks.join(", ") : "Traga dados de outros bancos", go: "#/open-finance" })}${setting("Meus créditos", { detail: "Pedidos, contratos e parcelas", go: "#/creditos" })}${setting("Aval Labs", { detail: "Custódia que rende, cofrinho e cartão 12x", go: "#/labs" })}
       <h3 class="bk-settings-title">Configurações</h3>
       ${setting("Segurança", { detail: "Biometria, token e aparelhos" })}${setting("Arbitragem e disputas", { detail: "Cláusula compromissória aceita", go: "#/arbitragem" })}${setting("Notificações", { go: "#/avisos" })}
-      <div class="bk-setting"><span><strong>Aval IA nos seus serviços</strong><small>Lê textos e provas para conferir entregas. Os dados ficam no Nexo e não treinam modelos.</small></span><button type="button" class="toggle ${on ? "on" : ""}" role="switch" aria-checked="${on}" aria-label="Aval IA" data-action="toggleAi"><span></span></button></div>
       <h3 class="bk-settings-title">Precisa de ajuda?</h3>
-      ${setting("Assistente Aval", { detail: "Peça em poucas palavras", go: "#/ia" })}${setting("Baixar meus dados", { detail: "LGPD · arquivo em até 48 horas", action: "downloadData" })}
+      ${setting("Baixar meus dados", { detail: "LGPD · arquivo em até 48 horas", action: "downloadData" })}
       <div class="bk-menu-foot"><button type="button" class="bk-primary" data-action="logout">Sair do app${icon("sign-out")}</button><small>Versão do app: Aval 5.0 · protótipo</small></div>`,
-  });
-}
-
-function chatMessage(m, s) {
-  if (m.from === "user") return `<div class="bubble user">${esc(m.text)}</div>`;
-  if (!m.result) return `<div class="bubble ia">${esc(m.text)}</div>`;
-  const { value, routing, confidence } = m.result;
-  const services = clientServices(s);
-  const service = value.serviceId ? contractById(s, value.serviceId) : null;
-  const confident = routing === "automatic";
-  const needsService = NEEDS_SERVICE.includes(value.intent);
-  const head = `<div class="row-between"><strong>${confident ? "Entendi o pedido" : value.serviceId || !needsService ? "Confirme o pedido" : "Qual serviço?"}</strong>${confident ? signal(`Aval IA · ${percent(confidence)}`) : signal("Confirme", "review")}</div>`;
-  const target = `<div class="ia-target">${icon("arrow-right")}<span><strong>${esc(INTENT_LABEL[value.intent] ?? value.intent)}</strong>${service ? `<small>${esc(service.title)} · ${esc(service.provider)}</small>` : ""}</span></div>`;
-  const choices = !confident && needsService
-    ? `<div class="choice-list">${services.map((sv) => `<button type="button" class="pill-option" data-action="chatOpen" data-intent="${esc(value.intent)}" data-service="${esc(sv.id)}">${esc(sv.label)}</button>`).join("")}</div>`
-    : btn(confident ? "Abrir" : "Confirmar e abrir", { action: "chatOpen", data: { intent: value.intent, service: value.serviceId ?? "" }, kind: confident ? "primary" : "secondary" });
-  return `<div class="bubble ia card">${head}${target}${choices}</div>`;
-}
-
-function avalIa(s) {
-  const suggestions = ["quero liberar a segunda etapa da reforma", "e pagar o pintor também", "quero financiar a reforma da cozinha", "quero reclamar do chuveiro que não liga"];
-  const body = s.chat.length === 0
-    ? `<div class="center-block">${circle("sparkle", "info", 56)}<h2>Peça em poucas palavras</h2><p class="muted">O Aval IA entende o pedido e abre a tela certa. Nenhuma ação acontece sem sua confirmação.</p></div><div class="choice-list">${suggestions.map((t) => `<button type="button" class="pill-option" data-action="chatSuggest" data-text="${esc(t)}">${esc(t)}</button>`).join("")}</div>`
-    : `${s.chat.map((m) => chatMessage(m, s)).join("")}${s.ui.busy.chat ? busyNote("Aval IA entendendo o pedido") : ""}`;
-  return screen({
-    header: appbar({ title: "Aval IA" }),
-    body: `<div class="chat">${body}</div>`,
-    footer: `<div class="chat-input"><input id="chat-input" data-bind="chat.text" placeholder="Peça em poucas palavras" value="${esc(draft("chat.text", ""))}" aria-label="Mensagem para o Aval IA">${icon("microphone")}<button type="button" class="send" data-action="sendChat" aria-label="Enviar" ${s.ui.busy.chat ? "disabled" : ""}>${icon("paper-plane-tilt")}</button></div>`,
   });
 }
 
@@ -158,12 +142,6 @@ function contrato(s, { id }) {
 }
 
 export const commonRoutes = {
-  entrada, biometria, cadastro, "conta-analise": contaAnalise, avisos, perfil, ia: avalIa, "contrato/:id": contrato,
+  entrada, biometria, cadastro, "cadastro/dados": cadastroDados, "conta-analise": contaAnalise, avisos, perfil, "contrato/:id": contrato,
 };
 
-export const commonActions = {
-  chatSuggest: ({ text }) => {
-    setDraft("chat.text", text);
-    actions.sendChat();
-  },
-};

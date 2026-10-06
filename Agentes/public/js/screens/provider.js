@@ -1,7 +1,7 @@
 import { anticipationCheck, anticipationValues } from "../actions/index.js";
 import { contractById, draft, isProviderOf } from "../store.js";
 import {
-  appbar, btn, busyNote, card, checkbox, chip, circle, empty, esc, field, icon, judgmentSignal, kv, listCard, money, note, row, screen,
+  appbar, btn, busyNote, card, checkbox, chip, circle, empty, esc, field, icon, kv, listCard, money, note, row, screen,
 } from "../ui.js";
 
 const ATTACH = [["photo", "Foto", "camera"], ["video", "Vídeo", "video-camera"], ["document", "Documento", "file-text"], ["location", "Local", "map-pin"]];
@@ -30,15 +30,8 @@ function entrega(s, { id, stage }) {
     return screen({ header: appbar({ title: "Enviar entrega" }), body: empty("Comece o envio pela página do serviço."), footer: btn("Começar envio", { action: "startDelivery", data: { id, stage } }) });
   }
   const atts = draft("entrega.attachments", []);
-  const cov = draft("entrega.coverage");
   const counts = Object.fromEntries(ATTACH.map(([k]) => [k, atts.filter((a) => a.kind === k).length]));
-  let covHtml = "";
-  if (s.ui.busy.entrega) covHtml = busyNote("Aval IA conferindo os itens da etapa");
-  else if (cov && !cov.failed) {
-    covHtml = `<div class="row-between"><strong>Itens da etapa</strong>${cov.value.coveredCount === cov.value.items.length ? judgmentSignal(cov, `${cov.value.coveredCount} de ${cov.value.items.length}`) : `<span class="signal review">${icon("sparkle")}${cov.value.coveredCount} de ${cov.value.items.length} cobertos</span>`}</div>${cov.value.items.map((it) => `<div class="check-line ${it.covered ? "" : "warn"}">${icon(it.covered ? "check-circle" : "warning-circle")}<span>${esc(it.item)}</span></div>`).join("")}${cov.value.coveredCount < cov.value.items.length ? `<p class="small muted">Falta prova de algum item. Sem ela, a cliente pode pedir ajuste.</p>` : ""}`;
-  } else {
-    covHtml = `<strong>Itens da etapa</strong>${st.items.map((it) => `<div class="check-line muted">${icon("list-checks")}<span>${esc(it)}</span></div>`).join("")}`;
-  }
+  const covHtml = `<strong>Itens combinados da etapa</strong>${st.items.map((it) => `<div class="check-line muted">${icon("list-checks")}<span>${esc(it)}</span></div>`).join("")}`;
   return screen({
     header: appbar({ title: "Enviar entrega" }),
     body: `${card(`<strong>Etapa ${idx + 1} · ${esc(st.name)}</strong><small class="muted">${esc(c.client)} · ${money(st.valueCents)} · até ${esc(st.due)}</small>${st.reply ? `<p class="quote">Pedido de ajuste: “${esc(st.reply.text)}”</p>` : ""}`)}
@@ -46,7 +39,7 @@ function entrega(s, { id, stage }) {
       <div class="attach-grid">${ATTACH.map(([k, l, ic]) => `<button type="button" class="attach ${counts[k] ? "has" : ""}" data-action="addAttachment" data-kind="${k}">${icon(ic)}<strong>${l}</strong><small>${counts[k] ? `${counts[k]} ${counts[k] === 1 ? "item" : "itens"}` : "Adicionar"}</small></button>`).join("")}</div>
       ${atts.length ? listCard("Anexos", atts.map((a, i) => row({ icon: ATTACH.find(([k]) => k === a.kind)[2], title: a.caption, detail: ATTACH.find(([k]) => k === a.kind)[1], action: "removeAttachment", data: { index: i }, tone: "neutral", extra: `<small class="muted">remover</small>` })).join("")) : ""}
       ${card(field("Descrição do que foi feito", { bind: "entrega.description", value: draft("entrega.description"), multiline: true }))}
-      ${card(`${covHtml}${btn("Conferir com Aval IA", { kind: "secondary", action: "checkDelivery", data: { id, stage }, busy: s.ui.busy.entrega, iconName: "sparkle" })}`)}`,
+      ${card(covHtml)}`,
     footer: btn("Enviar para aprovação", { action: "sendDelivery", data: { id, stage } }),
   });
 }

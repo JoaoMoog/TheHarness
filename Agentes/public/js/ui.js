@@ -20,13 +20,6 @@ export function btn(label, { action, go, kind = "primary", data, disabled = fals
 export const chip = (text, tone = "neutral") => `<span class="chip ${tone}">${esc(text)}</span>`;
 export const signal = (text, state = "ok") => `<span class="signal ${state}">${icon("sparkle")}${esc(text)}</span>`;
 
-/** A Jev result as a badge: confident and automatic, or flagged for a person to check. */
-export function judgmentSignal(result, okText) {
-  if (!result || result.failed) return "";
-  return result.routing === "automatic"
-    ? signal(`${okText} · ${percent(result.confidence)}`, "ok")
-    : signal(`Confira · ${percent(result.confidence)}`, "review");
-}
 
 export const circle = (name, tone = "info", size = 40) => `<span class="circle ${tone}" style="--s:${size}px">${icon(name)}</span>`;
 
@@ -44,9 +37,9 @@ export const card = (html, cls = "") => `<section class="card ${cls}">${html}</s
 export const listCard = (title, rowsHtml, linkHtml = "") =>
   `<section class="card flush">${title ? `<div class="card-head"><h3>${esc(title)}</h3>${linkHtml}</div>` : ""}${rowsHtml}</section>`;
 
-export function field(label, { bind, value = "", multiline = false, placeholder = "", rows = 3, inputmode = "", id = "" }) {
+export function field(label, { bind, value = "", multiline = false, placeholder = "", rows = 3, inputmode = "", id = "", type = "text" }) {
   const common = `data-bind="${esc(bind)}" placeholder="${esc(placeholder)}" ${id ? `id="${esc(id)}"` : ""} ${inputmode ? `inputmode="${inputmode}"` : ""}`;
-  const control = multiline ? `<textarea ${common} rows="${rows}">${esc(value)}</textarea>` : `<input ${common} value="${esc(value)}">`;
+  const control = multiline ? `<textarea ${common} rows="${rows}">${esc(value)}</textarea>` : `<input type="${type === "password" ? "password" : "text"}" ${common} value="${esc(value)}">`;
   return `<label class="field"><span>${esc(label)}</span>${control}</label>`;
 }
 
@@ -82,11 +75,10 @@ export function appbar({ title = "", tone = "light", close = false } = {}) {
 
 /** The Nexo floating "Menu" pill. It replaces the bottom tab bar on the main screens. */
 export const menuButton = () => `<button type="button" class="bk-menu" data-go="#/menu">${icon("list")}<span>Menu</span></button>`;
-const iaButton = () => `<button type="button" class="fab" data-go="#/ia" aria-label="Abrir Assistente Aval">${icon("sparkle")}</button>`;
 
 export function screen({ header = "", body, footer = "", tab = "", fab = false, overlay = "", cls = "", dark = false }) {
-  const floating = tab ? menuButton() : fab ? iaButton() : "";
-  return `<div class="screen ${cls} ${tab ? "has-menu" : fab ? "has-fab" : ""}">${statusbar(dark)}${header}<div class="content">${body}</div>${footer ? `<div class="footer">${footer}</div>` : ""}${floating}${overlay}</div>`;
+  const floating = tab ? menuButton() : "";
+  return `<div class="screen ${cls} ${tab ? "has-menu" : ""}">${statusbar(dark)}${header}<div class="content">${body}</div>${footer ? `<div class="footer">${footer}</div>` : ""}${floating}${overlay}</div>`;
 }
 
 export function sheet(title, body) {
