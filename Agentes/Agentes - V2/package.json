@@ -1,0 +1,18 @@
+{
+  "name": "crossmarketplace",
+  "version": "2.0.0",
+  "description": "Protótipo navegável do CrossMarketPlace v2 (padrão Orquestra / BTG). Dados fictícios.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --import tsx src/index.ts",
+    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
+    "test:coverage": "node --import tsx --test --experimental-test-coverage \"tests/**/*.test.ts\"",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
