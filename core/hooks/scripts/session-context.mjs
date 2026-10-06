@@ -1,25 +1,98 @@
 #!/usr/bin/env node
 /**
- * SessionStart: injects the precomputed repository inventory and the open
- * session, so the orchestrator starts a turn already knowing where it is
- * without spending a tool call to find out.
+ * SessionStart: says where the session is, in as few bytes as it takes.
  *
- * This is the cheap half of the Precompute idea: the expensive scan happens
- * once, in the inventory file, and every session reads it for free.
+ * Everything injected here is resent on every model call of the session, and
+ * on every call of a sub-agent that inherits it, so the start names things
+ * and points at files rather than pasting them: the spec layout, whether a
+ * Cross TK server is declared, the commands the repository sanctions, how
+ * many decisions are on record, which sessions are open. A phase reads the
+ * rest when it needs it, and a direct change never does.
  *
- * It is also where a dream lands. dream-collect gathered the evidence when the
- * previous sessions closed; this is the first moment a model is present to read
- * it, so consolidation is asked for here and nowhere else.
+ * It is also where pending consolidation is named. dream-collect gathered the
+ * evidence when the previous sessions closed; the start says it is waiting and
+ * nothing more, because the extraction runs when this session reaches done or
+ * on /dream, never before the request that opened the chat.
  */
 import fs from 'node:fs';
+
 import path from 'node:path';
-import { contextFile, readSession, clip, specsDir, layoutFor } from './lib/session.mjs';
+import { contextFile, openSessions, clip, specsDir, layoutFor } from './lib/session.mjs';
+import { crossTkServer } from './lib/crosstk.mjs';
 import * as git from './lib/git.mjs';
 import { readHookInput, isHookMode, context, EXIT_OK } from './lib/io.mjs';
 
-const CONTEXT_LIMIT = 6000;
-const SESSION_LIMIT = 4000;
-const DREAM_LIMIT = 5000;
+const COMMANDS_LIMIT = 1200;
+const SUMMARY_LIMIT = 400;
+
+/**
+ * Whether a Cross TK server is declared, said once so the agent does not
+ * spend a turn probing for it, and said as what it is: the cheaper route for
+ * the reads that would otherwise put a whole file or a whole search into the
+ * context. Discovery is by name and never by an assumed tool.
+ */
+function crossTkSection(root) {
+  const server = crossTkServer(root);
+  if (!server) {
+    return (
+      '## Cross TK\n\nNo server matching cross-tk is configured in this repository or in your user profile; the ' +
+      'built-in tools are what there is. Do not probe or retry for it.'
+    );
+  }
+  const known =
+    server.scope === 'user'
+      ? '`' + server.name + '` is configured in your user profile, `' + server.file + '`, so it is connected in ' +
+        'every workspace'
+      : '`' + server.name + '` is configured in `' + server.file + '`';
+  return (
+    '## Cross TK\n\n' + known + '. Use it where it returns less than a whole read: one symbol out of a large ' +
+    'file, a workspace search, a summary, the shape of a repository with no inventory. Small files, ranged reads ' +
+    'and files already in context are read directly. Learn its tools from their descriptions; the rules are in ' +
+    '`token-economy.instructions.md`.'
+  );
+}
+
+/** One `## name` section of a markdown file, without its heading; empty when absent. */
+function section(text, name) {
+  const match = new RegExp('(?:^|\\n)## ' + name + '[^\\n]*\\n([\\s\\S]*?)(?=\\n## |$)').exec(text);
+  return match ? match[1].trim() : '';
+}
+
+/**
+ * The inventory is precomputed so no session rediscovers the repository, but
+ * pasting it whole made every session pay for the parts only a plan needs.
+ * What every change needs is the sanctioned commands; the rest is pointed at.
+ */
+function inventorySection(root, specs) {
+  const file = contextFile(root);
+  if (!fs.existsSync(file)) {
+    return (
+      '## Repository inventory\n\nNone yet. A direct change, a patch, a fix or an incident continues without it, on ' +
+      'the scripts the repository manifest defines. Run the codebase-inventory skill before the first feature or ' +
+      'refactor to create `' + specs + '/_context.md`.'
+    );
+  }
+  const text = fs.readFileSync(file, 'utf8');
+  const lines = text.split('\n').length;
+  const parts = ['## Repository inventory (`' + specs + '/_context.md`, ' + lines + ' lines)'];
+  const what = section(text, 'What this repository is');
+  if (what) parts.push(clip(what, SUMMARY_LIMIT));
+  const commands = section(text, 'Commands');
+  if (commands) parts.push('### Commands\n\n' + clip(commands, COMMANDS_LIMIT));
+  parts.push('Stack, entry points and structure are in the file: read it when a phase needs them, not before.');
+  return parts.join('\n\n');
+}
+
+/** Choices, not facts: named and counted, read by the phases that decide. */
+function decisionsSection(root, specs) {
+  const file = path.join(specsDir(root), '_decisions.md');
+  if (!fs.existsSync(file)) return null;
+  const entries = (fs.readFileSync(file, 'utf8').match(/^## (?!<)/gm) ?? []).length;
+  return (
+    '## Decisions\n\n`' + specs + '/_decisions.md` holds ' + entries + ' recorded decision' + (entries === 1 ? '' : 's') +
+    '. Read it during planning on a feature, refactor or spike; a direct change or a patch does not need it.'
+  );
+}
 
 const input = await readHookInput();
 if (!isHookMode(input)) process.exit(EXIT_OK);
@@ -31,36 +104,13 @@ try {
   root = process.cwd();
 }
 
+try {
+  const dir=path.join(root,'.harness');
+  fs.mkdirSync(dir,{recursive:true});
+  fs.appendFileSync(path.join(dir,'sessions.jsonl'),JSON.stringify({event:'session-start',at:new Date().toISOString(),session:input.session_id ?? null})+'\n');
+} catch {}
 const layout = layoutFor(root);
-const specs = specsDir(root).replace(root, '.');
-
-/**
- * The contract for consolidation, stated where the material is. Candidates,
- * never memory: a wrong extraction written straight into the decisions file is
- * inherited by every later session, and nobody goes looking for it.
- */
-function dreamSection(file) {
-  const material = clip(fs.readFileSync(file, 'utf8'), DREAM_LIMIT);
-  return [
-    '## Consolidation pending (dreaming)',
-    '',
-    'Sessions closed since the last pass. Before anything else this turn, read the',
-    '`dreaming` skill and extract candidates from the material below into',
-    '`' + specs + '/_dreams.md`, following `templates/dreams.md`.',
-    '',
-    'Two rules decide most of it: a pattern needs at least two sessions, and every',
-    'candidate cites the sessions it rests on. Nothing here is written to',
-    '`' + specs + '/_decisions.md` - promotion is a human decision, made through',
-    '`harness dream --promote`.',
-    '',
-    'If nothing in the material clears those two rules, write nothing and say so in',
-    'one line.',
-    '',
-    '```json',
-    material,
-    '```',
-  ].join('\n');
-}
+const specs = ('./' + path.relative(root,specsDir(root)).split(path.sep).join('/'));
 
 const parts = [];
 
@@ -81,50 +131,28 @@ parts.push(
   ].join('\n')
 );
 
-const inventory = contextFile(root);
-if (fs.existsSync(inventory)) {
+parts.push(crossTkSection(root));
+parts.push(inventorySection(root, specs));
+
+const decisions = decisionsSection(root, specs);
+if (decisions) parts.push(decisions);
+
+// Every open session, not only the newest: two unrelated adjustments in two
+// chats are two sessions, and a start that names one and forbids the other
+// blocks the second chat for no reason. One line each; /resume reads the file.
+const open = openSessions(root);
+if (open.length > 0) {
+  const line = (s) => '- ' + s.id + '-' + s.slug + ' (phase: ' + s.phase + (s.workBranch ? ', work branch: ' + s.workBranch : '') + ')';
   parts.push(
-    `## Repository inventory (${specs}/_context.md)\n\n` +
-      clip(fs.readFileSync(inventory, 'utf8'), CONTEXT_LIMIT)
+    '## Open sessions (' + open.length + ')\n\n' + open.map(line).join('\n') +
+      '\n\n`/resume <id>` continues one of them and reads its `session.md`; /feature starts another alongside them. ' +
+      'Two sessions that change the same files are the one real conflict, so say so before the first phase.'
   );
 } else {
   parts.push(
-    `## Repository inventory\n\nNone yet. Run the codebase-inventory skill once to create ` +
-      `${specs}/_context.md; every later session reads it instead of rediscovering the repository.`
+    '## Open sessions\n\nNone. A small change is made here directly; multi-step work starts with @orchestrator, which ' +
+      'creates one.'
   );
-}
-
-const decisions = path.join(specsDir(root), '_decisions.md');
-if (fs.existsSync(decisions)) {
-  // The other half of repository memory: choices, not facts. Read so no session
-  // re-litigates what a previous one settled.
-  parts.push(
-    `## Decisions (${specs}/_decisions.md)\n\n` +
-      clip(fs.readFileSync(decisions, 'utf8'), CONTEXT_LIMIT)
-  );
-}
-
-// Material exists only when a session closed since the last pass, so on an
-// ordinary morning this section is simply absent.
-const pending = path.join(root, '.harness', 'dream-pending.json');
-if (fs.existsSync(pending)) {
-  parts.push(dreamSection(pending));
-  try {
-    fs.rmSync(pending, { force: true });
-  } catch {
-    // Injected twice means a duplicate candidate, which the skill drops. Not fatal.
-  }
-}
-
-const session = readSession(root);
-if (session) {
-  parts.push(
-    `## Open session ${session.id}-${session.slug} (phase: ${session.phase})\n\n` +
-      clip(session.text, SESSION_LIMIT) +
-      `\n\nResume it with /resume ${session.id}. Do not start a new session while this one is open.`
-  );
-} else {
-  parts.push('## Open session\n\nNone. Start multi-step work with @orchestrator, which will create one.');
 }
 
 process.exit(context('SessionStart', parts.join('\n\n')));

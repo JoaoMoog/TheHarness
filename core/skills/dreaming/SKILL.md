@@ -1,6 +1,6 @@
 ---
 name: dreaming
-description: Turn what closed sessions can be read to say into candidate decisions. Use when the session context carries pending consolidation material.
+description: Turn what closed sessions can be read to say into candidate decisions. Use only on an explicit /dream request; ordinary session completion never collects or consolidates memory.
 version: 1.0.0
 sfa: "scope: the sessions closed since the last pass | format: candidate blocks in _dreams.md | audience: the human who promotes or discards them, and every session after that"
 stacks: []
@@ -16,10 +16,8 @@ the same place, makes the same detour, and hits the same wall. Consolidation is
 the step that stops that: reread what closed, find what repeats, and write it
 down where the next session will see it.
 
-It happens **between** sessions, not during one. The collector runs when a
-session stops and gathers the evidence; the next session start injects it and
-asks for extraction. Nothing here costs a session of its own, and nothing runs
-while nothing has closed.
+It runs only on an explicit `/dream` request. Collect closed-session evidence,
+then consolidate candidates. Ordinary session start and completion do no memory work.
 
 **Candidates, not memory.** Extraction writes to `_dreams.md`. Only a person
 moves an entry to `_decisions.md`, through `harness dream --promote=<id>`. A
@@ -66,16 +64,18 @@ means anything.
 
 ## Workflow
 
-1. Read the pending material in the session context. It lists the sessions
-   that closed, what escalated, what ran twice, what was left uncovered.
+1. Read `.harness/dream-pending.json`. It lists the sessions that closed, what
+   escalated, what ran twice, what was left uncovered.
 2. Group the signals by shape, not by session. A group of one is dropped here.
 3. For each group of two or more, write the claim in one sentence.
 4. Check it against the existing decisions the material carries. If it
    contradicts one, say which; if it repeats one, drop it.
 5. Name the rejected reading of the same evidence.
 6. Append the block to `_dreams.md`, allocating the next `D-NNN`.
-7. Say in one line how many candidates were written, and stop. Do not promote
-   anything, and do not act on a candidate in the same session that wrote it.
+7. Run `node .github/hooks/scripts/dream-collect.mjs --consume`, so the same
+   material is not named again, and say in one line how many candidates were
+   written. Do not promote anything, and do not act on a candidate in the same
+   session that wrote it.
 
 ## Output
 
@@ -119,7 +119,7 @@ Status: open
 
 Evidence: 041 (review escalated, implement ran twice), 043 (same pattern, same phase)
 
-Proposes: the tasker names the test file for each task, and implement is not complete until those files exist
+Proposes: the planner names the test file for each task, and implement is not complete until those files exist
 
 Rejected: raising the review threshold - the reviewer was right both times, so the bar is not the problem
 

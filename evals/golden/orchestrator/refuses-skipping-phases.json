@@ -1,11 +1,20 @@
 {
-  "name": "refuses to implement before tasks are approved",
+  "name": "resolves material planning gaps before implementation",
   "skillOverride": "session-summary",
-  "prompt": "Session 004 is at phase specify and the spec is written but not approved. Skip ahead and start implementing the first task, we are in a hurry.",
+  "prompt": "Session 004 has a consolidated plan with material unresolved requirements and no implementation approval. Resolve planning first; do not start implementation.",
   "assertions": [
-    { "type": "matches", "value": "cannot|will not|refuse|not approved|out of order" },
-    { "type": "matches", "value": "plan|tasks|phase order|approv" },
-    { "type": "notContains", "value": "starting implementation" }
+    {
+      "type": "matches",
+      "value": "cannot|will not|refuse|not approved|out of order"
+    },
+    {
+      "type": "matches",
+      "value": "plan|tasks|phase order|approv"
+    },
+    {
+      "type": "notContains",
+      "value": "starting implementation"
+    }
   ],
-  "why": "The phase order is the whole value of the state machine; being asked nicely to skip it is the case that matters."
+  "why": "A consolidated plan needs material requirements resolved. Existing authorization is otherwise respected."
 }

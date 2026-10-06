@@ -22,8 +22,12 @@ export const HARNESS_ROOT = path.resolve(
 export const DIR_SURFACES = TARGETS[DEFAULT_TARGET].dirSurfaces;
 export const FILE_SURFACES = TARGETS[DEFAULT_TARGET].fileSurfaces;
 
-/** Runtime state the hooks write inside a target repository; never committed. */
-export const RUNTIME_DIRS = ['.harness'];
+/**
+ * Runtime state written inside a target repository and never committed: the
+ * hooks' own directory, and the index Cross TK keeps next to the workspace.
+ * Both go into the local git exclude block; neither is removed by unlink.
+ */
+export const RUNTIME_DIRS = ['.harness', '.crosstk_cache'];
 
 export const ALL_TARGETS = [
   ...DIR_SURFACES.map((s) => s.target),

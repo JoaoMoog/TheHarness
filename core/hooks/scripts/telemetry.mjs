@@ -11,6 +11,7 @@ import path from 'node:path';
 import os from 'node:os';
 import * as git from './lib/git.mjs';
 import { readHookInput, isHookMode, EXIT_OK } from './lib/io.mjs';
+import { bumpUsage } from './lib/usage.mjs';
 
 const input = await readHookInput();
 if (!isHookMode(input)) process.exit(EXIT_OK);
@@ -36,6 +37,8 @@ try {
   if (input.hook_event_name === 'SubagentStart') {
     starts[key] = Date.now();
     fs.writeFileSync(startedFile, JSON.stringify(starts), 'utf8');
+    // A sub-agent is another context, opened and paid for on its own.
+    bumpUsage(root, input.session_id, { subagents: 1 });
   } else {
     const started = starts[key];
     delete starts[key];

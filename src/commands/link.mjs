@@ -29,13 +29,14 @@ export default function link(args) {
   const failures = [];
 
   for (const repo of repos) {
-    const effective = override ? { ...repo, settings: { ...repo.settings, mode: override } } : repo;
+    const effective = { ...repo, settings: { ...repo.settings, ...(override ? {mode:override}:{}), ...(args.target ? {targets:String(args.target).split(',')}:{}) } };
     try {
-      const entry = installRepo(effective, lock.repos[repo.name] ?? {}, { force: Boolean(args.force) });
+      const entry = installRepo(effective, lock.repos[repo.name] ?? {});
       if (entry) {
         lock = recordRepo(lock, repo.name, entry);
         saveLock(lock);
-        installed += 1;
+        if (entry.conflicts?.length) failures.push(repo.name + ": installation conflicts preserved");
+        else installed += 1;
       } else {
         failures.push(repo.name);
       }

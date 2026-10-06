@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-09-22T13:36:06.704Z",
+  "platform": "win32",
+  "node": "v22.23.2",
+  "checks": {
+    "unit": [
+      "# pass 20",
+      "# fail 0"
+    ],
+    "guardrails": [
+      "  140 passed, 0 failed"
+    ],
+    "dream": [
+      "  29 passed, 0 failed"
+    ],
+    "traceability": [
+      "  19 passed, 0 failed"
+    ],
+    "eval": [
+      "  96 passed  0 warnings  0 failures"
+    ],
+    "doctor": [
+      "  61 passed  0 warnings  0 failures"
+    ]
+  },
+  "browser": {
+    "status": "passed",
+    "tests": 18,
+    "browsers": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "durationSeconds": 9.8,
+    "sandbox": "Firefox required execution outside sandbox"
+  },
+  "editorPilot": "pending",
+  "linuxExecution": "pending"
+}

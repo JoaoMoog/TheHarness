@@ -1,0 +1,412 @@
+{
+  "version": 2,
+  "limit": 2000,
+  "clients": [
+    {
+      "target": "copilot",
+      "source": "authored/generated harness",
+      "measurement": "estimated",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "estimatedTokens": 675
+        },
+        {
+          "path": ".github/copilot-instructions.md",
+          "estimatedTokens": 136
+        }
+      ],
+      "estimatedTokens": 811,
+      "customAgentBaseEstimatedTokens": 811,
+      "agentContexts": [
+        {
+          "name": "implementer.agent.md",
+          "promptEstimatedTokens": 458,
+          "totalEstimatedTokens": 1269
+        },
+        {
+          "name": "orchestrator.agent.md",
+          "promptEstimatedTokens": 578,
+          "totalEstimatedTokens": 1389
+        },
+        {
+          "name": "planner.agent.md",
+          "promptEstimatedTokens": 368,
+          "totalEstimatedTokens": 1179
+        },
+        {
+          "name": "reviewer.agent.md",
+          "promptEstimatedTokens": 464,
+          "totalEstimatedTokens": 1275
+        },
+        {
+          "name": "security.agent.md",
+          "promptEstimatedTokens": 399,
+          "totalEstimatedTokens": 1210
+        }
+      ],
+      "maxActiveEstimatedTokens": 1389,
+      "conditional": [
+        {
+          "path": ".github/instructions/code-style.instructions.md",
+          "estimatedTokens": 427,
+          "scope": "**/*.{js,mjs,ts,tsx,jsx,py,cs,go,rs,java,cpp,c,h,vue}"
+        },
+        {
+          "path": ".github/instructions/git-workflow.instructions.md",
+          "estimatedTokens": 114,
+          "scope": ".github/workflows/**,.gitignore,.gitattributes"
+        },
+        {
+          "path": ".github/instructions/performance.instructions.md",
+          "estimatedTokens": 547,
+          "scope": "**/perf/**,**/benchmarks/**,**/*.bench.*"
+        },
+        {
+          "path": ".github/instructions/routing.instructions.md",
+          "estimatedTokens": 215,
+          "scope": "**/session.md,**/tasks.md"
+        },
+        {
+          "path": ".github/instructions/security.instructions.md",
+          "estimatedTokens": 631,
+          "scope": "**/auth/**,**/security/**,**/crypto/**,**/payment*/**,**/api/**,**/migrations/**,**/package.json,**/*.tf"
+        },
+        {
+          "path": ".github/instructions/stack-cpp.instructions.md",
+          "estimatedTokens": 385,
+          "scope": "**/*.cpp,**/*.cc,**/*.hpp,**/*.h,**/CMakeLists.txt"
+        },
+        {
+          "path": ".github/instructions/stack-docker.instructions.md",
+          "estimatedTokens": 318,
+          "scope": "**/Dockerfile*,**/*.dockerfile,**/docker-compose*.yml,**/docker-compose*.yaml,**/compose*.yml,**/compose*.yaml,**/.dockerignore"
+        },
+        {
+          "path": ".github/instructions/stack-dotnet.instructions.md",
+          "estimatedTokens": 365,
+          "scope": "**/*.cs,**/*.csproj,**/*.sln"
+        },
+        {
+          "path": ".github/instructions/stack-go.instructions.md",
+          "estimatedTokens": 280,
+          "scope": "**/*.go,**/go.mod"
+        },
+        {
+          "path": ".github/instructions/stack-java.instructions.md",
+          "estimatedTokens": 348,
+          "scope": "**/*.java,**/pom.xml,**/build.gradle*"
+        },
+        {
+          "path": ".github/instructions/stack-node-ts.instructions.md",
+          "estimatedTokens": 323,
+          "scope": "**/*.ts,**/*.mts,**/*.cts,**/*.js,**/*.mjs,**/*.cjs,**/tsconfig*.json,**/package.json"
+        },
+        {
+          "path": ".github/instructions/stack-python.instructions.md",
+          "estimatedTokens": 307,
+          "scope": "**/*.py,**/pyproject.toml,**/requirements*.txt"
+        },
+        {
+          "path": ".github/instructions/stack-react.instructions.md",
+          "estimatedTokens": 377,
+          "scope": "**/*.tsx,**/*.jsx"
+        },
+        {
+          "path": ".github/instructions/stack-rust.instructions.md",
+          "estimatedTokens": 484,
+          "scope": "**/*.rs,**/Cargo.toml"
+        },
+        {
+          "path": ".github/instructions/stack-terraform.instructions.md",
+          "estimatedTokens": 326,
+          "scope": "**/*.tf,**/*.tfvars"
+        },
+        {
+          "path": ".github/instructions/stack-vue.instructions.md",
+          "estimatedTokens": 421,
+          "scope": "**/*.vue"
+        },
+        {
+          "path": ".github/instructions/testing.instructions.md",
+          "estimatedTokens": 495,
+          "scope": "**/*.test.*,**/*.spec.*,**/tests/**,**/test/**,**/e2e/**,**/playwright.config.*"
+        },
+        {
+          "path": ".github/instructions/token-economy.instructions.md",
+          "estimatedTokens": 188,
+          "scope": "**/session.md,**/tasks.md"
+        }
+      ],
+      "skillCatalogEstimatedTokens": 1675,
+      "toolCatalogTokens": null,
+      "projectContextTokens": null,
+      "providerTokens": null
+    },
+    {
+      "target": "kiro",
+      "source": "authored/generated harness",
+      "measurement": "estimated",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "estimatedTokens": 675
+        }
+      ],
+      "estimatedTokens": 675,
+      "customAgentBaseEstimatedTokens": 1350,
+      "agentContexts": [
+        {
+          "name": ".kiro/agents/implementer.json",
+          "promptEstimatedTokens": 458,
+          "totalEstimatedTokens": 1808
+        },
+        {
+          "name": ".kiro/agents/orchestrator.json",
+          "promptEstimatedTokens": 578,
+          "totalEstimatedTokens": 1928
+        },
+        {
+          "name": ".kiro/agents/planner.json",
+          "promptEstimatedTokens": 368,
+          "totalEstimatedTokens": 1718
+        },
+        {
+          "name": ".kiro/agents/reviewer.json",
+          "promptEstimatedTokens": 464,
+          "totalEstimatedTokens": 1814
+        },
+        {
+          "name": ".kiro/agents/security.json",
+          "promptEstimatedTokens": 399,
+          "totalEstimatedTokens": 1749
+        }
+      ],
+      "maxActiveEstimatedTokens": 1928,
+      "conditional": [
+        {
+          "path": ".kiro/steering/code-style.md",
+          "estimatedTokens": 427,
+          "scope": [
+            "**/*.{js,mjs,ts,tsx,jsx,py,cs,go,rs,java,cpp,c,h,vue}"
+          ]
+        },
+        {
+          "path": ".kiro/steering/git-workflow.md",
+          "estimatedTokens": 114,
+          "scope": [
+            ".github/workflows/**",
+            ".gitignore",
+            ".gitattributes"
+          ]
+        },
+        {
+          "path": ".kiro/steering/performance.md",
+          "estimatedTokens": 547,
+          "scope": [
+            "**/perf/**",
+            "**/benchmarks/**",
+            "**/*.bench.*"
+          ]
+        },
+        {
+          "path": ".kiro/steering/routing.md",
+          "estimatedTokens": 215,
+          "scope": [
+            "**/session.md",
+            "**/tasks.md"
+          ]
+        },
+        {
+          "path": ".kiro/steering/security.md",
+          "estimatedTokens": 631,
+          "scope": [
+            "**/auth/**",
+            "**/security/**",
+            "**/crypto/**",
+            "**/payment*/**",
+            "**/api/**",
+            "**/migrations/**",
+            "**/package.json",
+            "**/*.tf"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-cpp.md",
+          "estimatedTokens": 385,
+          "scope": [
+            "**/*.cpp",
+            "**/*.cc",
+            "**/*.hpp",
+            "**/*.h",
+            "**/CMakeLists.txt"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-docker.md",
+          "estimatedTokens": 318,
+          "scope": [
+            "**/Dockerfile*",
+            "**/*.dockerfile",
+            "**/docker-compose*.yml",
+            "**/docker-compose*.yaml",
+            "**/compose*.yml",
+            "**/compose*.yaml",
+            "**/.dockerignore"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-dotnet.md",
+          "estimatedTokens": 365,
+          "scope": [
+            "**/*.cs",
+            "**/*.csproj",
+            "**/*.sln"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-go.md",
+          "estimatedTokens": 280,
+          "scope": [
+            "**/*.go",
+            "**/go.mod"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-java.md",
+          "estimatedTokens": 348,
+          "scope": [
+            "**/*.java",
+            "**/pom.xml",
+            "**/build.gradle*"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-node-ts.md",
+          "estimatedTokens": 323,
+          "scope": [
+            "**/*.ts",
+            "**/*.mts",
+            "**/*.cts",
+            "**/*.js",
+            "**/*.mjs",
+            "**/*.cjs",
+            "**/tsconfig*.json",
+            "**/package.json"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-python.md",
+          "estimatedTokens": 307,
+          "scope": [
+            "**/*.py",
+            "**/pyproject.toml",
+            "**/requirements*.txt"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-react.md",
+          "estimatedTokens": 377,
+          "scope": [
+            "**/*.tsx",
+            "**/*.jsx"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-rust.md",
+          "estimatedTokens": 484,
+          "scope": [
+            "**/*.rs",
+            "**/Cargo.toml"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-terraform.md",
+          "estimatedTokens": 326,
+          "scope": [
+            "**/*.tf",
+            "**/*.tfvars"
+          ]
+        },
+        {
+          "path": ".kiro/steering/stack-vue.md",
+          "estimatedTokens": 421,
+          "scope": [
+            "**/*.vue"
+          ]
+        },
+        {
+          "path": ".kiro/steering/testing.md",
+          "estimatedTokens": 495,
+          "scope": [
+            "**/*.test.*",
+            "**/*.spec.*",
+            "**/tests/**",
+            "**/test/**",
+            "**/e2e/**",
+            "**/playwright.config.*"
+          ]
+        },
+        {
+          "path": ".kiro/steering/token-economy.md",
+          "estimatedTokens": 188,
+          "scope": [
+            "**/session.md",
+            "**/tasks.md"
+          ]
+        },
+        {
+          "path": ".kiro/steering/dream.md",
+          "estimatedTokens": 186,
+          "scope": "manual"
+        },
+        {
+          "path": ".kiro/steering/feature.md",
+          "estimatedTokens": 123,
+          "scope": "manual"
+        },
+        {
+          "path": ".kiro/steering/loop-evaluate.md",
+          "estimatedTokens": 222,
+          "scope": "manual"
+        },
+        {
+          "path": ".kiro/steering/loop-verify.md",
+          "estimatedTokens": 381,
+          "scope": "manual"
+        },
+        {
+          "path": ".kiro/steering/plan.md",
+          "estimatedTokens": 158,
+          "scope": "manual"
+        },
+        {
+          "path": ".kiro/steering/resume.md",
+          "estimatedTokens": 101,
+          "scope": "manual"
+        },
+        {
+          "path": ".kiro/steering/route.md",
+          "estimatedTokens": 229,
+          "scope": "manual"
+        },
+        {
+          "path": ".kiro/steering/spec.md",
+          "estimatedTokens": 44,
+          "scope": "manual"
+        },
+        {
+          "path": ".kiro/steering/tasks.md",
+          "estimatedTokens": 38,
+          "scope": "manual"
+        }
+      ],
+      "skillCatalogEstimatedTokens": 1675,
+      "toolCatalogTokens": null,
+      "projectContextTokens": null,
+      "providerTokens": null
+    }
+  ],
+  "passed": true,
+  "note": "Estimated instruction tokens, not billed usage. Catalogs and project context are separate; unavailable values are null."
+}

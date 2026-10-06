@@ -1,5 +1,5 @@
 ---
-applyTo: "**"
+applyTo: "**/*.test.*,**/*.spec.*,**/tests/**,**/test/**,**/e2e/**,**/playwright.config.*"
 description: How tests are written and when they are required, including the failing-test-first rule for bug fixes.
 ---
 
@@ -13,6 +13,9 @@ then does implementation code get written.
 
 If a test passes the first time you run it against unchanged code, it is not
 testing what you think it is. Make it fail deliberately before you trust it.
+
+A change with no observable behaviour — text, a version, formatting, dead
+code — has no test to write. Say so and move on; do not invent one.
 
 ## Structure
 

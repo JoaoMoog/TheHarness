@@ -4,7 +4,7 @@ import { harnessPath } from './paths.mjs';
 import { parseFrontmatter, headings } from './frontmatter.mjs';
 import { estimateTokens } from './tokens.mjs';
 import {
-  AGENT_SECTIONS, AGENT_FRONTMATTER, BUDGETS, AGENT_SKILL_RATIO, PLACEHOLDER_MARKERS,
+  AGENT_SECTIONS, AGENT_FRONTMATTER, AGENT_ALL_TOOLS, BUDGETS, AGENT_SKILL_RATIO, PLACEHOLDER_MARKERS,
 } from './contracts.mjs';
 
 const listFiles = (dir, suffix) =>
@@ -31,6 +31,7 @@ export function loadAgents() {
       subagents: asArray(data.agents).filter((a) => a !== '*'),
       wildcard: asArray(data.agents).includes('*'),
       tools: asArray(data.tools),
+      allTools: typeof data[AGENT_ALL_TOOLS] === 'string' && data[AGENT_ALL_TOOLS].trim() !== '',
       handoffs: parseHandoffs(text),
       userInvocable: data['user-invocable'] !== false,
     };
@@ -97,6 +98,15 @@ export function auditAgents(report) {
     if (missingKeys.length > 0) {
       report.fail(`${label}: frontmatter missing ${missingKeys.join(', ')}`);
     }
+    if (agent.tools.length === 0 && !agent.allTools) {
+      report.fail(`${label}: declares no tools and gives no ${AGENT_ALL_TOOLS} reason; a manifest is explicit or deliberately open, never absent`);
+    }
+    if (agent.tools.length > 0 && agent.allTools) {
+      report.fail(`${label}: has both a tools list and ${AGENT_ALL_TOOLS}; one of them is not what runs`);
+    }
+    // A tool may be listed short (`codebase`) or qualified (`search/codebase`); both name the same tool.
+    const lastSegment = (t) => String(t).split('/').pop();
+    const hasTool = (name) => agent.allTools || agent.tools.some((t) => lastSegment(t) === name);
 
     const missingSections = missing(AGENT_SECTIONS, agent.sections);
     if (missingSections.length > 0) {
@@ -110,6 +120,14 @@ export function auditAgents(report) {
       }
     }
 
+    // The model is the user's choice in the chat, never the file's: a single
+    // pinned name goes stale the day a newer one ships and silently overrides
+    // what the person selected. A prioritised list survives a retirement, so
+    // a fork that wants the coordinator-and-worker pattern may carry one.
+    if (typeof agent.data.model === 'string') {
+      report.warn(`${label}: pins one model (${agent.data.model}); a name goes stale, list fallbacks or leave the choice to the chat`);
+    }
+
     // Delegation graph. These are the checks that make an orchestrator real
     // rather than a paragraph describing one.
     for (const target of agent.subagents) {
@@ -121,10 +139,10 @@ export function auditAgents(report) {
     }
 
     const delegates = agent.subagents.length > 0 || agent.wildcard;
-    if (delegates && !agent.tools.includes('agent')) {
+    if (delegates && !hasTool('agent')) {
       report.fail(`${label}: lists sub-agents but has no "agent" tool, so it cannot invoke them`);
     }
-    if (!delegates && agent.tools.includes('agent')) {
+    if (!delegates && hasTool('agent') && !agent.allTools) {
       report.warn(`${label}: carries the "agent" tool but delegates to nobody`);
     }
 
@@ -186,6 +204,6 @@ export function auditRatio(report, agents, skillCount) {
   const text = `${invocable.length} user-invocable agents (+${internal} internal) : ${skillCount} skills (1:${ratio.toFixed(1)})`;
 
   if (ratio < min) report.fail(`${text} - below 1:${min}; this work belongs in skills`);
-  else if (ratio > max) report.warn(`${text} - above 1:${max}; consider another specialist agent`);
+  else if (ratio > max) report.pass(`${text} - discovery is on demand; no extra agent required`);
   else report.pass(text);
 }

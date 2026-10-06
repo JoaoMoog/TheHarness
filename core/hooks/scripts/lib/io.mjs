@@ -7,9 +7,68 @@
  *    hard block the model sees, any other non-zero exit is a warning.
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 export const EXIT_OK = 0;
 export const EXIT_REFUSE = 1;
 export const EXIT_BLOCK = 2;
+
+/**
+ * Whether the module at `url` is the script Node was started with. Every
+ * guardrail is both a CLI (git pre-commit, Kiro, the self-test) and a function
+ * the tool-hooks dispatcher imports; the guard keeps the CLI path from running
+ * on import. Both sides are resolved through symlinks, because the scripts are
+ * reached through the .github/hooks junction and Node resolves the main module
+ * to its real path while argv keeps the junction.
+ */
+export function isMain(url) {
+  try {
+    if (!process.argv[1]) return false;
+    const real = (p) => {
+      try {
+        return fs.realpathSync(p);
+      } catch {
+        return p;
+      }
+    };
+    return real(path.resolve(process.argv[1])) === real(fileURLToPath(url));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * A guardrail's answer as a value rather than an emitted line, so several can
+ * run in one process. `null` means "not my concern"; a message on an allow is
+ * the advisory the model sees.
+ */
+export const verdict = {
+  allow: (systemMessage = undefined, { updatedInput = undefined } = {}) => ({
+    decision: 'allow',
+    ...(systemMessage ? { systemMessage } : {}),
+    ...(updatedInput ? { updatedInput } : {}),
+  }),
+  ask: (reason) => ({ decision: 'ask', reason }),
+  deny: (reason) => ({ decision: 'deny', reason }),
+};
+
+/**
+ * How the runtime combines several hooks on one call, done once here instead:
+ * the most restrictive decision wins, and every message survives.
+ */
+export function combine(results) {
+  const real = results.filter(Boolean);
+  const messages = real.map((r) => r.systemMessage).filter(Boolean);
+  const systemMessage = messages.length > 0 ? messages.join('\n\n') : undefined;
+  const top = real.find((r) => r.decision === 'deny') ?? real.find((r) => r.decision === 'ask');
+  const out = top ? { decision: top.decision, reason: top.reason } : { decision: 'allow' };
+  // A rewrite rides only on a plain allow: a call a guardrail holds or
+  // questions runs as the model wrote it, once the person has answered.
+  const updatedInput = top ? undefined : real.find((r) => r.updatedInput)?.updatedInput;
+  return { ...out, ...(systemMessage ? { systemMessage } : {}), ...(updatedInput ? { updatedInput } : {}) };
+}
 
 const STDIN_LIMIT = 4 * 1024 * 1024;
 const STDIN_TIMEOUT_MS = 2000;
@@ -52,11 +111,19 @@ export async function readHookInput() {
     process.stdin.on("error", () => done(null));
   });
 
-  if (!raw || !raw.trim()) return null;
+  if (!raw || !raw.trim()) {
+    if(hookMode()==='kiro' && process.argv.includes('--hook-event=PreToolUse')) throw new Error('Cannot verify tool: missing hook payload');
+    return null;
+  }
   try {
     const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" && parsed.hook_event_name ? parsed : null;
-  } catch {
+    if (!parsed || typeof parsed !== 'object') return null;
+    const declared=process.argv.find(a=>a.startsWith('--hook-event='))?.slice(13);
+    const event=parsed.hook_event_name ?? declared;
+    const names={PromptSubmit:'UserPromptSubmit',AgentStop:'Stop'};
+    return event ? {...parsed,hook_event_name:names[event] ?? event} : null;
+  } catch (error) {
+    if(hookMode()==='kiro' && process.argv.includes('--hook-event=PreToolUse')) throw new Error('Cannot verify tool: malformed hook payload');
     return null;
   }
 }
@@ -81,30 +148,62 @@ export function emit(json) {
   process.stdout.write(`${JSON.stringify(json)}\n`);
 }
 
-export function deny(eventName, reason) {
-  emit({
+export function deny(eventName, reason, systemMessage = undefined) {
+  const out = {
     hookSpecificOutput: {
       hookEventName: eventName,
       permissionDecision: 'deny',
       permissionDecisionReason: reason,
     },
-  });
+  };
+  if (systemMessage) out.systemMessage = systemMessage;
+  emit(out);
+  if (hookMode() === 'kiro') { console.error(reason); return EXIT_BLOCK; }
   return EXIT_OK;
 }
 
-export function ask(eventName, reason) {
-  emit({
+export function ask(eventName, reason, systemMessage = undefined) {
+  const out = {
     hookSpecificOutput: {
       hookEventName: eventName,
       permissionDecision: 'ask',
       permissionDecisionReason: reason,
     },
-  });
+  };
+  if (systemMessage) out.systemMessage = systemMessage;
+  emit(out);
+  if (hookMode() === 'kiro') { console.error('Confirmation required: '+reason); return EXIT_BLOCK; }
   return EXIT_OK;
 }
 
-export function allow(eventName) {
-  emit({ hookSpecificOutput: { hookEventName: eventName, permissionDecision: 'allow' } });
+/**
+ * Emits a verdict value in the runtime's format. A PostToolUse carries no
+ * permission decision, only what the model should hear.
+ */
+export function emitVerdict(eventName, v) {
+  if (eventName === 'PostToolUse') {
+    const out = { hookSpecificOutput: { hookEventName: eventName } };
+    if (v?.systemMessage) out.systemMessage = v.systemMessage;
+    emit(out);
+    return EXIT_OK;
+  }
+  const decision = v?.decision ?? 'allow';
+  if (decision === 'deny') return deny(eventName, v.reason, v.systemMessage);
+  if (decision === 'ask') return ask(eventName, v.reason, v.systemMessage);
+  return allow(eventName, v?.systemMessage, v?.updatedInput);
+}
+
+/**
+ * An allow may carry a warning the model sees; an advisory guardrail is one
+ * that uses it. It may also carry `updatedInput`, the tool's parameters
+ * rewritten: VS Code runs the call with those instead, and ignores the field
+ * when it does not match the tool's schema, so a bad rewrite is a no-op.
+ */
+export function allow(eventName, systemMessage = undefined, updatedInput = undefined) {
+  const out = { hookSpecificOutput: { hookEventName: eventName, permissionDecision: 'allow' } };
+  if (updatedInput) out.hookSpecificOutput.updatedInput = updatedInput;
+  if (systemMessage) out.systemMessage = systemMessage;
+  emit(out);
   return EXIT_OK;
 }
 

@@ -5,15 +5,19 @@
 
 /** Section 1 is the frontmatter itself; these are the four required headings. */
 export const SKILL_SECTIONS = ['Rules', 'Workflow', 'Output', 'Validation'];
-export const SKILL_FRONTMATTER = ['name', 'description', 'version', 'sfa'];
+export const SKILL_FRONTMATTER = ['name', 'description'];
 
 export const AGENT_SECTIONS = ['Identity', 'Tools', 'Scope', 'Contracts', 'Skills', 'Escalation'];
 /**
- * `tools` is required, not optional. An agent whose tool manifest is implicit
- * has unbounded blast radius, and the previous contract asked for the manifest
- * in prose while never checking that one existed.
+ * A manifest is explicit or deliberately open, never absent. `tools` lists
+ * what the agent may call - the built-in tools it uses and `cross-tk/*` where
+ * it reads code, which reaches every tool of that server without naming one -
+ * so each sub-agent carries the catalogue it needs and nothing more. `allTools`
+ * opens everything and carries the reason in its value, the way `alwaysApply`
+ * needs a justification; it is the escape hatch, never the default.
  */
-export const AGENT_FRONTMATTER = ['name', 'description', 'version', 'tools'];
+export const AGENT_FRONTMATTER = ['name', 'description', 'version'];
+export const AGENT_ALL_TOOLS = 'allTools';
 
 export const INSTRUCTION_FRONTMATTER = ['applyTo'];
 export const PROMPT_FRONTMATTER = ['description', 'version'];
@@ -28,7 +32,7 @@ export const BUDGETS = {
    * hot in every sense except the name. Measuring only copilot-instructions.md
    * understated the real per-turn cost by roughly seven times.
    */
-  effectiveHotTokens: 4500,
+  effectiveHotTokens: 2000,
   skillBodyTokens: 2000,
   instructionTokens: 1200,
   agentTokens: 1400,
@@ -42,8 +46,13 @@ export const BUDGETS = {
  */
 export const AGENT_SKILL_RATIO = { min: 6, max: 14 };
 
-/** Universal instruction coverage that real-world repositories usually lack. */
-export const REQUIRED_INSTRUCTIONS = ['security', 'performance', 'testing', 'routing'];
+/**
+ * Universal instruction coverage that real-world repositories usually lack.
+ * token-economy is required because the rules it carries - verify once per
+ * tree state, warn rather than fix what predates the change, use a token-saving
+ * MCP server when one is connected - are the ones every phase drifts from.
+ */
+export const REQUIRED_INSTRUCTIONS = ['security', 'performance', 'testing', 'routing', 'token-economy'];
 
 export const LOOP_REQUIRED_KEYS = ['maxIterations', 'stopCriterion', 'tokenBudget'];
 
@@ -59,33 +68,33 @@ export const LOOP_REQUIRED_KEYS = ['maxIterations', 'stopCriterion', 'tokenBudge
  */
 export const SESSION_TRACKS = {
   patch: {
-    phases: ['implement', 'review', 'deliver'],
+    phases: ['implement', 'review'],
     when: 'no behaviour changes: text, a version bump, formatting, dead code',
     promoteTo: 'fix',
   },
   fix: {
-    phases: ['specify', 'implement', 'review', 'deliver'],
-    when: 'a reported defect; specify produces the failing test that reproduces it',
+    phases: ['plan', 'implement', 'review'],
+    when: 'a reported defect; planning defines the failing regression test',
     promoteTo: 'feature',
   },
   refactor: {
-    phases: ['plan', 'tasks', 'implement', 'review', 'deliver'],
-    when: 'structure changes and behaviour does not, so there is nothing to specify',
+    phases: ['plan', 'implement', 'review'],
+    when: 'structure changes and behaviour does not, so planning preserves existing behavior',
     promoteTo: 'feature',
   },
   feature: {
-    phases: ['specify', 'plan', 'tasks', 'implement', 'review', 'deliver'],
+    phases: ['plan', 'implement', 'review'],
     when: 'behaviour the system does not have yet',
     promoteTo: null,
   },
   incident: {
-    phases: ['implement', 'review', 'deliver'],
+    phases: ['implement', 'review'],
     when: 'production is broken; you stanch the bleeding before you understand it',
     promoteTo: 'fix',
     requiresArtifact: 'runbook',
   },
   spike: {
-    phases: ['specify', 'plan'],
+    phases: ['plan'],
     when: 'a question rather than a change; ends in an answer, never in a pull request',
     promoteTo: 'feature',
   },
@@ -100,13 +109,13 @@ export const RUBRIC_SECTIONS = ['Criteria', 'Levels', 'Threshold'];
 export const RUBRIC_FRONTMATTER = ['name', 'description', 'version', 'appliesTo', 'threshold'];
 
 /** A phase that produces a judgement must have a rubric to judge against. */
-export const RUBRIC_REQUIRED_PHASES = ['specify', 'review', 'deliver'];
+export const RUBRIC_REQUIRED_PHASES = ['plan', 'review'];
 
 /** The one phase no track may omit: nothing ships unreviewed. */
 export const MANDATORY_PHASE = 'review';
 
 /** The ordered phases of a session. An agent may not skip forward. */
-export const SESSION_PHASES = ['specify', 'plan', 'tasks', 'implement', 'review', 'deliver', 'done'];
+export const SESSION_PHASES = ['plan', 'implement', 'review', 'done'];
 
 /** Fields every phase agent must return so the orchestrator can advance. */
 export const HANDOFF_FIELDS = ['stage', 'status', 'summary'];
@@ -114,6 +123,13 @@ export const HANDOFF_STATUSES = ['complete', 'blocked', 'escalated'];
 
 /** MCP servers must declare who owns them and what they can reach. */
 export const MCP_SERVER_FIELDS = ['owner', 'trust', 'scope', 'version'];
+
+/**
+ * A disabled server may carry TODO placeholders, because the file is also the
+ * template for enabling one. An enabled server may not: a placeholder command
+ * does not start, and a placeholder owner means nobody answers for it.
+ */
+export const MCP_PLACEHOLDER = /\bTODO\b/;
 
 /** Text the scaffolder writes that must be replaced before the contract holds. */
 export const PLACEHOLDER_MARKERS = [

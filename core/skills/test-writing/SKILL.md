@@ -64,4 +64,4 @@ describe("listRecords", () => {
 - [ ] Arrange, act and assert are visually separated.
 - [ ] Assertions target observable behaviour only.
 - [ ] Error and boundary paths are covered, not just the happy path.
-- [ ] The full suite result is reported, including failures.
+- [ ] The applicable verification result is reported, including failures.

@@ -1,8 +1,8 @@
 ---
 name: task-decomposition
-description: Break an approved plan into atomic tasks, mark the ones that can run in parallel, and classify each by how much human oversight it needs. Use in the tasks phase.
-version: 1.0.0
-sfa: "scope: one approved plan | format: a tasks.md table with parallel and oversight markers | audience: the implementer and the human approving the batch"
+description: Decompose structured work into verifiable tasks during the same planning pass that produces requirements and design. Mark dependencies and sensitive scope.
+version: 3.0.0
+sfa: "scope: one structured change | format: tasks.md with files, checks and dependencies | audience: implementer and reviewer"
 stacks: []
 alwaysApply: false
 ---
@@ -11,64 +11,39 @@ alwaysApply: false
 
 ## Rules
 
-A task is atomic when it can be finished and verified on its own, and when
-finishing it leaves the repository building with its tests passing.
+Requirements, design and tasks are produced in one planning execution. The
+combined plan receives one approval before implementation. Existing approval
+counts; neither a document nor a batch creates another approval gate.
 
-Mark a task parallel only when it shares no file with any other unblocked task
-and depends on nothing still open. Marking dependent work as parallel produces
-merge conflicts that cost more than the sequencing saved.
+A task can be implemented and checked independently. Name the files, behavior,
+dependencies and verification. File count alone does not decide its complexity.
 
-Classify every task by impact and reversibility. This quadrant decides how much
-a human has to watch:
+Mark sensitive work (auth, authorization, crypto, payments, production data or
+destructive operations) with the exact confirmation scope required. Once that
+scope is authorized, the agent may implement it within the authorization.
+Publication remains manual.
 
-| | reversible | hard to reverse |
-|---|---|---|
-| low impact | Q1 automate: run it, report after | Q3 confirm: state the plan, wait for yes |
-| high impact | Q2 review: run it, human reviews before merge | Q4 dual control: a human runs it, the agent assists |
-
-Anything touching authentication, authorisation, cryptography, payment, a
-production schema change, a deletion, or an infrastructure apply is Q4 by
-default. Moving something out of Q4 needs a written reason.
-
-Every task states how it is verified: a command, or an observable outcome. A
-task with no verification cannot be marked done honestly.
-
-Anti-patterns to refuse:
-
-- a task that says "implement the feature"
-- a task whose verification is "it looks right"
-- marking everything parallel because it is faster on paper
-- putting a schema migration and its backfill in one task
+Parallel eligibility is descriptive, not permission to spawn agents. Default
+to sequential work; use only explicitly authorized parallel work within budget.
 
 ## Workflow
 
-1. Walk the plan order of work and turn each step into one or more tasks.
-2. For each task, name the files it touches.
-3. Compute dependencies from file overlap, not from intuition.
-4. Mark parallel where files and dependencies genuinely allow it.
-5. Assign the quadrant. Default to the more cautious one when unsure.
-6. Write the verification for each task.
-7. Order the list so dependencies come first.
+1. Read requirements and design from this planning pass.
+2. Define tasks with stable ids, affected files and expected behavior.
+3. Order dependencies; mark actual file overlap.
+4. Name the check that proves each task and prerequisites it needs.
+5. Mark sensitive scope and record existing authorization where applicable.
+6. Return tasks together with requirements/design for the single plan approval.
 
 ## Output
 
-```
-| id | task | files | verify | dep | P | Q |
-|----|------|-------|--------|-----|---|---|
-| T1 | CSV encoder with quote and newline escaping | src/export/csv.ts | npm test csv | - |   | Q1 |
-| T2 | Row count estimate on the filter builder | src/query/filter.ts | npm test filter | - | P | Q1 |
-| T3 | Refuse over 50000 rows and name the limit | src/http/routes/export.ts | curl returns 413 with the number | T2 |   | Q2 |
-| T4 | Apply column permissions inside buildFilter | src/query/filter.ts | test FR-003 passes | T2 |   | Q4 |
-
-T4 is Q4 because it changes authorisation: a human runs and reviews it.
-```
+| id | task | files | verify | dependency | sensitive scope |
+|---|---|---|---|---|---|
+| T1 | Handle an empty export | src/export.ts | regression for FR-001 | none | none |
+| T2 | Preserve tenant permissions | src/query.ts | authorization regression | T1 | permission boundary |
 
 ## Validation
 
-- [ ] Every task is finishable and verifiable on its own.
-- [ ] Every task names its files and its verification.
-- [ ] Parallel is marked only where no file is shared and nothing is pending.
-- [ ] Every task has a quadrant, and auth, crypto, payment, schema, deletion and
-      infrastructure apply are Q4.
-- [ ] Dependencies come before dependents.
-- [ ] No task is "implement the feature".
+Every task names concrete files, observable behavior and a check. Dependencies
+are ordered. Missing test prerequisites remain explicit. No per-task or
+per-document approval is introduced. No publication step is present.

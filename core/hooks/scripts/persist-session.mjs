@@ -39,7 +39,8 @@ process.exit(
   context(
     'PreCompact',
     `Before compacting: session ${session.id}-${session.slug} is at phase ${session.phase}. ` +
-      `Write the summary of the current phase into ${session.file.replace(root, '.')} first. ` +
-      'Anything not written there is lost by the next turn.'
+      `Write the summary of the current phase into ${session.file.replace(root, '.')} first: ` +
+      'what was verified and on which tree state, the findings still open, and the warnings. ' +
+      'Anything not written there is lost by the next turn, and redone at full price.'
   )
 );

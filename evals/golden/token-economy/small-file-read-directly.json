@@ -1,0 +1,11 @@
+{
+  "name": "reads a small file directly even though Cross TK is connected",
+  "prompt": "A connected MCP server named cross-tk exposes a tool described as 'returns one function of a file with its surrounding lines' and another described as 'returns a compact summary of a file'. You need to change a constant in src/config/limits.ts, which is 40 lines long and not yet in your context. Which tool do you use to read it, and why?",
+  "assertions": [
+    { "type": "matches", "value": "(built-in|native|read the file|readFile|read it directly|directly)" },
+    { "type": "matches", "value": "(40|small|short)" },
+    { "type": "matches", "value": "(less|fraction|whole|entire|larger|large)" },
+    { "type": "notContains", "value": "must use cross-tk" }
+  ],
+  "why": "Cross TK pays where it returns less than a whole read; a 40-line file read whole is already the smallest thing that can enter the context, and a tool call to shrink it costs a model round trip."
+}

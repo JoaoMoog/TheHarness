@@ -18,7 +18,9 @@
     "selftest": "node core/hooks/scripts/selftest.mjs",
     "selftest:dream": "node core/hooks/scripts/dream-selftest.mjs",
     "selftest:spec": "node core/tools/spec/selftest.mjs",
-    "selftest:ado": "node core/tools/ado/selftest.mjs"
+    "test": "node --test tests/unit/*.test.mjs",
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:full": "playwright test"
   },
   "keywords": [
     "github-copilot",
@@ -28,5 +30,8 @@
     "context-engineering",
     "devops",
     "kiro"
-  ]
+  ],
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
 }

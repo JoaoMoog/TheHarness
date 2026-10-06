@@ -11,6 +11,7 @@ import path from 'node:path';
 import os from 'node:os';
 import * as git from './lib/git.mjs';
 import { readHookInput, EXIT_OK } from './lib/io.mjs';
+import { finishUsage } from './lib/usage.mjs';
 
 const MAX_BYTES = 2 * 1024 * 1024;
 
@@ -62,5 +63,15 @@ try {
   fs.appendFileSync(file, `${JSON.stringify(entry)}\n`, 'utf8');
 } catch (err) {
   console.error(`harness audit-log: could not write the audit entry - ${err.message}`);
+}
+
+// The session stopped: its usage counters become one line in sessions.jsonl,
+// next to the sub-agent records, so `harness cost` can read what it cost.
+if (input?.hook_event_name === 'Stop' && input.session_id) {
+  try {
+    finishUsage(root ?? process.cwd(), input.session_id);
+  } catch (err) {
+    console.error(`harness audit-log: could not write the usage record - ${err.message}`);
+  }
 }
 process.exit(EXIT_OK);

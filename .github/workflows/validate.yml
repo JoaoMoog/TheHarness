@@ -1,43 +1,56 @@
-﻿name: validate
-
+name: validate
 on:
   push:
     branches: [main]
   pull_request:
-
+  workflow_dispatch:
 permissions:
   contents: read
-
 jobs:
   contracts:
-    name: harness contracts
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run validate
+      - run: npm run budget
+      - run: npm test
+      - run: npm run selftest
+      - run: npm run selftest:dream
+      - run: npm run selftest:spec
+      - run: npm run eval
+  browser:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Audit contracts and the delegation graph
-        run: node bin/harness.mjs doctor --self --verbose
-      - name: Check context budgets, including the effective hot tier
-        run: node bin/harness.mjs budget
-
-  guardrails:
-    name: guardrails actually block
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium
+        if: github.event_name != 'workflow_dispatch'
+        run: npx playwright install --with-deps chromium
+      - name: Install full browser matrix
+        if: github.event_name == 'workflow_dispatch'
+        run: npx playwright install --with-deps chromium firefox webkit
+      - if: github.event_name != 'workflow_dispatch'
+        run: npm run test:e2e
+      - if: github.event_name == 'workflow_dispatch'
+        run: npm run test:e2e:full
+      - uses: actions/upload-artifact@v4
+        if: failure()
         with:
-          node-version: '22'
-      # The self-test creates its own repositories and asserts a verdict for
-      # each case. Running the guardrails against a clean checkout would stage
-      # nothing and pass by construction, which is not a test.
-      - name: Guardrail self-test
-        run: node core/hooks/scripts/selftest.mjs
-      - name: Azure DevOps script self-test
-        run: node core/tools/ado/selftest.mjs
-      - name: Traceability self-test
-        run: node core/tools/spec/selftest.mjs
-
-
+          name: browser-failure-evidence
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

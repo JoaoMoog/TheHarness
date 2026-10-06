@@ -1,5 +1,5 @@
 ---
-applyTo: "**"
+applyTo: "**/perf/**,**/benchmarks/**,**/*.bench.*"
 description: Performance rules for every file. The other 14.5% coverage gap; most config sets describe how to build, not how fast it must be.
 ---
 

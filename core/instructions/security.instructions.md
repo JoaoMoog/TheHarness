@@ -1,5 +1,5 @@
 ---
-applyTo: "**"
+applyTo: "**/auth/**,**/security/**,**/crypto/**,**/payment*/**,**/api/**,**/migrations/**,**/package.json,**/*.tf"
 description: Security rules that apply to every file. Present in only 14.5% of real-world config sets; that gap is the reason this file exists.
 ---
 

@@ -1,8 +1,8 @@
 ---
 name: plan-writing
-description: Turn an approved spec into an implementation plan that names the files, the contracts, the order of work and the risks, after searching for what already exists. Use in the plan phase, before any code.
+description: Turn requirements into an implementation plan that names the files, the contracts, the order of work and the risks, after searching for what already exists. Use in consolidated planning.
 version: 1.0.0
-sfa: "scope: one approved spec | format: a plan.md with files, order and risks | audience: the tasker and the reviewer"
+sfa: "scope: requirements in consolidated planning | format: a plan.md with files, order and risks | audience: the planner and the reviewer"
 stacks: []
 alwaysApply: false
 ---
@@ -10,6 +10,9 @@ alwaysApply: false
 # plan-writing
 
 ## Rules
+
+Produce requirements, design and tasks in one execution. Only the combined
+plan has an approval gate; prior authorization counts.
 
 Search before you propose. Reuse of something that already exists beats a
 parallel implementation, and finding nothing is a result worth writing down

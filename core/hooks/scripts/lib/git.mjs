@@ -6,6 +6,8 @@
  *     edited out and refuse a clean hunk because of an unstaged one.
  *  2. Never fail open. If git cannot answer, the caller must refuse, not pass.
  */
+import fs from 'node:fs';
+import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 const QUIET = ['-c', 'core.quotePath=false'];
@@ -38,6 +40,30 @@ export function isInsideRepo(cwd = process.cwd()) {
 
 export function repoRoot(cwd = process.cwd()) {
   return git(['rev-parse', '--show-toplevel'], { cwd }).trim();
+}
+
+/** The repository root in one git call, or null outside a work tree. */
+export function repoRootOrNull(cwd = process.cwd()) {
+  try {
+    return repoRoot(cwd) || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * What every tool guardrail needs to know about where it runs, resolved once
+ * per process: the root to keep state under, and whether git can answer at
+ * all. Outside a repository the cwd stands in for the root.
+ */
+export function hookContext(cwd = process.cwd()) {
+  let dir=path.resolve(cwd);
+  while(true) {
+    // Worktrees use a .git file; normal repositories use a directory.
+    if(fs.existsSync(path.join(dir,'.git'))) return {root:dir,inRepo:true};
+    const parent=path.dirname(dir); if(parent===dir) break; dir=parent;
+  }
+  return {root:cwd,inRepo:false};
 }
 
 /** NUL-separated so filenames with spaces, quotes or non-ASCII survive intact. */

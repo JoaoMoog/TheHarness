@@ -1,0 +1,11 @@
+{
+  "name": "a change with no observable behaviour gets no invented test",
+  "prompt": "Patch track, one task: the export button label in src/reports/exportButton.tsx says \"Exprot\" and must say \"Export\". Nothing else changes. What test do you write first, and what do you return?",
+  "assertions": [
+    { "type": "matches", "value": "no test|without a test|nothing to test|no behaviour|no observable" },
+    { "type": "matches", "value": "text|label" },
+    { "type": "contains", "value": "harness-handoff" },
+    { "type": "matches", "value": "status:\\s*complete" }
+  ],
+  "why": "The patch track exists for text, versions, formatting and dead code. Hunting for a failing test that cannot exist is where a one-word change used to lose its first ten minutes."
+}

@@ -16,6 +16,9 @@ import { log, c } from '../lib/log.mjs';
 
 const NEAR_ZERO_MS = 1500;
 const REWORK_THRESHOLD = 3;
+/** Above these, a session is paying for iterations and tool output rather than for the change. */
+const MANY_TOOL_CALLS = 80;
+const HEAVY_TOOL_OUTPUT_BYTES = 200 * 1024;
 
 /** Internal agents only: a user-invocable one may run as the parent, which the
  *  SubagentStop hook never sees, so its absence from telemetry proves nothing. */
@@ -70,7 +73,7 @@ export default function improve(args) {
 
   // Where sessions die tells you which phase contract is failing.
   const deaths = new Map();
-  for (const session of sessions.filter((s) => s.outcome === 'stopped before review')) {
+  for (const session of sessions.filter((s) => ['failed','blocked'].includes(s.outcome))) {
     const last = session.agents.slice().sort((a, b) => String(a.at).localeCompare(String(b.at))).at(-1);
     if (last) deaths.set(last.agent, (deaths.get(last.agent) ?? 0) + 1);
   }
@@ -79,7 +82,7 @@ export default function improve(args) {
       findings.push({
         kind: 'sessions die here',
         subject: agent,
-        detail: `${count} session(s) stopped after ${agent} and never reached review`,
+        detail: `${count} session(s) stopped after ${agent} with an explicit failed/blocked result`,
         question: 'Either the phase before hands over something unusable, or the escalation rules are too broad.',
       });
     }
@@ -101,21 +104,44 @@ export default function improve(args) {
     }
   }
 
+  // Tokens are billed per model call and per byte that enters the context,
+  // so a session that iterated a hundred times, or read a megabyte of test
+  // output, paid for that rather than for the change.
+  for (const session of sessions) {
+    const usage = session.usage ?? {};
+    if ((usage.toolCalls ?? 0) > MANY_TOOL_CALLS) {
+      findings.push({
+        kind: 'many tool calls',
+        subject: session.id,
+        detail: `${usage.toolCalls} tool calls, ${usage.subagents ?? 0} sub-agent(s), ${usage.prompts ?? 0} prompt(s); every call resent the context`,
+        question: 'Was this a small change that should have stayed in the direct lane, or a verify loop that did not converge?',
+      });
+    }
+    if ((usage.toolOutputBytes ?? 0) > HEAVY_TOOL_OUTPUT_BYTES && (usage.rewrites ?? 0) === 0) {
+      findings.push({
+        kind: 'heavy tool output',
+        subject: session.id,
+        detail: `${Math.round(usage.toolOutputBytes / 1024)} KB returned by tools and no command went through crosstk run`,
+        question: 'Tests, diffs and listings entered the context whole. Is the crosstk binary on PATH, or the rewrite hook switched off?',
+      });
+    }
+  }
+
   // A track that never ships is a track nobody should be choosing.
   const tracks = new Map();
   for (const session of sessions) {
     const key = session.track ?? 'unknown';
-    if (!tracks.has(key)) tracks.set(key, { runs: 0, delivered: 0 });
+    if (!tracks.has(key)) tracks.set(key, { runs: 0, validated: 0 });
     tracks.get(key).runs += 1;
-    if (session.outcome === 'delivered') tracks.get(key).delivered += 1;
+    if (session.outcome === 'validated') tracks.get(key).validated += 1;
   }
   for (const [name, entry] of tracks) {
-    if (entry.runs >= 3 && entry.delivered === 0 && name !== 'spike') {
+    if (entry.runs >= 3 && entry.validated === 0 && !['spike','unknown'].includes(name)) {
       findings.push({
-        kind: 'track never ships',
+        kind: 'track has no recorded validation',
         subject: name,
-        detail: `${entry.runs} runs, none delivered`,
-        question: 'Either the selection criteria send the wrong work here, or its phases are missing something.',
+        detail: `${entry.runs} runs, none validated`,
+        question: 'Check explicit failures, blockers and missing outcome records before changing routing.',
       });
     }
   }
@@ -136,7 +162,8 @@ export default function improve(args) {
   log.title('What this cannot see');
   log.plain(`  ${c.dim('Which skills were loaded: no hook fires on a skill match.')}`);
   log.plain(`  ${c.dim('Whether a human approved a gate: the hook sees agents stop, not clicks.')}`);
-  log.plain(`  ${c.dim('Token cost per phase, unless the runtime reports usage on SubagentStop.')}`);
+  log.plain(`  ${c.dim('Token cost per phase, unless the runtime reports usage on SubagentStop. Credits are read in the')}`);
+  log.plain(`  ${c.dim('editor: hover a response for the turn, the context control for the session, the Status Bar for the month.')}`);
   log.plain(`  ${c.dim('Every finding above is a question to investigate, not a conclusion.')}`);
 
   log.plain(`\n  ${c.dim('This command never edits anything.')}`);

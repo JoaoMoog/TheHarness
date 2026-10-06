@@ -1,15 +1,16 @@
+import { contextBudget } from './context-budget.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { harnessPath } from './paths.mjs';
 import { parseFrontmatter, headings } from './frontmatter.mjs';
 import { estimateTokens } from './tokens.mjs';
-import { auditAgents, auditRatio } from './audit-graph.mjs';
+import { auditAgents, auditRatio, loadAgents } from './audit-graph.mjs';
 import {
   SKILL_SECTIONS, SKILL_FRONTMATTER, INSTRUCTION_FRONTMATTER, PROMPT_FRONTMATTER,
   SFA_KEYS, BUDGETS, REQUIRED_INSTRUCTIONS, LOOP_REQUIRED_KEYS, MCP_SERVER_FIELDS,
   SESSION_PHASES, SESSION_TRACKS, MANDATORY_PHASE,
   RUBRIC_SECTIONS, RUBRIC_FRONTMATTER, RUBRIC_REQUIRED_PHASES,
-  PLACEHOLDER_MARKERS,
+  PLACEHOLDER_MARKERS, MCP_PLACEHOLDER,
 } from './contracts.mjs';
 
 const listDir = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }) : []);
@@ -33,32 +34,16 @@ export function auditHotTier(report) {
  * Measuring only copilot-instructions.md understated the real per-turn cost
  * several times over.
  */
-export function effectiveHotTokens() {
-  const hot = harnessPath('core/copilot-instructions.md');
-  let total = fs.existsSync(hot) ? estimateTokens(fs.readFileSync(hot, 'utf8'), 'hot.md') : 0;
-  const root = harnessPath('core/instructions');
-  const always = [];
-  for (const entry of listDir(root)) {
-    if (!entry.isFile() || !entry.name.endsWith('.instructions.md')) continue;
-    const file = path.join(root, entry.name);
-    const { data, body } = parseFrontmatter(fs.readFileSync(file, 'utf8'));
-    const applyTo = String(data.applyTo ?? '').trim().replace(/["']/g, '');
-    if (applyTo !== '**') continue;
-    always.push(entry.name);
-    total += estimateTokens(body, file);
-  }
-  return { tokens: total, files: always };
+export function effectiveHotTokens(target = 'copilot') {
+  const report = contextBudget(target);
+  return { tokens: report.maxActiveEstimatedTokens, files: report.files.map(f => f.path) };
 }
 
 export function auditEffectiveHot(report) {
-  const { tokens, files } = effectiveHotTokens();
-  const count = files.length + 1;
-  if (tokens > BUDGETS.effectiveHotTokens) {
-    report.fail(
-      `effective hot tier is about ${tokens} tokens across ${count} always-loaded files, over the ${BUDGETS.effectiveHotTokens} budget`
-    );
-  } else {
-    report.pass(`effective hot tier about ${tokens} of ${BUDGETS.effectiveHotTokens} tokens across ${count} files`);
+  for (const target of ['copilot', 'kiro']) {
+    const { tokens, files } = effectiveHotTokens(target);
+    const message = target + ': permanent instructions including AGENTS.md and expanded includes ~' + tokens + '/' + BUDGETS.effectiveHotTokens + ' tokens';
+    if (tokens > BUDGETS.effectiveHotTokens) report.fail(message); else report.pass(message);
   }
 }
 
@@ -184,7 +169,11 @@ export function auditMcp(report) {
   const config = JSON.parse(fs.readFileSync(file, 'utf8'));
   const servers = Object.entries(config.servers ?? {});
 
-  if (servers.length === 0) return report.pass('no MCP server is enabled');
+  if (servers.length === 0) {
+    report.pass('no MCP server is enabled');
+    auditCrossTkReach(report, Object.keys(config.disabled ?? {}));
+    return;
+  }
 
   for (const [name, server] of servers) {
     const missingKeys = missing(MCP_SERVER_FIELDS, Object.keys(server));
@@ -196,8 +185,43 @@ export function auditMcp(report) {
     if (literal.length > 0) {
       report.fail(`mcp ${name}: a credential looks inlined; read it from the environment instead`);
     }
-    if (missingKeys.length === 0 && literal.length === 0) {
+    // The disabled block doubles as the template, so an entry moved into
+    // servers with its TODOs intact would be enabled without a real command
+    // or a real owner.
+    const unfilled = ['command', 'args', 'owner', 'version'].filter((k) => MCP_PLACEHOLDER.test(JSON.stringify(server[k] ?? '')));
+    if (unfilled.length > 0) {
+      report.fail(`mcp ${name}: enabled with a TODO placeholder in ${unfilled.join(', ')}; fill it in before enabling`);
+    }
+    if (missingKeys.length === 0 && literal.length === 0 && unfilled.length === 0) {
       report.pass(`mcp ${name}: owner ${server.owner}, scope ${server.scope}`);
+    }
+  }
+  auditCrossTkReach(report, [...Object.keys(config.servers ?? {}), ...Object.keys(config.disabled ?? {})]);
+}
+
+/**
+ * The rule is "Cross TK where it returns less than a whole read", and a rule
+ * an agent's manifest does not let it follow is decoration: a Copilot agent
+ * with a tools list can only call what is on it. So wherever the server is
+ * known to the harness, enabled or still a template, every agent that reads
+ * code lists `cross-tk/*`, which reaches every tool of the server without
+ * naming one. Warned rather than failed: a team may keep the server off.
+ */
+const CROSS_TK = /cross[-_ ]?tk/i;
+const last = (name) => String(name).split('/').pop();
+
+function auditCrossTkReach(report, knownServers) {
+  if (!knownServers.some((name) => CROSS_TK.test(name))) return;
+  // An open manifest can call every tool of the server; only a list can leave
+  // it out. A code reader is an agent that inspects code (usages, problems,
+  // changes) or reads it to write an artifact (codebase with editFiles); one
+  // that only reads session metadata has no use for it.
+  const inspects = (a) => a.tools.some((t) => /^(usages|problems|changes)$/.test(last(t)));
+  const readsToWrite = (a) => a.tools.some((t) => last(t) === 'codebase') && a.tools.some((t) => last(t) === 'editFiles');
+  const readers = loadAgents().filter((a) => !a.allTools && (inspects(a) || readsToWrite(a)));
+  for (const agent of readers) {
+    if (!agent.tools.some((t) => CROSS_TK.test(String(t)))) {
+      report.warn(`agent ${agent.id}: reads code but lists no cross-tk tool; add cross-tk/* so the server is reachable when it is connected`);
     }
   }
 }
@@ -235,8 +259,8 @@ export function auditTracks(report) {
       report.fail(`track ${name}: has no phases`);
       continue;
     }
-    if (track.phases.includes('deliver') && !track.phases.includes(MANDATORY_PHASE)) {
-      report.fail(`track ${name}: delivers without ${MANDATORY_PHASE}, nothing ships unreviewed`);
+    if (track.phases.includes('implement') && !track.phases.includes(MANDATORY_PHASE)) {
+      report.fail(`track ${name}: implements without ${MANDATORY_PHASE}, nothing ships unreviewed`);
       continue;
     }
     if (track.promoteTo !== null && !SESSION_TRACKS[track.promoteTo]) {
@@ -317,19 +341,7 @@ export function auditReach(report) {
   const agents = agentBodies();
   const allAgentText = agents.map((a) => a.text).join('\n');
 
-  // Every skill that is not stack-scoped must be named by some agent.
-  const skillsRoot = harnessPath('core/skills');
-  for (const dir of listDir(skillsRoot).filter((e) => e.isDirectory())) {
-    const file = path.join(skillsRoot, dir.name, 'SKILL.md');
-    if (!fs.existsSync(file)) continue;
-    const { data } = parseFrontmatter(fs.readFileSync(file, 'utf8'));
-    const stackScoped = Array.isArray(data.stacks) && data.stacks.length > 0;
-    if (stackScoped) continue;
-    if (!allAgentText.includes('`' + dir.name + '`')) {
-      report.fail(`skill ${dir.name}: no agent names it, so nothing in a session can reach it`);
-    }
-  }
-
+  // Native clients discover skills by name/description, without agent backlinks.
   // Every rubric must be scored by an agent that carries rubric-review.
   const judges = agents.filter((a) => a.text.includes('`rubric-review`'));
   if (judges.length === 0) {
@@ -374,7 +386,7 @@ export function auditReach(report) {
     report.fail(`finops/token-budgets.json says agentTokens ${declared}, contracts.mjs says ${BUDGETS.agentTokens}`);
   }
 
-  report.pass('reach: every skill, rubric and track is named by the agent that would use it');
+  report.pass('reach: native skills are discoverable; rubric and track references agree');
 }
 
 export function auditSelf(report) {
@@ -400,7 +412,7 @@ export function auditSelf(report) {
  */
 export function diagnose({ skills = 0, agentList = [], installed = null, lockExists = false } = {}) {
   const invocable = agentList.filter((a) => a.userInvocable);
-  const withTools = agentList.filter((a) => a.tools.length > 0);
+  const withTools = agentList.filter((a) => a.tools.length > 0 || a.allTools);
   const delegating = agentList.filter((a) => a.subagents.length > 0 || a.wildcard);
   const versioned = agentList.length > 0 && agentList.every((a) => Boolean(a.data.version));
 
@@ -412,10 +424,10 @@ export function diagnose({ skills = 0, agentList = [], installed = null, lockExi
       why: 'no skills are defined',
     },
     {
-      question: 'Does every custom agent declare its tools explicitly?',
+      question: 'Does every custom agent declare its tools, or open them all with a written reason?',
       answer: agentList.length > 0 && withTools.length === agentList.length,
       blocking: true,
-      why: `${agentList.length - withTools.length} agent(s) declare no tools, so their blast radius is unbounded`,
+      why: `${agentList.length - withTools.length} agent(s) declare no tools and give no reason, so their blast radius is unbounded by accident`,
     },
     {
       question: 'Is there an orchestrator that can actually delegate?',

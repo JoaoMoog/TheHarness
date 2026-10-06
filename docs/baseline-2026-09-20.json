@@ -1,0 +1,22 @@
+{
+  "revision": "8e2863d94270123ece78912af6e1f4eeb77193f0",
+  "date": "2026-09-20",
+  "node": "v22.23.2",
+  "platform": "win32",
+  "context": {
+    "existingCounterEstimatedTokens": 4492,
+    "includingAgentsEstimatedTokens": 6359,
+    "universalInstructions": 7
+  },
+  "checks": {
+    "doctor": "65 passed, 2 warnings",
+    "guardrails": "146 passed, 1 failed: Windows formatter invocation",
+    "traceability": "19 passed",
+    "dreams": "31 passed, 1 failed: Windows Kiro path separator"
+  },
+  "clientPilot": {
+    "copilot": "not-run",
+    "kiro": "not-run",
+    "reason": "No authenticated editor sessions or measured provider token data available in this checkout"
+  }
+}
