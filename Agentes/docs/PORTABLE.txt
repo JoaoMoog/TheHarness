@@ -1,0 +1,23 @@
+SpeedCode 0.7.0 — distribuição desktop para Windows x64
+
+Este é o pacote portátil: execute SpeedCode.exe sem instalador.
+Para equipes, existe também SpeedCode-<versão>-Setup.exe, que gerencia os arquivos
+e atualiza a instalação existente sem desinstalar. Veja INSTALACAO.md no app instalado
+ou docs/INSTALLER.md no repositório. Não há atualizador residente/automático.
+Copie a pasta inteira: mantenha WebView2Loader.dll, libunwind.dll e formatters/
+junto ao executável. Não é necessário instalar Rust ou Node para usar este pacote.
+
+Requisitos externos: WebView2 Evergreen Runtime e Git no PATH.
+Copilot CLI/Kiro CLI são opcionais; projetos .NET exigem o SDK/runtime adequado.
+Instale os requisitos ausentes separadamente. O exemplo .NET usa SDK 10.
+
+Configurações e cache ficam por padrão em %LOCALAPPDATA%\SpeedCode.
+Se existir um perfil antigo AgentDeskLite, ele pode ser reutilizado.
+Sem instalador não significa perfil totalmente portátil ou ausência de cache.
+Login é gerenciado pelo Copilot CLI; o chat compartilha essas credenciais.
+Conversas ficam em memória; alterações nos arquivos do projeto permanecem.
+
+README.md: recursos, ambiente de desenvolvimento e comandos de build.
+CONTRATO-DESEMPENHO.md e VALIDACAO-DESEMPENHO.md: limites e medições.
+CLIs, builds, MCPs e páginas HTML têm custo próprio; não há garantia de CPU,
+RAM, tokens ou créditos fixos. Execução .NET não oferece breakpoints/attach.

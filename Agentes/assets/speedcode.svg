@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="SpeedCode">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#1c2842"/><stop offset="1" stop-color="#0c1120"/></linearGradient>
+    <linearGradient id="speed" x2="1" y2="1"><stop stop-color="#6ce4db"/><stop offset="1" stop-color="#7c8bff"/></linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#bg)"/>
+  <path d="M54 160a79 79 0 0 1 147-57" fill="none" stroke="url(#speed)" stroke-width="15" stroke-linecap="round"/>
+  <path d="m142 68-58 78h35l-13 56 76-88h-39l18-46Z" fill="url(#speed)" stroke-linejoin="round"/>
+  <path d="m64 180 13-8m106-30 15 4m-46 49h35" fill="none" stroke="#dce7ff" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="202" cy="73" r="9" fill="#6ce4db"/>
+</svg>

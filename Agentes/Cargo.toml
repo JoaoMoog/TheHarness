@@ -1,0 +1,47 @@
+[package]
+name = "speedcode"
+version = "0.7.0"
+autobins = false
+edition = "2024"
+description = "Bancada desktop com editor, Git e terminais de agentes integrados"
+license = "MIT OR Apache-2.0"
+
+[[bin]]
+name = "speedcode"
+path = "src/desktop.rs"
+
+[dependencies]
+wry = "0.57"
+tao = "0.37"
+rfd = "0.17.2"
+portable-pty = "0.9"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+include_dir = "0.7"
+sha2 = "0.10"
+base64 = "0.22"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp", "bmp", "ico"] }
+winreg = "0.55"
+json5 = "0.4"
+url = "2"
+github-copilot-sdk = { version = "=1.0.17-preview.3", default-features = false, features = ["runtime"] }
+tokio = { version = "1", features = ["rt-multi-thread", "sync", "time", "process", "io-util"] }
+time = { version = "=0.3.55", features = ["formatting"] }
+async-trait = "0.1"
+ignore = "=0.4.33"
+rusqlite = { version = "0.37", features = ["bundled"] }
+tree-sitter = "0.25"
+tree-sitter-typescript = "0.23"
+tree-sitter-javascript = "0.25"
+tree-sitter-rust = "0.24"
+tree-sitter-c-sharp = "0.23"
+rmcp = { version = "=3.5.0", default-features = false, features = ["client", "transport-child-process", "which-command", "transport-streamable-http-client-reqwest", "reqwest-native-tls"] }
+reqwest = { version = "=0.13.5", default-features = false, features = ["native-tls", "stream", "json"] }
+futures = "=0.3.34"
+sse-stream = "=0.2.6"
+process-wrap = { version = "=10.0.1", features = ["tokio1"] }
+windows = { version = "0.62", features = ["Win32_System_Threading"] }
+windows-sys = { version = "0.61", features = ["Win32_UI_WindowsAndMessaging"] }
+tempfile = "3"
+
+[dev-dependencies]
