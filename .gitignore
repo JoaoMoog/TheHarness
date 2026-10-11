@@ -10,3 +10,6 @@ Thumbs.db
 playwright-report/
 test-results/
 .harness-*-output.txt
+
+# exportações de vídeo (geradas por motion/render.mjs)
+motion/*.mp4
