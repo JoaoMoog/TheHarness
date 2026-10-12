@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora de custo de IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --sunk:#EAEEF3; --ink:#18202E; --muted:#5A6476; --line:#D9DFE8;
+  --in:#2B5BD7; --in-soft:#DCE6FB; --out:#D9730A; --out-soft:#FBE7D0; --cache:#128A6E; --cache-soft:#D3F0E7;
+  --warn:#B4231A; --warn-soft:#FBE1DE; --focus:#2B5BD7;
+  --font:"Instrument Sans", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F141D; --surface:#171E2B; --sunk:#121824; --ink:#E7EBF2; --muted:#98A3B6; --line:#2A3446;
+    --in:#7AA2FF; --in-soft:#1E2C4D; --out:#FFA94D; --out-soft:#3D2A14; --cache:#45C9A6; --cache-soft:#123A31;
+    --warn:#FF8A80; --warn-soft:#3E1C1A; --focus:#7AA2FF; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F141D; --surface:#171E2B; --sunk:#121824; --ink:#E7EBF2; --muted:#98A3B6; --line:#2A3446;
+  --in:#7AA2FF; --in-soft:#1E2C4D; --out:#FFA94D; --out-soft:#3D2A14; --cache:#45C9A6; --cache-soft:#123A31;
+  --warn:#FF8A80; --warn-soft:#3E1C1A; --focus:#7AA2FF; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums}
+a{color:var(--in)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 40px}
+header.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:28px}
+header.top h1{font-size:clamp(28px,4.4vw,44px);line-height:1.05;margin:0;font-weight:700;font-stretch:80%;letter-spacing:-.01em}
+header.top p{margin:8px 0 0;color:var(--muted);max-width:60ch}
+.controls-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;align-items:start}
+@media (max-width:920px){.layout{grid-template-columns:1fr}}
+
+.step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px}
+.step-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+.step-n{flex:none;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-weight:700;font-size:15px}
+.step-head h2{margin:2px 0 2px;font-size:21px;line-height:1.2;font-weight:650}
+.step-head p{margin:0;color:var(--muted);font-size:14.5px;max-width:62ch}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:550}
+label.f small{font-weight:400;color:var(--muted);font-size:12.5px;line-height:1.35}
+input[type=number],input[type=text],select,textarea{
+  font:inherit;font-size:15px;color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%;min-width:0}
+input[type=number]{font-variant-numeric:tabular-nums}
+textarea{resize:vertical;min-height:120px;line-height:1.45}
+.pair{display:flex;align-items:center;gap:8px}
+.pair span{color:var(--muted);font-size:14px}
+
+.seg{display:inline-flex;background:var(--sunk);border:1px solid var(--line);border-radius:9px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:14px;border:0;background:transparent;color:var(--muted);padding:6px 12px;border-radius:7px;cursor:pointer;font-weight:550}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+
+.btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+/* modelos */
+.model-filter{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.model-filter input{flex:1;min-width:180px}
+.models{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;max-height:340px;overflow:auto;padding:2px}
+.mcard{text-align:left;font:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:3px}
+.mcard:hover{border-color:var(--muted)}
+.mcard[aria-pressed="true"]{border-color:var(--in);box-shadow:inset 0 0 0 1px var(--in);background:color-mix(in srgb,var(--in-soft) 45%,var(--surface))}
+.mcard b{font-size:15px;font-weight:650}
+.mcard .prov{font-size:12.5px;color:var(--muted)}
+.mcard .pr{font-size:13px;display:flex;gap:10px}
+.mcard .pr i{font-style:normal}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.dot.in{background:var(--in)}.dot.out{background:var(--out)}.dot.cache{background:var(--cache)}
+.price-edit{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.price-edit .grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.note{font-size:13px;color:var(--muted);margin:10px 0 0}
+
+/* presets */
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chip:hover{border-color:var(--muted)}
+
+/* lab */
+.lab{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:18px}
+.lab h3{margin:0 0 4px;font-size:17px}
+.lab > p{margin:0 0 12px;color:var(--muted);font-size:14px}
+.lab-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.lab-count{font-size:15px}
+.lab-count b{font-size:22px;font-stretch:80%;font-weight:700}
+.tokview{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.9;max-height:180px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.tokview span{border-radius:3px;padding:1px 0}
+.tokview span:nth-child(4n+1){background:var(--in-soft)}
+.tokview span:nth-child(4n+2){background:var(--out-soft)}
+.tokview span:nth-child(4n+3){background:var(--cache-soft)}
+.tokview span:nth-child(4n){background:color-mix(in srgb,var(--line) 70%,transparent)}
+.tokview .empty{color:var(--muted);background:none!important}
+.lab-use{display:flex;gap:6px;flex-wrap:wrap}
+
+.sub{font-size:15px;font-weight:650;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;cursor:pointer}
+.check input{margin-top:4px;width:17px;height:17px;accent-color:var(--in)}
+.check small{display:block;color:var(--muted);font-size:13px}
+.per-turn{margin-top:16px;background:var(--sunk);border-radius:10px;padding:12px 14px;font-size:14px}
+.per-turn table{width:100%;border-collapse:collapse}
+.per-turn td{padding:3px 0}
+.per-turn td:last-child{text-align:right}
+
+/* resumo */
+aside.summary{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+.big-label{font-size:14px;color:var(--muted);margin:0}
+.big{font-size:clamp(40px,5vw,54px);font-weight:700;font-stretch:75%;line-height:1;margin:6px 0 4px;letter-spacing:-.01em;word-break:break-all}
+.big-sub{font-size:14px;color:var(--muted);margin:0 0 18px}
+.bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--sunk);margin:6px 0 10px}
+.bar div{height:100%;transition:width .25s}
+.legend{display:grid;gap:4px;font-size:13.5px}
+.legend div{display:flex;justify-content:space-between;gap:8px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:8px 12px;font-size:14.5px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.kv dt{color:var(--muted)} .kv dd{margin:0;text-align:right;font-weight:600}
+.warn{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-top:14px}
+.tip{background:var(--cache-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-top:14px}
+.summary .actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
+/* comparação */
+section.compare{margin-top:10px}
+.compare h2,.learn h2{font-size:24px;font-stretch:85%;margin:0 0 4px}
+.compare > p,.learn > p{color:var(--muted);margin:0 0 14px;max-width:70ch}
+.table-scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+table.cmp{border-collapse:collapse;width:100%;min-width:640px;font-size:14.5px}
+.cmp th,.cmp td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.cmp th{font-size:13px;color:var(--muted);font-weight:600;background:var(--sunk)}
+.cmp td.r,.cmp th.r{text-align:right}
+.cmp tr:last-child td{border-bottom:0}
+.cmp tbody tr{cursor:pointer}
+.cmp tbody tr:hover td{background:var(--sunk)}
+.cmp tr.sel td{background:color-mix(in srgb,var(--in-soft) 55%,var(--surface))}
+.cmp .mini{display:block;height:8px;border-radius:4px;background:var(--out);min-width:2px}
+.cmp .barcell{width:28%;min-width:120px}
+
+.learn{margin-top:36px}
+.learn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+details summary{cursor:pointer;font-weight:650;font-size:15.5px}
+details p{margin:10px 0 0;color:var(--muted);font-size:14.5px;max-width:65ch}
+footer{margin-top:30px;color:var(--muted);font-size:13px;max-width:80ch}
+
+/* barra mobile */
+.mobile-bar{display:none}
+@media (max-width:920px){
+  aside.summary{position:static}
+  .mobile-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);
+    padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));justify-content:space-between;align-items:center;gap:12px}
+  .mobile-bar b{font-size:24px;font-stretch:75%}
+  .mobile-bar span{font-size:13px;color:var(--muted);display:block}
+  body{padding-bottom:76px}
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Calculadora de custo de IA</h1>
+      <p>Descubra quanto custa usar um modelo de linguagem no Amazon Bedrock: escolha o modelo, meça seus prompts e veja o custo por conversa, por dia e por mês.</p>
+    </div>
+    <div class="controls-top">
+      <div class="seg" role="group" aria-label="Moeda">
+        <button data-cur="BRL">R$</button><button data-cur="USD">US$</button>
+      </div>
+      <label class="pair" title="Cotação usada para converter dólar em real">
+        <span>US$ 1 =</span>
+        <input type="number" id="rate" step="0.01" min="0" style="width:90px" aria-label="Cotação do dólar em reais">
+      </label>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main>
+      <!-- 1 modelo -->
+      <section class="step" id="s-model">
+        <div class="step-head"><div class="step-n">1</div><div>
+          <h2>Escolha o modelo</h2>
+          <p>Cada modelo cobra um preço por milhão de tokens de entrada (o que você envia) e outro de saída (o que ele responde). Modelos maiores são mais capazes e mais caros.</p>
+        </div></div>
+        <div class="model-filter">
+          <input type="text" id="msearch" placeholder="Buscar modelo (ex.: Sonnet, Nova, Llama)" aria-label="Buscar modelo">
+          <select id="mprov" aria-label="Filtrar por provedor"></select>
+        </div>
+        <div class="models" id="models" role="group" aria-label="Modelos"></div>
+
+        <div class="price-edit">
+          <div class="grid">
+            <label class="f">Modo de cobrança
+              <select id="tier">
+                <option value="standard">Sob demanda (padrão)</option>
+                <option value="batch">Lote / Batch (−50%)</option>
+                <option value="priority">Prioridade (+75%)</option>
+              </select>
+              <small>Batch processa de forma assíncrona (até 24 h) pela metade do preço.</small>
+            </label>
+            <label class="f">Endpoint
+              <select id="endpoint">
+                <option value="global">Global (cross-region)</option>
+                <option value="regional">Regional (+10% nos Claude)</option>
+              </select>
+              <small>Regional garante que os dados fiquem numa região específica.</small>
+            </label>
+          </div>
+          <div class="sub">Preços do modelo selecionado <span class="note" style="margin:0;font-weight:400">US$ por 1 milhão de tokens · editáveis</span></div>
+          <div class="grid">
+            <label class="f"><span><span class="dot in"></span>Entrada</span><input type="number" step="0.001" min="0" id="p-in"></label>
+            <label class="f"><span><span class="dot out"></span>Saída</span><input type="number" step="0.001" min="0" id="p-out"></label>
+            <label class="f"><span><span class="dot cache"></span>Leitura de cache</span><input type="number" step="0.001" min="0" id="p-cr" placeholder="sem cache"></label>
+            <label class="f"><span>Escrita de cache</span><input type="number" step="0.001" min="0" id="p-cw" placeholder="sem cache"></label>
+          </div>
+          <p class="note" id="model-note"></p>
+          <button class="btn" id="reset-price" style="margin-top:8px">Voltar ao preço de tabela</button>
+        </div>
+      </section>
+
+      <!-- 2 tokens -->
+      <section class="step" id="s-tokens">
+        <div class="step-head"><div class="step-n">2</div><div>
+          <h2>Estime os tokens de cada chamada</h2>
+          <p>Token é um pedaço de texto: em português, cerca de 3 a 4 caracteres. Comece por um cenário pronto ou meça seus próprios textos no laboratório.</p>
+        </div></div>
+
+        <div class="presets" id="presets"></div>
+
+        <div class="lab">
+          <h3>Laboratório de tokens</h3>
+          <p>Cole um texto de exemplo (seu prompt, uma pergunta típica, uma resposta esperada) e veja como ele é quebrado em tokens.</p>
+          <textarea id="lab-text" placeholder="Ex.: Você é um assistente do time de atendimento. Responda de forma objetiva, cite a política interna quando relevante..."></textarea>
+          <div class="lab-row">
+            <div class="lab-count num" aria-live="polite"><b id="lab-tok">0</b> tokens <span style="color:var(--muted)">· <span id="lab-chars">0</span> caracteres · <span id="lab-words">0</span> palavras</span></div>
+            <div class="seg" role="group" aria-label="Tipo de texto" style="margin-left:auto">
+              <button data-lang="pt">Português</button><button data-lang="en">Inglês</button><button data-lang="code">Código/JSON</button>
+            </div>
+          </div>
+          <div class="tokview" id="tokview" aria-label="Visualização dos tokens"><span class="empty">Os tokens aparecem aqui, cada cor é um pedaço.</span></div>
+          <div class="lab-row">
+            <span style="font-size:14px;color:var(--muted)">Usar esta contagem como:</span>
+            <div class="lab-use">
+              <button class="btn" data-use="sys">Prompt de sistema</button>
+              <button class="btn" data-use="user">Mensagem do usuário</button>
+              <button class="btn" data-use="ragT">Trecho de RAG</button>
+              <button class="btn" data-use="resp">Resposta</button>
+            </div>
+          </div>
+          <p class="note" style="margin:0">Estimativa com margem de ±20%. O número exato depende do tokenizador de cada modelo.</p>
+        </div>
+
+        <div class="sub"><span class="dot in"></span>Entrada (o que vai para o modelo a cada mensagem)</div>
+        <div class="grid">
+          <label class="f">Prompt de sistema<input type="number" min="0" data-k="sys"><small>Instruções fixas, persona, regras.</small></label>
+          <label class="f">Ferramentas e esquemas<input type="number" min="0" data-k="tools"><small>Definições de tools/funções que acompanham a chamada.</small></label>
+          <label class="f">Mensagem do usuário<input type="number" min="0" data-k="user"><small>Tamanho médio de uma pergunta.</small></label>
+          <label class="f">Trechos de RAG por mensagem<div class="pair"><input type="number" min="0" data-k="ragN" aria-label="Quantidade de trechos"><span>×</span><input type="number" min="0" data-k="ragT" aria-label="Tokens por trecho"></div><small>Quantidade × tokens por trecho de documento.</small></label>
+          <label class="f">Imagens por mensagem<div class="pair"><input type="number" min="0" data-k="imgN" aria-label="Quantidade de imagens"><span>×</span><input type="number" min="0" data-k="imgT" aria-label="Tokens por imagem"></div><small>Uma imagem de ~1000×1000 px dá cerca de 1.300 tokens.</small></label>
+        </div>
+
+        <div class="sub"><span class="dot out"></span>Saída (o que o modelo gera)</div>
+        <div class="grid">
+          <label class="f">Resposta<input type="number" min="0" data-k="resp"><small>Curta ≈ 150 · média ≈ 500 · longa ≈ 1.500.</small></label>
+          <label class="f">Raciocínio (thinking)<input type="number" min="0" data-k="think"><small>Tokens de “pensamento” também são cobrados como saída.</small></label>
+        </div>
+
+        <div class="sub">Conversa</div>
+        <div class="grid">
+          <label class="f">Mensagens por conversa<input type="number" min="1" data-k="turns"><small>Quantas perguntas o usuário faz em sequência.</small></label>
+          <label class="check" style="align-self:center"><input type="checkbox" id="hist">
+            <span>Reenviar o histórico a cada mensagem<small>É assim que chats funcionam: a cada pergunta nova, as anteriores vão junto.</small></span></label>
+        </div>
+        <div class="per-turn num" id="per-turn"></div>
+      </section>
+
+      <!-- 3 volume -->
+      <section class="step" id="s-volume">
+        <div class="step-head"><div class="step-n">3</div><div>
+          <h2>Defina o volume de uso</h2>
+          <p>Quantas pessoas vão usar e com que frequência. É aqui que o custo por conversa vira custo mensal.</p>
+        </div></div>
+        <div class="grid">
+          <label class="f">Usuários ativos por dia<input type="number" min="0" data-k="users"></label>
+          <label class="f">Conversas por usuário por dia<input type="number" min="0" step="0.1" data-k="convs"></label>
+          <label class="f">Dias de uso no mês<input type="number" min="1" max="31" data-k="days"><small>22 para dias úteis, 30 para uso contínuo.</small></label>
+          <label class="f">Margem de segurança (%)<input type="number" min="0" data-k="margin"><small>Cobre retentativas, erros e picos de uso.</small></label>
+        </div>
+      </section>
+
+      <!-- 4 otimizações -->
+      <section class="step" id="s-opt">
+        <div class="step-head"><div class="step-n">4</div><div>
+          <h2>Aplique otimizações</h2>
+          <p>Prompt caching guarda a parte fixa do prompt (sistema + ferramentas) e cobra bem menos para reler. Vale muito quando o prompt de sistema é grande.</p>
+        </div></div>
+        <div class="grid">
+          <label class="check"><input type="checkbox" id="cache">
+            <span>Usar prompt caching<small id="cache-help">Aplica-se ao prompt de sistema e às ferramentas.</small></span></label>
+          <label class="f">Taxa de acerto do cache (%)<input type="number" min="0" max="100" data-k="hit"><small>Com tráfego constante, 80–95% é comum. O cache padrão dura 5 minutos.</small></label>
+        </div>
+      </section>
+    </main>
+
+    <aside class="summary" id="summary" aria-label="Sua estimativa">
+      <div class="card">
+        <p class="big-label">Custo mensal estimado</p>
+        <p class="big num" id="r-month">—</p>
+        <p class="big-sub" id="r-model">—</p>
+
+        <p class="big-label" style="color:var(--ink);font-weight:600">Para onde vai o dinheiro</p>
+        <div class="bar" id="r-bar" aria-hidden="true"></div>
+        <div class="legend num" id="r-legend"></div>
+
+        <dl class="kv num">
+          <dt>Por mensagem</dt><dd id="r-msg">—</dd>
+          <dt>Por conversa</dt><dd id="r-conv">—</dd>
+          <dt>Por dia</dt><dd id="r-day">—</dd>
+          <dt>Por ano</dt><dd id="r-year">—</dd>
+          <dt>Por usuário/mês</dt><dd id="r-user">—</dd>
+        </dl>
+        <dl class="kv num">
+          <dt>Conversas por mês</dt><dd id="r-nconv">—</dd>
+          <dt>Tokens de entrada/mês</dt><dd id="r-tin">—</dd>
+          <dt>Tokens de saída/mês</dt><dd id="r-tout">—</dd>
+        </dl>
+        <div id="r-alerts"></div>
+        <div class="actions">
+          <button class="btn primary" id="copy">Copiar resumo</button>
+          <a class="btn" href="#compare" style="text-decoration:none">Comparar modelos</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="compare" id="compare">
+    <h2>O mesmo uso em todos os modelos</h2>
+    <p>Mesmos tokens, mesmo volume e mesmas otimizações, só trocando o modelo. Toque numa linha para selecioná-lo.</p>
+    <div class="table-scroll">
+      <table class="cmp">
+        <thead><tr><th>Modelo</th><th>Provedor</th><th class="r">Entrada /1M</th><th class="r">Saída /1M</th><th class="r">Custo mensal</th><th class="barcell"><span class="sr">Comparação visual</span></th></tr></thead>
+        <tbody id="cmp-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="learn">
+    <h2>Entenda os conceitos</h2>
+    <p>O básico para ler a estimativa e explicar o custo para qualquer pessoa.</p>
+    <div class="learn-grid">
+      <details><summary>O que é um token?</summary><p>É a unidade que o modelo lê e escreve. Um token é um pedaço de palavra: “calculadora” pode virar 3 tokens. Em português, 1.000 tokens equivalem a cerca de 650 a 750 palavras. Tudo é cobrado em tokens.</p></details>
+      <details><summary>Por que a saída custa mais que a entrada?</summary><p>Ler é rápido: o modelo processa a entrada toda de uma vez. Escrever é feito token a token, o que usa muito mais computação. Por isso a saída costuma custar de 4 a 5 vezes mais. Respostas curtas economizam bastante.</p></details>
+      <details><summary>Por que conversas longas ficam caras?</summary><p>O modelo não tem memória entre chamadas. Para lembrar do que foi dito, o histórico inteiro é reenviado a cada mensagem. Na décima pergunta, você paga para o modelo reler as nove anteriores. O custo cresce mais rápido que o número de mensagens.</p></details>
+      <details><summary>O que é prompt caching?</summary><p>Quando a parte inicial do prompt se repete (instruções, ferramentas, documentos fixos), o Bedrock guarda essa parte por alguns minutos. Reler do cache custa até 90% menos que a entrada normal. Gravar no cache custa um pouco mais (cerca de 25% a mais) na primeira vez.</p></details>
+      <details><summary>Quando usar Batch?</summary><p>Quando ninguém está esperando a resposta na hora: classificar milhares de documentos, gerar resumos durante a noite, enriquecer bases. O processamento leva até 24 horas e custa metade do preço.</p></details>
+      <details><summary>O que é raciocínio (thinking)?</summary><p>Alguns modelos “pensam” antes de responder, gerando tokens internos de raciocínio. Isso melhora tarefas complexas, mas esses tokens são cobrados como saída. Limite o orçamento de raciocínio em tarefas simples.</p></details>
+      <details><summary>Como reduzir o custo?</summary><p>Use o menor modelo que resolve bem a tarefa, encurte o prompt de sistema, ative caching, limite o tamanho das respostas, resuma o histórico de conversas longas e mande tarefas sem urgência para Batch.</p></details>
+      <details><summary>Quão precisa é esta estimativa?</summary><p>É uma ordem de grandeza para planejar orçamento. Na prática, meça o consumo real com algumas centenas de chamadas (o Bedrock retorna os tokens usados em cada resposta) e ajuste os números aqui.</p></details>
+    </div>
+  </section>
+
+  <footer>
+    Preços de referência do Amazon Bedrock sob demanda em us-east-1, conferidos em outubro de 2026. Preços mudam e variam por região. Confirme em aws.amazon.com/bedrock/pricing antes de fechar orçamento. Claude Haiku 5.5 foi anunciado, mas ainda sem preço publicado. Não inclui custos de Knowledge Bases, Guardrails, Agents, armazenamento ou transferência de dados.
+  </footer>
+</div>
+
+<div class="mobile-bar" aria-hidden="true">
+  <div><span>Custo mensal estimado</span><b class="num" id="m-month">—</b></div>
+  <a class="btn" href="#summary" style="text-decoration:none">Ver detalhes</a>
+</div>
+
+<script>
+// Preços em US$ por 1M tokens (Bedrock, sob demanda, us-east-1). cw/cr = escrita/leitura de cache (null = sem cache)
+const MODELS = [
+  {id:'fable-5-1', name:'Claude Fable 5.1', prov:'Anthropic', in:10, out:50, cw:12.5, cr:0.25, ctx:1000000, claude:true, note:'Topo de linha da Anthropic. Para os problemas mais difíceis.'},
+  {id:'opus-5-5', name:'Claude Opus 5.5', prov:'Anthropic', in:4, out:20, cw:5, cr:0.20, ctx:1000000, claude:true, note:'Muito capaz para agentes, código e análise complexa.'},
+  {id:'sonnet-5-5', name:'Claude Sonnet 5.5', prov:'Anthropic', in:2, out:10, cw:2.5, cr:0.20, ctx:1000000, claude:true, note:'Melhor equilíbrio entre qualidade e custo. Bom ponto de partida.'},
+  {id:'sonnet-5', name:'Claude Sonnet 5', prov:'Anthropic', in:2, out:10, cw:2.5, cr:0.20, ctx:1000000, claude:true, note:'Geração anterior do Sonnet, mesmo preço do 5.5.'},
+  {id:'opus-4-8', name:'Claude Opus 4.8', prov:'Anthropic', in:5, out:25, cw:6.25, cr:0.50, ctx:1000000, claude:true, note:'Geração anterior do Opus.'},
+  {id:'sonnet-4-6', name:'Claude Sonnet 4.6', prov:'Anthropic', in:3, out:15, cw:3.75, cr:0.30, ctx:1000000, claude:true, note:'Geração anterior, ainda muito usada em produção.'},
+  {id:'haiku-4-5', name:'Claude Haiku 4.5', prov:'Anthropic', in:1, out:5, cw:1.25, cr:0.10, ctx:200000, claude:true, note:'Claude mais barato e rápido. Bom para classificação e alto volume.'},
+  {id:'nova-premier', name:'Amazon Nova Premier', prov:'Amazon', in:2.5, out:12.5, cw:null, cr:null, ctx:1000000, note:'Modelo mais capaz da família Nova.'},
+  {id:'nova-pro', name:'Amazon Nova Pro', prov:'Amazon', in:0.8, out:3.2, cw:0.8, cr:0.2, ctx:300000, note:'Equilibrado e multimodal. Cache com 75% de desconto na leitura.'},
+  {id:'nova-2-lite', name:'Amazon Nova 2 Lite', prov:'Amazon', in:0.3, out:2.5, cw:null, cr:null, ctx:1000000, note:'Nova de segunda geração com raciocínio.'},
+  {id:'nova-lite', name:'Amazon Nova Lite', prov:'Amazon', in:0.06, out:0.24, cw:0.06, cr:0.015, ctx:300000, note:'Multimodal de baixíssimo custo.'},
+  {id:'nova-micro', name:'Amazon Nova Micro', prov:'Amazon', in:0.035, out:0.14, cw:0.035, cr:0.00875, ctx:128000, note:'O mais barato do Bedrock. Só texto, tarefas simples.'},
+  {id:'llama4-maverick', name:'Llama 4 Maverick', prov:'Meta', in:0.24, out:0.97, cw:null, cr:null, ctx:1000000, note:'Open-weight multimodal.'},
+  {id:'llama4-scout', name:'Llama 4 Scout', prov:'Meta', in:0.17, out:0.66, cw:null, cr:null, ctx:3500000, note:'Contexto enorme a baixo custo.'},
+  {id:'llama33-70b', name:'Llama 3.3 70B', prov:'Meta', in:0.72, out:0.72, cw:null, cr:null, ctx:128000, note:'Geração anterior do Llama.'},
+  {id:'gpt-oss-120b', name:'gpt-oss-120b', prov:'OpenAI', in:0.15, out:0.6, cw:null, cr:null, ctx:128000, note:'Open-weight da OpenAI com raciocínio.'},
+  {id:'gpt-oss-20b', name:'gpt-oss-20b', prov:'OpenAI', in:0.07, out:0.3, cw:null, cr:null, ctx:128000, note:'Versão menor e mais barata.'},
+  {id:'deepseek-v32', name:'DeepSeek V3.2', prov:'DeepSeek', in:0.62, out:1.85, cw:null, cr:null, ctx:164000, note:'Uso geral com bom custo-benefício.'},
+  {id:'deepseek-r1', name:'DeepSeek R1', prov:'DeepSeek', in:1.35, out:5.4, cw:null, cr:null, ctx:128000, note:'Focado em raciocínio. O pensamento é cobrado como saída.'},
+  {id:'mistral-large-3', name:'Mistral Large 3', prov:'Mistral', in:0.5, out:1.5, cw:null, cr:null, ctx:256000, note:'Principal modelo da Mistral.'},
+  {id:'ministral-14b', name:'Ministral 14B', prov:'Mistral', in:0.2, out:0.2, cw:null, cr:null, ctx:128000, note:'Pequeno e barato.'},
+  {id:'ministral-8b', name:'Ministral 8B', prov:'Mistral', in:0.15, out:0.15, cw:null, cr:null, ctx:128000, note:'Ainda menor.'}
+];
+
+const PRESETS = [
+  {name:'Chatbot de atendimento', v:{sys:1200,tools:0,user:80,ragN:0,ragT:500,imgN:0,resp:250,think:0,turns:5,hist:true,users:500,convs:2,days:30,cache:true,hit:90}},
+  {name:'Assistente com RAG', v:{sys:900,tools:0,user:120,ragN:5,ragT:600,imgN:0,resp:500,think:0,turns:3,hist:true,users:150,convs:4,days:22,cache:true,hit:85}},
+  {name:'Agente com ferramentas', v:{sys:3000,tools:2500,user:200,ragN:0,ragT:500,imgN:0,resp:600,think:1500,turns:12,hist:true,users:40,convs:5,days:22,cache:true,hit:90}},
+  {name:'Classificação em massa', v:{sys:400,tools:0,user:300,ragN:0,ragT:500,imgN:0,resp:20,think:0,turns:1,hist:false,users:1,convs:50000,days:30,cache:true,hit:95}},
+  {name:'Resumo de documentos', v:{sys:300,tools:0,user:8000,ragN:0,ragT:500,imgN:0,resp:700,think:0,turns:1,hist:false,users:20,convs:10,days:22,cache:false,hit:80}},
+  {name:'Leitura de imagens', v:{sys:500,tools:0,user:60,ragN:0,ragT:500,imgN:2,imgT:1300,resp:300,think:0,turns:1,hist:false,users:50,convs:20,days:22,cache:true,hit:80}}
+];
+
+const DEFAULTS = {model:'sonnet-5-5', tier:'standard', endpoint:'global', cur:'BRL', rate:5.40, lang:'pt',
+  sys:1200, tools:0, user:120, ragN:3, ragT:500, imgN:0, imgT:1300, resp:400, think:0, turns:3, hist:true,
+  users:100, convs:3, days:22, margin:15, cache:true, hit:85, over:{}};
+
+let S = {...DEFAULTS, over:{}};
+try{ const saved = localStorage.getItem('calc-ia-v1'); if(saved){ S = {...DEFAULTS, ...JSON.parse(saved)}; S.over = S.over||{}; } }catch(e){}
+function save(){ try{ localStorage.setItem('calc-ia-v1', JSON.stringify(S)); }catch(e){} }
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const n = v => (isFinite(v) && v>0) ? Number(v) : 0;
+
+function priceOf(m){
+  const o = S.over[m.id] || {};
+  return {in: o.in ?? m.in, out: o.out ?? m.out, cw: o.cw !== undefined ? o.cw : m.cw, cr: o.cr !== undefined ? o.cr : m.cr};
+}
+
+function calc(m){
+  const p = priceOf(m);
+  const N = Math.max(1, Math.round(n(S.turns)));
+  const fixed = n(S.sys) + n(S.tools);
+  const rag = n(S.ragN) * n(S.ragT);
+  const user = n(S.user) + n(S.imgN) * n(S.imgT);
+  const resp = n(S.resp), think = n(S.think);
+  const histUnit = S.hist ? (user + resp) : 0;
+  // entrada total da conversa
+  const inFixed = N * fixed;
+  const inVar = N * (rag + user) + histUnit * N * (N - 1) / 2;
+  const outTot = N * (resp + think);
+  const lastTurnIn = fixed + rag + user + histUnit * (N - 1);
+
+  const hasCache = S.cache && p.cr != null && p.cr !== '' && fixed > 0;
+  const hit = Math.min(100, n(S.hit)) / 100;
+  let costFixed, cacheCost = 0, baseInCost;
+  if(hasCache){
+    const hits = inFixed * hit, miss = inFixed * (1 - hit);
+    const cw = (p.cw == null || p.cw === '') ? p.in : p.cw;
+    cacheCost = hits * p.cr + miss * cw;
+    baseInCost = inVar * p.in;
+  } else {
+    baseInCost = (inFixed + inVar) * p.in;
+  }
+  const outCost = outTot * p.out;
+  let mult = S.tier === 'batch' ? 0.5 : S.tier === 'priority' ? 1.75 : 1;
+  if(S.endpoint === 'regional' && m.claude) mult *= 1.1;
+  const margin = 1 + n(S.margin) / 100;
+  const k = mult * margin / 1e6;
+  const conv = {in: baseInCost * k, cache: cacheCost * k, out: outCost * k};
+  conv.total = conv.in + conv.cache + conv.out;
+  const convsDay = n(S.users) * n(S.convs);
+  const days = Math.max(1, n(S.days));
+  return {
+    p, N, conv, convsDay, days,
+    msg: conv.total / N,
+    day: conv.total * convsDay,
+    month: conv.total * convsDay * days,
+    tinMonth: (inFixed + inVar) * convsDay * days,
+    toutMonth: outTot * convsDay * days,
+    lastTurnIn, inTot: inFixed + inVar, outTot, hasCache,
+    perTurnFirst: fixed + rag + user, histUnit
+  };
+}
+
+// formatação
+function money(usd){
+  const v = S.cur === 'BRL' ? usd * n(S.rate) : usd;
+  const cur = S.cur === 'BRL' ? 'BRL' : 'USD';
+  let digits = 2;
+  if(v > 0 && v < 0.01) digits = 5; else if(v > 0 && v < 1) digits = 4; else if(v >= 100000) digits = 0;
+  return new Intl.NumberFormat('pt-BR', {style:'currency', currency:cur, minimumFractionDigits:digits, maximumFractionDigits:digits}).format(v);
+}
+function compact(x){
+  if(x >= 1e9) return (x/1e9).toLocaleString('pt-BR',{maximumFractionDigits:2}) + ' bi';
+  if(x >= 1e6) return (x/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2}) + ' mi';
+  if(x >= 1e4) return (x/1e3).toLocaleString('pt-BR',{maximumFractionDigits:1}) + ' mil';
+  return Math.round(x).toLocaleString('pt-BR');
+}
+const usdP = v => (v == null || v === '') ? '—' : 'US$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:4});
+const ctxFmt = c => c >= 1e6 ? (c/1e6).toLocaleString('pt-BR') + 'M' : Math.round(c/1e3) + 'K';
+
+// modelos
+const provs = ['Todos', ...new Set(MODELS.map(m => m.prov))];
+$('#mprov').innerHTML = provs.map(p => `<option>${p}</option>`).join('');
+function renderModels(){
+  const q = $('#msearch').value.trim().toLowerCase();
+  const pv = $('#mprov').value;
+  $('#models').innerHTML = MODELS.filter(m => (pv === 'Todos' || m.prov === pv) && (!q || (m.name + ' ' + m.prov).toLowerCase().includes(q)))
+    .map(m => `<button class="mcard" data-id="${m.id}" aria-pressed="${m.id === S.model}">
+      <b>${m.name}</b><span class="prov">${m.prov} · contexto ${ctxFmt(m.ctx)}</span>
+      <span class="pr num"><i><span class="dot in"></span>${usdP(m.in)}</i><i><span class="dot out"></span>${usdP(m.out)}</i></span>
+    </button>`).join('') || '<p class="note">Nenhum modelo encontrado.</p>';
+}
+$('#models').addEventListener('click', e => {
+  const b = e.target.closest('.mcard'); if(!b) return;
+  S.model = b.dataset.id; renderModels(); syncPrices(); update();
+});
+$('#msearch').addEventListener('input', renderModels);
+$('#mprov').addEventListener('change', renderModels);
+
+function current(){ return MODELS.find(m => m.id === S.model) || MODELS[2]; }
+function syncPrices(){
+  const m = current(), p = priceOf(m);
+  $('#p-in').value = p.in; $('#p-out').value = p.out;
+  $('#p-cr').value = p.cr ?? ''; $('#p-cw').value = p.cw ?? '';
+  $('#model-note').textContent = m.note + (m.cr == null ? ' Sem prompt caching no Bedrock para este modelo.' : '');
+}
+[['#p-in','in'],['#p-out','out'],['#p-cr','cr'],['#p-cw','cw']].forEach(([sel,key]) => {
+  $(sel).addEventListener('input', e => {
+    const m = current(); S.over[m.id] = S.over[m.id] || {};
+    const raw = e.target.value;
+    S.over[m.id][key] = raw === '' ? (key === 'cr' || key === 'cw' ? null : m[key]) : Number(raw);
+    update(); renderModels();
+  });
+});
+$('#reset-price').addEventListener('click', () => { delete S.over[current().id]; syncPrices(); renderModels(); update(); });
+
+// inputs numéricos
+$$('[data-k]').forEach(el => {
+  el.value = S[el.dataset.k];
+  el.addEventListener('input', () => { S[el.dataset.k] = el.value === '' ? 0 : Number(el.value); update(); });
+});
+$('#hist').checked = S.hist; $('#hist').addEventListener('change', e => { S.hist = e.target.checked; update(); });
+$('#cache').checked = S.cache; $('#cache').addEventListener('change', e => { S.cache = e.target.checked; update(); });
+$('#tier').value = S.tier; $('#tier').addEventListener('change', e => { S.tier = e.target.value; update(); });
+$('#endpoint').value = S.endpoint; $('#endpoint').addEventListener('change', e => { S.endpoint = e.target.value; update(); });
+$('#rate').value = S.rate; $('#rate').addEventListener('input', e => { S.rate = Number(e.target.value) || 0; update(); });
+$$('[data-cur]').forEach(b => b.addEventListener('click', () => { S.cur = b.dataset.cur; update(); }));
+
+// presets
+$('#presets').innerHTML = PRESETS.map((p,i) => `<button class="chip" data-p="${i}">${p.name}</button>`).join('');
+$('#presets').addEventListener('click', e => {
+  const b = e.target.closest('[data-p]'); if(!b) return;
+  Object.assign(S, PRESETS[b.dataset.p].v);
+  $$('[data-k]').forEach(el => el.value = S[el.dataset.k]);
+  $('#hist').checked = S.hist; $('#cache').checked = S.cache;
+  update();
+});
+
+// laboratório de tokens
+function tokenize(text, lang){
+  const size = {pt:4, en:5, code:3}[lang] || 4;
+  const parts = text.match(/\s*[\p{L}\p{N}_]+|\s*[^\s\p{L}\p{N}_]|\s+/gu) || [];
+  const out = [];
+  for(const p of parts){
+    const lead = p.match(/^\s*/)[0];
+    const w = p.slice(lead.length);
+    if(!w){ if(p.includes('\n')) out.push(p); else if(out.length) out[out.length-1] += p; continue; }
+    if(w.length <= size + 1){ out.push(p); continue; }
+    for(let i = 0; i < w.length; i += size) out.push((i === 0 ? lead : '') + w.slice(i, i + size));
+  }
+  return out;
+}
+let labCount = 0;
+function esc(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function renderLab(){
+  const t = $('#lab-text').value;
+  const toks = tokenize(t, S.lang);
+  labCount = toks.length;
+  $('#lab-tok').textContent = labCount.toLocaleString('pt-BR');
+  $('#lab-chars').textContent = t.length.toLocaleString('pt-BR');
+  $('#lab-words').textContent = (t.trim() ? t.trim().split(/\s+/).length : 0).toLocaleString('pt-BR');
+  const LIMIT = 800;
+  $('#tokview').innerHTML = toks.length
+    ? toks.slice(0, LIMIT).map(x => `<span>${esc(x)}</span>`).join('') + (toks.length > LIMIT ? `<span class="empty"> … e mais ${(toks.length - LIMIT).toLocaleString('pt-BR')} tokens</span>` : '')
+    : '<span class="empty">Os tokens aparecem aqui, cada cor é um pedaço.</span>';
+}
+$('#lab-text').addEventListener('input', renderLab);
+$$('[data-lang]').forEach(b => b.addEventListener('click', () => { S.lang = b.dataset.lang; renderLab(); update(); }));
+$$('[data-use]').forEach(b => b.addEventListener('click', () => {
+  if(!labCount) { $('#lab-text').focus(); return; }
+  const k = b.dataset.use; S[k] = labCount;
+  if(k === 'ragT' && !n(S.ragN)) S.ragN = 1;
+  $$('[data-k]').forEach(el => el.value = S[el.dataset.k]);
+  const old = b.textContent; b.textContent = 'Aplicado'; setTimeout(() => b.textContent = old, 1100);
+  update();
+}));
+
+// render principal
+function update(){
+  const m = current();
+  const r = calc(m);
+  $$('[data-cur]').forEach(b => b.setAttribute('aria-pressed', b.dataset.cur === S.cur));
+  $$('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === S.lang));
+  $('#rate').closest('label').style.display = S.cur === 'BRL' ? '' : 'none';
+
+  $('#r-month').textContent = money(r.month);
+  $('#m-month').textContent = money(r.month);
+  const tierTxt = {standard:'sob demanda', batch:'batch', priority:'prioridade'}[S.tier];
+  $('#r-model').textContent = `${m.name} · ${tierTxt}${S.endpoint === 'regional' && m.claude ? ' · regional' : ''}`;
+
+  const c = r.conv, tot = c.total || 1;
+  const segs = [['in','Entrada',c.in],['cache','Cache',c.cache],['out','Saída',c.out]].filter(s => s[2] > 0 || s[0] !== 'cache');
+  $('#r-bar').innerHTML = segs.map(s => `<div style="width:${(s[2]/tot*100).toFixed(2)}%;background:var(--${s[0]})"></div>`).join('');
+  $('#r-legend').innerHTML = segs.map(s => `<div><span><span class="dot ${s[0]}"></span>${s[1]}</span><span>${money(s[2] * r.convsDay * r.days)} · ${Math.round(s[2]/tot*100)}%</span></div>`).join('');
+
+  $('#r-msg').textContent = money(r.msg);
+  $('#r-conv').textContent = money(c.total);
+  $('#r-day').textContent = money(r.day);
+  $('#r-year').textContent = money(r.month * 12);
+  $('#r-user').textContent = n(S.users) ? money(r.month / n(S.users)) : '—';
+  $('#r-nconv').textContent = compact(r.convsDay * r.days);
+  $('#r-tin').textContent = compact(r.tinMonth);
+  $('#r-tout').textContent = compact(r.toutMonth);
+
+  // alertas e dicas
+  const al = [];
+  if(r.lastTurnIn > m.ctx) al.push(`<div class="warn">A última mensagem da conversa chega a ${compact(r.lastTurnIn)} tokens, acima do limite de contexto do ${m.name} (${ctxFmt(m.ctx)}). Reduza o histórico ou escolha outro modelo.</div>`);
+  if(S.cache && m.cr == null && priceOf(m).cr == null) al.push(`<div class="tip">Este modelo não tem prompt caching no Bedrock, então a otimização não foi aplicada.</div>`);
+  else if(!S.cache && (n(S.sys) + n(S.tools)) >= 1024 && priceOf(m).cr != null && r.N * r.convsDay > 50) al.push(`<div class="tip">Seu prompt fixo tem ${compact(n(S.sys)+n(S.tools))} tokens. Ativar prompt caching no passo 4 pode reduzir bastante o custo de entrada.</div>`);
+  if(c.out / tot > 0.6 && n(S.resp) > 800) al.push(`<div class="tip">A saída responde por ${Math.round(c.out/tot*100)}% do custo. Pedir respostas mais curtas é a forma mais rápida de economizar.</div>`);
+  if(S.hist && r.N >= 8) al.push(`<div class="tip">Com ${r.N} mensagens por conversa, o histórico reenviado pesa muito. Resumir conversas antigas ajuda.</div>`);
+  $('#r-alerts').innerHTML = al.join('');
+
+  // tabela por mensagem
+  const histNote = S.hist && r.N > 1 ? `<tr><td>Histórico na última mensagem</td><td>+ ${compact(r.histUnit * (r.N - 1))} tokens</td></tr>` : '';
+  $('#per-turn').innerHTML = `<table>
+    <tr><td>Entrada na 1ª mensagem</td><td>${compact(r.perTurnFirst)} tokens</td></tr>${histNote}
+    <tr><td>Entrada total da conversa</td><td><b>${compact(r.inTot)} tokens</b></td></tr>
+    <tr><td>Saída total da conversa</td><td><b>${compact(r.outTot)} tokens</b></td></tr></table>`;
+
+  $('#cache-help').textContent = (n(S.sys) + n(S.tools)) < 1024
+    ? 'Aplica-se ao prompt de sistema e às ferramentas. Nos Claude, o trecho precisa ter ao menos 1.024 tokens para ser cacheado.'
+    : 'Aplica-se ao prompt de sistema e às ferramentas.';
+
+  renderCompare();
+  save();
+}
+
+function renderCompare(){
+  const rows = MODELS.map(m => ({m, r: calc(m)})).sort((a,b) => a.r.month - b.r.month);
+  const max = Math.max(...rows.map(x => x.r.month)) || 1;
+  $('#cmp-body').innerHTML = rows.map(({m, r}) => {
+    const p = r.p, over = r.lastTurnIn > m.ctx;
+    return `<tr data-id="${m.id}" class="${m.id === S.model ? 'sel' : ''}" tabindex="0">
+      <td><b>${m.name}</b>${over ? ' <span style="color:var(--warn);font-size:12.5px">excede contexto</span>' : ''}</td>
+      <td>${m.prov}</td>
+      <td class="r num">${usdP(p.in)}</td><td class="r num">${usdP(p.out)}</td>
+      <td class="r num"><b>${money(r.month)}</b></td>
+      <td class="barcell"><span class="mini" style="width:${Math.max(1, r.month / max * 100).toFixed(1)}%"></span></td></tr>`;
+  }).join('');
+}
+function pickRow(tr){ if(!tr) return; S.model = tr.dataset.id; renderModels(); syncPrices(); update(); $('#s-model').scrollIntoView({block:'start'}); }
+$('#cmp-body').addEventListener('click', e => pickRow(e.target.closest('tr')));
+$('#cmp-body').addEventListener('keydown', e => { if(e.key === 'Enter') pickRow(e.target.closest('tr')); });
+
+// copiar resumo
+$('#copy').addEventListener('click', async () => {
+  const m = current(), r = calc(m);
+  const txt = [
+    `Estimativa de custo de IA — ${m.name} (Amazon Bedrock, ${ {standard:'sob demanda', batch:'batch', priority:'prioridade'}[S.tier] })`,
+    `Mensal: ${money(r.month)} | Diário: ${money(r.day)} | Anual: ${money(r.month*12)}`,
+    `Por conversa: ${money(r.conv.total)} (${r.N} mensagens) | Por mensagem: ${money(r.msg)}`,
+    `Volume: ${n(S.users)} usuários/dia × ${n(S.convs)} conversas × ${r.days} dias = ${compact(r.convsDay*r.days)} conversas/mês`,
+    `Tokens/mês: ${compact(r.tinMonth)} entrada, ${compact(r.toutMonth)} saída`,
+    `Premissas: sistema ${n(S.sys)} + ferramentas ${n(S.tools)} + mensagem ${n(S.user)} + RAG ${n(S.ragN)}×${n(S.ragT)} tokens; resposta ${n(S.resp)} + raciocínio ${n(S.think)}; caching ${S.cache ? 'ativo ('+n(S.hit)+'% acerto)' : 'desativado'}; margem ${n(S.margin)}%` + (S.cur==='BRL' ? `; cotação US$ 1 = R$ ${n(S.rate).toLocaleString('pt-BR')}` : '')
+  ].join('\n');
+  const b = $('#copy');
+  try{ await navigator.clipboard.writeText(txt); b.textContent = 'Resumo copiado'; }
+  catch(e){ b.textContent = 'Não foi possível copiar'; }
+  setTimeout(() => b.textContent = 'Copiar resumo', 1600);
+});
+
+renderModels(); syncPrices(); renderLab(); update();
+</script>
+</body>
+</html>
