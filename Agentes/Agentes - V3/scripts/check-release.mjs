@@ -1,0 +1,10 @@
+import assert from "node:assert/strict";
+import { readFile, readdir } from "node:fs/promises";
+const files = await readdir(new URL("../dist/release/js/", import.meta.url), { recursive: true });
+assert.equal(files.some(f => /player|guide|scenarios|slides|tours|balloon|moments|presentation-adapter|actions[\\/]clock\.js/.test(f)), false);
+const html = await readFile(new URL("../dist/release/index.html", import.meta.url), "utf8");
+assert.doesNotMatch(html, /id="presenter"|id="dock"/);
+const runtime = await readFile(new URL("../dist/release/js/runtime.js", import.meta.url), "utf8");
+assert.match(runtime, /VALIDATION = false/);
+assert.ok(files.includes("local-auth.js"));
+console.log("Release: local authentication present; presentation modules and controls excluded.");

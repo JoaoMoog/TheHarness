@@ -1,0 +1,22 @@
+{
+  "name": "aval",
+  "version": "1.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --import tsx --test \"src/**/*.test.ts\"",
+    "typecheck": "tsc",
+    "build": "node scripts/build-web.mjs release && node scripts/build-web.mjs validation",
+    "server": "node scripts/build-web.mjs release && node --env-file-if-exists=.env --import tsx src/server/index.ts",
+    "server:validation": "node --env-file-if-exists=.env --import tsx src/server/index.ts --validation"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

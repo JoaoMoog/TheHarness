@@ -1,0 +1,59 @@
+plugins {
+    id "com.android.application"
+}
+
+// Release signing comes from ../keystore.properties (kept out of version control), never from this file.
+def keystoreFile = rootProject.file("keystore.properties")
+def keystore = new Properties()
+if (keystoreFile.exists()) keystoreFile.withInputStream { keystore.load(it) }
+
+android {
+    namespace "br.com.aval.prototipo"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "br.com.aval.prototipo"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    // The web prototype ships inside the APK, straight from ../public: the app works offline.
+    sourceSets {
+        main {
+            assets.srcDirs = ["../../public"]
+        }
+    }
+
+    signingConfigs {
+        release {
+            if (keystoreFile.exists()) {
+                storeFile rootProject.file(keystore["storeFile"])
+                storePassword keystore["storePassword"]
+                keyAlias keystore["keyAlias"]
+                keyPassword keystore["keyPassword"]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt")
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+gradle.taskGraph.whenReady { graph ->
+    if (graph.allTasks.any { it.name.contains("Release") } && !keystoreFile.exists()) {
+        throw new GradleException("Release build needs android/keystore.properties (storeFile, storePassword, keyAlias, keyPassword).")
+    }
+}

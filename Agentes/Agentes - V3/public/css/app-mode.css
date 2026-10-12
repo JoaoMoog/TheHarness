@@ -1,0 +1,33 @@
+/* App mode (?app=1, the Android APK): one phone screen that fills the real one. --sb and --nb are the heights of the
+   phone's own status and navigation bars, set by the native shell; the fake 9:41 bar becomes the area under the
+   real status bar, keeping each screen's color. */
+.app-mode { --sb: 0px; --nb: 0px; }
+.app-mode body { padding: 0; background: #fff; overflow: hidden; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+.app-mode .dock, .app-mode #demo-play { display: none; }
+
+.app-mode .phone-stage { display: block; height: 100dvh; padding: 0; overflow: hidden; }
+.app-mode .phone-col { height: 100%; padding: 0; background: none; }
+.app-mode .device-fit { width: 100%; height: 100%; }
+.app-mode .device-fit > .device { scale: none; }
+.app-mode .device, .app-mode .phone-col .device { width: 100%; height: 100%; padding: 0; border-radius: 0; background: #fff; box-shadow: none; animation: none; }
+.app-mode .device-inner { width: 100%; height: calc(100% - var(--nb)); border-radius: 0; }
+
+.app-mode .statusbar { height: var(--sb); padding: 0; }
+.app-mode .statusbar > * { display: none; }
+.app-mode .toast { top: auto; bottom: 12px; }
+
+/* The Demo tab rests on the right edge, mid-screen, away from app bars and tab menus. */
+.app-demo { display: none; }
+.app-mode .app-demo { position: fixed; right: 0; top: 46%; z-index: 65; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px 0 12px;
+  border: 0; border-radius: 18px 0 0 18px; background: rgba(8, 19, 39, .72); color: #fff; font: 500 13px/1 var(--font); box-shadow: 0 4px 14px rgba(5, 19, 42, .2); }
+.app-demo .i { width: 16px; height: 16px; fill: currentColor; }
+.menu-open .app-demo { background: var(--live); }
+.app-mode .presenter { left: 12px; right: 12px; bottom: calc(var(--nb) + 12px); width: auto; max-height: calc(100dvh - var(--sb) - var(--nb) - 24px); }
+.app-mode .p-roles { flex-direction: column; }
+.app-mode .p-roles button { max-width: none; border-radius: 14px; padding: 8px 14px; }
+.app-mode .p-clock { flex-wrap: wrap; }
+.app-mode .dm-reset { margin-top: 4px; }
+
+/* Keep the existing Menu pill in a reserved bottom area, away from scrollable content. */
+.screen.has-menu { padding-bottom: 80px; }
+.screen.has-menu > .content { padding-bottom: 24px; }

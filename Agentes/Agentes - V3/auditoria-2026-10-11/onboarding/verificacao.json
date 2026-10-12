@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-10-12T13:17:14.811Z",
+  "results": [
+    {
+      "mode": "release",
+      "firstAccess": true,
+      "unfinishedRestart": true,
+      "completionAndSkipPersist": true,
+      "manualNavigation": true,
+      "focusTrapAndRestore": true,
+      "androidBack": true,
+      "replay": true,
+      "deepLinkPreserved": true,
+      "localSignupAndLogout": true,
+      "existingAccount": true,
+      "narrowScreenAndLargeText": true
+    },
+    {
+      "mode": "validation",
+      "firstAccess": true,
+      "unfinishedRestart": true,
+      "completionAndSkipPersist": true,
+      "manualNavigation": true,
+      "focusTrapAndRestore": true,
+      "androidBack": true,
+      "replay": true,
+      "deepLinkPreserved": true,
+      "localSignupAndLogout": true,
+      "existingAccount": true,
+      "narrowScreenAndLargeText": true
+    }
+  ]
+}
