@@ -1,0 +1,188 @@
+- generic [ref=e1]:
+  - link "Pular para o conteúdo" [ref=e2] [cursor=pointer]:
+    - /url: "#conteudo"
+  - generic [ref=e3]:
+    - banner [ref=e1656]:
+      - generic [ref=e1657]:
+        - generic [ref=e1658]:
+          - button "CrossMarketPlace, ir para o início" [ref=e1659] [cursor=pointer]:
+            - img "BTG Pactual" [ref=e1660]
+            - strong [ref=e1662]: CrossMarketPlace
+          - button "Buscar no catálogo" [ref=e1663] [cursor=pointer]
+          - button "Avisos, 4 não lidos" [ref=e1667] [cursor=pointer]:
+            - generic [ref=e1671]: "4"
+          - 'button "Perfil: Publicador" [ref=e1672] [cursor=pointer]':
+            - generic [ref=e1673]: "Perfil:"
+            - text: Publicador
+          - generic "João Bahia" [ref=e1676]: JB
+        - navigation "Áreas do CrossMarketPlace" [ref=e1677]:
+          - button "Início" [ref=e1678] [cursor=pointer]
+          - button "Catálogo" [ref=e1679] [cursor=pointer]
+          - button "Projetos do meu time" [ref=e1680] [cursor=pointer]
+          - button "Minha área" [ref=e1681] [cursor=pointer]
+          - button "Solicitações de acesso 2" [ref=e1682] [cursor=pointer]:
+            - text: Solicitações de acesso
+            - generic [ref=e1683]: "2"
+          - button [ref=e1684] [cursor=pointer]:
+            - text: Aprovações
+            - generic "Sem acesso neste perfil" [ref=e1685]
+          - button [ref=e1689] [cursor=pointer]:
+            - text: Administração
+            - generic "Sem acesso neste perfil" [ref=e1690]
+    - generic [ref=e1695]:
+      - navigation "Trilha" [ref=e1696]:
+        - button "Início" [ref=e1697] [cursor=pointer]
+        - text: /
+        - button "Catálogo" [ref=e1698] [cursor=pointer]
+        - text: / Leitor de Contratos
+      - generic [ref=e1699]:
+        - generic [ref=e1700]: AGENTE DE IA
+        - generic [ref=e1701]: ● Produção
+        - generic [ref=e1702]: v2.3.0
+        - generic [ref=e1703]: Acesso direto
+      - generic [ref=e1704]:
+        - generic [ref=e1705]:
+          - heading "Leitor de Contratos" [level=1] [ref=e1706]
+          - paragraph [ref=e1707]: Extrai cláusulas, prazos e riscos de contratos em PDF e devolve um resumo estruturado.
+          - generic [ref=e1708]:
+            - generic [ref=e1709]: "Equipe: Jurídico Digital"
+            - generic [ref=e1710]: "Responsável: Ana Ribeiro"
+            - generic [ref=e1711]: Atualizada há 2 dias
+            - generic [ref=e1712]: ★ 4,8 (32 avaliações)
+            - generic [ref=e1713]: 1,2 mil usos confirmados
+          - paragraph
+        - generic [ref=e1714]:
+          - button "★ Favorita" [pressed] [ref=e1715] [cursor=pointer]
+          - button "Confirmar uso" [ref=e1716] [cursor=pointer]
+          - button "Acessar solução" [ref=e1717] [cursor=pointer]
+      - tablist "Seções da solução" [ref=e1718]:
+        - tab "Visão geral" [selected] [ref=e1719] [cursor=pointer]
+        - tab "Documentação e uso" [ref=e1720] [cursor=pointer]
+        - tab "Versões e histórico" [ref=e1721] [cursor=pointer]
+        - tab "Acesso e contatos" [ref=e1722] [cursor=pointer]
+        - tab "Avaliações (32)" [ref=e1723] [cursor=pointer]
+    - main [active] [ref=e1724]:
+      - generic [ref=e1726]:
+        - generic [ref=e1727]:
+          - generic [ref=e1728]:
+            - heading "Finalidade" [level=2] [ref=e1731]
+            - paragraph [ref=e1732]: Reduz o tempo de leitura de contratos extensos. O agente identifica cláusulas relevantes, prazos, multas e garantias, classifica o risco de cada ponto e devolve um resumo que o jurídico revisa em minutos.
+            - heading "Problemas que resolve" [level=3] [ref=e1733]
+            - generic [ref=e1734]: Leitura manual de contratos de 40+ páginas, que levava horas por documento
+            - generic [ref=e1740]: Prazos e multas perdidos por falta de controle centralizado
+            - generic [ref=e1746]: Retrabalho entre áreas que analisavam o mesmo contrato
+          - generic [ref=e1752]:
+            - generic [ref=e1754]:
+              - heading "Possíveis aplicações" [level=2] [ref=e1755]
+              - paragraph [ref=e1756]: Onde outras equipes já reaproveitaram
+            - generic [ref=e1757]:
+              - generic [ref=e1758]:
+                - heading "Due diligence de M&A" [level=3] [ref=e1759]
+                - paragraph [ref=e1760]: Triagem de centenas de contratos em data rooms.
+              - generic [ref=e1761]:
+                - heading "Contratos com fornecedores" [level=3] [ref=e1762]
+                - paragraph [ref=e1763]: Checagem de multas, reajustes e renovação automática.
+              - generic [ref=e1764]:
+                - heading "Crédito estruturado" [level=3] [ref=e1765]
+                - paragraph [ref=e1766]: Leitura de covenants e garantias antes do comitê.
+          - generic [ref=e1767]:
+            - generic [ref=e1769]:
+              - heading "Como usar" [level=2] [ref=e1770]
+              - paragraph [ref=e1771]: Instruções de uso e materiais da solução
+            - generic [ref=e1772]:
+              - generic [ref=e1773]: "1"
+              - generic [ref=e1774]: Envie o PDF pela aplicação web ou pela API
+            - generic [ref=e1775]:
+              - generic [ref=e1776]: "2"
+              - generic [ref=e1777]: "Escolha o modelo de análise: contrato padrão, crédito ou fornecedores"
+            - generic [ref=e1778]:
+              - generic [ref=e1779]: "3"
+              - generic [ref=e1780]: Revise o resumo e exporte para o sistema do jurídico
+            - generic [ref=e1781]: "POST https://api.interno.btg/juridico/contratos/v2/analisar Authorization: Bearer <token-sso> { \"arquivo\": \"contrato.pdf\", \"modelo\": \"fornecedores\" }"
+            - heading "Materiais" [level=3] [ref=e1782]
+            - generic [ref=e1783]: Manual de uso · PDF · 2,4 MB
+        - complementary [ref=e1788]:
+          - generic [ref=e1789]:
+            - heading "Acesso" [level=2] [ref=e1792]
+            - generic [ref=e1797]:
+              - strong [ref=e1798]: Acesso direto
+              - generic [ref=e1799]: Não precisa pedir autorização.
+            - generic [ref=e1806]:
+              - generic [ref=e1807]: Repositório
+              - generic [ref=e1808]: git.btg/juridico/leitor-contratos
+            - generic [ref=e1813]:
+              - generic [ref=e1814]: Aplicação
+              - generic [ref=e1815]: leitor-contratos.btg.intranet
+            - generic [ref=e1824]:
+              - generic [ref=e1825]: Endpoint
+              - generic [ref=e1826]: /juridico/contratos/v2/analisar
+            - generic [ref=e1831]:
+              - generic [ref=e1832]: Manual de uso
+              - generic [ref=e1833]: Manual de uso · PDF · 2,4 MB
+            - button "Acessar solução" [ref=e1835] [cursor=pointer]
+          - generic [ref=e1836]:
+            - heading "Impacto e utilização" [level=2] [ref=e1839]
+            - generic [ref=e1840]:
+              - generic [ref=e1841]:
+                - strong [ref=e1842]: "1.204"
+                - text: usos confirmados
+              - generic [ref=e1843]:
+                - strong [ref=e1844]: 640 h
+                - text: economizadas
+              - generic [ref=e1845]:
+                - strong [ref=e1846]: 86%
+                - text: reutilizariam
+            - separator [ref=e1847]
+            - generic [ref=e1849]:
+              - generic [ref=e1850]: Aberturas do detalhe
+              - strong [ref=e1851]: "9.871"
+            - generic [ref=e1854]:
+              - generic [ref=e1855]: Interesse (favoritos e pedidos)
+              - strong [ref=e1856]: "2.310"
+            - generic [ref=e1859]:
+              - generic [ref=e1860]: Uso confirmado
+              - strong [ref=e1861]: "1.204"
+            - paragraph [ref=e1863]: Só contamos uso quando a pessoa confirma que usou. 52% do interesse virou uso.
+            - button "Confirmar que usei" [ref=e1864] [cursor=pointer]
+          - generic [ref=e1865]:
+            - heading "Avaliações" [level=2] [ref=e1868]
+            - generic [ref=e1869]:
+              - strong [ref=e1870]: 4,8
+              - generic [ref=e1871]:
+                - generic [aria-hidden] [ref=e1872]: ★★★★★
+                - text: 32 avaliações
+            - generic [ref=e1873]:
+              - generic [ref=e1874]: 5 ★
+              - generic [ref=e1877]: 81%
+            - generic [ref=e1878]:
+              - generic [ref=e1879]: 4 ★
+              - generic [ref=e1882]: 19%
+            - generic [ref=e1883]:
+              - generic [ref=e1884]: 3 ★
+              - generic [ref=e1887]: 0%
+            - generic [ref=e1888]:
+              - generic [ref=e1889]: 2 ★
+              - generic [ref=e1892]: 0%
+            - generic [ref=e1893]:
+              - generic [ref=e1894]: 1 ★
+              - generic [ref=e1897]: 0%
+            - generic [ref=e1898]:
+              - text: “Reduziu de 3 horas para 20 minutos a revisão dos contratos de fornecedores.”
+              - generic [ref=e1899]: Marina Costa · Compras · ★ 5
+            - button "Avaliar esta solução" [ref=e1900] [cursor=pointer]
+          - generic [ref=e1901]:
+            - heading "Contatos" [level=2] [ref=e1904]
+            - generic [ref=e1905]:
+              - generic "Ana Ribeiro" [ref=e1906]: AR
+              - generic [ref=e1907]:
+                - strong [ref=e1908]: Ana Ribeiro
+                - generic [ref=e1909]: Responsável
+              - button "Teams" [ref=e1910] [cursor=pointer]
+            - generic [ref=e1911]:
+              - generic "Carlos Mendes" [ref=e1912]: CM
+              - generic [ref=e1913]:
+                - strong [ref=e1914]: Carlos Mendes
+                - generic [ref=e1915]: Engenheiro de software
+              - button "Teams" [ref=e1916] [cursor=pointer]
+    - contentinfo [ref=e1917]: CrossMarketPlace v2 · protótipo navegável com dados fictícios · padrão visual Orquestra (aproximado) · BTG Pactual
+  - status

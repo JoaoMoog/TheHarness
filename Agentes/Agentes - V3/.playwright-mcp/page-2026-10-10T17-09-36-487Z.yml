@@ -1,0 +1,82 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e574]:
+      - region "Celular de Ana, agindo agora" [ref=f2e575]:
+        - generic [ref=f2e576]:
+          - generic [ref=f2e578]: Ana
+          - generic [ref=f2e579]: agindo agora
+        - generic [ref=f2e583]:
+          - generic [ref=f2e584]: 9:41
+          - generic [ref=f2e587]:
+            - button "Voltar" [ref=f2e588] [cursor=pointer]
+            - heading "Etapas com o assistente" [level=1] [ref=f2e591]
+          - generic [ref=f2e592]:
+            - paragraph [ref=f2e597]: Você define como o dinheiro é liberado. O assistente sugere; quem decide é você.
+            - paragraph [ref=f2e603]: Vou te ajudar a dividir "Pintura" de R$ 16.000,00. É assim que uma pintura costuma andar. Cada etapa só é paga a quem faz quando você aprovar.
+            - generic [ref=f2e604]:
+              - generic [ref=f2e605]:
+                - strong [ref=f2e606]: 2 etapas
+                - generic [ref=f2e607]: Sugestão do assistente
+              - generic [ref=f2e608]:
+                - generic [ref=f2e609]: 1. Preparo e massa
+                - strong [ref=f2e610]: R$ 8.000,00
+              - generic [ref=f2e611]:
+                - generic [ref=f2e612]: 2. Pintura e acabamento
+                - strong [ref=f2e613]: R$ 8.000,00
+            - generic [ref=f2e614]:
+              - button "Quero 2 etapas" [ref=f2e615] [cursor=pointer]
+              - button "Quero 3 etapas" [ref=f2e616] [cursor=pointer]
+              - button "Valor único" [ref=f2e617] [cursor=pointer]
+              - button "Como funcionam as etapas?" [ref=f2e618] [cursor=pointer]
+            - generic [ref=f2e619]:
+              - textbox "Mensagem para o assistente" [ref=f2e620]:
+                - /placeholder: Pergunte ou peça uma mudança
+              - button "Enviar" [ref=f2e621] [cursor=pointer]
+          - button "Usar estas 2 etapas" [ref=f2e625] [cursor=pointer]
+      - region "Celular de Carlos, só para ver" [ref=f2e628]:
+        - generic [ref=f2e629]:
+          - generic [ref=f2e632]: Carlos
+          - generic [ref=f2e633]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f2e634] [cursor=pointer]
+        - generic [ref=f2e640]:
+          - generic [ref=f2e641]: 9:41
+          - generic [ref=f2e644]:
+            - button "Fechar"
+          - generic [ref=f2e645]:
+            - heading "Mensagem pronta no WhatsApp" [level=2] [ref=f2e650]
+            - generic [ref=f2e651]:
+              - paragraph [ref=f2e652]: "Horizonte Reformas cobra R$ 16.000,00 com proteção: Pintura. Confira e aceite: pague.btgpactual.com.br/p/PG-001"
+              - generic [ref=f2e653]: (11) 97777-3003
+          - generic [ref=f2e654]:
+            - button "Cancelar este pagamento"
+            - button "Abrir o link como quem recebeu"
+            - button "Ir para o início"
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e657]:
+      - group "Cenários" [ref=f2e658]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e659] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e660] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e661] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e662] [cursor=pointer]': "4"
+      - strong [ref=f2e663]: O prestador cobra
+      - generic [ref=f2e664]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f2e184]:
+      - generic [ref=f2e665]:
+        - generic [ref=f2e666]: Ana · cliente
+        - paragraph [ref=f2e667]: Use a sugestão
+      - generic [ref=f2e668]:
+        - button "Pausar (espaço)" [ref=f2e669] [cursor=pointer]
+        - button "Próximo" [ref=f2e672] [cursor=pointer]
+        - generic [ref=f2e675]:
+          - group "Como avança" [ref=f2e676]:
+            - button "Eu avanço" [ref=f2e677] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e678] [cursor=pointer]
+          - group "Velocidade" [ref=f2e679]:
+            - button "Devagar" [ref=f2e680] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e681] [cursor=pointer]
+            - button "Rápido" [ref=f2e682] [cursor=pointer]
+          - generic [ref=f2e683]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f2e684] [cursor=pointer]
+  - generic [ref=f2e689]:
+    - generic [ref=f2e690]: Guardado no BTG
+    - strong [ref=f2e691]: R$ 0,00

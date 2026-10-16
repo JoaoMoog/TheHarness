@@ -1,0 +1,208 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e34]:
+    - generic [ref=f15e294]:
+      - region "Celular de Ana, agindo agora" [ref=f15e295]:
+        - generic [ref=f15e296]:
+          - generic [ref=f15e298]: Ana
+          - generic [ref=f15e299]: agindo agora
+        - generic [ref=f15e303]:
+          - generic [ref=f15e304]: 9:41
+          - generic [ref=f15e307]:
+            - button "Voltar" [ref=f15e308] [cursor=pointer]
+            - heading "Pagar" [level=1] [ref=f15e311]
+          - generic [ref=f15e312]:
+            - generic [ref=f15e313]:
+              - generic [ref=f15e314]: Horizonte Reformas · Pintura
+              - generic [ref=f15e315]: R$ 16.400,00
+              - generic [ref=f15e316]:
+                - generic [ref=f15e317]: Inclui o seguro do serviço
+                - strong [ref=f15e318]: R$ 400,00
+              - generic [ref=f15e319]:
+                - generic [ref=f15e320]: "Já incluso: seguro de arbitragem"
+                - strong [ref=f15e321]: R$ 64,00
+            - generic [ref=f15e326]:
+              - strong [ref=f15e327]: Seu saldo não cobre
+              - generic [ref=f15e328]: Parcele em 6x de R$ 2.942,46 com empréstimo na hora.
+              - button "Ver opções de empréstimo" [ref=f15e329] [cursor=pointer]
+            - generic [ref=f15e331]:
+              - strong [ref=f15e335]: Seguro do serviço
+              - generic [ref=f15e336]: +R$ 400,00
+              - switch "Seguro do serviço" [checked] [ref=f15e337] [cursor=pointer]
+            - heading "Como você quer pagar?" [level=3] [ref=f15e339]
+            - button "Saldo da conta BTG Saldo R$ 15.000,00" [disabled] [ref=f15e340]:
+              - generic [ref=f15e342]:
+                - strong [ref=f15e343]: Saldo da conta BTG
+                - generic [ref=f15e344]: Saldo R$ 15.000,00
+            - button "Guardar no cofrinho e pagar depois" [ref=f15e345] [cursor=pointer]
+            - button "Empréstimo na hora 6x de R$ 2.942,46 R$ 17.654,76" [ref=f15e348] [cursor=pointer]:
+              - generic [ref=f15e350]:
+                - strong [ref=f15e351]: Empréstimo na hora
+                - generic [ref=f15e352]: 6x de R$ 2.942,46
+              - strong [ref=f15e353]: R$ 17.654,76
+            - button "Cartão de crédito BTG Até 12x · 3x sem juros · limite livre R$ 15.000,00 Recomendado 3x sem juros no cartão, com um aumento pequeno de limite. Seu saldo fica livre." [ref=f15e354] [cursor=pointer]:
+              - generic [ref=f15e356]:
+                - strong [ref=f15e357]: Cartão de crédito BTG
+                - generic [ref=f15e358]: Até 12x · 3x sem juros · limite livre R$ 15.000,00
+                - generic [ref=f15e359]: Recomendado
+                - generic [ref=f15e360]: 3x sem juros no cartão, com um aumento pequeno de limite. Seu saldo fica livre.
+            - generic [ref=f15e361]:
+              - button "1x de R$ 16.400,00 sem juros" [ref=f15e362] [cursor=pointer]
+              - button "2x de R$ 8.200,00 sem juros" [ref=f15e363] [cursor=pointer]
+              - button "3x de R$ 5.466,67 sem juros" [ref=f15e364] [cursor=pointer]
+              - button "4x de R$ 4.410,99" [ref=f15e365] [cursor=pointer]
+              - button "5x de R$ 3.579,99" [ref=f15e366] [cursor=pointer]
+              - button "6x de R$ 3.026,40" [ref=f15e367] [cursor=pointer]
+              - button "7x de R$ 2.631,31" [ref=f15e368] [cursor=pointer]
+              - button "8x de R$ 2.335,30" [ref=f15e369] [cursor=pointer]
+              - button "9x de R$ 2.105,33" [ref=f15e370] [cursor=pointer]
+              - button "10x de R$ 1.921,60" [ref=f15e371] [cursor=pointer]
+              - button "11x de R$ 1.771,49" [ref=f15e372] [cursor=pointer]
+              - button "12x de R$ 1.646,59" [ref=f15e373] [cursor=pointer]
+            - generic [ref=f15e374]:
+              - generic [ref=f15e375]:
+                - generic [ref=f15e376]: Parcelas
+                - strong [ref=f15e377]: 6x de R$ 3.026,40
+              - generic [ref=f15e378]:
+                - generic [ref=f15e379]: Total no cartão
+                - strong [ref=f15e380]: R$ 18.158,40
+              - generic [ref=f15e381]:
+                - generic [ref=f15e382]: Custo
+                - strong [ref=f15e383]: R$ 1.758,40 de juros (2,99% ao mês)
+            - generic [ref=f15e388]:
+              - strong [ref=f15e389]: Aumente o limite em R$ 3.200,00 agora
+              - generic [ref=f15e390]: Só o que este pagamento precisa, aprovado na hora pelo banco. O resto do cartão continua igual.
+              - button "Aumentar limite" [ref=f15e391] [cursor=pointer]
+            - button "Pix De qualquer banco R$ 16.400,00" [ref=f15e392] [cursor=pointer]:
+              - generic [ref=f15e394]:
+                - strong [ref=f15e395]: Pix
+                - generic [ref=f15e396]: De qualquer banco
+              - strong [ref=f15e397]: R$ 16.400,00
+            - button "Pagar em conjunto com outras pessoas" [ref=f15e398] [cursor=pointer]
+            - paragraph [ref=f15e401]: Fica guardado até você aprovar.
+          - button "Pagar R$ 18.158,40 no cartão em 6x" [ref=f15e405] [cursor=pointer]
+      - region "Celular de Carlos, só para ver" [ref=f15e406]:
+        - generic [ref=f15e407]:
+          - generic [ref=f15e410]: Carlos
+          - generic [ref=f15e411]: Atualizou agora
+          - button "Usar este celular" [ref=f15e414] [cursor=pointer]
+        - generic [ref=f15e420]:
+          - generic [ref=f15e421]: 9:41
+          - generic [ref=f15e424]:
+            - button "Voltar"
+            - heading "Pintura" [level=1] [ref=f15e425]
+          - generic [ref=f15e426]:
+            - generic [ref=f15e427]:
+              - generic [ref=f15e428]:
+                - generic [ref=f15e429]: AV-2026-001 · Ana Ribeiro
+                - generic [ref=f15e430]: Aguardando pagamento
+              - generic [ref=f15e431]: R$ 16.000,00
+              - generic [ref=f15e433]:
+                - generic [ref=f15e434]: Liberado R$ 0,00
+                - generic [ref=f15e435]: Guardado R$ 0,00
+            - status [ref=f15e436]:
+              - generic [ref=f15e439]: "Agora: esperando Ana Ribeiro pagar."
+            - generic [ref=f15e440]:
+              - strong [ref=f15e441]: Linha do tempo
+              - list [ref=f15e442]:
+                - listitem [ref=f15e443]:
+                  - generic [ref=f15e446]:
+                    - strong [ref=f15e447]: Combinado
+                    - generic [ref=f15e448]: Aceito em 04/10
+                - listitem [ref=f15e449]:
+                  - generic [ref=f15e452]:
+                    - strong [ref=f15e453]: Pago e protegido
+                    - generic [ref=f15e454]: Aguardando o pagamento
+                - listitem [ref=f15e455]:
+                  - generic [ref=f15e458]:
+                    - strong [ref=f15e459]: "Marco 1: Preparo e massa"
+                    - generic [ref=f15e460]: Liberado quando aprovado
+                - listitem [ref=f15e461]:
+                  - generic [ref=f15e464]:
+                    - strong [ref=f15e465]: "Marco 2: Pintura e acabamento"
+                    - generic [ref=f15e466]: Liberado quando aprovado
+                - listitem [ref=f15e467]:
+                  - generic [ref=f15e470]:
+                    - strong [ref=f15e471]: Concluído
+                    - generic [ref=f15e472]: Todo o valor liberado
+            - generic [ref=f15e473]:
+              - generic [ref=f15e474]:
+                - generic [ref=f15e478]:
+                  - strong [ref=f15e479]: Marco 1 · Preparo e massa · 60%
+                  - generic [ref=f15e480]: R$ 9.600,00 · até 19/10
+                - generic [ref=f15e481]: A iniciar
+              - generic [ref=f15e482]:
+                - button "Subcontratar"
+              - generic [ref=f15e483]:
+                - generic [ref=f15e487]:
+                  - strong [ref=f15e488]: Marco 2 · Pintura e acabamento · 40%
+                  - generic [ref=f15e489]: R$ 6.400,00 · até 03/11
+                - generic [ref=f15e490]: A iniciar
+              - generic [ref=f15e491]:
+                - button "Subcontratar"
+            - generic [ref=f15e492]:
+              - generic [ref=f15e493]:
+                - generic [ref=f15e494]: Prazo de entrega
+                - strong [ref=f15e495]: 03/11
+              - generic [ref=f15e496]:
+                - generic [ref=f15e497]: Endereço
+                - strong [ref=f15e498]: Rua Harmonia, 410
+              - paragraph [ref=f15e499]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+            - generic [ref=f15e500]:
+              - button "Seguro Aval da obra SG-2026-001 · cobre R$ 16.000,00 · prêmio pendente":
+                - generic:
+                  - strong: Seguro Aval da obra
+                  - generic: SG-2026-001 · cobre R$ 16.000,00 · prêmio pendente
+              - button "Conversa 0 mensagens · registrada no contrato":
+                - generic:
+                  - strong: Conversa
+                  - generic: 0 mensagens · registrada no contrato
+              - button "Tirar dúvida com o assistente Prazos, marcos, seguro e disputas":
+                - generic:
+                  - strong: Tirar dúvida com o assistente
+                  - generic: Prazos, marcos, seguro e disputas
+              - button "Contrato e arbitragem Assinado em 04/10 · arbitragem incluída":
+                - generic:
+                  - strong: Contrato e arbitragem
+                  - generic: Assinado em 04/10 · arbitragem incluída
+  - contentinfo "Controle da apresentação" [ref=f15e106]:
+    - generic [ref=f15e503]:
+      - group "Cenários" [ref=f15e504]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f15e505] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f15e506] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f15e507] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Disputa" [ref=f15e508] [cursor=pointer]': "4"
+        - 'button "Cenário 5: Antecipação" [ref=f15e509] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Pelo WhatsApp" [ref=f15e510] [cursor=pointer]': "6"
+        - 'button "Cenário 7: No banco" [ref=f15e511] [cursor=pointer]': "7"
+      - strong [ref=f15e512]: O prestador cobra
+      - generic [ref=f15e513]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f15e131]:
+      - generic [ref=f15e514]:
+        - generic [ref=f15e515]: Ana · cliente
+        - paragraph [ref=f15e516]: Aumente o limite
+      - generic [ref=f15e517]:
+        - button "Pausar (espaço)" [ref=f15e518] [cursor=pointer]
+        - button "Próximo" [ref=f15e521] [cursor=pointer]
+        - generic [ref=f15e524]:
+          - group "Como avança" [ref=f15e525]:
+            - button "Eu avanço" [ref=f15e526] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f15e527] [cursor=pointer]
+          - group "Velocidade" [ref=f15e528]:
+            - button "Devagar" [ref=f15e529] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f15e530] [cursor=pointer]
+            - button "Rápido" [ref=f15e531] [cursor=pointer]
+          - generic [ref=f15e532]: Espaço pausa · → próximo · F tela cheia · Esc sai
+        - generic "Pilares do escopo" [ref=f15e533]:
+          - generic "Pilar 1 · Custódia por marcos" [ref=f15e534]: Custódia por marcos
+          - generic "Pilar 2 · Crédito e antecipação" [ref=f15e537]: Crédito e antecipação
+          - generic "Pilar 3 · Banco" [ref=f15e540]: Banco
+        - button "Tela cheia (F)" [ref=f15e543] [cursor=pointer]
+        - button "Sair (Esc)" [ref=f15e546] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Ana · cliente
+      - strong: Aumente o limite
+      - paragraph: O limite não cobre. O banco oferece aumentar só o que falta, na hora.
+  - generic [ref=f15e551]:
+    - generic [ref=f15e552]: Guardado no BTG
+    - strong [ref=f15e553]: R$ 0,00

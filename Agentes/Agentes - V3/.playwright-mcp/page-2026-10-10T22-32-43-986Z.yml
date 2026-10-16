@@ -1,0 +1,150 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e34]:
+    - generic [ref=f15e554]:
+      - region "Celular de Ana, agindo agora" [ref=f15e555]:
+        - generic [ref=f15e556]:
+          - generic [ref=f15e558]: Ana
+          - generic [ref=f15e559]: agindo agora
+        - generic [ref=f15e562]:
+          - generic [ref=f15e563]:
+            - generic [ref=f15e564]: 9:41
+            - generic [ref=f15e567]:
+              - button "Voltar" [ref=f15e568] [cursor=pointer]
+              - heading "Benefícios" [level=1] [ref=f15e571]
+            - generic [ref=f15e572]:
+              - generic [ref=f15e573]:
+                - generic [ref=f15e574]: Seus pontos
+                - generic [ref=f15e575]: "1.600"
+                - generic [ref=f15e576]: Valem R$ 160,00 de desconto
+                - button "Transferir para Pontos BTG" [ref=f15e577] [cursor=pointer]
+              - heading "Dos seus pagamentos" [level=3] [ref=f15e580]
+              - generic [ref=f15e581]:
+                - generic [ref=f15e582]:
+                  - generic [ref=f15e586]:
+                    - strong [ref=f15e587]: Cashback em material de construção
+                    - generic [ref=f15e588]: Pintura · 5% de volta na Casa & Obra, até R$ 300. R$ 300,00.
+                  - generic [ref=f15e589]: Cupom 001OBRA
+                - generic [ref=f15e590]:
+                  - generic [ref=f15e594]:
+                    - strong [ref=f15e595]: Garantia do serviço por 90 dias
+                    - generic [ref=f15e596]: Pintura · Se o defeito voltar, a disputa reabre e o seguro cobre o retrabalho.
+                  - generic [ref=f15e597]: Ativo
+                - generic [ref=f15e598]:
+                  - generic [ref=f15e602]:
+                    - strong [ref=f15e603]: Assistência residencial 24h
+                    - generic [ref=f15e604]: Pintura · 30 dias de chaveiro, eletricista e encanador.
+                  - generic [ref=f15e605]: Ativo
+              - heading "Indique e ganhe" [level=3] [ref=f15e606]
+              - generic [ref=f15e607]:
+                - paragraph [ref=f15e608]:
+                  - text: Vocês dois ganham
+                  - strong [ref=f15e609]: 500 pontos
+                  - text: no primeiro pagamento protegido concluído.
+                - generic [ref=f15e610]:
+                  - generic [ref=f15e611]: Seu código
+                  - strong [ref=f15e612]: AVAL-ANA
+                - generic [ref=f15e613]:
+                  - button "Indicar um prestador" [ref=f15e614] [cursor=pointer]
+                  - button "Convidar um cliente" [ref=f15e615] [cursor=pointer]
+              - heading "Últimos pontos" [level=3] [ref=f15e616]
+              - generic [ref=f15e617]:
+                - generic [ref=f15e618]:
+                  - generic [ref=f15e619]: 11/10 · Pintura
+                  - strong [ref=f15e620]: "+640"
+                - generic [ref=f15e621]:
+                  - generic [ref=f15e622]: 04/10 · Pintura
+                  - strong [ref=f15e623]: "+960"
+          - status: Convite copiado. Vocês dois ganham 500 pontos no primeiro pagamento.
+      - region "Celular de Carlos, só para ver" [ref=f15e624]:
+        - generic [ref=f15e625]:
+          - generic [ref=f15e628]: Carlos
+          - generic [ref=f15e629]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f15e630] [cursor=pointer]
+        - generic [ref=f15e636]:
+          - generic [ref=f15e637]: 9:41
+          - generic [ref=f15e640]:
+            - generic [ref=f15e641]:
+              - generic [ref=f15e642]:
+                - button "CM Olá, Carlos":
+                  - generic: CM
+                  - generic:
+                    - text: Olá,
+                    - strong: Carlos
+                - generic [ref=f15e643]:
+                  - button "Avisos, 4 não lidos":
+                    - generic: "4"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f15e644]
+              - generic [ref=f15e645]:
+                - generic [ref=f15e646]:
+                  - generic [ref=f15e647]: Guardado nos seus pagamentos
+                  - strong [ref=f15e648]: R$ 0,00
+                - button "Ocultar valores"
+              - paragraph [ref=f15e649]: 0 a pagar · 0 a receber
+              - generic [ref=f15e650]:
+                - button "Saldo para pagar R$ 48.120,00":
+                  - generic: Saldo para pagar
+                  - strong: R$ 48.120,00
+                - button "Pode pagar com empréstimo na hora R$ 50.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 50.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f15e651]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Antecipar"
+              - button "Selo"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f15e653]:
+              - paragraph [ref=f15e654]: Vai pagar um serviço? Você tem R$ 50.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f15e658]:
+              - button "A pagar"
+              - button "A receber"
+              - button "Concluídos 1"
+            - generic [ref=f15e659]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f15e661]
+              - paragraph [ref=f15e662]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=f15e663]:
+              - generic [ref=f15e666]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=f15e106]:
+    - generic [ref=f15e669]:
+      - group "Cenários" [ref=f15e670]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f15e671] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f15e672] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f15e673] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Disputa" [ref=f15e674] [cursor=pointer]': "4"
+        - 'button "Cenário 5: Antecipação" [ref=f15e675] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Pelo WhatsApp" [ref=f15e676] [cursor=pointer]': "6"
+        - 'button "Cenário 7: No banco" [ref=f15e677] [cursor=pointer]': "7"
+      - strong [ref=f15e678]: Entregar e liberar
+      - generic [ref=f15e679]: Um marco aprovado, outro liberado sozinho.
+    - generic [ref=f15e131]:
+      - generic [ref=f15e680]:
+        - generic [ref=f15e681]: Ana · cliente
+        - paragraph [ref=f15e682]: Indique um prestador
+      - generic [ref=f15e683]:
+        - button "Pausar (espaço)" [ref=f15e684] [cursor=pointer]
+        - button "Próximo" [ref=f15e687] [cursor=pointer]
+        - generic [ref=f15e690]:
+          - group "Como avança" [ref=f15e691]:
+            - button "Eu avanço" [ref=f15e692] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f15e693] [cursor=pointer]
+          - group "Velocidade" [ref=f15e694]:
+            - button "Devagar" [ref=f15e695] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f15e696] [cursor=pointer]
+            - button "Rápido" [ref=f15e697] [cursor=pointer]
+          - generic [ref=f15e698]: Espaço pausa · → próximo · F tela cheia · Esc sai
+        - generic "Pilares do escopo" [ref=f15e699]:
+          - generic "Pilar 1 · Custódia por marcos" [ref=f15e700]: Custódia por marcos
+          - generic "Pilar 2 · Crédito e antecipação" [ref=f15e703]: Crédito e antecipação
+          - generic "Pilar 3 · Banco" [ref=f15e706]: Banco
+        - button "Tela cheia (F)" [ref=f15e709] [cursor=pointer]
+        - button "Sair (Esc)" [ref=f15e712] [cursor=pointer]
+  - generic [ref=f15e717]:
+    - generic [ref=f15e718]: Guardado no BTG
+    - strong [ref=f15e719]: R$ 0,00

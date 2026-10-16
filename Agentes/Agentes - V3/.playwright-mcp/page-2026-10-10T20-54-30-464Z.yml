@@ -1,0 +1,138 @@
+- generic [active] [ref=f6e1]:
+  - main [ref=f6e34]:
+    - generic [ref=f6e1267]:
+      - region "Celular de Ana, agindo agora" [ref=f6e1268]:
+        - generic [ref=f6e1269]:
+          - generic [ref=f6e1271]: Ana
+          - generic [ref=f6e1272]: agindo agora
+        - generic [ref=f6e1275]:
+          - generic [ref=f6e1276]:
+            - generic [ref=f6e1277]: 9:41
+            - generic [ref=f6e1280]:
+              - button "Voltar" [ref=f6e1281] [cursor=pointer]
+              - heading "Pagar" [level=1] [ref=f6e1284]
+            - generic [ref=f6e1285]:
+              - heading "Como o dinheiro é liberado?" [level=2] [ref=f6e1290]
+              - generic [ref=f6e1291]:
+                - strong [ref=f6e1296]: Não sabe como dividir?
+                - button "Ajustar com o assistente" [ref=f6e1297] [cursor=pointer]
+              - button "Valor único Sai tudo no fim" [ref=f6e1300] [cursor=pointer]:
+                - generic [ref=f6e1302]:
+                  - strong [ref=f6e1303]: Valor único
+                  - generic [ref=f6e1304]: Sai tudo no fim
+              - button "Por etapas Sai a cada etapa aprovada" [ref=f6e1305] [cursor=pointer]:
+                - generic [ref=f6e1307]:
+                  - strong [ref=f6e1308]: Por etapas
+                  - generic [ref=f6e1309]: Sai a cada etapa aprovada
+              - generic [ref=f6e1310]: Etapas montadas com o assistente.
+              - generic [ref=f6e1314]:
+                - generic [ref=f6e1315]:
+                  - generic [ref=f6e1316]: 1. Medição e briefing
+                  - strong [ref=f6e1317]: R$ 4.500,00
+                - generic [ref=f6e1318]:
+                  - generic [ref=f6e1319]: 2. Projeto 3D e memorial
+                  - strong [ref=f6e1320]: R$ 9.000,00
+                - generic [ref=f6e1321]:
+                  - generic [ref=f6e1322]: 3. Acompanhamento da obra
+                  - strong [ref=f6e1323]: R$ 4.500,00
+                - generic [ref=f6e1324]:
+                  - generic [ref=f6e1325]: Total
+                  - strong [ref=f6e1326]: R$ 18.000,00
+              - generic [ref=f6e1327]:
+                - strong [ref=f6e1328]: Como a proteção funciona
+                - strong [ref=f6e1333]: Fica guardado no banco
+                - strong [ref=f6e1338]: Sai quando quem paga aprova
+                - strong [ref=f6e1343]: Sem resposta em 7 dias, libera sozinho
+            - button "Continuar" [ref=f6e1345] [cursor=pointer]
+          - status: 3 etapas definidas.
+      - region "Celular de Carlos, só para ver" [ref=f6e1346]:
+        - generic [ref=f6e1347]:
+          - generic [ref=f6e1350]: Carlos
+          - generic [ref=f6e1351]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f6e1352] [cursor=pointer]
+        - generic [ref=f6e1358]:
+          - generic [ref=f6e1359]: 9:41
+          - generic [ref=f6e1362]:
+            - generic [ref=f6e1363]:
+              - generic [ref=f6e1364]:
+                - button "CM Olá, Carlos":
+                  - generic: CM
+                  - generic:
+                    - text: Olá,
+                    - strong: Carlos
+                - generic [ref=f6e1365]:
+                  - button "Avisos, 4 não lidos":
+                    - generic: "4"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f6e1366]
+              - generic [ref=f6e1367]:
+                - generic [ref=f6e1368]:
+                  - generic [ref=f6e1369]: Guardado nos seus pagamentos
+                  - strong [ref=f6e1370]: R$ 0,00
+                - button "Ocultar valores"
+              - paragraph [ref=f6e1371]: 0 a pagar · 0 a receber
+              - generic [ref=f6e1372]:
+                - button "Saldo para pagar R$ 48.120,00":
+                  - generic: Saldo para pagar
+                  - strong: R$ 48.120,00
+                - button "Pode pagar com empréstimo na hora R$ 50.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 50.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f6e1373]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Antecipar"
+              - button "Selo"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f6e1375]:
+              - paragraph [ref=f6e1376]: Vai pagar um serviço? Você tem R$ 50.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f6e1380]:
+              - button "A pagar"
+              - button "A receber"
+              - button "Concluídos 1"
+            - generic [ref=f6e1381]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f6e1383]
+              - paragraph [ref=f6e1384]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=f6e1385]:
+              - generic [ref=f6e1388]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=f6e363]:
+    - generic [ref=f6e1391]:
+      - group "Cenários" [ref=f6e1392]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f6e1393] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f6e1394] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f6e1395] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pelo WhatsApp" [ref=f6e1396] [cursor=pointer]': "4"
+        - 'button "Cenário 5: No banco" [ref=f6e1397] [cursor=pointer]': "5"
+      - strong [ref=f6e1398]: O cliente paga um prestador
+      - generic [ref=f6e1399]: A cliente paga a Marina com o empréstimo na hora.
+    - generic [ref=f6e387]:
+      - generic [ref=f6e1400]:
+        - generic [ref=f6e1401]: Ana · cliente
+        - paragraph [ref=f6e1402]: Continue
+      - generic [ref=f6e1403]:
+        - button "Pausar (espaço)" [ref=f6e1404] [cursor=pointer]
+        - button "Próximo" [ref=f6e1407] [cursor=pointer]
+        - generic [ref=f6e1410]:
+          - group "Como avança" [ref=f6e1411]:
+            - button "Eu avanço" [ref=f6e1412] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f6e1413] [cursor=pointer]
+          - group "Velocidade" [ref=f6e1414]:
+            - button "Devagar" [ref=f6e1415] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f6e1416] [cursor=pointer]
+            - button "Rápido" [ref=f6e1417] [cursor=pointer]
+          - generic [ref=f6e1418]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f6e1419] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Ana · cliente
+      - strong: Continue
+      - paragraph: Falta só escolher para quem vai e como enviar.
+  - generic [ref=f6e1424]:
+    - generic [ref=f6e1425]: Guardado no BTG
+    - strong [ref=f6e1426]: R$ 0,00

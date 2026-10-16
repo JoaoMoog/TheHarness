@@ -1,0 +1,137 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e2792]:
+      - complementary [ref=f2e2793]:
+        - generic [ref=f2e2794]:
+          - img "BTG Pactual" [ref=f2e2795]
+          - generic [ref=f2e2796]: Aval
+        - navigation "Áreas" [ref=f2e2797]:
+          - button "Visão geral" [ref=f2e2798] [cursor=pointer]
+          - button "Operações" [ref=f2e2802] [cursor=pointer]
+          - button "Fila de trabalho" [ref=f2e2806] [cursor=pointer]
+          - button "Clientes e limites" [ref=f2e2810] [cursor=pointer]
+          - button "Crédito" [ref=f2e2814] [cursor=pointer]
+          - button "Seguros" [ref=f2e2818] [cursor=pointer]
+          - button "Ofertas" [ref=f2e2822] [cursor=pointer]
+          - button "Receita" [ref=f2e2826] [cursor=pointer]
+          - button "Funding" [ref=f2e2830] [cursor=pointer]
+          - button "Risco e conluio" [ref=f2e2834] [cursor=pointer]
+          - button "Compliance" [ref=f2e2838] [cursor=pointer]
+          - button "API" [ref=f2e2842] [cursor=pointer]
+        - generic [ref=f2e2846]:
+          - generic [ref=f2e2847]: LP
+          - generic [ref=f2e2848]:
+            - strong [ref=f2e2849]: Luiza Prado
+            - generic [ref=f2e2850]: Operações · BTG
+      - main [ref=f2e2851]:
+        - generic [ref=f2e2852]:
+          - heading "Funding estruturado" [level=1] [ref=f2e2853]
+          - generic [ref=f2e2854]: Buscar contrato, CPF ou CNPJ
+        - generic [ref=f2e2858]:
+          - generic [ref=f2e2859]:
+            - generic [ref=f2e2860]:
+              - generic [ref=f2e2861]: Carteira elegível
+              - strong [ref=f2e2862]: R$ 43.060.000,00
+              - generic [ref=f2e2863]: Crédito Aval e recebíveis em custódia
+            - generic [ref=f2e2864]:
+              - generic [ref=f2e2865]: Cota sênior
+              - strong [ref=f2e2866]: R$ 34.448.000,00
+              - generic [ref=f2e2867]: CDI + 1,9% a.a.
+            - generic [ref=f2e2868]:
+              - generic [ref=f2e2869]: Cota subordinada
+              - strong [ref=f2e2870]: R$ 8.612.000,00
+              - generic [ref=f2e2871]: CDI + 6,5% a.a.
+          - generic [ref=f2e2872]:
+            - generic [ref=f2e2873]:
+              - heading "FIDC Aval Recebíveis I" [level=2] [ref=f2e2874]
+              - generic [ref=f2e2875]:
+                - generic [ref=f2e2876]: Crédito ao contratante
+                - strong [ref=f2e2877]: R$ 38.218.000,00
+              - generic [ref=f2e2878]:
+                - generic [ref=f2e2879]: Recebíveis em custódia
+                - strong [ref=f2e2880]: R$ 4.842.000,00
+              - generic [ref=f2e2881]:
+                - generic [ref=f2e2882]: Lastro
+                - strong [ref=f2e2883]: Contratos com custódia por marco
+              - generic [ref=f2e2884]:
+                - generic [ref=f2e2885]: Taxa de estruturação
+                - strong [ref=f2e2886]: 2%
+              - button "Emitir e distribuir" [ref=f2e2887] [cursor=pointer]
+            - generic [ref=f2e2890]:
+              - heading "Por que funciona" [level=2] [ref=f2e2891]
+              - paragraph [ref=f2e2892]: Cada real do fundo está ligado a um serviço com etapas, custódia e seguro de arbitragem. O risco é de execução da obra, não de uso livre do dinheiro.
+              - generic [ref=f2e2893]:
+                - generic [ref=f2e2894]: Perda esperada
+                - strong [ref=f2e2895]: 1,2% a.a.
+              - generic [ref=f2e2896]:
+                - generic [ref=f2e2897]: Subordinação
+                - strong [ref=f2e2898]: 20%
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e2901]:
+      - group "Cenários" [ref=f2e2902]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e2903] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e2904] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e2905] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e2906] [cursor=pointer]': "4"
+      - strong [ref=f2e2907]: No banco
+      - generic [ref=f2e2908]: Ofertas, receita, risco e quem decidiu.
+    - generic [ref=f2e184]:
+      - dialog "Aval em números" [ref=f2e2909]:
+        - generic [ref=f2e2910]:
+          - generic [ref=f2e2911]: O Aval em 10 minutos
+          - heading "O Aval em números" [level=2] [ref=f2e2912]
+          - generic [ref=f2e2913]:
+            - generic [ref=f2e2914]:
+              - strong [ref=f2e2915]: R$ 34.000,00
+              - generic [ref=f2e2916]: guardados no BTG
+            - generic [ref=f2e2917]:
+              - strong [ref=f2e2918]: R$ 6.800,00
+              - generic [ref=f2e2919]: liberados para quem trabalhou
+            - generic [ref=f2e2920]:
+              - strong [ref=f2e2921]: R$ 3.535,58
+              - generic [ref=f2e2922]: de receita para o banco
+            - generic [ref=f2e2923]:
+              - strong [ref=f2e2924]: 3 de 6
+              - generic [ref=f2e2925]: ofertas do banco aceitas
+            - generic [ref=f2e2926]:
+              - strong [ref=f2e2927]: "1"
+              - generic [ref=f2e2928]: pessoa nova no Aval
+            - generic [ref=f2e2929]:
+              - strong [ref=f2e2930]: "1"
+              - generic [ref=f2e2931]: disputa resolvida no app
+            - generic [ref=f2e2932]:
+              - strong [ref=f2e2933]: "2"
+              - generic [ref=f2e2934]: pagamentos protegidos
+          - list [ref=f2e2935]:
+            - listitem [ref=f2e2936]:
+              - generic [ref=f2e2939]:
+                - strong [ref=f2e2940]: O prestador cobra
+                - generic [ref=f2e2941]: Uma cobrança pelo WhatsApp virou usuária nova do Aval, compra no cartão, aumento de limite e seguro, em minutos.
+            - listitem [ref=f2e2942]:
+              - generic [ref=f2e2945]:
+                - strong [ref=f2e2946]: O cliente paga um prestador
+                - generic [ref=f2e2947]: O crédito é oferecido no momento exato da necessidade, e o dinheiro continua protegido.
+            - listitem [ref=f2e2948]:
+              - generic [ref=f2e2951]:
+                - strong [ref=f2e2952]: Disputa
+                - generic [ref=f2e2953]: Conflito resolvido dentro do app, em dias, com o dinheiro seguro o tempo todo.
+            - listitem [ref=f2e2954]:
+              - generic [ref=f2e2957]:
+                - strong [ref=f2e2958]: No banco
+                - generic [ref=f2e2959]: Cada pagamento protegido é uma porta para crédito, seguro, captação e cliente novo.
+          - generic [ref=f2e2960]:
+            - button "Ver de novo" [ref=f2e2961] [cursor=pointer]
+            - button "Fechar" [ref=f2e2962] [cursor=pointer]
+      - generic [ref=f2e2963]:
+        - button "Apresentar este cenário" [ref=f2e2964] [cursor=pointer]
+        - generic [ref=f2e2967]:
+          - button "Versão executiva · 10 min" [ref=f2e2968] [cursor=pointer]
+          - button "Ver cenários" [ref=f2e2969] [cursor=pointer]
+        - generic [ref=f2e2970]:
+          - group "Como avança" [ref=f2e2971]:
+            - button "Eu avanço" [ref=f2e2972] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e2973] [cursor=pointer]
+          - group "Velocidade" [ref=f2e2974]:
+            - button "Devagar" [ref=f2e2975] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e2976] [cursor=pointer]
+            - button "Rápido" [ref=f2e2977] [cursor=pointer]

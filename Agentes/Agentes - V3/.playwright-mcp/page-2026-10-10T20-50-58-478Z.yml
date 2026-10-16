@@ -1,0 +1,92 @@
+- generic [active] [ref=f6e1]:
+  - main [ref=f6e34]:
+    - generic [ref=f6e403]:
+      - region "Celular de Cliente, só para ver" [ref=f6e404]:
+        - generic [ref=f6e405]:
+          - generic [ref=f6e408]: Cliente
+          - generic [ref=f6e409]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f6e410] [cursor=pointer]
+        - generic [ref=f6e416]:
+          - generic [ref=f6e417]: 9:41
+          - generic [ref=f6e420]:
+            - img "BTG Pactual" [ref=f6e421]
+            - generic [ref=f6e422]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=f6e423]
+              - paragraph [ref=f6e424]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG"
+            - navigation "Acesso rápido" [ref=f6e425]:
+              - button "Conta BTG"
+              - button "Arbitragem"
+      - region "Celular de Carlos, agindo agora" [ref=f6e426]:
+        - generic [ref=f6e427]:
+          - generic [ref=f6e429]: Carlos
+          - generic [ref=f6e430]: agindo agora
+        - generic [ref=f6e434]:
+          - generic [ref=f6e435]: 9:41
+          - generic [ref=f6e438]:
+            - button "Voltar" [ref=f6e439] [cursor=pointer]
+            - heading "Cobrar" [level=1] [ref=f6e442]
+          - generic [ref=f6e443]:
+            - heading "O que vocês combinaram?" [level=2] [ref=f6e447]
+            - generic [ref=f6e448]:
+              - generic [ref=f6e449]:
+                - generic [ref=f6e450]: Descrição do serviço
+                - generic [ref=f6e451]:
+                  - textbox "Descrição do serviço Melhorar a descrição com IA" [ref=f6e452]:
+                    - /placeholder: "Ex.: pintar a sala e o quarto"
+                    - text: pintar o apartamento todo, massa corrida e duas demãos
+                  - button "Melhorar a descrição com IA" [ref=f6e453] [cursor=pointer]
+              - generic [ref=f6e456]:
+                - generic [ref=f6e457]: Valor combinado (R$)
+                - textbox "Valor combinado (R$)" [ref=f6e458]:
+                  - /placeholder: ""
+                  - text: 16.000,00
+              - generic [ref=f6e459]:
+                - generic [ref=f6e460]: Prazo de entrega (dd/mm)
+                - textbox "Prazo de entrega (dd/mm)" [ref=f6e461]:
+                  - /placeholder: ""
+                  - text: 03/11
+              - generic [ref=f6e462]:
+                - generic [ref=f6e463]: Endereço do serviço
+                - textbox "Endereço do serviço" [ref=f6e464]:
+                  - /placeholder: ""
+                  - text: Rua Harmonia, 410
+            - generic [ref=f6e466]:
+              - strong [ref=f6e470]: Repetir todo mês
+              - switch "Repetir todo mês" [ref=f6e471] [cursor=pointer]
+          - button "Continuar" [ref=f6e474] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f6e363]:
+    - generic [ref=f6e477]:
+      - group "Cenários" [ref=f6e478]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f6e479] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f6e480] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f6e481] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pelo WhatsApp" [ref=f6e482] [cursor=pointer]': "4"
+        - 'button "Cenário 5: No banco" [ref=f6e483] [cursor=pointer]': "5"
+      - strong [ref=f6e484]: O prestador cobra
+      - generic [ref=f6e485]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f6e387]:
+      - generic [ref=f6e486]:
+        - generic [ref=f6e487]: Nesta tela
+        - paragraph [ref=f6e488]: Valor e prazo
+      - generic [ref=f6e489]:
+        - button "Pausar (espaço)" [ref=f6e490] [cursor=pointer]
+        - button "Próximo" [ref=f6e493] [cursor=pointer]
+        - generic [ref=f6e496]:
+          - group "Como avança" [ref=f6e497]:
+            - button "Eu avanço" [ref=f6e498] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f6e499] [cursor=pointer]
+          - group "Velocidade" [ref=f6e500]:
+            - button "Devagar" [ref=f6e501] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f6e502] [cursor=pointer]
+            - button "Rápido" [ref=f6e503] [cursor=pointer]
+          - generic [ref=f6e504]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f6e505] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Nesta tela · 2 de 3
+      - strong: Valor e prazo
+      - paragraph: O valor combinado e a data de entrega. É isso que vai ficar guardado e ser cobrado.
+  - generic [ref=f6e511]:
+    - generic [ref=f6e512]: Guardado no BTG
+    - strong [ref=f6e513]: R$ 0,00

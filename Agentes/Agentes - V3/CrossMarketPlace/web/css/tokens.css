@@ -1,0 +1,14 @@
+/* Orquestra-like tokens (BTG Banking palette). Mirrors the Figma variables collection "Orquestra". */
+:root {
+  --ink: #081327; --navy: #233b81; --primary: #2d5aaf; --primary-strong: #1f4790; --primary-soft: #e8eef9; --accent: #a9c1f0;
+  --canvas: #f5f5f5; --surface: #ffffff; --text: #081327; --text-2: #575e6d; --text-3: #8b909c; --line: #e1e2e6;
+  --success: #1f7a54; --success-soft: #e6f2ec; --warning: #a35f00; --warning-soft: #fbf1e1; --danger: #e5484d; --danger-soft: #fdecec;
+  --violet: #4a5ea8; --violet-soft: #eceffa;
+  --radius-sm: 4px; --radius-lg: 8px;
+  --font: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --gutter: 64px; --max: 1312px;
+  --shadow: 0 8px 24px rgba(8, 19, 39, .12);
+}
+@media (max-width: 1100px) { :root { --gutter: 32px; } }
+@media (max-width: 640px) { :root { --gutter: 16px; } }

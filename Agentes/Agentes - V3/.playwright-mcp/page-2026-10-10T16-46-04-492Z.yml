@@ -1,0 +1,122 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e1260]:
+      - strong [ref=f1e1261]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f1e1262]:
+      - button "Ana Ribeiro sua conta" [ref=f1e1263] [cursor=pointer]:
+        - strong [ref=f1e1264]: Ana Ribeiro
+        - generic [ref=f1e1265]: sua conta
+      - button "Marina Costa paga e recebe" [pressed] [ref=f1e1266] [cursor=pointer]:
+        - strong [ref=f1e1267]: Marina Costa
+        - generic [ref=f1e1268]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [ref=f1e1269] [cursor=pointer]:
+        - strong [ref=f1e1270]: Carlos Mendes
+        - generic [ref=f1e1271]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=f1e1272] [cursor=pointer]:
+        - strong [ref=f1e1273]: Banco
+        - generic [ref=f1e1274]: operações BTG
+    - group "Relógio da demonstração" [ref=f1e1275]:
+      - strong [ref=f1e1278]: Hoje 11/10
+      - button "+1 dia" [ref=f1e1279] [cursor=pointer]
+      - button "+7 dias" [ref=f1e1280] [cursor=pointer]
+    - generic [ref=f1e1281]:
+      - button "Dois celulares" [pressed] [ref=f1e1282] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f1e1285] [cursor=pointer]
+  - main [ref=f1e31]:
+    - generic [ref=f1e1288]:
+      - region "Celular de Ana, só para ver" [ref=f1e1289]:
+        - generic [ref=f1e1290]:
+          - generic [ref=f1e1293]: Ana
+          - generic [ref=f1e1294]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f1e1295] [cursor=pointer]
+        - generic [ref=f1e1301]:
+          - generic [ref=f1e1302]: 9:41
+          - generic [ref=f1e1305]:
+            - button "Fechar"
+          - generic [ref=f1e1307]:
+            - heading "Enviado para Marina Costa Interiores" [level=2] [ref=f1e1311]
+            - paragraph [ref=f1e1312]: A pessoa recebeu um aviso no app.
+          - generic [ref=f1e1313]:
+            - status [ref=f1e1314]:
+              - generic [ref=f1e1315]: Enviado.
+              - button "Desfazer"
+            - button "Abrir como quem recebeu"
+            - button "Ir para o início"
+      - region "Celular de Marina, agindo agora" [ref=f1e1316]:
+        - generic [ref=f1e1317]:
+          - generic [ref=f1e1319]: Marina
+          - generic [ref=f1e1320]: agindo agora
+        - generic [ref=f1e1324]:
+          - generic [ref=f1e1325]: 9:41
+          - generic [ref=f1e1328]:
+            - button "Voltar" [ref=f1e1329] [cursor=pointer]
+            - heading "Pagamento protegido" [level=1] [ref=f1e1332]
+          - generic [ref=f1e1333]:
+            - generic [ref=f1e1334]:
+              - generic [ref=f1e1335]: Ana Ribeiro quer pagar
+              - heading "Projeto de interiores" [level=3] [ref=f1e1336]
+              - generic [ref=f1e1337]: R$ 18.000,00
+              - paragraph [ref=f1e1338]: "Projeto de interiores: projeto de interiores da sala e da cozinha. Inclui medição, projeto 3D e acompanhamento."
+              - generic [ref=f1e1339]:
+                - generic [ref=f1e1340]: Prazo de entrega
+                - strong [ref=f1e1341]: 10/11
+              - generic [ref=f1e1342]:
+                - generic [ref=f1e1343]: Endereço
+                - strong [ref=f1e1344]: Rua Harmonia, 410
+              - generic [ref=f1e1345]:
+                - generic [ref=f1e1346]: Liberação
+                - strong [ref=f1e1347]: Por etapas
+              - generic [ref=f1e1348]:
+                - generic [ref=f1e1349]: 1. Medição e briefing · até 21/10
+                - strong [ref=f1e1350]: R$ 4.500,00
+              - generic [ref=f1e1351]:
+                - generic [ref=f1e1352]: 2. Projeto 3D e memorial · até 31/10
+                - strong [ref=f1e1353]: R$ 9.000,00
+              - generic [ref=f1e1354]:
+                - generic [ref=f1e1355]: 3. Acompanhamento da obra · até 10/11
+                - strong [ref=f1e1356]: R$ 4.500,00
+            - generic [ref=f1e1357]:
+              - strong [ref=f1e1358]: Como a proteção funciona
+              - strong [ref=f1e1363]: Fica guardado no banco
+              - strong [ref=f1e1368]: Sai quando quem paga aprova
+              - strong [ref=f1e1373]: Sem resposta em 7 dias, libera sozinho
+            - generic [ref=f1e1374]:
+              - checkbox "Confiro o combinado e aceito as condições e a cláusula de arbitragem." [checked] [ref=f1e1375]
+              - generic [ref=f1e1376]: Confiro o combinado e aceito as condições e a cláusula de arbitragem.
+          - generic [ref=f1e1377]:
+            - button "Aceitar o pagamento" [ref=f1e1378] [cursor=pointer]
+            - button "Recusar" [ref=f1e1379] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f1e103]:
+    - generic [ref=f1e1382]:
+      - group "Cenários" [ref=f1e1383]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f1e1384] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f1e1385] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f1e1386] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f1e1387] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f1e1388] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f1e1389] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f1e1390] [cursor=pointer]': "7"
+        - 'button "Cenário 8: No banco" [ref=f1e1391] [cursor=pointer]': "8"
+      - strong [ref=f1e1392]: O cliente paga um prestador
+      - generic [ref=f1e1393]: A cliente paga a Marina com o empréstimo na hora.
+    - generic [ref=f1e127]:
+      - generic [ref=f1e1394]:
+        - generic [ref=f1e1395]: Marina
+        - paragraph [ref=f1e1396]: Aceite
+      - generic [ref=f1e1397]:
+        - button "Pausar (espaço)" [ref=f1e1398] [cursor=pointer]
+        - button "Próximo" [ref=f1e1401] [cursor=pointer]
+        - generic [ref=f1e1404]:
+          - group "Como avança" [ref=f1e1405]:
+            - button "Eu avanço" [ref=f1e1406] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f1e1407] [cursor=pointer]
+          - group "Velocidade" [ref=f1e1408]:
+            - button "Devagar" [ref=f1e1409] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f1e1410] [cursor=pointer]
+            - button "Rápido" [ref=f1e1411] [cursor=pointer]
+          - generic [ref=f1e1412]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f1e1413] [cursor=pointer]
+  - generic [ref=f1e1418]:
+    - generic [ref=f1e1419]: Guardado no BTG
+    - strong [ref=f1e1420]: R$ 0,00

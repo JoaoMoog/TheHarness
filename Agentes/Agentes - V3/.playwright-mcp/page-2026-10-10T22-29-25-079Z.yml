@@ -1,0 +1,122 @@
+- generic [active] [ref=f13e1]:
+  - main [ref=f13e34]:
+    - generic [ref=f13e151]:
+      - region "Celular de Cliente, agindo agora" [ref=f13e152]:
+        - generic [ref=f13e153]:
+          - generic [ref=f13e155]: Cliente
+          - generic [ref=f13e156]: agindo agora
+        - generic [ref=f13e160]:
+          - generic [ref=f13e161]: 9:41
+          - generic [ref=f13e164]:
+            - img "BTG Pactual" [ref=f13e165]
+            - generic [ref=f13e166]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=f13e167]
+              - paragraph [ref=f13e168]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG" [ref=f13e169] [cursor=pointer]
+            - navigation "Acesso rápido" [ref=f13e170]:
+              - button "Conta BTG" [ref=f13e171] [cursor=pointer]
+              - button "Arbitragem" [ref=f13e175] [cursor=pointer]
+      - region "Celular de Carlos, só para ver" [ref=f13e179]:
+        - generic [ref=f13e180]:
+          - generic [ref=f13e183]: Carlos
+          - generic [ref=f13e184]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f13e185] [cursor=pointer]
+        - generic [ref=f13e191]:
+          - generic [ref=f13e192]: 9:41
+          - generic [ref=f13e195]:
+            - generic [ref=f13e196]:
+              - generic [ref=f13e197]:
+                - button "CM Olá, Carlos":
+                  - generic: CM
+                  - generic:
+                    - text: Olá,
+                    - strong: Carlos
+                - generic [ref=f13e198]:
+                  - button "Avisos"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f13e199]
+              - generic [ref=f13e200]:
+                - generic [ref=f13e201]:
+                  - generic [ref=f13e202]: Guardado nos seus pagamentos
+                  - strong [ref=f13e203]: R$ 0,00
+                - button "Ocultar valores"
+              - paragraph [ref=f13e204]: 0 a pagar · 0 a receber
+              - generic [ref=f13e205]:
+                - button "Saldo para pagar R$ 48.120,00":
+                  - generic: Saldo para pagar
+                  - strong: R$ 48.120,00
+                - button "Pode pagar com empréstimo na hora R$ 50.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 50.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f13e206]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Antecipar"
+              - button "Selo"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f13e208]:
+              - paragraph [ref=f13e209]: Vai pagar um serviço? Você tem R$ 50.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f13e213]:
+              - button "A pagar"
+              - button "A receber"
+              - button "Concluídos"
+            - generic [ref=f13e214]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f13e216]
+              - paragraph [ref=f13e217]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=f13e218]:
+              - generic [ref=f13e221]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=f13e106]:
+    - generic [ref=f13e131]:
+      - dialog "O dinheiro só sai quando o marco é aprovado" [ref=f13e323]:
+        - banner [ref=f13e324]:
+          - img "BTG Pactual" [ref=f13e325]
+          - generic [ref=f13e326]:
+            - navigation "Slides" [ref=f13e327]:
+              - button "O que é" [ref=f13e328] [cursor=pointer]
+              - button "Problema" [ref=f13e330] [cursor=pointer]
+              - button "Solução" [ref=f13e332] [cursor=pointer]
+              - button "Marcos" [ref=f13e334] [cursor=pointer]
+              - button "Canais" [ref=f13e336] [cursor=pointer]
+              - button "Receita" [ref=f13e338] [cursor=pointer]
+              - button "Exemplo" [ref=f13e340] [cursor=pointer]
+            - button "Tela cheia (F)" [ref=f13e342] [cursor=pointer]
+        - generic [ref=f13e345]:
+          - heading "O dinheiro só sai quando o marco é aprovado" [level=1] [ref=f13e346]
+          - generic [ref=f13e347]: Como uma obra financiada pela Caixa
+          - generic [ref=f13e350]:
+            - generic [ref=f13e351]: Entrega com prova
+            - generic [ref=f13e357]: Quem paga aprova
+            - generic [ref=f13e363]: O marco é liberado
+          - generic [ref=f13e368]:
+            - generic [ref=f13e369]:
+              - generic [ref=f13e370]: Marco 1 · 60%
+              - generic [ref=f13e371]: Preparo e massa
+            - generic [ref=f13e372]:
+              - generic [ref=f13e373]: Marco 2 · 40%
+              - generic [ref=f13e374]: Pintura e acabamento
+          - generic [ref=f13e375]:
+            - generic [ref=f13e376]: "7 dias sem resposta: libera sozinho"
+            - generic [ref=f13e379]: "Contestou: só aquele marco fica bloqueado"
+        - contentinfo [ref=f13e382]:
+          - button "Voltar" [ref=f13e383] [cursor=pointer]
+          - button "Pular para a demonstração" [ref=f13e386] [cursor=pointer]
+          - button "Próximo" [ref=f13e387] [cursor=pointer]
+      - generic [ref=f13e390]:
+        - button "Avançar (→)" [ref=f13e391] [cursor=pointer]
+        - generic [ref=f13e394]:
+          - strong [ref=f13e395]: Avançar
+          - generic [ref=f13e396]: →, espaço ou passador
+        - group "Como avança" [ref=f13e398]:
+          - button "Eu avanço" [pressed] [ref=f13e399] [cursor=pointer]
+          - button "Automático" [ref=f13e400] [cursor=pointer]
+        - button "Tela cheia (F)" [ref=f13e401] [cursor=pointer]
+        - button "Sair (Esc)" [ref=f13e404] [cursor=pointer]
+  - generic [ref=f13e317]:
+    - generic [ref=f13e318]: Guardado no BTG
+    - strong [ref=f13e319]: R$ 0,00

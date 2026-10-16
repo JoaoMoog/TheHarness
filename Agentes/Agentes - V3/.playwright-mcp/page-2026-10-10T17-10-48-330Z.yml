@@ -1,0 +1,149 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e911]:
+      - region "Celular de Ana, agindo agora" [ref=f2e912]:
+        - generic [ref=f2e913]:
+          - generic [ref=f2e915]: Ana
+          - generic [ref=f2e916]: agindo agora
+        - generic [ref=f2e920]:
+          - generic [ref=f2e921]: 9:41
+          - generic [ref=f2e924]:
+            - generic [ref=f2e925]:
+              - generic [ref=f2e926]:
+                - button "AR Olá, Ana" [ref=f2e927] [cursor=pointer]:
+                  - generic [ref=f2e928]: AR
+                  - generic [ref=f2e929]:
+                    - text: Olá,
+                    - strong [ref=f2e930]: Ana
+                - generic [ref=f2e933]:
+                  - button "Avisos, 8 não lidos" [ref=f2e934] [cursor=pointer]:
+                    - generic [ref=f2e937]: "8"
+                  - button "Pagamentos" [ref=f2e938] [cursor=pointer]
+              - heading "Pagamento protegido" [level=2] [ref=f2e941]
+              - generic [ref=f2e942]:
+                - generic [ref=f2e943]:
+                  - generic [ref=f2e944]: Guardado nos seus pagamentos
+                  - strong [ref=f2e945]: R$ 0,00
+                - button "Ocultar valores" [ref=f2e946] [cursor=pointer]
+              - paragraph [ref=f2e949]: 0 a pagar · 0 a receber
+              - generic [ref=f2e950]:
+                - button "Saldo para pagar R$ 15.040,66" [ref=f2e951] [cursor=pointer]:
+                  - generic [ref=f2e952]: Saldo para pagar
+                  - strong [ref=f2e953]: R$ 15.040,66
+                - button "Pode pagar com empréstimo na hora R$ 20.000,00" [ref=f2e956] [cursor=pointer]:
+                  - generic [ref=f2e957]: Pode pagar com empréstimo na hora
+                  - strong [ref=f2e958]: R$ 20.000,00
+              - button "Movimentos dos pagamentos" [ref=f2e961] [cursor=pointer]
+            - navigation "Atalhos" [ref=f2e962]:
+              - button "Cobrar" [ref=f2e963] [cursor=pointer]
+              - button "Pagar" [ref=f2e967] [cursor=pointer]
+              - button "Ler QR" [ref=f2e971] [cursor=pointer]
+              - button "Assistente" [ref=f2e975] [cursor=pointer]
+              - button "Disputas" [ref=f2e979] [cursor=pointer]
+              - button "Benefícios" [ref=f2e983] [cursor=pointer]
+            - generic [ref=f2e987]:
+              - generic [ref=f2e988]:
+                - heading "Para hoje" [level=3] [ref=f2e989]
+                - generic [ref=f2e990]: Hoje 11/Out
+              - button "Serviço concluído Avaliar Horizonte Reformas" [ref=f2e991] [cursor=pointer]:
+                - generic [ref=f2e995]:
+                  - generic [ref=f2e996]: Serviço concluído
+                  - strong [ref=f2e997]: Avaliar Horizonte Reformas
+            - generic [ref=f2e999]:
+              - paragraph [ref=f2e1000]: Vai pagar um serviço? Você tem R$ 20.000,00 de empréstimo na hora.
+              - button "Pagar" [ref=f2e1001] [cursor=pointer]
+            - generic [ref=f2e1005]:
+              - button "A pagar" [ref=f2e1006] [cursor=pointer]
+              - button "A receber" [ref=f2e1007] [cursor=pointer]
+              - button "Concluídos 1" [ref=f2e1008] [cursor=pointer]
+            - generic [ref=f2e1009]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f2e1011]
+              - paragraph [ref=f2e1012]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=f2e1013]:
+              - generic [ref=f2e1016]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu" [ref=f2e1017] [cursor=pointer]
+      - region "Celular de Carlos, só para ver" [ref=f2e1021]:
+        - generic [ref=f2e1022]:
+          - generic [ref=f2e1025]: Carlos
+          - generic [ref=f2e1026]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f2e1027] [cursor=pointer]
+        - generic [ref=f2e1033]:
+          - generic [ref=f2e1034]: 9:41
+          - generic [ref=f2e1037]:
+            - generic [ref=f2e1038]:
+              - generic [ref=f2e1039]:
+                - button "CM Olá, Carlos":
+                  - generic: CM
+                  - generic:
+                    - text: Olá,
+                    - strong: Carlos
+                - generic [ref=f2e1040]:
+                  - button "Avisos, 4 não lidos":
+                    - generic: "4"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f2e1041]
+              - generic [ref=f2e1042]:
+                - generic [ref=f2e1043]:
+                  - generic [ref=f2e1044]: Guardado nos seus pagamentos
+                  - strong [ref=f2e1045]: R$ 0,00
+                - button "Ocultar valores"
+              - paragraph [ref=f2e1046]: 0 a pagar · 0 a receber
+              - generic [ref=f2e1047]:
+                - button "Saldo para pagar R$ 48.120,00":
+                  - generic: Saldo para pagar
+                  - strong: R$ 48.120,00
+                - button "Pode pagar com empréstimo na hora R$ 50.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 50.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f2e1048]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Antecipar"
+              - button "Selo"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f2e1050]:
+              - paragraph [ref=f2e1051]: Vai pagar um serviço? Você tem R$ 50.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f2e1055]:
+              - button "A pagar"
+              - button "A receber"
+              - button "Concluídos 1"
+            - generic [ref=f2e1056]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f2e1058]
+              - paragraph [ref=f2e1059]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=f2e1060]:
+              - generic [ref=f2e1063]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e1065]:
+      - group "Cenários" [ref=f2e1066]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e1067] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e1068] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e1069] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e1070] [cursor=pointer]': "4"
+      - strong [ref=f2e1071]: O cliente paga um prestador
+      - generic [ref=f2e1072]: A cliente paga a Marina com o empréstimo na hora.
+    - generic [ref=f2e184]:
+      - generic [ref=f2e1073]:
+        - generic [ref=f2e1074]: Ana · cliente
+        - paragraph [ref=f2e1075]: Toque em Pagar
+      - generic [ref=f2e1076]:
+        - button "Pausar (espaço)" [ref=f2e1077] [cursor=pointer]
+        - button "Próximo" [ref=f2e1080] [cursor=pointer]
+        - generic [ref=f2e1083]:
+          - group "Como avança" [ref=f2e1084]:
+            - button "Eu avanço" [ref=f2e1085] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e1086] [cursor=pointer]
+          - group "Velocidade" [ref=f2e1087]:
+            - button "Devagar" [ref=f2e1088] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e1089] [cursor=pointer]
+            - button "Rápido" [ref=f2e1090] [cursor=pointer]
+          - generic [ref=f2e1091]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f2e1092] [cursor=pointer]
+  - generic [ref=f2e1097]:
+    - generic [ref=f2e1098]: Guardado no BTG
+    - strong [ref=f2e1099]: R$ 0,00

@@ -1,0 +1,91 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e200]:
+      - region "Celular de Cliente, só para ver" [ref=f2e201]:
+        - generic [ref=f2e202]:
+          - generic [ref=f2e205]: Cliente
+          - generic [ref=f2e206]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f2e207] [cursor=pointer]
+        - generic [ref=f2e213]:
+          - generic [ref=f2e214]: 9:41
+          - generic [ref=f2e217]:
+            - img "BTG Pactual" [ref=f2e218]
+            - generic [ref=f2e219]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=f2e220]
+              - paragraph [ref=f2e221]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG"
+            - navigation "Acesso rápido" [ref=f2e222]:
+              - button "Conta BTG"
+              - button "Arbitragem"
+      - region "Celular de Carlos, agindo agora" [ref=f2e223]:
+        - generic [ref=f2e224]:
+          - generic [ref=f2e226]: Carlos
+          - generic [ref=f2e227]: agindo agora
+        - generic [ref=f2e231]:
+          - generic [ref=f2e232]: 9:41
+          - generic [ref=f2e235]:
+            - button "Voltar" [ref=f2e236] [cursor=pointer]
+            - heading "Cobrar" [level=1] [ref=f2e239]
+          - generic [ref=f2e240]:
+            - heading "O que vocês combinaram?" [level=2] [ref=f2e244]
+            - generic [ref=f2e245]:
+              - generic [ref=f2e246]:
+                - generic [ref=f2e247]: Descrição do serviço
+                - generic [ref=f2e248]:
+                  - textbox "Descrição do serviço Melhorar a descrição com IA" [ref=f2e249]:
+                    - /placeholder: "Ex.: pintar a sala e o quarto"
+                    - text: pintar o apartamento todo, massa corrida e duas demãos
+                  - button "Melhorar a descrição com IA" [ref=f2e250] [cursor=pointer]
+              - generic [ref=f2e253]:
+                - generic [ref=f2e254]: Valor combinado (R$)
+                - textbox "Valor combinado (R$)" [ref=f2e255]:
+                  - /placeholder: ""
+                  - text: 16.000,00
+              - generic [ref=f2e256]:
+                - generic [ref=f2e257]: Prazo de entrega (dd/mm)
+                - textbox "Prazo de entrega (dd/mm)" [ref=f2e258]:
+                  - /placeholder: ""
+                  - text: 03/11
+              - generic [ref=f2e259]:
+                - generic [ref=f2e260]: Endereço do serviço
+                - textbox "Endereço do serviço" [ref=f2e261]:
+                  - /placeholder: ""
+                  - text: Rua Harmonia, 410
+            - generic [ref=f2e263]:
+              - strong [ref=f2e267]: Repetir todo mês
+              - switch "Repetir todo mês" [ref=f2e268] [cursor=pointer]
+          - button "Continuar" [ref=f2e271] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e274]:
+      - group "Cenários" [ref=f2e275]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e276] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e277] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e278] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e279] [cursor=pointer]': "4"
+      - strong [ref=f2e280]: O prestador cobra
+      - generic [ref=f2e281]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f2e184]:
+      - generic [ref=f2e282]:
+        - generic [ref=f2e283]: Nesta tela
+        - paragraph [ref=f2e284]: O que foi combinado
+      - generic [ref=f2e285]:
+        - button "Pausar (espaço)" [ref=f2e286] [cursor=pointer]
+        - button "Próximo" [ref=f2e289] [cursor=pointer]
+        - generic [ref=f2e292]:
+          - group "Como avança" [ref=f2e293]:
+            - button "Eu avanço" [ref=f2e294] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e295] [cursor=pointer]
+          - group "Velocidade" [ref=f2e296]:
+            - button "Devagar" [ref=f2e297] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e298] [cursor=pointer]
+            - button "Rápido" [ref=f2e299] [cursor=pointer]
+          - generic [ref=f2e300]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f2e301] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Nesta tela · 1 de 3
+      - strong: O que foi combinado
+      - paragraph: A pessoa escreve do jeito dela. O botão de IA deixa a descrição clara, para não haver dúvida depois.
+  - generic [ref=f2e307]:
+    - generic [ref=f2e308]: Guardado no BTG
+    - strong [ref=f2e309]: R$ 0,00

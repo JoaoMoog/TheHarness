@@ -1,0 +1,110 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e34]:
+    - generic [ref=f15e720]:
+      - region "Celular de Ana, só para ver" [ref=f15e721]:
+        - generic [ref=f15e722]:
+          - generic [ref=f15e725]: Ana
+          - generic [ref=f15e726]: Atualizou agora
+          - button "Usar este celular" [ref=f15e729] [cursor=pointer]
+        - generic [ref=f15e735]:
+          - generic [ref=f15e736]: 9:41
+          - generic [ref=f15e739]:
+            - button "Voltar"
+            - heading "Pagamento protegido" [level=1] [ref=f15e740]
+          - generic [ref=f15e741]:
+            - generic [ref=f15e742]:
+              - generic [ref=f15e743]: Horizonte Reformas cobra
+              - heading "Pintura" [level=3] [ref=f15e744]
+              - generic [ref=f15e745]: R$ 16.000,00
+              - paragraph [ref=f15e746]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+              - generic [ref=f15e747]:
+                - generic [ref=f15e748]: Prazo de entrega
+                - strong [ref=f15e749]: 03/11
+              - generic [ref=f15e750]:
+                - generic [ref=f15e751]: Endereço
+                - strong [ref=f15e752]: Rua Harmonia, 410
+              - generic [ref=f15e753]:
+                - generic [ref=f15e754]: Liberação
+                - strong [ref=f15e755]: Quem paga define
+            - generic [ref=f15e756]:
+              - strong [ref=f15e757]: Como a proteção funciona
+              - strong [ref=f15e762]: Fica guardado no banco
+              - strong [ref=f15e767]: Sai quando quem paga aprova
+              - strong [ref=f15e772]: Sem resposta em 7 dias, libera sozinho
+            - generic [ref=f15e773]:
+              - strong [ref=f15e778]: Como o dinheiro é liberado
+              - button "Definir com o assistente"
+            - generic [ref=f15e779]:
+              - 'checkbox "Confiro o combinado: valor, prazo, marcos e as regras da proteção." [ref=f15e780]'
+              - generic [ref=f15e781]: "Confiro o combinado: valor, prazo, marcos e as regras da proteção."
+            - generic [ref=f15e782]:
+              - strong [ref=f15e783]: Cláusula de arbitragem
+              - paragraph [ref=f15e784]: Se a mediação do BTG não resolver, um árbitro decide no lugar da Justiça, em semanas. A decisão vale para os dois lados.
+              - button "Ler a cláusula"
+              - generic [ref=f15e785]:
+                - checkbox "Li e aceito a cláusula de arbitragem." [ref=f15e786]
+                - generic [ref=f15e787]: Li e aceito a cláusula de arbitragem.
+          - generic [ref=f15e788]:
+            - button "Aceitar e pagar"
+            - button "Recusar"
+      - region "Celular de Carlos, agindo agora" [ref=f15e789]:
+        - generic [ref=f15e790]:
+          - generic [ref=f15e792]: Carlos
+          - generic [ref=f15e793]: agindo agora
+        - generic [ref=f15e796]:
+          - generic [ref=f15e797]:
+            - generic [ref=f15e798]: 9:41
+            - button "Fechar" [ref=f15e802] [cursor=pointer]
+            - generic [ref=f15e806]:
+              - heading "Mostre este QR" [level=2] [ref=f15e810]
+              - paragraph [ref=f15e811]: Pintura · R$ 16.000,00
+            - generic [ref=f15e812]:
+              - status [ref=f15e813]:
+                - generic [ref=f15e814]: Enviado.
+                - button "Desfazer" [ref=f15e815] [cursor=pointer]
+              - button "Ler o QR como quem paga" [ref=f15e816] [cursor=pointer]
+              - button "Ir para o início" [ref=f15e819] [cursor=pointer]
+          - status: Descrição melhorada pela IA. Confira e ajuste se quiser.
+  - contentinfo "Controle da apresentação" [ref=f15e106]:
+    - generic [ref=f15e821]:
+      - group "Cenários" [ref=f15e822]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f15e823] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f15e824] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f15e825] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Disputa" [ref=f15e826] [cursor=pointer]': "4"
+        - 'button "Cenário 5: Antecipação" [ref=f15e827] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Pelo WhatsApp" [ref=f15e828] [cursor=pointer]': "6"
+        - 'button "Cenário 7: No banco" [ref=f15e829] [cursor=pointer]': "7"
+      - strong [ref=f15e830]: Disputa
+      - generic [ref=f15e831]: A cliente contesta e o banco media.
+    - generic [ref=f15e131]:
+      - status [ref=f15e832]:
+        - generic [ref=f15e833]:
+          - generic [ref=f15e834]: Preparando
+          - heading "Disputa" [level=2] [ref=f15e835]
+          - paragraph [ref=f15e836]: "Passando por trás: QR na hora"
+          - button "Sair" [ref=f15e839] [cursor=pointer]
+      - generic [ref=f15e840]:
+        - generic [ref=f15e841]: Ana · cliente
+        - paragraph [ref=f15e842]: Pague
+      - generic [ref=f15e843]:
+        - button "Pausar (espaço)" [ref=f15e844] [cursor=pointer]
+        - button "Próximo" [ref=f15e847] [cursor=pointer]
+        - generic [ref=f15e850]:
+          - group "Como avança" [ref=f15e851]:
+            - button "Eu avanço" [ref=f15e852] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f15e853] [cursor=pointer]
+          - group "Velocidade" [ref=f15e854]:
+            - button "Devagar" [ref=f15e855] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f15e856] [cursor=pointer]
+            - button "Rápido" [ref=f15e857] [cursor=pointer]
+          - generic [ref=f15e858]: Espaço pausa · → próximo · F tela cheia · Esc sai
+        - generic "Pilares do escopo" [ref=f15e859]:
+          - generic "Pilar 1 · Custódia por marcos" [ref=f15e860]: Custódia por marcos
+          - generic "Pilar 2 · Crédito e antecipação" [ref=f15e863]: Crédito e antecipação
+          - generic "Pilar 3 · Banco" [ref=f15e866]: Banco
+        - button "Tela cheia (F)" [ref=f15e869] [cursor=pointer]
+        - button "Sair (Esc)" [ref=f15e872] [cursor=pointer]
+  - generic [ref=f15e877]:
+    - generic [ref=f15e878]: Guardado no BTG
+    - strong [ref=f15e879]: R$ 34.000,00

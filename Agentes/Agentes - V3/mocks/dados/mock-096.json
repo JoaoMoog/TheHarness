@@ -1,0 +1,599 @@
+{
+  "version": 1,
+  "mock": {
+    "id": "mock-096",
+    "group": "Banco",
+    "title": "Pedido de crédito",
+    "path": "banco/credito/CR-001",
+    "variant": "bank",
+    "sheet": null,
+    "surface": "desktop",
+    "description": "Tela existente, com dados fictícios. As ações modificam somente este exemplo em memória; recarregar restaura o padrão.",
+    "limitation": "Referência do comportamento atual. Bancos, crédito, seguro, decisões e integrações não são serviços reais."
+  },
+  "state": {
+    "session": {
+      "person": "banco",
+      "mode": "banco",
+      "loggedIn": true
+    },
+    "people": {
+      "voce": {
+        "id": "voce",
+        "first": "Exemplo",
+        "name": "Pessoa Exemplo",
+        "initials": "PE",
+        "defaultMode": "contratante",
+        "rating": "4,9",
+        "clientName": "Pessoa Exemplo",
+        "providerName": "Serviços Exemplo",
+        "clientDoc": "CPF ***.481.***-20",
+        "providerDoc": "MEI 45.118.903/0001-12",
+        "activity": "Projeto de interiores",
+        "phone": "(11) 97777-3003",
+        "email": "pessoa@example.com"
+      }
+    },
+    "clock": {
+      "offsetDays": 0,
+      "log": []
+    },
+    "newAccount": null,
+    "accounts": {
+      "marina": {
+        "btg": {
+          "status": "connected",
+          "kind": "PF",
+          "label": "Conta corrente PF · ag 0001 · cc 4.281.993-1",
+          "since": "02/08",
+          "scopes": [
+            "Dados cadastrais",
+            "Saldo e extrato da conta",
+            "Débito para Pix",
+            "Empréstimo na hora"
+          ]
+        },
+        "pj": {
+          "status": "connected",
+          "label": "BTG Empresas · MEI 45.118.903/0001-12"
+        },
+        "openFinance": {
+          "status": "none",
+          "banks": []
+        },
+        "creditLimitCents": 2000000,
+        "anticipationLimitCents": 800000,
+        "balanceCents": 1284350,
+        "incomeCents": 1250000,
+        "reputation": 4.9,
+        "completedServices": 22,
+        "disputeRate": 0.02,
+        "preApprovedCents": 2000000,
+        "reservedCredit": null,
+        "card": {
+          "label": "Cartão BTG final 4821",
+          "limitCents": 1500000,
+          "usedCents": 0
+        }
+      },
+      "carlos": {
+        "btg": {
+          "status": "connected",
+          "kind": "PJ",
+          "label": "BTG Empresas · CNPJ 12.345.678/0001-90",
+          "since": "14/06",
+          "scopes": [
+            "Dados cadastrais",
+            "Saldo e extrato da conta",
+            "Débito para Pix",
+            "Empréstimo na hora"
+          ]
+        },
+        "pj": {
+          "status": "connected",
+          "label": "BTG Empresas · CNPJ 12.345.678/0001-90"
+        },
+        "openFinance": {
+          "status": "none",
+          "banks": []
+        },
+        "creditLimitCents": 5000000,
+        "anticipationLimitCents": 3000000,
+        "balanceCents": 4812000,
+        "incomeCents": 6800000,
+        "reputation": 4.8,
+        "completedServices": 37,
+        "disputeRate": 0.03,
+        "preApprovedCents": 4000000,
+        "reservedCredit": null,
+        "card": {
+          "label": "Cartão BTG Empresas final 7730",
+          "limitCents": 3000000,
+          "usedCents": 0
+        }
+      },
+      "voce": {
+        "btg": {
+          "status": "connected",
+          "kind": "PF",
+          "label": "Conta corrente PF · ag 0001 · cc 4.281.993-1",
+          "since": "02/08",
+          "scopes": [
+            "Dados cadastrais",
+            "Saldo e extrato da conta",
+            "Débito para Pix",
+            "Empréstimo na hora"
+          ]
+        },
+        "pj": null,
+        "openFinance": {
+          "status": "none",
+          "banks": []
+        },
+        "creditLimitCents": 2000000,
+        "anticipationLimitCents": 1000000,
+        "balanceCents": 1500000,
+        "incomeCents": 1000000,
+        "reputation": 4.5,
+        "preApprovedCents": 2000000,
+        "reservedCredit": null,
+        "card": {
+          "label": "Cartão BTG final 3390",
+          "limitCents": 1500000,
+          "usedCents": 0
+        }
+      }
+    },
+    "contracts": [
+      {
+        "id": "AV-2026-001",
+        "title": "Pintura da sala",
+        "description": "Preparar as paredes e aplicar duas demãos de tinta na sala.",
+        "client": "Pessoa Exemplo",
+        "provider": "Horizonte Reformas",
+        "kind": "individual",
+        "protected": true,
+        "from": "provider",
+        "channel": "app",
+        "address": "Rua Exemplo, 100 · São Paulo/SP",
+        "dueDate": "20/11",
+        "release": "stages",
+        "totalCents": 120000,
+        "status": "active",
+        "signedAt": "04/10",
+        "arbitration": true,
+        "arbitrationFeeCents": 480,
+        "paidInCents": 120000,
+        "refundedCents": 0,
+        "payment": {
+          "method": "balance",
+          "origin": "Saldo simulado",
+          "label": "Saldo simulado"
+        },
+        "paymentRecordedAt": "2026-10-04T12:00:00-03:00",
+        "entrada": null,
+        "insurance": {
+          "policy": "SG-2026-001",
+          "premiumCents": 3000,
+          "coverageCents": 120000,
+          "paid": true
+        },
+        "stages": [
+          {
+            "name": "Preparação das paredes",
+            "valueCents": 48000,
+            "due": "10/11",
+            "status": "awaitingApproval",
+            "items": [
+              "Lixar as paredes",
+              "Aplicar massa corrida"
+            ],
+            "delivery": {
+              "sentAt": "04/10",
+              "deadline": "11/10",
+              "description": "Paredes lixadas e preparadas com massa corrida.",
+              "attachments": [
+                {
+                  "kind": "photo",
+                  "caption": "Paredes preparadas",
+                  "file": "foto-simulada.jpg"
+                }
+              ]
+            },
+            "releasedAt": null,
+            "releaseMode": null,
+            "coverage": null,
+            "anticipation": null,
+            "reply": null
+          },
+          {
+            "name": "Pintura e acabamento",
+            "valueCents": 72000,
+            "due": "20/11",
+            "status": "pending",
+            "items": [
+              "Duas demãos de tinta",
+              "Limpeza do ambiente"
+            ],
+            "delivery": null,
+            "releasedAt": null,
+            "releaseMode": null,
+            "coverage": null,
+            "anticipation": null,
+            "reply": null
+          }
+        ]
+      }
+    ],
+    "installments": [
+      {
+        "id": "PC-1",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 1,
+        "of": 12,
+        "due": "10/10",
+        "valueCents": 11000,
+        "status": "paid"
+      },
+      {
+        "id": "PC-2",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 2,
+        "of": 12,
+        "due": "10/11",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-3",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 3,
+        "of": 12,
+        "due": "10/12",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-4",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 4,
+        "of": 12,
+        "due": "10/01/27",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-5",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 5,
+        "of": 12,
+        "due": "10/02/27",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-6",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 6,
+        "of": 12,
+        "due": "10/03/27",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-7",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 7,
+        "of": 12,
+        "due": "10/04/27",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-8",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 8,
+        "of": 12,
+        "due": "10/05/27",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-9",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 9,
+        "of": 12,
+        "due": "10/06/27",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-10",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 10,
+        "of": 12,
+        "due": "10/07/27",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-11",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 11,
+        "of": 12,
+        "due": "10/08/27",
+        "valueCents": 11000,
+        "status": "open"
+      },
+      {
+        "id": "PC-12",
+        "creditId": "CCB-001",
+        "owner": "voce",
+        "n": 12,
+        "of": 12,
+        "due": "10/09/27",
+        "valueCents": 11000,
+        "status": "open"
+      }
+    ],
+    "credits": [
+      {
+        "id": "CCB-001",
+        "owner": "voce",
+        "purpose": "Pintura da sala",
+        "principalCents": 120000,
+        "count": 12,
+        "installmentCents": 11000,
+        "monthlyRate": 0.02,
+        "cet": "29,05% ao ano",
+        "signedAt": "04/10",
+        "status": "active"
+      }
+    ],
+    "creditRequests": [
+      {
+        "id": "CR-001",
+        "owner": "voce",
+        "amountCents": 120000,
+        "count": 12,
+        "incomeCents": 1000000,
+        "purposeLabel": "Contratar serviço",
+        "status": "analysis",
+        "openFinanceShared": false
+      }
+    ],
+    "claims": [],
+    "offerEvents": [],
+    "messages": {
+      "AV-2026-001": [
+        {
+          "from": "client",
+          "text": "Quando você conclui a preparação?",
+          "at": "03/10 · 10:00"
+        },
+        {
+          "from": "provider",
+          "text": "Enviei a entrega para você conferir.",
+          "at": "04/10 · 12:00"
+        }
+      ]
+    },
+    "chatReadings": {},
+    "bankSettings": {
+      "negativationDays": 30
+    },
+    "audit": [],
+    "funding": {
+      "issued": false
+    },
+    "apiEvents": [],
+    "blacklist": [
+      {
+        "kind": "Documento",
+        "value": "CPF ***.774.***-10",
+        "reason": "Fraude confirmada em 08/2026"
+      },
+      {
+        "kind": "Aparelho",
+        "value": "Android · id 7f3a…c21",
+        "reason": "Contas múltiplas da mesma pessoa"
+      }
+    ],
+    "invoices": [
+      {
+        "id": "NF-001",
+        "contractId": "AV-2026-001",
+        "stage": 0,
+        "provider": "Horizonte Reformas",
+        "client": "Pessoa Exemplo",
+        "issuedAt": "04/10",
+        "amountCents": 48000
+      }
+    ],
+    "invites": [
+      {
+        "id": "PG-001",
+        "token": "PG-001",
+        "title": "Pintura da sala",
+        "description": "Preparar as paredes e aplicar duas demãos de tinta na sala.",
+        "client": "Pessoa Exemplo",
+        "provider": "Horizonte Reformas",
+        "kind": "individual",
+        "protected": true,
+        "from": "provider",
+        "channel": "app",
+        "address": "Rua Exemplo, 100 · São Paulo/SP",
+        "dueDate": "20/11",
+        "release": "stages",
+        "totalCents": 120000,
+        "arbitrationFeeCents": 480,
+        "createdBy": "carlos",
+        "contact": "(11) 97777-3003",
+        "recipient": {
+          "kind": "phone",
+          "contact": "(11) 97777-3003",
+          "personId": "voce",
+          "name": "Pessoa Exemplo"
+        },
+        "stages": [
+          {
+            "name": "Preparação das paredes",
+            "valueCents": 48000,
+            "due": "10/11",
+            "status": "awaitingApproval",
+            "items": [
+              "Lixar as paredes",
+              "Aplicar massa corrida"
+            ],
+            "delivery": {
+              "sentAt": "04/10",
+              "deadline": "11/10",
+              "description": "Paredes lixadas e preparadas com massa corrida.",
+              "attachments": [
+                {
+                  "kind": "photo",
+                  "caption": "Paredes preparadas",
+                  "file": "foto-simulada.jpg"
+                }
+              ]
+            },
+            "releasedAt": null,
+            "releaseMode": null,
+            "coverage": null,
+            "anticipation": null,
+            "reply": null
+          },
+          {
+            "name": "Pintura e acabamento",
+            "valueCents": 72000,
+            "due": "20/11",
+            "status": "pending",
+            "items": [
+              "Duas demãos de tinta",
+              "Limpeza do ambiente"
+            ],
+            "delivery": null,
+            "releasedAt": null,
+            "releaseMode": null,
+            "coverage": null,
+            "anticipation": null,
+            "reply": null
+          }
+        ],
+        "participants": null,
+        "declined": [],
+        "status": "sent",
+        "createdAt": "04/10",
+        "sentAtMs": 0,
+        "repeat": false,
+        "origin": "app",
+        "insurance": null
+      }
+    ],
+    "disputes": [],
+    "reviews": [],
+    "ledger": [
+      {
+        "id": "LG-001",
+        "contractId": "AV-2026-001",
+        "label": "Pagamento simulado em custódia",
+        "amountCents": 120000,
+        "status": "Conciliado",
+        "date": "04/10"
+      }
+    ],
+    "notifications": [
+      {
+        "id": "AV-001",
+        "to": "Pessoa Exemplo",
+        "mode": "contratante",
+        "text": "Entrega recebida",
+        "detail": "Confira o marco antes de liberar o valor.",
+        "icon": "check-circle",
+        "go": "#/servico/AV-2026-001",
+        "read": false
+      }
+    ],
+    "bankNotes": {},
+    "wa": {
+      "on": false,
+      "active": null,
+      "threads": {}
+    },
+    "ui": {
+      "sheet": null,
+      "toast": null,
+      "busy": {},
+      "drafts": {
+        "ag": {
+          "from": "client",
+          "description": "Preparar as paredes e aplicar duas demãos de tinta na sala.",
+          "total": "1.200,00",
+          "dueDate": "20/11",
+          "dueIso": "2026-11-20",
+          "release": "stages",
+          "template": "pintura",
+          "channel": "app",
+          "person": "carlos",
+          "contact": "(11) 98888-2002",
+          "cep": "05435-000",
+          "street": "Rua Exemplo",
+          "number": "100",
+          "district": "Vila Madalena",
+          "city": "São Paulo",
+          "uf": "SP",
+          "addressOpen": true
+        },
+        "stg": {
+          "novo": {
+            "messages": [
+              {
+                "from": "ai",
+                "text": "Confira a sugestão de marcos para este exemplo."
+              }
+            ],
+            "proposal": {
+              "release": "stages",
+              "stages": [
+                {
+                  "name": "Preparação das paredes",
+                  "valueCents": 48000,
+                  "due": "10/11"
+                },
+                {
+                  "name": "Pintura e acabamento",
+                  "valueCents": 72000,
+                  "due": "20/11"
+                }
+              ]
+            },
+            "typing": false
+          }
+        }
+      },
+      "hideValues": false,
+      "dual": false
+    },
+    "points": {
+      "voce": 2500,
+      "carlos": 1200
+    },
+    "reserves": {
+      "AV-2026-001": {
+        "cents": 20000,
+        "since": "04/10"
+      }
+    }
+  }
+}

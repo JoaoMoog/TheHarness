@@ -1,0 +1,293 @@
+- generic [active] [ref=f6e1]:
+  - main [ref=f6e34]:
+    - generic [ref=f6e2776]:
+      - region "Celular de Ana, agindo agora" [ref=f6e2777]:
+        - generic [ref=f6e2778]:
+          - generic [ref=f6e2780]: Ana
+          - generic [ref=f6e2781]: agindo agora
+        - generic [ref=f6e2785]:
+          - generic [ref=f6e2786]: 9:41
+          - generic [ref=f6e2789]:
+            - generic [ref=f6e2790]:
+              - generic [ref=f6e2791]:
+                - button "AR Olá, Ana" [ref=f6e2792] [cursor=pointer]:
+                  - generic [ref=f6e2793]: AR
+                  - generic [ref=f6e2794]:
+                    - text: Olá,
+                    - strong [ref=f6e2795]: Ana
+                - generic [ref=f6e2798]:
+                  - button "Avisos, 20 não lidos" [ref=f6e2799] [cursor=pointer]:
+                    - generic [ref=f6e2802]: 9+
+                  - button "Pagamentos" [ref=f6e2803] [cursor=pointer]
+              - heading "Pagamento protegido" [level=2] [ref=f6e2806]
+              - generic [ref=f6e2807]:
+                - generic [ref=f6e2808]:
+                  - generic [ref=f6e2809]: Guardado nos seus pagamentos
+                  - strong [ref=f6e2810]: R$ 42.000,00
+                - button "Ocultar valores" [ref=f6e2811] [cursor=pointer]
+              - paragraph [ref=f6e2814]: 4 a pagar · 0 a receber
+              - generic [ref=f6e2815]:
+                - button "Saldo para pagar R$ 9.707,33" [ref=f6e2816] [cursor=pointer]:
+                  - generic [ref=f6e2817]: Saldo para pagar
+                  - strong [ref=f6e2818]: R$ 9.707,33
+                - button "Pode pagar com empréstimo na hora R$ 622,82" [ref=f6e2821] [cursor=pointer]:
+                  - generic [ref=f6e2822]: Pode pagar com empréstimo na hora
+                  - strong [ref=f6e2823]: R$ 622,82
+              - button "Movimentos dos pagamentos" [ref=f6e2826] [cursor=pointer]
+            - navigation "Atalhos" [ref=f6e2827]:
+              - button "Cobrar" [ref=f6e2828] [cursor=pointer]
+              - button "Pagar" [ref=f6e2832] [cursor=pointer]
+              - button "Ler QR" [ref=f6e2836] [cursor=pointer]
+              - button "Assistente" [ref=f6e2840] [cursor=pointer]
+              - button "Disputas" [ref=f6e2844] [cursor=pointer]
+              - button "Benefícios" [ref=f6e2848] [cursor=pointer]
+            - generic [ref=f6e2852]:
+              - generic [ref=f6e2853]:
+                - heading "Para hoje" [level=3] [ref=f6e2854]
+                - generic [ref=f6e2855]: Hoje 11/Out
+              - button "Aprovar entrega Horizonte Reformas · etapa 2 R$ 8.000,00" [ref=f6e2856] [cursor=pointer]:
+                - generic [ref=f6e2860]:
+                  - generic [ref=f6e2861]: Aprovar entrega
+                  - strong [ref=f6e2862]: Horizonte Reformas · etapa 2
+                - generic [ref=f6e2863]: R$ 8.000,00
+              - button "Serviço concluído Avaliar Horizonte Reformas" [ref=f6e2864] [cursor=pointer]:
+                - generic [ref=f6e2868]:
+                  - generic [ref=f6e2869]: Serviço concluído
+                  - strong [ref=f6e2870]: Avaliar Horizonte Reformas
+            - generic [ref=f6e2871]:
+              - button "A pagar 5" [ref=f6e2872] [cursor=pointer]
+              - button "A receber" [ref=f6e2873] [cursor=pointer]
+              - button "Concluídos 1" [ref=f6e2874] [cursor=pointer]
+            - generic [ref=f6e2875]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f6e2877]
+              - button "Cobrança para conferir Pintura Horizonte Reformas R$ 4.500,00" [ref=f6e2878] [cursor=pointer]:
+                - generic [ref=f6e2882]:
+                  - generic [ref=f6e2883]: Cobrança para conferir
+                  - strong [ref=f6e2884]: Pintura
+                  - generic [ref=f6e2885]: Horizonte Reformas
+                - generic [ref=f6e2886]: R$ 4.500,00
+              - button "Pagar Projeto de interiores Marina Costa Interiores R$ 6.000,00" [ref=f6e2887] [cursor=pointer]:
+                - generic [ref=f6e2891]:
+                  - generic [ref=f6e2892]: Pagar
+                  - strong [ref=f6e2893]: Projeto de interiores
+                  - generic [ref=f6e2894]: Marina Costa Interiores
+                - generic [ref=f6e2895]: R$ 6.000,00
+              - button "Aprovar entrega Pintura Horizonte Reformas R$ 16.000,00" [ref=f6e2896] [cursor=pointer]:
+                - generic [ref=f6e2900]:
+                  - generic [ref=f6e2901]: Aprovar entrega
+                  - strong [ref=f6e2902]: Pintura
+                  - generic [ref=f6e2903]: Horizonte Reformas
+                - generic [ref=f6e2904]: R$ 16.000,00
+              - button "Protegido Pintura Horizonte Reformas R$ 16.000,00" [ref=f6e2905] [cursor=pointer]:
+                - generic [ref=f6e2909]:
+                  - generic [ref=f6e2910]: Protegido
+                  - strong [ref=f6e2911]: Pintura
+                  - generic [ref=f6e2912]: Horizonte Reformas
+                - generic [ref=f6e2913]: R$ 16.000,00
+              - button "Protegido Projeto de interiores Marina Costa Interiores R$ 18.000,00" [ref=f6e2914] [cursor=pointer]:
+                - generic [ref=f6e2918]:
+                  - generic [ref=f6e2919]: Protegido
+                  - strong [ref=f6e2920]: Projeto de interiores
+                  - generic [ref=f6e2921]: Marina Costa Interiores
+                - generic [ref=f6e2922]: R$ 18.000,00
+            - paragraph [ref=f6e2923]:
+              - generic [ref=f6e2926]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu" [ref=f6e2927] [cursor=pointer]
+      - region "Celular de Marina, só para ver" [ref=f6e2931]:
+        - generic [ref=f6e2932]:
+          - generic [ref=f6e2935]: Marina
+          - generic [ref=f6e2936]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f6e2937] [cursor=pointer]
+        - generic [ref=f6e2943]:
+          - generic [ref=f6e2944]: 9:41
+          - generic [ref=f6e2947]:
+            - generic [ref=f6e2948]:
+              - generic [ref=f6e2949]:
+                - button "MC Olá, Marina":
+                  - generic: MC
+                  - generic:
+                    - text: Olá,
+                    - strong: Marina
+                - generic [ref=f6e2950]:
+                  - button "Avisos, 5 não lidos":
+                    - generic: "5"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f6e2951]
+              - generic [ref=f6e2952]:
+                - generic [ref=f6e2953]:
+                  - generic [ref=f6e2954]: Guardado nos seus pagamentos
+                  - strong [ref=f6e2955]: R$ 34.000,00
+                - button "Ocultar valores"
+              - paragraph [ref=f6e2956]: 1 a pagar · 2 a receber
+              - generic [ref=f6e2957]:
+                - button "Saldo para pagar R$ 7.510,17":
+                  - generic: Saldo para pagar
+                  - strong: R$ 7.510,17
+                - button "Pode pagar com empréstimo na hora R$ 20.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 20.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f6e2958]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Antecipar"
+              - button "Selo"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f6e2959]:
+              - generic [ref=f6e2960]:
+                - heading "Para hoje" [level=3] [ref=f6e2961]
+                - generic [ref=f6e2962]: Hoje 11/Out
+              - button "Enviar entrega Projeto de interiores · etapa 1 R$ 4.500,00":
+                - generic:
+                  - generic: Enviar entrega
+                  - strong: Projeto de interiores · etapa 1
+                - generic: R$ 4.500,00
+            - generic [ref=f6e2964]:
+              - paragraph [ref=f6e2965]: Vai pagar um serviço? Você tem R$ 20.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f6e2969]:
+              - button "A pagar 1"
+              - button "A receber 2"
+              - button "Concluídos"
+            - generic [ref=f6e2970]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f6e2972]
+              - button "Protegido Pintura Horizonte Reformas R$ 16.000,00":
+                - generic:
+                  - generic: Protegido
+                  - strong: Pintura
+                  - generic: Horizonte Reformas
+                - generic: R$ 16.000,00
+            - paragraph [ref=f6e2973]:
+              - generic [ref=f6e2976]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+      - region "WhatsApp de Ana" [ref=f6e2977]:
+        - generic [ref=f6e2978]:
+          - generic [ref=f6e2982]: WhatsApp de Ana
+          - generic [ref=f6e2983]: sem abrir o app
+        - generic [ref=f6e2987]:
+          - generic [ref=f6e2988]: 9:41
+          - generic [ref=f6e2995]:
+            - strong [ref=f6e2996]: BTG Aval
+            - generic [ref=f6e2999]: Conta comercial oficial do BTG Pactual
+          - generic [ref=f6e3000]:
+            - generic [ref=f6e3001]: Hoje
+            - generic [ref=f6e3003]:
+              - paragraph [ref=f6e3004]: "Oi, Ana! Aqui é o BTG Aval. Reconheci seu número da conta BTG. Me conte o que você combinou, do seu jeito. Por exemplo: \"cobrar pintura de R$ 4.500 da Ana até 30/11\"."
+              - generic [ref=f6e3005]: 9:41
+            - generic [ref=f6e3007]:
+              - paragraph [ref=f6e3008]: Quero pagar a Marina 6 mil pelo projeto de interiores da varanda, até 20/11
+              - generic [ref=f6e3009]: 9:41
+            - generic [ref=f6e3010]:
+              - generic [ref=f6e3011]:
+                - paragraph [ref=f6e3012]: "Sugiro 3 etapas para projeto de interiores:1. Medição e briefing: R$ 1.500,002. Projeto 3D e memorial: R$ 3.000,003. Acompanhamento da obra: R$ 1.500,00Cada etapa só sai quando você aprovar a entrega dela."
+                - generic [ref=f6e3013]: 9:41
+              - generic [ref=f6e3014]:
+                - button "Usar etapas" [disabled] [ref=f6e3015]
+                - button "Valor único" [disabled] [ref=f6e3016]
+            - generic [ref=f6e3018]:
+              - paragraph [ref=f6e3019]: Usar etapas
+              - generic [ref=f6e3020]: 9:41
+            - generic [ref=f6e3022]:
+              - paragraph [ref=f6e3023]: "Confere o que eu entendi:"
+              - generic [ref=f6e3024]:
+                - strong [ref=f6e3025]: Pagamento protegido
+                - generic [ref=f6e3026]:
+                  - generic [ref=f6e3027]: Serviço
+                  - generic [ref=f6e3028]: Projeto de interiores
+                - generic [ref=f6e3029]:
+                  - generic [ref=f6e3030]: Valor
+                  - generic [ref=f6e3031]: R$ 6.000,00
+                - generic [ref=f6e3032]:
+                  - generic [ref=f6e3033]: Entrega
+                  - generic [ref=f6e3034]: 20/11
+                - generic [ref=f6e3035]:
+                  - generic [ref=f6e3036]: Endereço
+                  - generic [ref=f6e3037]: A combinar
+                - generic [ref=f6e3038]:
+                  - generic [ref=f6e3039]: Quem recebe
+                  - generic [ref=f6e3040]: Marina Costa Interiores
+                - generic [ref=f6e3041]:
+                  - generic [ref=f6e3042]: 1. Medição e briefing
+                  - generic [ref=f6e3043]: R$ 1.500,00
+                - generic [ref=f6e3044]:
+                  - generic [ref=f6e3045]: 2. Projeto 3D e memorial
+                  - generic [ref=f6e3046]: R$ 3.000,00
+                - generic [ref=f6e3047]:
+                  - generic [ref=f6e3048]: 3. Acompanhamento da obra
+                  - generic [ref=f6e3049]: R$ 1.500,00
+              - generic [ref=f6e3050]: 9:41
+            - generic [ref=f6e3051]:
+              - generic [ref=f6e3052]:
+                - paragraph [ref=f6e3053]: Posso enviar?
+                - generic [ref=f6e3054]: 9:41
+              - generic [ref=f6e3055]:
+                - button "Enviar para Marina" [disabled] [ref=f6e3056]
+                - button "Corrigir" [disabled] [ref=f6e3057]
+            - generic [ref=f6e3059]:
+              - paragraph [ref=f6e3060]: Enviar para Marina
+              - generic [ref=f6e3061]: 9:41
+            - generic [ref=f6e3063]:
+              - paragraph [ref=f6e3064]: Pronto! Marina recebe um aviso para conferir e aceitar. Te aviso aqui para pagar.
+              - generic [ref=f6e3065]: 9:41
+            - generic [ref=f6e3067]:
+              - paragraph [ref=f6e3068]: "Código de segurança 8230: é o mesmo que Marina vê no app do BTG. Assim ninguém cai em link falso."
+              - generic [ref=f6e3069]: 9:41
+            - generic [ref=f6e3070]:
+              - generic [ref=f6e3071]:
+                - paragraph [ref=f6e3072]: Marina Costa Interiores aceitou o pagamento de R$ 6.000,00 · Projeto de interiores. Como você quer pagar?
+                - generic [ref=f6e3073]: 9:41
+              - generic [ref=f6e3074]:
+                - button "Pagar com Pix" [disabled] [ref=f6e3075]
+                - button "Pagar no app" [disabled] [ref=f6e3076]
+            - generic [ref=f6e3078]:
+              - paragraph [ref=f6e3079]: Pagar com Pix
+              - generic [ref=f6e3080]: 9:41
+            - generic [ref=f6e3082]:
+              - paragraph [ref=f6e3083]: Pix copia e cola de R$ 6.000,00 para BTG Pactual · Aval:00020126480014BR.GOV.BCB.PIX0134aval-av-2026-005@btgpactual.com.br52040000530398654076000.005802BR5916BTG PACTUAL AVAL6009SAO PAULO63046CA7
+              - generic [ref=f6e3084]: 9:41
+            - generic [ref=f6e3085]:
+              - generic [ref=f6e3086]:
+                - paragraph [ref=f6e3087]: Pague de qualquer banco. O dinheiro fica guardado no BTG até você aprovar cada etapa.
+                - generic [ref=f6e3088]: 9:41
+              - button "Já paguei" [disabled] [ref=f6e3090]
+            - generic [ref=f6e3092]:
+              - paragraph [ref=f6e3093]: Já paguei
+              - generic [ref=f6e3094]: 9:41
+            - paragraph [ref=f6e3097]
+          - generic [ref=f6e3101]:
+            - textbox "Mensagem para o BTG Aval" [ref=f6e3102]:
+              - /placeholder: Mensagem
+            - button "Enviar" [ref=f6e3103] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f6e363]:
+    - generic [ref=f6e3108]:
+      - group "Cenários" [ref=f6e3109]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f6e3110] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f6e3111] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f6e3112] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pelo WhatsApp" [ref=f6e3113] [cursor=pointer]': "4"
+        - 'button "Cenário 5: No banco" [ref=f6e3114] [cursor=pointer]': "5"
+      - strong [ref=f6e3115]: Pelo WhatsApp
+      - generic [ref=f6e3116]: Cobrar e pagar sem abrir o app.
+    - generic [ref=f6e387]:
+      - generic [ref=f6e3117]:
+        - generic [ref=f6e3118]: Ana · cliente
+        - paragraph [ref=f6e3119]: Confirme o Pix
+      - generic [ref=f6e3120]:
+        - button "Pausar (espaço)" [ref=f6e3121] [cursor=pointer]
+        - button "Próximo" [ref=f6e3124] [cursor=pointer]
+        - generic [ref=f6e3127]:
+          - group "Como avança" [ref=f6e3128]:
+            - button "Eu avanço" [ref=f6e3129] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f6e3130] [cursor=pointer]
+          - group "Velocidade" [ref=f6e3131]:
+            - button "Devagar" [ref=f6e3132] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f6e3133] [cursor=pointer]
+            - button "Rápido" [ref=f6e3134] [cursor=pointer]
+          - generic [ref=f6e3135]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f6e3136] [cursor=pointer]
+  - generic [ref=f6e3141]:
+    - generic [ref=f6e3142]: Guardado no BTG
+    - strong [ref=f6e3143]: R$ 42.000,00

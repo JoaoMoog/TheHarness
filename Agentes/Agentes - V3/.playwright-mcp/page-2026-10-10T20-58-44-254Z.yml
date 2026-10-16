@@ -1,0 +1,181 @@
+- generic [active] [ref=f6e1]:
+  - main [ref=f6e34]:
+    - generic [ref=f6e3144]:
+      - complementary [ref=f6e3145]:
+        - generic [ref=f6e3146]:
+          - img "BTG Pactual" [ref=f6e3147]
+          - generic [ref=f6e3148]: Aval
+        - navigation "Áreas" [ref=f6e3149]:
+          - button "Visão geral" [ref=f6e3150] [cursor=pointer]
+          - button "Operações" [ref=f6e3154] [cursor=pointer]
+          - button "Fila de trabalho" [ref=f6e3158] [cursor=pointer]
+          - button "Clientes e limites" [ref=f6e3162] [cursor=pointer]
+          - button "Crédito" [ref=f6e3166] [cursor=pointer]
+          - button "Seguros" [ref=f6e3170] [cursor=pointer]
+          - button "Ofertas" [ref=f6e3174] [cursor=pointer]
+          - button "Receita" [ref=f6e3178] [cursor=pointer]
+          - button "Funding" [ref=f6e3182] [cursor=pointer]
+          - button "Risco e conluio" [ref=f6e3186] [cursor=pointer]
+          - button "Compliance" [ref=f6e3190] [cursor=pointer]
+          - button "API" [ref=f6e3194] [cursor=pointer]
+        - generic [ref=f6e3198]:
+          - generic [ref=f6e3199]: LP
+          - generic [ref=f6e3200]:
+            - strong [ref=f6e3201]: Luiza Prado
+            - generic [ref=f6e3202]: Operações · BTG
+      - main [ref=f6e3203]:
+        - generic [ref=f6e3204]:
+          - heading "Receita do Aval" [level=1] [ref=f6e3205]
+          - generic [ref=f6e3206]: Buscar contrato, CPF ou CNPJ
+        - generic [ref=f6e3210]:
+          - generic [ref=f6e3211]:
+            - generic [ref=f6e3212]:
+              - generic [ref=f6e3213]: Receita no mês
+              - strong [ref=f6e3214]: R$ 1.121.411,08
+              - generic [ref=f6e3215]: 8 fontes, nenhuma depende só de juros
+            - generic [ref=f6e3216]:
+              - generic [ref=f6e3217]: Contas BTG abertas pelo Aval
+              - strong [ref=f6e3218]: "1.940"
+              - generic [ref=f6e3219]: +212 em 30 dias
+            - generic [ref=f6e3220]:
+              - generic [ref=f6e3221]: Clientes com 2 produtos ou mais
+              - strong [ref=f6e3222]: 38%
+              - generic [ref=f6e3223]: Seguros, investimentos e cartão
+            - generic [ref=f6e3224]:
+              - generic [ref=f6e3225]: Crédito com garantia de custódia
+              - strong [ref=f6e3226]: 100%
+              - generic [ref=f6e3227]: Dinheiro sempre vinculado a um serviço
+          - generic [ref=f6e3228]:
+            - generic [ref=f6e3229]:
+              - heading "Receita por fonte" [level=2] [ref=f6e3230]
+              - generic [ref=f6e3231]: R$ · mês corrente · inclui o que esta demonstração gerou
+              - generic [ref=f6e3232]:
+                - generic [ref=f6e3233]:
+                  - generic [ref=f6e3234]: Participação nos juros
+                  - 'generic "Participação nos juros: R$ 413.377,18" [ref=f6e3236]'
+                  - strong [ref=f6e3237]: R$ 413.377,18
+                - generic [ref=f6e3238]:
+                  - generic [ref=f6e3239]: Float da custódia
+                  - 'generic "Float da custódia: R$ 268.566,40" [ref=f6e3241]'
+                  - strong [ref=f6e3242]: R$ 268.566,40
+                - generic [ref=f6e3243]:
+                  - generic [ref=f6e3244]: Licenciamento da infraestrutura
+                  - 'generic "Licenciamento da infraestrutura: R$ 180.000,00" [ref=f6e3246]'
+                  - strong [ref=f6e3247]: R$ 180.000,00
+                - generic [ref=f6e3248]:
+                  - generic [ref=f6e3249]: Taxa por transação
+                  - 'generic "Taxa por transação: R$ 96.099,50" [ref=f6e3251]'
+                  - strong [ref=f6e3252]: R$ 96.099,50
+                - generic [ref=f6e3253]:
+                  - generic [ref=f6e3254]: Adquirência (MDR)
+                  - 'generic "Adquirência (MDR): R$ 71.000,00" [ref=f6e3256]'
+                  - strong [ref=f6e3257]: R$ 71.000,00
+                - generic [ref=f6e3258]:
+                  - generic [ref=f6e3259]: Seguro da operação
+                  - 'generic "Seguro da operação: R$ 54.080,00" [ref=f6e3261]'
+                  - strong [ref=f6e3262]: R$ 54.080,00
+                - generic [ref=f6e3263]:
+                  - generic [ref=f6e3264]: Seguro de arbitragem
+                  - 'generic "Seguro de arbitragem: R$ 38.288,00" [ref=f6e3266]'
+                  - strong [ref=f6e3267]: R$ 38.288,00
+                - generic [ref=f6e3268]:
+                  - generic [ref=f6e3269]: Funding estruturado (emissão)
+                  - generic [ref=f6e3270]:
+                    - 'generic "Funding estruturado (emissão): R$ 0,00"'
+                  - strong [ref=f6e3271]: R$ 0,00
+              - group [ref=f6e3272]:
+                - generic "Ver como tabela" [ref=f6e3273] [cursor=pointer]
+            - generic [ref=f6e3274]:
+              - heading "Resultado para o BTG" [level=2] [ref=f6e3275]
+              - generic [ref=f6e3276]:
+                - generic [ref=f6e3277]: Novas contas por mês
+                - strong [ref=f6e3278]: "212"
+              - generic [ref=f6e3279]:
+                - generic [ref=f6e3280]: Crédito mais qualificado
+                - strong [ref=f6e3281]: Garantido por custódia
+              - generic [ref=f6e3282]:
+                - generic [ref=f6e3283]: Inadimplência do crédito Aval
+                - strong [ref=f6e3284]: 2,4% contra 5,1% no pessoal
+              - generic [ref=f6e3285]:
+                - generic [ref=f6e3286]: Venda cruzada
+                - strong [ref=f6e3287]: Seguros, investimentos, cartão
+              - generic [ref=f6e3288]:
+                - generic [ref=f6e3289]: Novo produto de funding
+                - strong [ref=f6e3290]: FIDC pronto para emitir
+              - paragraph [ref=f6e3291]: O Aval nasce independente e já gera receita antes do ELO Marketplace existir.
+          - generic [ref=f6e3292]:
+            - heading "Um contrato por dentro" [level=2] [ref=f6e3293]
+            - generic [ref=f6e3294]: AV-2026-001 · Pintura · R$ 16.000,00
+            - table [ref=f6e3295]:
+              - rowgroup [ref=f6e3296]:
+                - row [ref=f6e3297]:
+                  - columnheader "Linha" [ref=f6e3298]
+                  - columnheader "Quem paga" [ref=f6e3299]
+                  - columnheader "Receita" [ref=f6e3300]
+              - rowgroup [ref=f6e3301]:
+                - row [ref=f6e3302]:
+                  - cell "Juros do cartão" [ref=f6e3303]
+                  - cell "quem paga" [ref=f6e3304]
+                  - cell [ref=f6e3305]:
+                    - strong [ref=f6e3306]: R$ 1.758,40
+                - row [ref=f6e3307]:
+                  - cell "Comissão do seguro (20% do prêmio)" [ref=f6e3308]
+                  - cell "quem paga" [ref=f6e3309]
+                  - cell [ref=f6e3310]:
+                    - strong [ref=f6e3311]: R$ 80,00
+                - row [ref=f6e3312]:
+                  - cell "Seguro de arbitragem" [ref=f6e3313]
+                  - cell "dentro do valor" [ref=f6e3314]
+                  - cell [ref=f6e3315]:
+                    - strong [ref=f6e3316]: R$ 64,00
+                - row [ref=f6e3317]:
+                  - cell "Tarifa por transação" [ref=f6e3318]
+                  - cell "prestador" [ref=f6e3319]
+                  - cell [ref=f6e3320]:
+                    - strong [ref=f6e3321]: R$ 19,90
+                - row [ref=f6e3322]:
+                  - cell "Float da custódia (1 mês)" [ref=f6e3323]
+                  - cell "captação" [ref=f6e3324]
+                  - cell [ref=f6e3325]:
+                    - strong [ref=f6e3326]: R$ 128,00
+            - generic [ref=f6e3327]:
+              - generic [ref=f6e3328]: Receita do banco neste contrato
+              - strong [ref=f6e3329]: R$ 2.050,30
+            - generic [ref=f6e3330]:
+              - generic [ref=f6e3331]: Sobre o valor do serviço
+              - strong [ref=f6e3332]: 13%
+  - contentinfo "Controle da apresentação" [ref=f6e363]:
+    - generic [ref=f6e3335]:
+      - group "Cenários" [ref=f6e3336]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f6e3337] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f6e3338] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f6e3339] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pelo WhatsApp" [ref=f6e3340] [cursor=pointer]': "4"
+        - 'button "Cenário 5: No banco" [ref=f6e3341] [cursor=pointer]': "5"
+      - strong [ref=f6e3342]: No banco
+      - generic [ref=f6e3343]: Ofertas, receita, risco e quem decidiu.
+    - generic [ref=f6e387]:
+      - generic [ref=f6e3344]:
+        - generic [ref=f6e3345]: Banco BTG
+        - paragraph [ref=f6e3346]: Veja um contrato por dentro
+      - generic [ref=f6e3347]:
+        - button "Pausar (espaço)" [ref=f6e3348] [cursor=pointer]
+        - button "Próximo" [ref=f6e3351] [cursor=pointer]
+        - generic [ref=f6e3354]:
+          - group "Como avança" [ref=f6e3355]:
+            - button "Eu avanço" [ref=f6e3356] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f6e3357] [cursor=pointer]
+          - group "Velocidade" [ref=f6e3358]:
+            - button "Devagar" [ref=f6e3359] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f6e3360] [cursor=pointer]
+            - button "Rápido" [ref=f6e3361] [cursor=pointer]
+          - generic [ref=f6e3362]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f6e3363] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Banco BTG
+      - strong: Veja um contrato por dentro
+      - paragraph: Linha por linha, quanto o banco ganha num contrato desta apresentação e quem paga cada parte.
+  - generic [ref=f6e3368]:
+    - generic [ref=f6e3369]: Guardado no BTG
+    - strong [ref=f6e3370]: R$ 48.000,00

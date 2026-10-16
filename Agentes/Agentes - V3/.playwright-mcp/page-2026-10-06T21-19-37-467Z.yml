@@ -1,0 +1,151 @@
+- generic [ref=e1]:
+  - link "Pular para o conteúdo" [ref=e2] [cursor=pointer]:
+    - /url: "#conteudo"
+  - generic [ref=e3]:
+    - banner [ref=e1099]:
+      - generic [ref=e1100]:
+        - generic [ref=e1101]:
+          - button "CrossMarketPlace, ir para o início" [ref=e1102] [cursor=pointer]:
+            - img "BTG Pactual" [ref=e1103]
+            - strong [ref=e1105]: CrossMarketPlace
+          - button "Buscar no catálogo" [ref=e1106] [cursor=pointer]
+          - button "Avisos, 3 não lidos" [ref=e1110] [cursor=pointer]:
+            - generic [ref=e1114]: "3"
+          - 'button "Perfil: Publicador" [ref=e1115] [cursor=pointer]':
+            - generic [ref=e1116]: "Perfil:"
+            - text: Publicador
+          - generic "João Bahia" [ref=e1119]: JB
+        - navigation "Áreas do CrossMarketPlace" [ref=e1120]:
+          - button "Início" [ref=e1121] [cursor=pointer]
+          - button "Catálogo" [ref=e1122] [cursor=pointer]
+          - button "Projetos do meu time" [ref=e1123] [cursor=pointer]
+          - button "Minha área" [ref=e1124] [cursor=pointer]
+          - button "Solicitações de acesso 2" [ref=e1125] [cursor=pointer]:
+            - text: Solicitações de acesso
+            - generic [ref=e1126]: "2"
+          - button [ref=e1127] [cursor=pointer]:
+            - text: Aprovações
+            - generic "Sem acesso neste perfil" [ref=e1128]
+          - button [ref=e1132] [cursor=pointer]:
+            - text: Administração
+            - generic "Sem acesso neste perfil" [ref=e1133]
+    - generic [ref=e1138]:
+      - navigation "Trilha" [ref=e1139]:
+        - button "Início" [ref=e1140] [cursor=pointer]
+        - text: /
+        - button "Catálogo" [ref=e1141] [cursor=pointer]
+        - text: / Revisor de Minutas
+      - generic [ref=e1142]:
+        - generic [ref=e1143]: AGENTE DE IA
+        - generic [ref=e1144]: ● Produção
+        - generic [ref=e1145]: v1.6.0
+        - generic [ref=e1146]: Exige autorização
+      - generic [ref=e1147]:
+        - generic [ref=e1148]:
+          - heading "Revisor de Minutas" [level=1] [ref=e1149]
+          - paragraph [ref=e1150]: Compara minutas com o padrão do banco e sugere ajustes de cláusulas com justificativa.
+          - generic [ref=e1151]:
+            - generic [ref=e1152]: "Equipe: Jurídico Digital"
+            - generic [ref=e1153]: "Responsável: Carlos Mendes"
+            - generic [ref=e1154]: Atualizada há 1 semana
+            - generic [ref=e1155]: ★ 4,6 (18 avaliações)
+            - generic [ref=e1156]: 540 usos confirmados
+          - paragraph
+        - generic [ref=e1157]:
+          - button "☆ Favoritar" [ref=e1158] [cursor=pointer]
+          - button "Confirmar uso" [ref=e1159] [cursor=pointer]
+          - button "Pedir acesso" [ref=e1160] [cursor=pointer]
+      - tablist "Seções da solução" [ref=e1161]:
+        - tab "Visão geral" [selected] [ref=e1162] [cursor=pointer]
+        - tab "Documentação e uso" [ref=e1163] [cursor=pointer]
+        - tab "Versões e histórico" [ref=e1164] [cursor=pointer]
+        - tab "Acesso e contatos" [ref=e1165] [cursor=pointer]
+        - tab "Avaliações (18)" [ref=e1166] [cursor=pointer]
+    - main [ref=e1167]:
+      - generic [ref=e1169]:
+        - generic [ref=e1170]:
+          - generic [ref=e1171]:
+            - heading "Finalidade" [level=2] [ref=e1174]
+            - paragraph [ref=e1175]: Compara minutas com o padrão do banco e sugere ajustes de cláusulas com justificativa.
+          - generic [ref=e1176]:
+            - generic [ref=e1178]:
+              - heading "Como usar" [level=2] [ref=e1179]
+              - paragraph [ref=e1180]: Instruções de uso e materiais da solução
+            - paragraph [ref=e1181]: O manual de uso traz o passo a passo completo.
+        - complementary [ref=e1182]:
+          - generic [ref=e1183]:
+            - heading "Acesso" [level=2] [ref=e1186]
+            - generic [ref=e1191]:
+              - strong [ref=e1192]: Exige autorização
+              - generic [ref=e1193]: O responsável aprova cada pedido, com justificativa.
+            - button "Pedir acesso" [ref=e1195] [cursor=pointer]
+          - generic [ref=e1196]:
+            - heading "Impacto e utilização" [level=2] [ref=e1199]
+            - generic [ref=e1200]:
+              - generic [ref=e1201]:
+                - strong [ref=e1202]: "540"
+                - text: usos confirmados
+              - generic [ref=e1203]:
+                - strong [ref=e1204]: 260 h
+                - text: economizadas
+              - generic [ref=e1205]:
+                - strong [ref=e1206]: 86%
+                - text: reutilizariam
+            - separator [ref=e1207]
+            - generic [ref=e1209]:
+              - generic [ref=e1210]: Aberturas do detalhe
+              - strong [ref=e1211]: "3.101"
+            - generic [ref=e1214]:
+              - generic [ref=e1215]: Interesse (favoritos e pedidos)
+              - strong [ref=e1216]: "820"
+            - generic [ref=e1219]:
+              - generic [ref=e1220]: Uso confirmado
+              - strong [ref=e1221]: "540"
+            - paragraph [ref=e1223]: Só contamos uso quando a pessoa confirma que usou. 66% do interesse virou uso.
+            - button "Confirmar que usei" [ref=e1224] [cursor=pointer]
+          - generic [ref=e1225]:
+            - heading "Avaliações" [level=2] [ref=e1228]
+            - generic [ref=e1229]:
+              - strong [ref=e1230]: 4,6
+              - generic [ref=e1231]:
+                - generic [aria-hidden] [ref=e1232]: ★★★★★
+                - text: 18 avaliações
+            - generic [ref=e1233]:
+              - generic [ref=e1234]: 5 ★
+              - generic [ref=e1237]: 61%
+            - generic [ref=e1238]:
+              - generic [ref=e1239]: 4 ★
+              - generic [ref=e1242]: 39%
+            - generic [ref=e1243]:
+              - generic [ref=e1244]: 3 ★
+              - generic [ref=e1247]: 0%
+            - generic [ref=e1248]:
+              - generic [ref=e1249]: 2 ★
+              - generic [ref=e1252]: 0%
+            - generic [ref=e1253]:
+              - generic [ref=e1254]: 1 ★
+              - generic [ref=e1257]: 0%
+            - button "Avaliar esta solução" [ref=e1258] [cursor=pointer]
+          - generic [ref=e1259]:
+            - heading "Contatos" [level=2] [ref=e1262]
+            - generic [ref=e1263]:
+              - generic "Carlos Mendes" [ref=e1264]: CM
+              - generic [ref=e1265]:
+                - strong [ref=e1266]: Carlos Mendes
+                - generic [ref=e1267]: Responsável
+              - button "Teams" [ref=e1268] [cursor=pointer]
+    - contentinfo [ref=e1269]: CrossMarketPlace v2 · protótipo navegável com dados fictícios · padrão visual Orquestra (aproximado) · BTG Pactual
+  - dialog [ref=e1271]:
+    - generic [ref=e1272]:
+      - generic [ref=e1273]:
+        - heading "Pedir acesso" [level=2] [ref=e1274]
+        - paragraph [ref=e1275]: Revisor de Minutas exige autorização do responsável.
+      - button "Fechar" [ref=e1276] [cursor=pointer]: ×
+    - generic [ref=e1277]:
+      - generic [ref=e1278]: Como você vai usar a solução?
+      - textbox "Como você vai usar a solução?" [active] [ref=e1279]
+      - generic [ref=e1280]: Conte em pelo menos 10 caracteres como vai usar (justificativa).
+    - generic [ref=e1281]:
+      - button "Cancelar" [ref=e1282] [cursor=pointer]
+      - button "Enviar pedido" [ref=e1283] [cursor=pointer]
+  - status

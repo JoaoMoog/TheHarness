@@ -1,0 +1,193 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e1826]:
+      - strong [ref=f1e1827]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f1e1828]:
+      - button "Ana Ribeiro sua conta" [ref=f1e1829] [cursor=pointer]:
+        - strong [ref=f1e1830]: Ana Ribeiro
+        - generic [ref=f1e1831]: sua conta
+      - button "Marina Costa paga e recebe" [ref=f1e1832] [cursor=pointer]:
+        - strong [ref=f1e1833]: Marina Costa
+        - generic [ref=f1e1834]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [pressed] [ref=f1e1835] [cursor=pointer]:
+        - strong [ref=f1e1836]: Carlos Mendes
+        - generic [ref=f1e1837]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=f1e1838] [cursor=pointer]:
+        - strong [ref=f1e1839]: Banco
+        - generic [ref=f1e1840]: operações BTG
+    - group "Relógio da demonstração" [ref=f1e1841]:
+      - strong [ref=f1e1844]: Hoje 11/10
+      - button "+1 dia" [ref=f1e1845] [cursor=pointer]
+      - button "+7 dias" [ref=f1e1846] [cursor=pointer]
+    - generic [ref=f1e1847]:
+      - button "Dois celulares" [pressed] [ref=f1e1848] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f1e1851] [cursor=pointer]
+  - main [ref=f1e31]:
+    - generic [ref=f1e1854]:
+      - region "Celular de Ana, só para ver" [ref=f1e1855]:
+        - generic [ref=f1e1856]:
+          - generic [ref=f1e1859]: Ana
+          - generic [ref=f1e1860]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f1e1861] [cursor=pointer]
+        - generic [ref=f1e1867]:
+          - generic [ref=f1e1868]: 9:41
+          - generic [ref=f1e1871]:
+            - button "Voltar"
+            - heading "Disputa DP-001" [level=1] [ref=f1e1872]
+          - generic [ref=f1e1873]:
+            - generic [ref=f1e1874]:
+              - generic [ref=f1e1875]:
+                - generic [ref=f1e1876]: Em mediação
+                - generic [ref=f1e1877]: Prazo 25/10
+              - heading "R$ 8.000,00 bloqueados" [level=2] [ref=f1e1878]
+              - generic [ref=f1e1879]: Pintura · etapa 1 · Qualidade da entrega
+            - paragraph [ref=f1e1880]: “A pintura da sala ficou manchada perto da janela.”
+            - generic [ref=f1e1881]:
+              - strong [ref=f1e1882]: Prazos da disputa
+              - generic [ref=f1e1883]:
+                - generic [ref=f1e1884]: Provas das duas partes
+                - strong [ref=f1e1885]: até 14/10 · 72 horas
+              - generic [ref=f1e1886]:
+                - generic [ref=f1e1887]: Decisão da mediação
+                - strong [ref=f1e1888]: até 18/10 · 5 dias úteis
+              - paragraph [ref=f1e1889]: "Quem documenta rápido tende a vencer: envie fotos e vídeos logo."
+            - generic [ref=f1e1890]:
+              - strong [ref=f1e1891]: Provas de cada lado
+              - generic [ref=f1e1892]:
+                - generic [ref=f1e1893]:
+                  - strong [ref=f1e1894]: Contratante
+                  - generic [ref=f1e1895]: 3 fotos da parede
+                - generic [ref=f1e1896]: Com provas
+              - generic [ref=f1e1897]:
+                - generic [ref=f1e1898]:
+                  - strong [ref=f1e1899]: Prestador
+                  - generic [ref=f1e1900]: sem resposta ainda
+                - generic [ref=f1e1901]: Aguardando
+            - generic [ref=f1e1902]:
+              - strong [ref=f1e1906]: Regra da matriz que se aplica hoje
+              - paragraph [ref=f1e1907]: "Prestador sem nenhuma evidência: reembolso do valor da etapa à contratante"
+            - generic [ref=f1e1908]:
+              - strong [ref=f1e1909]: Andamento
+              - list [ref=f1e1910]:
+                - listitem [ref=f1e1911]:
+                  - generic [ref=f1e1914]:
+                    - strong [ref=f1e1915]: Disputa aberta
+                    - generic [ref=f1e1916]: 11/10 · R$ 8.000,00 bloqueados
+                - listitem [ref=f1e1917]:
+                  - generic [ref=f1e1920]:
+                    - strong [ref=f1e1921]: Mediação BTG
+                    - generic [ref=f1e1922]: Até 25/10 · proposta de acordo
+                - listitem [ref=f1e1923]:
+                  - generic [ref=f1e1926]:
+                    - strong [ref=f1e1927]: Arbitragem
+                    - generic [ref=f1e1928]: Só se não houver acordo
+      - region "Celular de Carlos, agindo agora" [ref=f1e1929]:
+        - generic [ref=f1e1930]:
+          - generic [ref=f1e1932]: Carlos
+          - generic [ref=f1e1933]: agindo agora
+        - generic [ref=f1e1936]:
+          - generic [ref=f1e1937]:
+            - generic [ref=f1e1938]: 9:41
+            - generic [ref=f1e1941]:
+              - button "Voltar" [ref=f1e1942] [cursor=pointer]
+              - heading "Disputa DP-001" [level=1] [ref=f1e1945]
+            - generic [ref=f1e1946]:
+              - generic [ref=f1e1947]:
+                - generic [ref=f1e1948]:
+                  - generic [ref=f1e1949]: Em mediação
+                  - generic [ref=f1e1950]: Prazo 25/10
+                - heading "R$ 8.000,00 bloqueados" [level=2] [ref=f1e1951]
+                - generic [ref=f1e1952]: Pintura · etapa 1 · Qualidade da entrega
+              - paragraph [ref=f1e1953]: “A pintura da sala ficou manchada perto da janela.”
+              - generic [ref=f1e1954]:
+                - strong [ref=f1e1955]: Prazos da disputa
+                - generic [ref=f1e1956]:
+                  - generic [ref=f1e1957]: Provas das duas partes
+                  - strong [ref=f1e1958]: até 14/10 · 72 horas
+                - generic [ref=f1e1959]:
+                  - generic [ref=f1e1960]: Decisão da mediação
+                  - strong [ref=f1e1961]: até 18/10 · 5 dias úteis
+                - paragraph [ref=f1e1962]: "Quem documenta rápido tende a vencer: envie fotos e vídeos logo."
+              - generic [ref=f1e1963]:
+                - strong [ref=f1e1964]: Provas de cada lado
+                - generic [ref=f1e1965]:
+                  - generic [ref=f1e1966]:
+                    - strong [ref=f1e1967]: Contratante
+                    - generic [ref=f1e1968]: 3 fotos da parede
+                  - generic [ref=f1e1969]: Com provas
+                - generic [ref=f1e1970]:
+                  - generic [ref=f1e1971]:
+                    - strong [ref=f1e1972]: Prestador
+                    - generic [ref=f1e1973]: sem resposta ainda
+                  - generic [ref=f1e1974]: Aguardando
+              - generic [ref=f1e1975]:
+                - strong [ref=f1e1979]: Regra da matriz que se aplica hoje
+                - paragraph [ref=f1e1980]: "Prestador sem nenhuma evidência: reembolso do valor da etapa à contratante"
+              - generic [ref=f1e1981]:
+                - strong [ref=f1e1982]: Sua versão
+                - generic [ref=f1e1983]:
+                  - generic [ref=f1e1984]: O que você tem a dizer?
+                  - textbox "O que você tem a dizer?" [ref=f1e1985]:
+                    - /placeholder: ""
+                    - text: Entreguei conforme o combinado. Posso retocar a mancha sem custo.
+                - generic [ref=f1e1986]:
+                  - generic [ref=f1e1987]: Suas provas (separe por vírgula)
+                  - textbox "Suas provas (separe por vírgula)" [ref=f1e1988]:
+                    - /placeholder: ""
+                    - text: Fotos do antes e depois
+                - button "Enviar resposta" [ref=f1e1989] [cursor=pointer]
+              - generic [ref=f1e1990]:
+                - strong [ref=f1e1991]: Andamento
+                - list [ref=f1e1992]:
+                  - listitem [ref=f1e1993]:
+                    - generic [ref=f1e1996]:
+                      - strong [ref=f1e1997]: Disputa aberta
+                      - generic [ref=f1e1998]: 11/10 · R$ 8.000,00 bloqueados
+                  - listitem [ref=f1e1999]:
+                    - generic [ref=f1e2002]:
+                      - strong [ref=f1e2003]: Mediação BTG
+                      - generic [ref=f1e2004]: Até 25/10 · proposta de acordo
+                  - listitem [ref=f1e2005]:
+                    - generic [ref=f1e2008]:
+                      - strong [ref=f1e2009]: Arbitragem
+                      - generic [ref=f1e2010]: Só se não houver acordo
+          - status: Agora você é Carlos.
+  - contentinfo "Controle da apresentação" [ref=f1e103]:
+    - generic [ref=f1e2013]:
+      - group "Cenários" [ref=f1e2014]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f1e2015] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f1e2016] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f1e2017] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f1e2018] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f1e2019] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f1e2020] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f1e2021] [cursor=pointer]': "7"
+        - 'button "Cenário 8: No banco" [ref=f1e2022] [cursor=pointer]': "8"
+      - strong [ref=f1e2023]: Disputa
+      - generic [ref=f1e2024]: A cliente contesta e o banco media.
+    - generic [ref=f1e127]:
+      - generic [ref=f1e2025]:
+        - generic [ref=f1e2026]: Carlos · prestador
+        - paragraph [ref=f1e2027]: Responda
+      - generic [ref=f1e2028]:
+        - button "Pausar (espaço)" [ref=f1e2029] [cursor=pointer]
+        - button "Próximo" [ref=f1e2032] [cursor=pointer]
+        - generic [ref=f1e2035]:
+          - group "Como avança" [ref=f1e2036]:
+            - button "Eu avanço" [ref=f1e2037] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f1e2038] [cursor=pointer]
+          - group "Velocidade" [ref=f1e2039]:
+            - button "Devagar" [ref=f1e2040] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f1e2041] [cursor=pointer]
+            - button "Rápido" [ref=f1e2042] [cursor=pointer]
+          - generic [ref=f1e2043]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f1e2044] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Carlos · prestador
+      - strong: Responda
+      - paragraph: Carlos responde com a versão e as provas dele.
+  - generic [ref=f1e2049]:
+    - generic [ref=f1e2050]: Guardado no BTG
+    - strong [ref=f1e2051]: R$ 50.000,00

@@ -1,0 +1,191 @@
+- generic [active] [ref=f6e1]:
+  - main [ref=f6e34]:
+    - generic [ref=f6e1717]:
+      - region "Celular de Ana, agindo agora" [ref=f6e1718]:
+        - generic [ref=f6e1719]:
+          - generic [ref=f6e1721]: Ana
+          - generic [ref=f6e1722]: agindo agora
+        - generic [ref=f6e1725]:
+          - generic [ref=f6e1726]:
+            - generic [ref=f6e1727]: 9:41
+            - button "Fechar" [ref=f6e1731] [cursor=pointer]
+            - article [ref=f6e1735]:
+              - generic [ref=f6e1736]:
+                - img "BTG Pactual" [ref=f6e1737]
+                - heading "Pagamento confirmado" [level=1] [ref=f6e1738]
+                - generic [ref=f6e1739]: Feito em 11/10/2026
+                - generic [ref=f6e1740]:
+                  - text: Valor
+                  - strong [ref=f6e1741]: R$ 16.000,00
+              - generic [ref=f6e1742]:
+                - generic [ref=f6e1743]:
+                  - generic [ref=f6e1744]: Para
+                  - generic [ref=f6e1745]:
+                    - generic [ref=f6e1746]:
+                      - text: GN
+                      - generic [ref=f6e1747]: btg
+                    - generic [ref=f6e1748]:
+                      - strong [ref=f6e1749]: Guardado no Aval
+                      - generic [ref=f6e1750]: Contrato AV-2026-004
+                      - generic [ref=f6e1751]: Banco BTG Pactual S.A.
+                - generic [ref=f6e1752]:
+                  - generic [ref=f6e1753]: De
+                  - generic [ref=f6e1754]:
+                    - generic [ref=f6e1755]:
+                      - text: AR
+                      - generic [ref=f6e1756]: btg
+                    - generic [ref=f6e1757]:
+                      - strong [ref=f6e1758]: Ana Ribeiro
+                      - generic [ref=f6e1759]: Conta corrente PF · ag 0001 · cc 7.310.552-8
+                - generic [ref=f6e1760]:
+                  - generic [ref=f6e1761]: Serviço
+                  - paragraph [ref=f6e1762]: Pintura
+                - generic [ref=f6e1763]:
+                  - generic [ref=f6e1764]: Situação
+                  - paragraph [ref=f6e1765]: Protegido guardado. O prestador já pode começar a etapa 1.
+                - generic [ref=f6e1766]:
+                  - generic [ref=f6e1767]: Código de autenticação
+                  - paragraph [ref=f6e1768]: 31a84a0e215f89565c42be9f11fb7aa9
+            - button "Ver serviço" [ref=f6e1770] [cursor=pointer]
+          - dialog "Avisos do pagamento" [ref=f6e1771]:
+            - heading "Acompanhe este pagamento em tempo real" [level=2] [ref=f6e1775]
+            - generic [ref=f6e1776]:
+              - generic [ref=f6e1777]: Aval · agora
+              - strong [ref=f6e1780]: Quando chegar a entrega
+              - paragraph [ref=f6e1781]: Horizonte Reformas enviou a entrega. Você tem 7 dias para aprovar.
+            - list [ref=f6e1782]:
+              - listitem [ref=f6e1783]: Só avisamos quando o dinheiro mexer.
+              - listitem [ref=f6e1784]: Lembrete 2 dias antes de liberar sozinho.
+              - listitem [ref=f6e1785]: Dá para desligar no Perfil.
+            - generic [ref=f6e1786]:
+              - button "Ativar avisos" [ref=f6e1787] [cursor=pointer]
+              - button "Agora não" [ref=f6e1790] [cursor=pointer]
+          - status: Pagamento confirmado.
+      - region "Celular de Carlos, só para ver" [ref=f6e1791]:
+        - generic [ref=f6e1792]:
+          - generic [ref=f6e1795]: Carlos
+          - generic [ref=f6e1796]: Atualizou agora
+          - button "Usar este celular" [ref=f6e1799] [cursor=pointer]
+        - generic [ref=f6e1805]:
+          - generic [ref=f6e1806]: 9:41
+          - generic [ref=f6e1809]:
+            - button "Voltar"
+            - heading "Pintura" [level=1] [ref=f6e1810]
+          - generic [ref=f6e1811]:
+            - generic [ref=f6e1812]:
+              - generic [ref=f6e1813]:
+                - generic [ref=f6e1814]: AV-2026-004 · Ana Ribeiro
+                - generic [ref=f6e1815]: Em andamento
+              - generic [ref=f6e1816]: R$ 16.000,00
+              - generic [ref=f6e1818]:
+                - generic [ref=f6e1819]: Liberado R$ 0,00
+                - generic [ref=f6e1820]: Guardado R$ 16.000,00
+            - status [ref=f6e1821]:
+              - generic [ref=f6e1824]: "Agora: fazer e entregar a etapa 1. Prazo 23/10."
+            - generic [ref=f6e1825]:
+              - strong [ref=f6e1826]: Linha do tempo
+              - list [ref=f6e1827]:
+                - listitem [ref=f6e1828]:
+                  - generic [ref=f6e1831]:
+                    - strong [ref=f6e1832]: Combinado
+                    - generic [ref=f6e1833]: Aceito em 11/10
+                - listitem [ref=f6e1834]:
+                  - generic [ref=f6e1837]:
+                    - strong [ref=f6e1838]: Pago e protegido
+                    - generic [ref=f6e1839]: O dinheiro está guardado no banco
+                - listitem [ref=f6e1840]:
+                  - generic [ref=f6e1843]:
+                    - strong [ref=f6e1844]: "Etapa 1: Preparo e massa"
+                    - generic [ref=f6e1845]: Em execução
+                - listitem [ref=f6e1846]:
+                  - generic [ref=f6e1849]:
+                    - strong [ref=f6e1850]: "Etapa 2: Pintura e acabamento"
+                    - generic [ref=f6e1851]: Liberado quando aprovado
+                - listitem [ref=f6e1852]:
+                  - generic [ref=f6e1855]:
+                    - strong [ref=f6e1856]: Concluído
+                    - generic [ref=f6e1857]: Todo o valor liberado
+            - generic [ref=f6e1858]:
+              - generic [ref=f6e1859]:
+                - generic [ref=f6e1863]:
+                  - strong [ref=f6e1864]: Etapa 1 · Preparo e massa
+                  - generic [ref=f6e1865]: R$ 8.000,00 · até 23/10
+                - generic [ref=f6e1866]: Em execução
+              - generic [ref=f6e1867]:
+                - button "Enviar entrega"
+                - button "Subcontratar"
+              - generic [ref=f6e1868]:
+                - generic [ref=f6e1872]:
+                  - strong [ref=f6e1873]: Etapa 2 · Pintura e acabamento
+                  - generic [ref=f6e1874]: R$ 8.000,00 · até 03/11
+                - generic [ref=f6e1875]: A iniciar
+              - generic [ref=f6e1876]:
+                - button "Subcontratar"
+            - generic [ref=f6e1877]:
+              - generic [ref=f6e1878]:
+                - generic [ref=f6e1879]: Prazo de entrega
+                - strong [ref=f6e1880]: 03/11
+              - generic [ref=f6e1881]:
+                - generic [ref=f6e1882]: Endereço
+                - strong [ref=f6e1883]: Rua Harmonia, 410
+              - paragraph [ref=f6e1884]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+            - generic [ref=f6e1885]:
+              - button "Conversa 0 mensagens · registrada no contrato":
+                - generic:
+                  - strong: Conversa
+                  - generic: 0 mensagens · registrada no contrato
+              - generic [ref=f6e1887]:
+                - strong [ref=f6e1891]: Receber antes, sempre
+                - switch "Receber antes, sempre"
+              - button "Tirar dúvida com o assistente Prazos, etapas, seguro e disputas":
+                - generic:
+                  - strong: Tirar dúvida com o assistente
+                  - generic: Prazos, etapas, seguro e disputas
+              - button "Contrato e arbitragem Assinado em 11/10 · arbitragem incluída":
+                - generic:
+                  - strong: Contrato e arbitragem
+                  - generic: Assinado em 11/10 · arbitragem incluída
+          - generic [ref=f6e1892]:
+            - button "Enviar entrega da etapa 1"
+  - contentinfo "Controle da apresentação" [ref=f6e363]:
+    - generic [ref=f6e1894]:
+      - group "Cenários" [ref=f6e1895]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f6e1896] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f6e1897] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f6e1898] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pelo WhatsApp" [ref=f6e1899] [cursor=pointer]': "4"
+        - 'button "Cenário 5: No banco" [ref=f6e1900] [cursor=pointer]': "5"
+      - strong [ref=f6e1901]: Disputa
+      - generic [ref=f6e1902]: A cliente contesta e o banco media.
+    - generic [ref=f6e387]:
+      - dialog "Disputa" [ref=f6e1903]:
+        - generic [ref=f6e1904]:
+          - generic [ref=f6e1905]: Cenário 3 de 5
+          - heading "Disputa" [level=2] [ref=f6e1906]
+          - generic [ref=f6e1907]:
+            - generic [ref=f6e1908]:
+              - generic [ref=f6e1909]: O problema
+              - paragraph [ref=f6e1910]: Quando algo dá errado, a briga vai para o Procon, para a Justiça ou para a rede social.
+            - generic [ref=f6e1911]:
+              - generic [ref=f6e1912]: Com o Aval
+              - paragraph [ref=f6e1913]: O valor da etapa fica bloqueado. Os dois mostram provas e o banco media com regras claras.
+          - paragraph [ref=f6e1914]: A parede ficou manchada. A cliente abre uma disputa, Carlos responde e o banco propõe um acordo.
+          - generic [ref=f6e1919]:
+            - button "Começar" [ref=f6e1920] [cursor=pointer]
+            - button "Sair" [ref=f6e1923] [cursor=pointer]
+      - generic [ref=f6e1924]:
+        - button "Pausar (espaço)" [ref=f6e1925] [cursor=pointer]
+        - button "Próximo" [ref=f6e1928] [cursor=pointer]
+        - generic [ref=f6e1931]:
+          - group "Como avança" [ref=f6e1932]:
+            - button "Eu avanço" [ref=f6e1933] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f6e1934] [cursor=pointer]
+          - group "Velocidade" [ref=f6e1935]:
+            - button "Devagar" [ref=f6e1936] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f6e1937] [cursor=pointer]
+            - button "Rápido" [ref=f6e1938] [cursor=pointer]
+          - generic [ref=f6e1939]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f6e1940] [cursor=pointer]
+  - generic [ref=f6e1945]:
+    - generic [ref=f6e1946]: Guardado no BTG
+    - strong [ref=f6e1947]: R$ 50.000,00

@@ -1,0 +1,86 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e310]:
+      - region "Celular de Cliente, só para ver" [ref=f2e311]:
+        - generic [ref=f2e312]:
+          - generic [ref=f2e315]: Cliente
+          - generic [ref=f2e316]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f2e317] [cursor=pointer]
+        - generic [ref=f2e323]:
+          - generic [ref=f2e324]: 9:41
+          - generic [ref=f2e327]:
+            - button "Voltar"
+            - heading "Pagamento protegido" [level=1] [ref=f2e328]
+          - generic [ref=f2e329]:
+            - generic [ref=f2e330]:
+              - generic [ref=f2e331]: Horizonte Reformas cobra
+              - heading "Pintura" [level=3] [ref=f2e332]
+              - generic [ref=f2e333]: R$ 16.000,00
+              - paragraph [ref=f2e334]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+              - generic [ref=f2e335]:
+                - generic [ref=f2e336]: Prazo de entrega
+                - strong [ref=f2e337]: 03/11
+              - generic [ref=f2e338]:
+                - generic [ref=f2e339]: Endereço
+                - strong [ref=f2e340]: Rua Harmonia, 410
+              - generic [ref=f2e341]:
+                - generic [ref=f2e342]: Liberação
+                - strong [ref=f2e343]: Quem paga define
+            - generic [ref=f2e344]:
+              - strong [ref=f2e345]: Como a proteção funciona
+              - strong [ref=f2e350]: Fica guardado no banco
+              - strong [ref=f2e355]: Sai quando quem paga aprova
+              - strong [ref=f2e360]: Sem resposta em 7 dias, libera sozinho
+            - generic [ref=f2e361]: Entre com a conta BTG para pagar.
+          - generic [ref=f2e365]:
+            - button "Entrar com a conta BTG"
+      - region "Celular de Carlos, agindo agora" [ref=f2e366]:
+        - generic [ref=f2e367]:
+          - generic [ref=f2e369]: Carlos
+          - generic [ref=f2e370]: agindo agora
+        - generic [ref=f2e374]:
+          - generic [ref=f2e375]: 9:41
+          - button "Fechar" [ref=f2e379] [cursor=pointer]
+          - generic [ref=f2e382]:
+            - heading "Mensagem pronta no WhatsApp" [level=2] [ref=f2e387]
+            - generic [ref=f2e388]:
+              - paragraph [ref=f2e389]: "Horizonte Reformas cobra R$ 16.000,00 com proteção: Pintura. Confira e aceite: pague.btgpactual.com.br/p/PG-001"
+              - generic [ref=f2e390]: (11) 97777-3003
+          - generic [ref=f2e391]:
+            - button "Cancelar este pagamento" [ref=f2e392] [cursor=pointer]
+            - button "Abrir o link como quem recebeu" [ref=f2e393] [cursor=pointer]
+            - button "Ir para o início" [ref=f2e396] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e399]:
+      - group "Cenários" [ref=f2e400]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e401] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e402] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e403] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e404] [cursor=pointer]': "4"
+      - strong [ref=f2e405]: O prestador cobra
+      - generic [ref=f2e406]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f2e184]:
+      - generic [ref=f2e407]:
+        - generic [ref=f2e408]: Carlos · prestador
+        - paragraph [ref=f2e409]: Abra o link
+      - generic [ref=f2e410]:
+        - button "Pausar (espaço)" [ref=f2e411] [cursor=pointer]
+        - button "Próximo" [ref=f2e414] [cursor=pointer]
+        - generic [ref=f2e417]:
+          - group "Como avança" [ref=f2e418]:
+            - button "Eu avanço" [ref=f2e419] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e420] [cursor=pointer]
+          - group "Velocidade" [ref=f2e421]:
+            - button "Devagar" [ref=f2e422] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e423] [cursor=pointer]
+            - button "Rápido" [ref=f2e424] [cursor=pointer]
+          - generic [ref=f2e425]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f2e426] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Carlos · prestador
+      - strong: Abra o link
+      - paragraph: Agora vemos o que a cliente recebe ao abrir o link.
+  - generic [ref=f2e431]:
+    - generic [ref=f2e432]: Guardado no BTG
+    - strong [ref=f2e433]: R$ 0,00

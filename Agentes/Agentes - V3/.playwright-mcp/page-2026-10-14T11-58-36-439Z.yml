@@ -1,0 +1,47 @@
+- generic [ref=f3e1]:
+  - main [ref=f3e2]:
+    - generic [ref=f3e6]:
+      - generic [ref=f3e7]:
+        - generic [ref=f3e8]: 9:41
+        - generic [ref=f3e11]:
+          - generic [ref=f3e12]: Simulação · sem dinheiro real
+          - button "Abrir controles de teste" [ref=f3e13] [cursor=pointer]: Controles
+        - generic [ref=f3e14]:
+          - img "Aval" [ref=f3e15]
+          - generic [ref=f3e16]:
+            - heading "Pague o que combinou." [level=1] [ref=f3e17]
+            - paragraph [ref=f3e18]: Combine o serviço, acompanhe a entrega e confira as condições de liberação.
+            - button "Criar conta neste aparelho" [ref=f3e19] [cursor=pointer]
+            - paragraph [ref=f3e20]: Pagamentos simulados. Sua conta e seus combinados ficam neste aparelho.
+            - button "Conhecer o Aval" [ref=f3e21] [cursor=pointer]
+      - dialog [ref=f3e23]:
+        - generic [ref=f3e24]: 9:41
+        - generic [ref=f3e27]:
+          - strong [ref=f3e28]: Aval
+          - button "Pular" [ref=f3e29] [cursor=pointer]
+        - generic [ref=f3e30]:
+          - generic "Etapa 1 de 4" [ref=f3e31]: 1 de 4
+          - heading "Bem-vindo ao Aval" [active] [level=1] [ref=f3e40]
+          - paragraph [ref=f3e41]: Uma forma de pagar por entregas, com cada etapa à vista.
+          - list [ref=f3e43]:
+            - listitem [ref=f3e44]:
+              - generic [aria-hidden] [ref=f3e45]: "1"
+              - generic [ref=f3e46]:
+                - heading "Cobrar" [level=2] [ref=f3e47]
+                - paragraph [ref=f3e48]: Crie uma cobrança com destinatário, descrição e valor.
+            - listitem [ref=f3e49]:
+              - generic [aria-hidden] [ref=f3e50]: "2"
+              - generic [ref=f3e51]:
+                - heading "Pagar" [level=2] [ref=f3e52]
+                - paragraph [ref=f3e53]: Confira a cobrança e acompanhe a liberação do valor conforme a entrega.
+          - generic [ref=f3e54]: Esta versão é uma simulação. Nenhum dinheiro real é movimentado.
+        - button "Continuar" [ref=f3e60] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f3e61]:
+    - generic [ref=f3e62]:
+      - generic [ref=f3e63]:
+        - paragraph [ref=f3e64]: Exploração livre
+        - paragraph [ref=f3e65]: Navegue no seu ritmo. Nenhum cenário está em execução.
+      - generic [ref=f3e66]:
+        - button "Escolher cenário" [ref=f3e67] [cursor=pointer]
+        - button "Demo" [ref=f3e70] [cursor=pointer]
+    - button "Apresentar este cenário" [ref=f3e75] [cursor=pointer]

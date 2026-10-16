@@ -1,0 +1,104 @@
+- generic [ref=e1]:
+  - link "Pular para o conteúdo" [ref=e2] [cursor=pointer]:
+    - /url: "#conteudo"
+  - generic [ref=e3]:
+    - banner [ref=e1918]:
+      - generic [ref=e1919]:
+        - generic [ref=e1920]:
+          - button "CrossMarketPlace, ir para o início" [ref=e1921] [cursor=pointer]:
+            - img "BTG Pactual" [ref=e1922]
+            - strong [ref=e1924]: CrossMarketPlace
+          - button "Buscar no catálogo" [ref=e1925] [cursor=pointer]
+          - button "Avisos, 4 não lidos" [ref=e1929] [cursor=pointer]:
+            - generic [ref=e1933]: "4"
+          - 'button "Perfil: Publicador" [ref=e1934] [cursor=pointer]':
+            - generic [ref=e1935]: "Perfil:"
+            - text: Publicador
+          - generic "João Bahia" [ref=e1938]: JB
+        - navigation "Áreas do CrossMarketPlace" [ref=e1939]:
+          - button "Início" [ref=e1940] [cursor=pointer]
+          - button "Catálogo" [ref=e1941] [cursor=pointer]
+          - button "Projetos do meu time" [ref=e1942] [cursor=pointer]
+          - button "Minha área" [ref=e1943] [cursor=pointer]
+          - button "Solicitações de acesso 2" [ref=e1944] [cursor=pointer]:
+            - text: Solicitações de acesso
+            - generic [ref=e1945]: "2"
+          - button [ref=e1946] [cursor=pointer]:
+            - text: Aprovações
+            - generic "Sem acesso neste perfil" [ref=e1947]
+          - button [ref=e1951] [cursor=pointer]:
+            - text: Administração
+            - generic "Sem acesso neste perfil" [ref=e1952]
+    - generic [ref=e1957]:
+      - navigation "Trilha" [ref=e1958]:
+        - button "Início" [ref=e1959] [cursor=pointer]
+        - text: / Publicar solução
+      - generic [ref=e1960]:
+        - generic [ref=e1961]:
+          - heading "Publicar solução" [level=1] [ref=e1962]
+          - paragraph [ref=e1963]: Preencha as informações, salve como rascunho e envie para aprovação.
+        - button "Importar JSON ou YAML" [ref=e1964] [cursor=pointer]
+      - list [ref=e1966]:
+        - listitem [ref=e1967] [cursor=pointer]:
+          - generic [ref=e1968]: "1"
+          - text: Informações básicas
+        - listitem [ref=e1970] [cursor=pointer]:
+          - generic [ref=e1971]: "2"
+          - text: Detalhes técnicos
+        - listitem [ref=e1973] [cursor=pointer]:
+          - generic [ref=e1974]: "3"
+          - text: Documentação e materiais
+        - listitem [ref=e1976] [cursor=pointer]:
+          - generic [ref=e1977]: "4"
+          - text: Revisão e envio
+    - main [active] [ref=e1978]:
+      - generic [ref=e1980]:
+        - generic [ref=e1981]:
+          - generic [ref=e1982]:
+            - generic [ref=e1983]:
+              - heading "1. Informações básicas" [level=2] [ref=e1984]
+              - paragraph [ref=e1985]: Etapa 1 de 4
+            - generic [ref=e1986]: Rascunho
+          - separator [ref=e1987]
+          - generic [ref=e1988]:
+            - generic [ref=e1989]: Nome da solução
+            - textbox "Nome da solução" [ref=e1990]:
+              - /placeholder: "Ex.: Leitor de Contratos"
+            - generic [ref=e1991]: Curto e fácil de buscar.
+          - generic [ref=e1992]:
+            - generic [ref=e1993]: O que ela faz
+            - textbox "O que ela faz" [ref=e1994]
+            - generic [ref=e1995]: Uma ou duas frases. Aparece nos cards do catálogo.
+          - generic [ref=e1996]:
+            - generic [ref=e1997]: Tipo de solução
+            - radiogroup [ref=e1998]:
+              - radio "Agente de IA" [checked] [ref=e1999] [cursor=pointer]
+              - radio "API" [ref=e2000] [cursor=pointer]
+              - radio "Modelo de ML" [ref=e2001] [cursor=pointer]
+              - radio "Automação" [ref=e2002] [cursor=pointer]
+              - radio "Dashboard" [ref=e2003] [cursor=pointer]
+              - radio "Biblioteca" [ref=e2004] [cursor=pointer]
+          - generic [ref=e2005]:
+            - generic [ref=e2006]: Finalidade e problemas que resolve (opcional)
+            - textbox "Finalidade e problemas que resolve (opcional)" [ref=e2007]
+            - generic [ref=e2008]: Ajuda outras equipes a saber se a solução serve para elas.
+          - separator [ref=e2009]
+          - generic [ref=e2010]:
+            - button "Descartar" [ref=e2011] [cursor=pointer]
+            - button "Salvar rascunho" [ref=e2012] [cursor=pointer]
+            - button "Continuar" [ref=e2013] [cursor=pointer]
+        - complementary [ref=e2014]:
+          - paragraph [ref=e2019]: Assim que você preencher nome e descrição, mostramos soluções parecidas para evitar trabalho duplicado.
+          - generic [ref=e2020]:
+            - generic [ref=e2021]:
+              - heading "Checklist para aprovação" [level=2] [ref=e2022]
+              - paragraph [ref=e2023]: O aprovador vê esta lista
+            - generic [ref=e2024]:
+              - generic [ref=e2029]: Nome, descrição e tipo
+              - generic [ref=e2030]: em andamento
+            - generic [ref=e2031]: Detalhes técnicos e acesso
+            - generic [ref=e2037]: Documentação e materiais
+            - generic [ref=e2043]: Comparação com soluções parecidas
+            - paragraph [ref=e2049]: Depois do envio, você acompanha o andamento em Minha área.
+    - contentinfo [ref=e2050]: CrossMarketPlace v2 · protótipo navegável com dados fictícios · padrão visual Orquestra (aproximado) · BTG Pactual
+  - status

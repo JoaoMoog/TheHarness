@@ -1,0 +1,222 @@
+- generic [ref=e1]:
+  - link "Pular para o conteúdo" [ref=e2] [cursor=pointer]:
+    - /url: "#conteudo"
+  - generic [ref=e3]:
+    - banner [ref=e2051]:
+      - generic [ref=e2052]:
+        - generic [ref=e2053]:
+          - button "CrossMarketPlace, ir para o início" [ref=e2054] [cursor=pointer]:
+            - img "BTG Pactual" [ref=e2055]
+            - strong [ref=e2057]: CrossMarketPlace
+          - button "Buscar no catálogo" [ref=e2058] [cursor=pointer]
+          - button "Avisos, 6 não lidos" [ref=e2062] [cursor=pointer]:
+            - generic [ref=e2066]: "6"
+          - 'button "Perfil: Administrador" [ref=e2067] [cursor=pointer]':
+            - generic [ref=e2068]: "Perfil:"
+            - text: Administrador
+          - generic "João Bahia" [ref=e2071]: JB
+        - navigation "Áreas do CrossMarketPlace" [ref=e2072]:
+          - button "Início" [ref=e2073] [cursor=pointer]
+          - button "Catálogo" [ref=e2074] [cursor=pointer]
+          - button "Projetos do meu time" [ref=e2075] [cursor=pointer]
+          - button "Minha área" [ref=e2076] [cursor=pointer]
+          - button "Solicitações de acesso 2" [ref=e2077] [cursor=pointer]:
+            - text: Solicitações de acesso
+            - generic [ref=e2078]: "2"
+          - button "Aprovações 3" [ref=e2079] [cursor=pointer]:
+            - text: Aprovações
+            - generic [ref=e2080]: "3"
+          - button "Administração" [ref=e2081] [cursor=pointer]
+    - generic [ref=e2083]:
+      - navigation "Trilha" [ref=e2084]:
+        - button "Início" [ref=e2085] [cursor=pointer]
+        - text: / Administração
+      - generic [ref=e2086]:
+        - generic [ref=e2087]:
+          - heading "Painel de adoção e impacto" [level=1] [ref=e2088]
+          - paragraph [ref=e2089]: Visão consolidada de soluções, categorias e equipes · dados até 06/10/2026
+        - generic [ref=e2090]:
+          - group "Período" [ref=e2091]:
+            - button "30 dias" [ref=e2092] [cursor=pointer]
+            - button "Trimestre" [ref=e2093] [cursor=pointer]
+            - button "2026" [pressed] [ref=e2094] [cursor=pointer]
+          - button "Exportar relatório" [ref=e2095] [cursor=pointer]
+      - tablist "Seções da administração" [ref=e2096]:
+        - tab "Indicadores" [selected] [ref=e2097] [cursor=pointer]
+        - tab "Soluções" [ref=e2098] [cursor=pointer]
+        - tab "Categorias" [ref=e2099] [cursor=pointer]
+        - tab "Equipes" [ref=e2100] [cursor=pointer]
+        - tab "Perfis e permissões" [ref=e2101] [cursor=pointer]
+    - main [active] [ref=e2102]:
+      - generic [ref=e2103]:
+        - generic [ref=e2104]:
+          - generic [ref=e2105]:
+            - generic [ref=e2106]: Soluções ativas no catálogo
+            - strong [ref=e2107]: "23"
+            - generic [ref=e2108]: 3 em análise
+          - generic [ref=e2110]:
+            - generic [ref=e2111]: Usos confirmados
+            - strong [ref=e2112]: "16.315"
+            - generic [ref=e2113]:
+              - generic [ref=e2114]: +24%
+              - generic [ref=e2115]: vs. 2025
+          - generic [ref=e2116]:
+            - generic [ref=e2117]: Horas economizadas
+            - strong [ref=e2118]: 13.883 h
+            - generic [ref=e2119]:
+              - generic [ref=e2120]: +18%
+              - generic [ref=e2121]: vs. 2025
+          - generic [ref=e2122]:
+            - generic [ref=e2123]: Nota média
+            - strong [ref=e2124]: 4,6
+            - generic [ref=e2125]:
+              - generic [ref=e2126]: +0,1
+              - generic [ref=e2127]: vs. 2025
+        - generic [ref=e2128]:
+          - generic [ref=e2129]:
+            - generic [ref=e2130]:
+              - generic [ref=e2131]:
+                - heading "Uso confirmado x interesse" [level=2] [ref=e2132]
+                - paragraph [ref=e2133]: Por mês, em 2026. Interesse = favoritos, pedidos de acesso e aberturas com retorno.
+              - generic [ref=e2134]:
+                - generic [ref=e2135]: Uso confirmado
+                - generic [ref=e2137]: Interesse
+            - generic [ref=e2139]:
+              - generic [aria-hidden] [ref=e2140]:
+                - generic [ref=e2141]: "4.000"
+                - generic [ref=e2142]: "3.000"
+                - generic [ref=e2143]: "2.000"
+                - generic [ref=e2144]: "1.000"
+                - generic [ref=e2145]: "0"
+              - img "Uso confirmado e interesse por mês em 2026" [ref=e2146]
+            - generic [aria-hidden] [ref=e2150]:
+              - generic [ref=e2151]: jan
+              - generic [ref=e2152]: fev
+              - generic [ref=e2153]: mar
+              - generic [ref=e2154]: abr
+              - generic [ref=e2155]: mai
+              - generic [ref=e2156]: jun
+              - generic [ref=e2157]: jul
+              - generic [ref=e2158]: ago
+              - generic [ref=e2159]: set
+              - generic [ref=e2160]: out
+            - group [ref=e2161]:
+              - generic "Ver como tabela" [ref=e2162]
+            - generic [ref=e2163]: No total, 67% do interesse registrado virou uso confirmado.
+          - generic [ref=e2168]:
+            - generic [ref=e2170]:
+              - heading "Usos por categoria" [level=2] [ref=e2171]
+              - paragraph [ref=e2172]: Confirmados em 2026
+            - generic [ref=e2174]:
+              - generic [ref=e2175]: Automações
+              - strong [ref=e2182]: "4.720"
+            - generic [ref=e2185]:
+              - generic [ref=e2186]: Agentes de IA
+              - strong [ref=e2189]: "4.125"
+            - generic [ref=e2192]:
+              - generic [ref=e2193]: APIs e serviços
+              - strong [ref=e2198]: "3.310"
+            - generic [ref=e2201]:
+              - generic [ref=e2202]: Modelos de ML
+              - strong [ref=e2209]: "1.570"
+            - generic [ref=e2212]:
+              - generic [ref=e2213]: Bibliotecas
+              - strong [ref=e2216]: "1.300"
+            - generic [ref=e2219]:
+              - generic [ref=e2220]: Dashboards
+              - strong [ref=e2223]: "1.290"
+        - generic [ref=e2225]:
+          - generic [ref=e2226]:
+            - generic [ref=e2229]:
+              - heading "Ranking por equipe" [level=2] [ref=e2230]
+              - paragraph [ref=e2231]: Ordenado por usos confirmados
+            - table [ref=e2233]:
+              - rowgroup [ref=e2234]:
+                - row [ref=e2235]:
+                  - columnheader "Equipe" [ref=e2236]
+                  - columnheader "Soluções" [ref=e2237]
+                  - columnheader "Usos" [ref=e2238]
+                  - columnheader "Horas economizadas" [ref=e2239]
+                  - columnheader "Nota" [ref=e2240]
+              - rowgroup [ref=e2241]:
+                - row [ref=e2242]:
+                  - cell "1 Ops Tech" [ref=e2243]:
+                    - generic [ref=e2244]:
+                      - generic [ref=e2245]: "1"
+                      - strong [ref=e2246]: Ops Tech
+                  - cell "4" [ref=e2247]
+                  - cell "6.430" [ref=e2248]
+                  - cell "4.710 h" [ref=e2249]
+                  - cell "★ 4,6" [ref=e2250]
+                - row [ref=e2251]:
+                  - cell "2 Crédito Digital" [ref=e2252]:
+                    - generic [ref=e2253]:
+                      - generic [ref=e2254]: "2"
+                      - strong [ref=e2255]: Crédito Digital
+                  - cell "4" [ref=e2256]
+                  - cell "3.150" [ref=e2257]
+                  - cell "2.720 h" [ref=e2258]
+                  - cell "★ 4,6" [ref=e2259]
+                - row [ref=e2260]:
+                  - cell "3 Risco Quant" [ref=e2261]:
+                    - generic [ref=e2262]:
+                      - generic [ref=e2263]: "3"
+                      - strong [ref=e2264]: Risco Quant
+                  - cell "8" [ref=e2265]
+                  - cell "2.240" [ref=e2266]
+                  - cell "3.590 h" [ref=e2267]
+                  - cell "★ 4,6" [ref=e2268]
+                - row [ref=e2269]:
+                  - cell "4 Jurídico Digital" [ref=e2270]:
+                    - generic [ref=e2271]:
+                      - generic [ref=e2272]: "4"
+                      - strong [ref=e2273]: Jurídico Digital
+                  - cell "2" [ref=e2274]
+                  - cell "1.745" [ref=e2275]
+                  - cell "903 h" [ref=e2276]
+                  - cell "★ 4,7" [ref=e2277]
+                - row [ref=e2278]:
+                  - cell "5 BI Varejo" [ref=e2279]:
+                    - generic [ref=e2280]:
+                      - generic [ref=e2281]: "5"
+                      - strong [ref=e2282]: BI Varejo
+                  - cell "1" [ref=e2283]
+                  - cell "1.100" [ref=e2284]
+                  - cell "600 h" [ref=e2285]
+                  - cell "★ 4,4" [ref=e2286]
+                - row [ref=e2287]:
+                  - cell "6 Prevenção a Fraudes" [ref=e2288]:
+                    - generic [ref=e2289]:
+                      - generic [ref=e2290]: "6"
+                      - strong [ref=e2291]: Prevenção a Fraudes
+                  - cell "1" [ref=e2292]
+                  - cell "980" [ref=e2293]
+                  - cell "760 h" [ref=e2294]
+                  - cell "★ 4,7" [ref=e2295]
+          - generic [ref=e2296]:
+            - generic [ref=e2298]:
+              - heading "Gestão do catálogo" [level=2] [ref=e2299]
+              - paragraph [ref=e2300]: Cadastros de apoio, conforme permissões
+            - generic [ref=e2301]:
+              - generic [ref=e2308]:
+                - strong [ref=e2309]: Categorias
+                - generic [ref=e2310]: 6 categorias
+              - button "Gerenciar" [ref=e2311] [cursor=pointer]
+            - generic [ref=e2312]:
+              - generic [ref=e2319]:
+                - strong [ref=e2320]: Equipes
+                - generic [ref=e2321]: 12 equipes cadastradas
+              - button "Gerenciar" [ref=e2322] [cursor=pointer]
+            - generic [ref=e2323]:
+              - generic [ref=e2327]:
+                - strong [ref=e2328]: Soluções
+                - generic [ref=e2329]: 23 ativas · 1 descontinuadas · 1 arquivadas
+              - button "Gerenciar" [ref=e2330] [cursor=pointer]
+            - generic [ref=e2331]:
+              - generic [ref=e2336]:
+                - strong [ref=e2337]: Perfis e permissões
+                - generic [ref=e2338]: "4 perfis: colaborador, publicador, aprovador e administrador"
+              - button "Gerenciar" [ref=e2339] [cursor=pointer]
+            - generic [ref=e2340]: 1 solução publicada está sem atualização desde agosto. Revise o ciclo de vida.
+    - contentinfo [ref=e2345]: CrossMarketPlace v2 · protótipo navegável com dados fictícios · padrão visual Orquestra (aproximado) · BTG Pactual
+  - status

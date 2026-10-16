@@ -1,0 +1,13 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e9]:
+      - img "BTG Pactual" [ref=e10]
+      - generic [ref=e11]:
+        - heading "Que bom te ver por aqui!" [level=1] [ref=e12]
+        - paragraph [ref=e13]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+        - button "Entrar com a conta BTG" [ref=e14] [cursor=pointer]
+      - navigation "Acesso rápido" [ref=e15]:
+        - button "Conta BTG" [ref=e16] [cursor=pointer]
+        - button "Arbitragem" [ref=e20] [cursor=pointer]
+        - button "Ajuda" [ref=e24] [cursor=pointer]
+  - button "Demo" [ref=e28] [cursor=pointer]

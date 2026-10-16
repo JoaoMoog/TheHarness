@@ -1,0 +1,255 @@
+- generic [ref=e1]:
+  - link "Pular para o conteúdo" [ref=e2] [cursor=pointer]:
+    - /url: "#conteudo"
+  - generic [ref=e3]:
+    - banner [ref=e391]:
+      - generic [ref=e392]:
+        - generic [ref=e393]:
+          - button "CrossMarketPlace, ir para o início" [ref=e394] [cursor=pointer]:
+            - img "BTG Pactual" [ref=e395]
+            - strong [ref=e397]: CrossMarketPlace
+          - button "Buscar no catálogo" [ref=e398] [cursor=pointer]
+          - button "Avisos, 3 não lidos" [ref=e402] [cursor=pointer]:
+            - generic [ref=e406]: "3"
+          - 'button "Perfil: Publicador" [ref=e407] [cursor=pointer]':
+            - generic [ref=e408]: "Perfil:"
+            - text: Publicador
+          - generic "João Bahia" [ref=e411]: JB
+        - navigation "Áreas do CrossMarketPlace" [ref=e412]:
+          - button "Início" [ref=e413] [cursor=pointer]
+          - button "Catálogo" [ref=e414] [cursor=pointer]
+          - button "Projetos do meu time" [ref=e415] [cursor=pointer]
+          - button "Minha área" [ref=e416] [cursor=pointer]
+          - button "Solicitações de acesso 2" [ref=e417] [cursor=pointer]:
+            - text: Solicitações de acesso
+            - generic [ref=e418]: "2"
+          - button [ref=e419] [cursor=pointer]:
+            - text: Aprovações
+            - generic "Sem acesso neste perfil" [ref=e420]
+          - button [ref=e424] [cursor=pointer]:
+            - text: Administração
+            - generic "Sem acesso neste perfil" [ref=e425]
+    - generic [ref=e430]:
+      - navigation "Trilha" [ref=e431]:
+        - button "Início" [ref=e432] [cursor=pointer]
+        - text: / Catálogo
+      - generic [ref=e434]:
+        - heading "Catálogo de soluções" [level=1] [ref=e435]
+        - paragraph [ref=e436]: 22 soluções aprovadas por 9 equipes. Só aparecem aqui publicações aprovadas.
+      - search [ref=e438]:
+        - generic [ref=e443]: Buscar no catálogo
+        - textbox "Buscar no catálogo" [ref=e444]:
+          - /placeholder: Busque por nome, descrição ou tag
+          - text: contratos
+        - button "Limpar" [ref=e445] [cursor=pointer]
+        - button "Buscar" [ref=e446] [cursor=pointer]
+    - main [active] [ref=e447]:
+      - generic [ref=e449]:
+        - complementary "Filtros" [ref=e450]:
+          - generic [ref=e451]:
+            - heading "Filtros" [level=2] [ref=e452]
+            - button "Limpar tudo" [ref=e453] [cursor=pointer]
+          - group "Tipo" [ref=e454]:
+            - generic [ref=e456] [cursor=pointer]:
+              - checkbox "Agentes de IA 7" [ref=e457]
+              - generic [ref=e458]: Agentes de IA
+              - generic [ref=e459]: "7"
+            - generic [ref=e460] [cursor=pointer]:
+              - checkbox "APIs e serviços 3" [ref=e461]
+              - generic [ref=e462]: APIs e serviços
+              - generic [ref=e463]: "3"
+            - generic [ref=e464] [cursor=pointer]:
+              - checkbox "Modelos de ML 3" [ref=e465]
+              - generic [ref=e466]: Modelos de ML
+              - generic [ref=e467]: "3"
+            - generic [ref=e468] [cursor=pointer]:
+              - checkbox "Automações 4" [ref=e469]
+              - generic [ref=e470]: Automações
+              - generic [ref=e471]: "4"
+            - generic [ref=e472] [cursor=pointer]:
+              - checkbox "Dashboards 2" [ref=e473]
+              - generic [ref=e474]: Dashboards
+              - generic [ref=e475]: "2"
+            - generic [ref=e476] [cursor=pointer]:
+              - checkbox "Bibliotecas 3" [ref=e477]
+              - generic [ref=e478]: Bibliotecas
+              - generic [ref=e479]: "3"
+          - group "Ciclo de vida" [ref=e480]:
+            - generic [ref=e482] [cursor=pointer]:
+              - checkbox "Experimental 1" [ref=e483]
+              - generic [ref=e484]: Experimental
+              - generic [ref=e485]: "1"
+            - generic [ref=e486] [cursor=pointer]:
+              - checkbox "Piloto 3" [ref=e487]
+              - generic [ref=e488]: Piloto
+              - generic [ref=e489]: "3"
+            - generic [ref=e490] [cursor=pointer]:
+              - checkbox "Produção 18" [ref=e491]
+              - generic [ref=e492]: Produção
+              - generic [ref=e493]: "18"
+          - group "Acesso" [ref=e494]:
+            - generic [ref=e496] [cursor=pointer]:
+              - checkbox "Acesso direto 13" [ref=e497]
+              - generic [ref=e498]: Acesso direto
+              - generic [ref=e499]: "13"
+            - generic [ref=e500] [cursor=pointer]:
+              - checkbox "Exige autorização 9" [ref=e501]
+              - generic [ref=e502]: Exige autorização
+              - generic [ref=e503]: "9"
+          - group "Equipe" [ref=e504]:
+            - generic [ref=e506] [cursor=pointer]:
+              - checkbox "Risco Quant 7" [ref=e507]
+              - generic [ref=e508]: Risco Quant
+              - generic [ref=e509]: "7"
+            - generic [ref=e510] [cursor=pointer]:
+              - checkbox "Ops Tech 4" [ref=e511]
+              - generic [ref=e512]: Ops Tech
+              - generic [ref=e513]: "4"
+            - generic [ref=e514] [cursor=pointer]:
+              - checkbox "Crédito Digital 4" [ref=e515]
+              - generic [ref=e516]: Crédito Digital
+              - generic [ref=e517]: "4"
+            - generic [ref=e518] [cursor=pointer]:
+              - checkbox "Jurídico Digital 2" [ref=e519]
+              - generic [ref=e520]: Jurídico Digital
+              - generic [ref=e521]: "2"
+            - generic [ref=e522] [cursor=pointer]:
+              - checkbox "Câmbio Tech 1" [ref=e523]
+              - generic [ref=e524]: Câmbio Tech
+              - generic [ref=e525]: "1"
+            - button "Ver as 9 equipes" [ref=e526] [cursor=pointer]
+          - group "Avaliação mínima" [ref=e527]:
+            - generic [ref=e529]:
+              - button "Todas" [pressed] [ref=e530] [cursor=pointer]
+              - button "3+ ★" [ref=e531] [cursor=pointer]
+              - button "4+ ★" [ref=e532] [cursor=pointer]
+              - button "4,5+ ★" [ref=e533] [cursor=pointer]
+        - region "Resultados" [ref=e534]:
+          - generic [ref=e535]:
+            - heading "5 resultados para “contratos”" [level=2] [ref=e537]
+            - generic [ref=e538]:
+              - generic [ref=e539]: "Ordenar por:"
+              - combobox "Ordenar por" [ref=e540]:
+                - option "Relevância" [selected]
+                - option "Atualização"
+                - option "Mais usadas"
+                - option "Melhor avaliadas"
+          - generic [ref=e541]:
+            - article [ref=e542]:
+              - generic [ref=e543]:
+                - generic [ref=e544]: Agente de IA
+                - generic [ref=e549]: Produção
+              - heading [level=3] [ref=e550]:
+                - button "Leitor de Contratos" [ref=e551] [cursor=pointer]
+              - paragraph [ref=e552]: Extrai cláusulas, prazos e riscos de contratos em PDF e devolve um resumo estruturado.
+              - generic [ref=e553]:
+                - generic [ref=e554]: "#ocr"
+                - generic [ref=e555]: "#genai"
+                - generic [ref=e556]: "#jurídico"
+              - generic [ref=e557]:
+                - strong [ref=e561]: 4,8
+                - generic [ref=e562]: (32 avaliações)
+                - generic [ref=e563]: ·
+                - text: 1,2 mil usos confirmados
+              - generic [ref=e568]:
+                - generic [ref=e569]:
+                  - generic [ref=e570]: JD
+                  - generic [ref=e571]: Jurídico Digital
+                - generic [ref=e572]:
+                  - generic [ref=e573]: Acesso direto
+                  - button "Remover dos favoritos Leitor de Contratos" [pressed] [ref=e577] [cursor=pointer]
+            - article [ref=e580]:
+              - generic [ref=e581]:
+                - generic [ref=e582]: Automação
+                - generic [ref=e591]: Produção
+              - heading [level=3] [ref=e592]:
+                - button "Monitor de Vencimentos" [ref=e593] [cursor=pointer]
+              - paragraph [ref=e594]: Avisa os responsáveis 30, 15 e 5 dias antes do vencimento de contratos com fornecedores.
+              - generic [ref=e595]:
+                - generic [ref=e596]: "#rpa"
+                - generic [ref=e597]: "#alertas"
+                - generic [ref=e598]: "#compras"
+              - generic [ref=e599]:
+                - strong [ref=e603]: 4,8
+                - generic [ref=e604]: (40 avaliações)
+                - generic [ref=e605]: ·
+                - text: 1,6 mil usos confirmados
+              - generic [ref=e610]:
+                - generic [ref=e611]:
+                  - generic [ref=e612]: OT
+                  - generic [ref=e613]: Ops Tech
+                - generic [ref=e614]:
+                  - generic [ref=e615]: Acesso direto
+                  - button "Remover dos favoritos Monitor de Vencimentos" [pressed] [ref=e619] [cursor=pointer]
+            - article [ref=e622]:
+              - generic [ref=e623]:
+                - generic [ref=e624]: Automação
+                - generic [ref=e633]: Produção
+              - heading [level=3] [ref=e634]:
+                - button "Extrator de Garantias" [ref=e635] [cursor=pointer]
+              - paragraph [ref=e636]: Lê contratos de crédito e cadastra as garantias no sistema de colaterais automaticamente.
+              - generic [ref=e637]:
+                - generic [ref=e638]: "#rpa"
+                - generic [ref=e639]: "#crédito"
+                - generic [ref=e640]: "#ocr"
+              - generic [ref=e641]:
+                - strong [ref=e645]: 4,7
+                - generic [ref=e646]: (21 avaliações)
+                - generic [ref=e647]: ·
+                - text: 860 usos confirmados
+              - generic [ref=e652]:
+                - generic [ref=e653]:
+                  - generic [ref=e654]: CD
+                  - generic [ref=e655]: Crédito Digital
+                - generic [ref=e656]:
+                  - generic [ref=e657]: Acesso direto
+                  - button "Remover dos favoritos Extrator de Garantias" [pressed] [ref=e661] [cursor=pointer]
+            - article [ref=e664]:
+              - generic [ref=e665]:
+                - generic [ref=e666]: Agente de IA
+                - generic [ref=e671]: Produção
+              - heading [level=3] [ref=e672]:
+                - button "Assistente de Cláusulas ESG" [ref=e673] [cursor=pointer]
+              - paragraph [ref=e674]: Identifica cláusulas socioambientais em contratos de financiamento e gera um checklist.
+              - generic [ref=e675]:
+                - generic [ref=e676]: "#esg"
+                - generic [ref=e677]: "#genai"
+                - generic [ref=e678]: "#crédito"
+              - generic [ref=e679]:
+                - strong [ref=e683]: 4,6
+                - generic [ref=e684]: (7 avaliações)
+                - generic [ref=e685]: ·
+                - text: 140 usos confirmados
+              - generic [ref=e690]:
+                - generic [ref=e691]:
+                  - generic [ref=e692]: S
+                  - generic [ref=e693]: Sustentabilidade
+                - generic [ref=e694]:
+                  - generic [ref=e695]: Acesso direto
+                  - button "Favoritar Assistente de Cláusulas ESG" [ref=e699] [cursor=pointer]
+            - article [ref=e702]:
+              - generic [ref=e703]:
+                - generic [ref=e704]: Agente de IA
+                - generic [ref=e709]: Produção
+              - heading [level=3] [ref=e710]:
+                - button "Classificador de Câmbio" [ref=e711] [cursor=pointer]
+              - paragraph [ref=e712]: Classifica contratos de câmbio por natureza e aponta inconsistências regulatórias.
+              - generic [ref=e713]:
+                - generic [ref=e714]: "#câmbio"
+                - generic [ref=e715]: "#compliance"
+                - generic [ref=e716]: "#genai"
+              - generic [ref=e717]:
+                - strong [ref=e721]: 4,4
+                - generic [ref=e722]: (9 avaliações)
+                - generic [ref=e723]: ·
+                - text: 220 usos confirmados
+              - generic [ref=e728]:
+                - generic [ref=e729]:
+                  - generic [ref=e730]: CT
+                  - generic [ref=e731]: Câmbio Tech
+                - generic [ref=e732]:
+                  - generic [ref=e733]: Exige autorização
+                  - button "Favoritar Classificador de Câmbio" [ref=e737] [cursor=pointer]
+          - generic [ref=e740]: Mostrando 1–5 de 5 soluções
+    - contentinfo [ref=e742]: CrossMarketPlace v2 · protótipo navegável com dados fictícios · padrão visual Orquestra (aproximado) · BTG Pactual
+  - status

@@ -1,0 +1,111 @@
+- generic [active] [ref=f11e1]:
+  - main [ref=f11e34]:
+    - generic [ref=f11e148]:
+      - region "Celular de Cliente, agindo agora" [ref=f11e149]:
+        - generic [ref=f11e150]:
+          - generic [ref=f11e152]: Cliente
+          - generic [ref=f11e153]: agindo agora
+        - generic [ref=f11e157]:
+          - generic [ref=f11e158]: 9:41
+          - generic [ref=f11e161]:
+            - img "BTG Pactual" [ref=f11e162]
+            - generic [ref=f11e163]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=f11e164]
+              - paragraph [ref=f11e165]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG" [ref=f11e166] [cursor=pointer]
+            - navigation "Acesso rápido" [ref=f11e167]:
+              - button "Conta BTG" [ref=f11e168] [cursor=pointer]
+              - button "Arbitragem" [ref=f11e172] [cursor=pointer]
+      - region "Celular de Marina, só para ver" [ref=f11e176]:
+        - generic [ref=f11e177]:
+          - generic [ref=f11e180]: Marina
+          - generic [ref=f11e181]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f11e182] [cursor=pointer]
+        - generic [ref=f11e188]:
+          - generic [ref=f11e189]: 9:41
+          - generic [ref=f11e192]:
+            - generic [ref=f11e193]:
+              - generic [ref=f11e194]:
+                - button "MC Olá, Marina":
+                  - generic: MC
+                  - generic:
+                    - text: Olá,
+                    - strong: Marina
+                - generic [ref=f11e195]:
+                  - button "Avisos"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f11e196]
+              - generic [ref=f11e197]:
+                - generic [ref=f11e198]:
+                  - generic [ref=f11e199]: Guardado nos seus pagamentos
+                  - strong [ref=f11e200]: R$ 0,00
+                - button "Ocultar valores"
+              - paragraph [ref=f11e201]: 0 a pagar · 0 a receber
+              - generic [ref=f11e202]:
+                - button "Saldo para pagar R$ 12.843,50":
+                  - generic: Saldo para pagar
+                  - strong: R$ 12.843,50
+                - button "Pode pagar com empréstimo na hora R$ 20.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 20.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f11e203]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f11e205]:
+              - paragraph [ref=f11e206]: Vai pagar um serviço? Você tem R$ 20.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f11e210]:
+              - button "A pagar"
+              - button "A receber"
+              - button "Concluídos"
+            - generic [ref=f11e211]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f11e213]
+              - paragraph [ref=f11e214]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=f11e215]:
+              - generic [ref=f11e218]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=f11e106]:
+    - generic [ref=f11e131]:
+      - dialog "Pagar um serviço é um risco" [ref=f11e219]:
+        - banner [ref=f11e220]:
+          - img "BTG Pactual" [ref=f11e221]
+          - navigation "Slides" [ref=f11e222]:
+            - button "O que é" [ref=f11e223] [cursor=pointer]
+            - button "Problema" [ref=f11e225] [cursor=pointer]
+            - button "Solução" [ref=f11e227] [cursor=pointer]
+            - button "Impacto" [ref=f11e229] [cursor=pointer]
+            - button "Exemplo" [ref=f11e231] [cursor=pointer]
+        - generic [ref=f11e233]:
+          - heading "Pagar um serviço é um risco" [level=1] [ref=f11e234]
+          - generic [ref=f11e235]:
+            - generic [ref=f11e236]:
+              - generic [ref=f11e240]: Quem contrata
+              - paragraph [ref=f11e241]: E se eu pagar e não fizerem?
+            - generic [ref=f11e245]:
+              - generic [ref=f11e249]: Quem presta
+              - paragraph [ref=f11e250]: E se eu fizer e não pagarem?
+          - generic [ref=f11e251]:
+            - generic [ref=f11e252]: Pix sem garantia
+            - generic [ref=f11e255]: Crédito escondido
+            - generic [ref=f11e258]: Briga no Procon
+        - contentinfo [ref=f11e261]:
+          - button "Voltar" [ref=f11e262] [cursor=pointer]
+          - button "Pular para a demonstração" [ref=f11e265] [cursor=pointer]
+          - button "Próximo" [ref=f11e266] [cursor=pointer]
+      - generic [ref=f11e269]:
+        - button "Avançar (→)" [ref=f11e270] [cursor=pointer]
+        - generic [ref=f11e273]:
+          - strong [ref=f11e274]: Avançar
+          - generic [ref=f11e275]: →, espaço ou passador
+        - group "Como avança" [ref=f11e277]:
+          - button "Eu avanço" [pressed] [ref=f11e278] [cursor=pointer]
+          - button "Automático" [ref=f11e279] [cursor=pointer]
+        - button "Sair (Esc)" [ref=f11e280] [cursor=pointer]
+  - generic [ref=f11e286]:
+    - generic [ref=f11e287]: Guardado no BTG
+    - strong [ref=f11e288]: R$ 0,00

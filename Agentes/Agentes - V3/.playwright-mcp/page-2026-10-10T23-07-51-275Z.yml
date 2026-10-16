@@ -1,0 +1,189 @@
+- generic [active] [ref=f23e1]:
+  - banner [ref=f23e2]:
+    - generic [ref=f23e3]:
+      - strong [ref=f23e4]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f23e5]:
+      - button "Ana Ribeiro sua conta" [pressed] [ref=f23e6] [cursor=pointer]:
+        - strong [ref=f23e7]: Ana Ribeiro
+        - generic [ref=f23e8]: sua conta
+      - button "Marina Costa paga e recebe" [ref=f23e9] [cursor=pointer]:
+        - strong [ref=f23e10]: Marina Costa
+        - generic [ref=f23e11]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [ref=f23e12] [cursor=pointer]:
+        - strong [ref=f23e13]: Carlos Mendes
+        - generic [ref=f23e14]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=f23e15] [cursor=pointer]:
+        - strong [ref=f23e16]: Banco
+        - generic [ref=f23e17]: operações BTG
+    - group "Relógio da demonstração" [ref=f23e18]:
+      - strong [ref=f23e21]: Hoje 04/10
+      - button "+1 dia" [ref=f23e22] [cursor=pointer]
+      - button "+7 dias" [ref=f23e23] [cursor=pointer]
+    - generic [ref=f23e24]:
+      - button "Dois celulares" [pressed] [ref=f23e25] [cursor=pointer]
+      - button "WhatsApp" [ref=f23e28] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f23e31] [cursor=pointer]
+  - main [ref=f23e34]:
+    - generic [ref=f23e35]:
+      - region "Celular de Ana, agindo agora" [ref=f23e36]:
+        - generic [ref=f23e37]:
+          - generic [ref=f23e39]: Ana
+          - generic [ref=f23e40]: agindo agora
+        - generic [ref=f23e44]:
+          - generic [ref=f23e45]: 9:41
+          - generic [ref=f23e48]:
+            - generic [ref=f23e49]:
+              - generic [ref=f23e50]:
+                - button "AR Olá, Ana" [ref=f23e51] [cursor=pointer]:
+                  - generic [ref=f23e52]: AR
+                  - generic [ref=f23e53]:
+                    - text: Olá,
+                    - strong [ref=f23e54]: Ana
+                - generic [ref=f23e57]:
+                  - button "Avisos" [ref=f23e58] [cursor=pointer]
+                  - button "Pagamentos" [ref=f23e61] [cursor=pointer]
+              - heading "Pagamento protegido" [level=2] [ref=f23e64]
+              - generic [ref=f23e65]:
+                - generic [ref=f23e66]:
+                  - generic [ref=f23e67]: Guardado nos seus pagamentos
+                  - strong [ref=f23e68]: R$ 16.000,00
+                - button "Ocultar valores" [ref=f23e69] [cursor=pointer]
+              - paragraph [ref=f23e72]: 1 a pagar · 0 a receber
+              - generic [ref=f23e73]:
+                - button "Saldo para pagar R$ 15.000,00" [ref=f23e74] [cursor=pointer]:
+                  - generic [ref=f23e75]: Saldo para pagar
+                  - strong [ref=f23e76]: R$ 15.000,00
+                - button "Pode pagar com empréstimo na hora R$ 20.000,00" [ref=f23e79] [cursor=pointer]:
+                  - generic [ref=f23e80]: Pode pagar com empréstimo na hora
+                  - strong [ref=f23e81]: R$ 20.000,00
+              - button "Movimentos dos pagamentos" [ref=f23e84] [cursor=pointer]
+            - navigation "Atalhos" [ref=f23e85]:
+              - button "Cobrar" [ref=f23e86] [cursor=pointer]
+              - button "Pagar" [ref=f23e90] [cursor=pointer]
+              - button "Ler QR" [ref=f23e94] [cursor=pointer]
+              - button "Assistente" [ref=f23e98] [cursor=pointer]
+              - button "Disputas" [ref=f23e102] [cursor=pointer]
+              - button "Benefícios" [ref=f23e106] [cursor=pointer]
+            - generic [ref=f23e111]:
+              - paragraph [ref=f23e112]: Vai pagar um serviço? Você tem R$ 20.000,00 de empréstimo na hora.
+              - button "Pagar" [ref=f23e113] [cursor=pointer]
+            - generic [ref=f23e117]:
+              - button "A pagar 1" [ref=f23e118] [cursor=pointer]
+              - button "A receber" [ref=f23e119] [cursor=pointer]
+              - button "Concluídos" [ref=f23e120] [cursor=pointer]
+            - generic [ref=f23e121]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f23e123]
+              - button "Protegido Pintura Horizonte Reformas R$ 16.000,00" [ref=f23e124] [cursor=pointer]:
+                - generic [ref=f23e128]:
+                  - generic [ref=f23e129]: Protegido
+                  - strong [ref=f23e130]: Pintura
+                  - generic [ref=f23e131]: Horizonte Reformas
+                - generic [ref=f23e132]: R$ 16.000,00
+            - paragraph [ref=f23e133]:
+              - generic [ref=f23e136]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu" [ref=f23e137] [cursor=pointer]
+      - region "Celular de Carlos, só para ver" [ref=f23e141]:
+        - generic [ref=f23e142]:
+          - generic [ref=f23e145]: Carlos
+          - generic [ref=f23e146]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f23e147] [cursor=pointer]
+        - generic [ref=f23e153]:
+          - generic [ref=f23e154]: 9:41
+          - generic [ref=f23e157]:
+            - generic [ref=f23e158]:
+              - generic [ref=f23e159]:
+                - button "CM Olá, Carlos":
+                  - generic: CM
+                  - generic:
+                    - text: Olá,
+                    - strong: Carlos
+                - generic [ref=f23e160]:
+                  - button "Avisos, 2 não lidos":
+                    - generic: "2"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f23e161]
+              - generic [ref=f23e162]:
+                - generic [ref=f23e163]:
+                  - generic [ref=f23e164]: Guardado nos seus pagamentos
+                  - strong [ref=f23e165]: R$ 16.000,00
+                - button "Ocultar valores"
+              - paragraph [ref=f23e166]: 0 a pagar · 1 a receber
+              - generic [ref=f23e167]:
+                - button "Saldo para pagar R$ 48.120,00":
+                  - generic: Saldo para pagar
+                  - strong: R$ 48.120,00
+                - button "Pode pagar com empréstimo na hora R$ 50.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 50.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f23e168]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Antecipar"
+              - button "Selo"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f23e169]:
+              - generic [ref=f23e170]:
+                - heading "Para hoje" [level=3] [ref=f23e171]
+                - generic [ref=f23e172]: Hoje 04/Out
+              - button "Enviar entrega Pintura · marco 1 R$ 9.600,00":
+                - generic:
+                  - generic: Enviar entrega
+                  - strong: Pintura · marco 1
+                - generic: R$ 9.600,00
+            - generic [ref=f23e174]:
+              - paragraph [ref=f23e175]: Vai pagar um serviço? Você tem R$ 50.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f23e179]:
+              - button "A pagar"
+              - button "A receber 1"
+              - button "Concluídos"
+            - generic [ref=f23e180]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f23e182]
+              - button "Entregar marco 1 Pintura Ana Ribeiro R$ 16.000,00":
+                - generic:
+                  - generic: Entregar marco 1
+                  - strong: Pintura
+                  - generic: Ana Ribeiro
+                - generic: R$ 16.000,00
+            - paragraph [ref=f23e183]:
+              - generic [ref=f23e186]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=f23e187]:
+    - generic [ref=f23e188]:
+      - generic [ref=f23e191]:
+        - group "Cenários" [ref=f23e192]:
+          - 'button "Cenário 1: O prestador cobra" [ref=f23e193] [cursor=pointer]': "1"
+          - 'button "Cenário 2: Entregar e liberar" [ref=f23e194] [cursor=pointer]': "2"
+          - 'button "Cenário 3: O cliente paga um prestador" [ref=f23e195] [cursor=pointer]': "3"
+          - 'button "Cenário 4: Pagar em conjunto" [ref=f23e196] [cursor=pointer]': "4"
+          - 'button "Cenário 5: QR na hora" [ref=f23e197] [cursor=pointer]': "5"
+          - 'button "Cenário 6: Disputa" [ref=f23e198] [cursor=pointer]': "6"
+          - 'button "Cenário 7: Antecipação" [ref=f23e199] [cursor=pointer]': "7"
+          - 'button "Cenário 8: Pelo WhatsApp" [ref=f23e200] [cursor=pointer]': "8"
+          - 'button "Cenário 9: No banco" [ref=f23e201] [cursor=pointer]': "9"
+        - strong [ref=f23e202]: O prestador cobra
+        - generic [ref=f23e203]: WhatsApp, conta na hora, cartão com seguro.
+      - generic [ref=f23e204]:
+        - paragraph [ref=f23e205]: Cenário concluído.
+        - 'button "Próximo: Entregar e liberar" [ref=f23e208] [cursor=pointer]'
+    - generic [ref=f23e212]:
+      - button "Apresentar este cenário" [ref=f23e213] [cursor=pointer]
+      - generic [ref=f23e216]:
+        - button "Versão executiva · 24 min" [ref=f23e217] [cursor=pointer]
+        - generic [ref=f23e218]:
+          - button "Slides de abertura" [ref=f23e219] [cursor=pointer]
+          - button "Ver cenários" [ref=f23e220] [cursor=pointer]
+          - button "Tela cheia (F)" [ref=f23e221] [cursor=pointer]
+      - generic [ref=f23e224]:
+        - group "Como avança" [ref=f23e225]:
+          - button "Eu avanço" [ref=f23e226] [cursor=pointer]
+          - button "Automático" [pressed] [ref=f23e227] [cursor=pointer]
+        - group "Velocidade" [ref=f23e228]:
+          - button "Devagar" [ref=f23e229] [cursor=pointer]
+          - button "Normal" [pressed] [ref=f23e230] [cursor=pointer]
+          - button "Rápido" [ref=f23e231] [cursor=pointer]

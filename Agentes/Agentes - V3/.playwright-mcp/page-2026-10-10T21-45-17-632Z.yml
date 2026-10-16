@@ -1,0 +1,132 @@
+- generic [active] [ref=f11e1]:
+  - banner [ref=f11e2]:
+    - generic [ref=f11e3]:
+      - strong [ref=f11e4]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f11e5]:
+      - button "Você criar conta" [pressed] [ref=f11e6] [cursor=pointer]:
+        - strong [ref=f11e7]: Você
+        - generic [ref=f11e8]: criar conta
+      - button "Marina Costa paga e recebe" [ref=f11e9] [cursor=pointer]:
+        - strong [ref=f11e10]: Marina Costa
+        - generic [ref=f11e11]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [ref=f11e12] [cursor=pointer]:
+        - strong [ref=f11e13]: Carlos Mendes
+        - generic [ref=f11e14]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=f11e15] [cursor=pointer]:
+        - strong [ref=f11e16]: Banco
+        - generic [ref=f11e17]: operações BTG
+    - group "Relógio da demonstração" [ref=f11e18]:
+      - strong [ref=f11e21]: Hoje 04/10
+      - button "+1 dia" [ref=f11e22] [cursor=pointer]
+      - button "+7 dias" [ref=f11e23] [cursor=pointer]
+    - generic [ref=f11e24]:
+      - button "Dois celulares" [pressed] [ref=f11e25] [cursor=pointer]
+      - button "WhatsApp" [ref=f11e28] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f11e31] [cursor=pointer]
+  - main [ref=f11e34]:
+    - generic [ref=f11e35]:
+      - region "Celular de Cliente, agindo agora" [ref=f11e36]:
+        - generic [ref=f11e37]:
+          - generic [ref=f11e39]: Cliente
+          - generic [ref=f11e40]: agindo agora
+        - generic [ref=f11e44]:
+          - generic [ref=f11e45]: 9:41
+          - generic [ref=f11e48]:
+            - img "BTG Pactual" [ref=f11e49]
+            - generic [ref=f11e50]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=f11e51]
+              - paragraph [ref=f11e52]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG" [ref=f11e53] [cursor=pointer]
+            - navigation "Acesso rápido" [ref=f11e54]:
+              - button "Conta BTG" [ref=f11e55] [cursor=pointer]
+              - button "Arbitragem" [ref=f11e59] [cursor=pointer]
+      - region "Celular de Marina, só para ver" [ref=f11e63]:
+        - generic [ref=f11e64]:
+          - generic [ref=f11e67]: Marina
+          - generic [ref=f11e68]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f11e69] [cursor=pointer]
+        - generic [ref=f11e75]:
+          - generic [ref=f11e76]: 9:41
+          - generic [ref=f11e79]:
+            - generic [ref=f11e80]:
+              - generic [ref=f11e81]:
+                - button "MC Olá, Marina":
+                  - generic: MC
+                  - generic:
+                    - text: Olá,
+                    - strong: Marina
+                - generic [ref=f11e82]:
+                  - button "Avisos"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f11e83]
+              - generic [ref=f11e84]:
+                - generic [ref=f11e85]:
+                  - generic [ref=f11e86]: Guardado nos seus pagamentos
+                  - strong [ref=f11e87]: R$ 0,00
+                - button "Ocultar valores"
+              - paragraph [ref=f11e88]: 0 a pagar · 0 a receber
+              - generic [ref=f11e89]:
+                - button "Saldo para pagar R$ 12.843,50":
+                  - generic: Saldo para pagar
+                  - strong: R$ 12.843,50
+                - button "Pode pagar com empréstimo na hora R$ 20.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 20.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f11e90]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f11e92]:
+              - paragraph [ref=f11e93]: Vai pagar um serviço? Você tem R$ 20.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f11e97]:
+              - button "A pagar"
+              - button "A receber"
+              - button "Concluídos"
+            - generic [ref=f11e98]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f11e100]
+              - paragraph [ref=f11e101]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=f11e102]:
+              - generic [ref=f11e105]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=f11e106]:
+    - generic [ref=f11e107]:
+      - generic [ref=f11e109]:
+        - group "Cenários" [ref=f11e110]:
+          - 'button "Cenário 1: O prestador cobra" [ref=f11e111] [cursor=pointer]': "1"
+          - 'button "Cenário 2: Entregar e liberar" [ref=f11e112] [cursor=pointer]': "2"
+          - 'button "Cenário 3: O cliente paga um prestador" [ref=f11e113] [cursor=pointer]': "3"
+          - 'button "Cenário 4: Pagar em conjunto" [ref=f11e114] [cursor=pointer]': "4"
+          - 'button "Cenário 5: QR na hora" [ref=f11e115] [cursor=pointer]': "5"
+          - 'button "Cenário 6: Disputa" [ref=f11e116] [cursor=pointer]': "6"
+          - 'button "Cenário 7: Antecipação" [ref=f11e117] [cursor=pointer]': "7"
+          - 'button "Cenário 8: Pelo WhatsApp" [ref=f11e118] [cursor=pointer]': "8"
+          - 'button "Cenário 9: No banco" [ref=f11e119] [cursor=pointer]': "9"
+        - strong [ref=f11e120]: O prestador cobra
+        - generic [ref=f11e121]: WhatsApp, conta na hora, cartão com seguro.
+      - generic [ref=f11e122]:
+        - generic [ref=f11e123]: Carlos
+        - paragraph [ref=f11e124]: Toque em Cobrar
+        - generic [ref=f11e125]: Passo 1 de 25
+        - generic [ref=f11e126]:
+          - paragraph [ref=f11e127]: Carlos registra a pintura que combinou.
+          - button "Ir para Carlos" [ref=f11e128] [cursor=pointer]
+    - generic [ref=f11e132]:
+      - button "Apresentar este cenário" [ref=f11e133] [cursor=pointer]
+      - generic [ref=f11e136]:
+        - button "Versão executiva · 17 min" [ref=f11e137] [cursor=pointer]
+        - generic [ref=f11e138]:
+          - button "Slides de abertura" [ref=f11e139] [cursor=pointer]
+          - button "Ver cenários" [ref=f11e140] [cursor=pointer]
+      - generic [ref=f11e141]:
+        - group "Como avança" [ref=f11e142]:
+          - button "Eu avanço" [pressed] [ref=f11e143] [cursor=pointer]
+          - button "Automático" [ref=f11e144] [cursor=pointer]
+        - generic [ref=f11e145]:
+          - button "Voltar" [ref=f11e146] [cursor=pointer]
+          - button "Pular" [ref=f11e147] [cursor=pointer]

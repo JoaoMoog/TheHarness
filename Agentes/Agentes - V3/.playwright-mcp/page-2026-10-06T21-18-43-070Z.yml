@@ -1,0 +1,247 @@
+- generic [ref=e1]:
+  - link "Pular para o conteúdo" [ref=e2] [cursor=pointer]:
+    - /url: "#conteudo"
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - button "CrossMarketPlace, ir para o início" [ref=e7] [cursor=pointer]:
+            - img "BTG Pactual" [ref=e8]
+            - strong [ref=e10]: CrossMarketPlace
+          - button "Buscar no catálogo" [ref=e11] [cursor=pointer]
+          - button "Avisos, 3 não lidos" [ref=e15] [cursor=pointer]:
+            - generic [ref=e19]: "3"
+          - 'button "Perfil: Publicador" [ref=e20] [cursor=pointer]':
+            - generic [ref=e21]: "Perfil:"
+            - text: Publicador
+          - generic "João Bahia" [ref=e24]: JB
+        - navigation "Áreas do CrossMarketPlace" [ref=e25]:
+          - button "Início" [ref=e26] [cursor=pointer]
+          - button "Catálogo" [ref=e27] [cursor=pointer]
+          - button "Projetos do meu time" [ref=e28] [cursor=pointer]
+          - button "Minha área" [ref=e29] [cursor=pointer]
+          - button "Solicitações de acesso 2" [ref=e30] [cursor=pointer]:
+            - text: Solicitações de acesso
+            - generic [ref=e31]: "2"
+          - button [ref=e32] [cursor=pointer]:
+            - text: Aprovações
+            - generic "Sem acesso neste perfil" [ref=e33]
+          - button [ref=e37] [cursor=pointer]:
+            - text: Administração
+            - generic "Sem acesso neste perfil" [ref=e38]
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - paragraph [ref=e44]: Olá, João
+            - heading "Antes de construir, descubra o que já existe." [level=1] [ref=e45]
+            - paragraph [ref=e46]: 22 soluções de tecnologia e IA, criadas por 9 equipes, prontas para reutilizar.
+            - search [ref=e47]:
+              - generic [ref=e52]: Buscar soluções
+              - textbox "Buscar soluções" [ref=e53]:
+                - /placeholder: "Busque por nome, descrição ou tag: OCR, RAG, conciliação…"
+              - button "Buscar" [ref=e54] [cursor=pointer]
+            - generic [ref=e55]:
+              - text: "Em alta:"
+              - button "#genai" [ref=e56] [cursor=pointer]
+              - button "#ocr" [ref=e57] [cursor=pointer]
+              - button "#risco" [ref=e58] [cursor=pointer]
+              - button "#crédito" [ref=e59] [cursor=pointer]
+              - button "#rpa" [ref=e60] [cursor=pointer]
+          - generic [ref=e61]:
+            - paragraph [ref=e62]: Horas economizadas com reutilização · 2026
+            - generic [ref=e63]:
+              - strong [ref=e64]: 13.880 h
+              - generic [ref=e65]: +18% vs. 2025
+            - paragraph [ref=e69]: pelas equipes do banco ao reaproveitar soluções
+            - button "Soluções publicadas 22" [ref=e70] [cursor=pointer]:
+              - generic [ref=e71]: Soluções publicadas
+              - strong [ref=e72]: "22"
+            - button "Equipes publicadoras 9" [ref=e75] [cursor=pointer]:
+              - generic [ref=e76]: Equipes publicadoras
+              - strong [ref=e77]: "9"
+            - button "Reutilizações confirmadas 16.314" [ref=e80] [cursor=pointer]:
+              - generic [ref=e81]: Reutilizações confirmadas
+              - strong [ref=e82]: "16.314"
+    - navigation "Atalhos" [ref=e85]:
+      - generic [ref=e86]:
+        - button "Publicar solução" [ref=e87] [cursor=pointer]
+        - button "Importar dados estruturados" [ref=e89] [cursor=pointer]
+        - button "Minhas solicitações" [ref=e93] [cursor=pointer]
+        - button "Favoritos" [ref=e97] [cursor=pointer]
+        - button "Pendências" [ref=e100] [cursor=pointer]
+        - button "Painel de impacto" [ref=e104] [cursor=pointer]
+        - button "Guia de publicação" [ref=e106] [cursor=pointer]
+    - main [active] [ref=e109]:
+      - generic [ref=e110]:
+        - region [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - heading "Explorar por categoria" [level=2] [ref=e114]
+              - paragraph [ref=e115]: Encontre soluções pelo tipo de problema que resolvem
+            - button "Ver catálogo completo" [ref=e116] [cursor=pointer]
+          - generic [ref=e119]:
+            - button [ref=e120] [cursor=pointer]:
+              - generic [ref=e124]:
+                - strong [ref=e125]: Agentes de IA
+                - text: 7 soluções
+            - button [ref=e126] [cursor=pointer]:
+              - generic [ref=e132]:
+                - strong [ref=e133]: APIs e serviços
+                - text: 3 soluções
+            - button [ref=e134] [cursor=pointer]:
+              - generic [ref=e142]:
+                - strong [ref=e143]: Modelos de ML
+                - text: 3 soluções
+            - button [ref=e144] [cursor=pointer]:
+              - generic [ref=e152]:
+                - strong [ref=e153]: Automações
+                - text: 4 soluções
+            - button [ref=e154] [cursor=pointer]:
+              - generic [ref=e158]:
+                - strong [ref=e159]: Dashboards
+                - text: 2 soluções
+            - button [ref=e160] [cursor=pointer]:
+              - generic [ref=e164]:
+                - strong [ref=e165]: Bibliotecas
+                - text: 3 soluções
+        - region [ref=e166]:
+          - generic [ref=e167]:
+            - generic [ref=e168]:
+              - heading "Atualizadas recentemente" [level=2] [ref=e169]
+              - paragraph [ref=e170]: Novas versões e publicações aprovadas nas últimas semanas
+            - group "Ordenar" [ref=e171]:
+              - button "Atualização" [pressed] [ref=e172] [cursor=pointer]
+              - button "Mais usadas" [ref=e173] [cursor=pointer]
+              - button "Melhor avaliadas" [ref=e174] [cursor=pointer]
+          - generic [ref=e175]:
+            - article [ref=e176]:
+              - generic [ref=e177]:
+                - generic [ref=e178]: Automação
+                - generic [ref=e187]: Produção
+              - heading [level=3] [ref=e188]:
+                - button "Conciliação D+0" [ref=e189] [cursor=pointer]
+              - paragraph [ref=e190]: Robô que concilia extratos com o razão contábil e aponta divergências antes do fechamento.
+              - generic [ref=e191]:
+                - generic [ref=e192]: "#rpa"
+                - generic [ref=e193]: "#backoffice"
+                - generic [ref=e194]: "#contábil"
+              - generic [ref=e195]:
+                - strong [ref=e199]: 4,9
+                - generic [ref=e200]: (54 avaliações)
+                - generic [ref=e201]: ·
+                - text: 2,1 mil usos confirmados
+              - generic [ref=e206]:
+                - generic [ref=e207]:
+                  - generic [ref=e208]: OT
+                  - generic [ref=e209]: Ops Tech
+                - generic [ref=e210]:
+                  - generic [ref=e211]: Acesso direto
+                  - button "Remover dos favoritos Conciliação D+0" [pressed] [ref=e215] [cursor=pointer]
+            - article [ref=e218]:
+              - generic [ref=e219]:
+                - generic [ref=e220]: Agente de IA
+                - generic [ref=e225]: Produção
+              - heading [level=3] [ref=e226]:
+                - button "Leitor de Contratos" [ref=e227] [cursor=pointer]
+              - paragraph [ref=e228]: Extrai cláusulas, prazos e riscos de contratos em PDF e devolve um resumo estruturado.
+              - generic [ref=e229]:
+                - generic [ref=e230]: "#ocr"
+                - generic [ref=e231]: "#genai"
+                - generic [ref=e232]: "#jurídico"
+              - generic [ref=e233]:
+                - strong [ref=e237]: 4,8
+                - generic [ref=e238]: (32 avaliações)
+                - generic [ref=e239]: ·
+                - text: 1,2 mil usos confirmados
+              - generic [ref=e244]:
+                - generic [ref=e245]:
+                  - generic [ref=e246]: JD
+                  - generic [ref=e247]: Jurídico Digital
+                - generic [ref=e248]:
+                  - generic [ref=e249]: Acesso direto
+                  - button "Remover dos favoritos Leitor de Contratos" [pressed] [ref=e253] [cursor=pointer]
+            - article [ref=e256]:
+              - generic [ref=e257]:
+                - generic [ref=e258]: Biblioteca
+                - generic [ref=e263]: Produção
+              - heading [level=3] [ref=e264]:
+                - button "VaR Engine" [ref=e265] [cursor=pointer]
+              - paragraph [ref=e266]: Biblioteca Python para cálculo de VaR histórico, paramétrico e Monte Carlo por carteira.
+              - generic [ref=e267]:
+                - generic [ref=e268]: "#risco"
+                - generic [ref=e269]: "#var"
+                - generic [ref=e270]: "#python"
+              - generic [ref=e271]:
+                - strong [ref=e275]: 4,8
+                - generic [ref=e276]: (26 avaliações)
+                - generic [ref=e277]: ·
+                - text: 920 usos confirmados
+              - generic [ref=e282]:
+                - generic [ref=e283]:
+                  - generic [ref=e284]: RQ
+                  - generic [ref=e285]: Risco Quant
+                - generic [ref=e286]:
+                  - generic [ref=e287]: Exige autorização
+                  - button "Favoritar VaR Engine" [ref=e291] [cursor=pointer]
+        - generic [ref=e294]:
+          - generic [ref=e295]:
+            - heading "Sua equipe tem uma ferramenta que outras poderiam usar?" [level=2] [ref=e296]
+            - paragraph [ref=e297]: Publique no CrossMarketPlace, acompanhe a adoção e o tempo economizado por quem reutiliza.
+          - button "Publicar solução" [ref=e299] [cursor=pointer]
+        - generic [ref=e304]:
+          - region [ref=e305]:
+            - generic [ref=e306]:
+              - generic [ref=e307]:
+                - heading "Seus favoritos" [level=2] [ref=e308]
+                - paragraph [ref=e309]: Atalhos para o que você mais usa
+              - button "Ver todos" [ref=e310] [cursor=pointer]
+            - generic [ref=e313]:
+              - button "Conciliação D+0 Automação · Ops Tech ★ 4,9" [ref=e314] [cursor=pointer]:
+                - generic [ref=e322]:
+                  - strong [ref=e323]: Conciliação D+0
+                  - generic [ref=e324]: Automação · Ops Tech
+                - generic [ref=e325]: ★ 4,9
+              - button "Copiloto de Crédito PJ Agente de IA · Crédito Digital ★ 4,7" [ref=e328] [cursor=pointer]:
+                - generic [ref=e332]:
+                  - strong [ref=e333]: Copiloto de Crédito PJ
+                  - generic [ref=e334]: Agente de IA · Crédito Digital
+                - generic [ref=e335]: ★ 4,7
+              - button "Painel de Inadimplência Dashboard · BI Varejo ★ 4,4" [ref=e338] [cursor=pointer]:
+                - generic [ref=e342]:
+                  - strong [ref=e343]: Painel de Inadimplência
+                  - generic [ref=e344]: Dashboard · BI Varejo
+                - generic [ref=e345]: ★ 4,4
+              - button "Leitor de Contratos Agente de IA · Jurídico Digital ★ 4,8" [ref=e348] [cursor=pointer]:
+                - generic [ref=e352]:
+                  - strong [ref=e353]: Leitor de Contratos
+                  - generic [ref=e354]: Agente de IA · Jurídico Digital
+                - generic [ref=e355]: ★ 4,8
+          - region [ref=e358]:
+            - generic [ref=e366]:
+              - heading "Projetos do meu time" [level=2] [ref=e367]
+              - paragraph [ref=e368]: Risco Quant · 10 soluções
+            - generic [ref=e369]:
+              - generic [ref=e370]:
+                - strong [ref=e371]: "7"
+                - text: publicadas
+              - generic [ref=e372]:
+                - strong [ref=e373]: "2.240"
+                - text: usos confirmados
+              - generic [ref=e374]:
+                - strong [ref=e375]: 3.590 h
+                - text: economizadas
+            - generic [ref=e376]:
+              - generic [ref=e377]:
+                - button "Stress Test Bot" [ref=e378] [cursor=pointer]
+                - generic [ref=e379]: v0.9.0
+                - generic [ref=e380]: Em análise
+              - generic [ref=e381]:
+                - button "Painel de Liquidez v2" [ref=e382] [cursor=pointer]
+                - generic [ref=e383]: v2.0.0
+                - generic [ref=e384]: Em correção
+              - generic [ref=e385]:
+                - button "VaR Engine" [ref=e386] [cursor=pointer]
+                - generic [ref=e387]: v3.2.1
+                - generic [ref=e388]: Aprovada
+            - button "Abrir Projetos do meu time" [ref=e389] [cursor=pointer]
+    - contentinfo [ref=e390]: CrossMarketPlace v2 · protótipo navegável com dados fictícios · padrão visual Orquestra (aproximado) · BTG Pactual
+  - status

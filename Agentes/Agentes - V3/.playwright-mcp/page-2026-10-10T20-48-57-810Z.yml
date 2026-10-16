@@ -1,0 +1,189 @@
+- generic [active] [ref=f5e1]:
+  - main [ref=f5e34]:
+    - generic [ref=f5e574]:
+      - region "Celular de Ana, só para ver" [ref=f5e575]:
+        - generic [ref=f5e576]:
+          - generic [ref=f5e579]: Ana
+          - generic [ref=f5e580]: Atualizou agora
+          - button "Usar este celular" [ref=f5e583] [cursor=pointer]
+        - generic [ref=f5e589]:
+          - generic [ref=f5e590]: 9:41
+          - generic [ref=f5e593]:
+            - button "Fechar"
+          - generic [ref=f5e594]:
+            - heading "Mensagem pronta no WhatsApp" [level=2] [ref=f5e599]
+            - generic [ref=f5e600]:
+              - paragraph [ref=f5e601]: "Ana Ribeiro quer pagar R$ 6.000,00 com proteção: Projeto de interiores. Confira e aceite: pague.btgpactual.com.br/p/PG-006 · Código de segurança 8230, o mesmo que aparece no app do BTG."
+              - generic [ref=f5e602]: (11) 98888-1001
+          - generic [ref=f5e603]:
+            - status [ref=f5e604]:
+              - generic [ref=f5e605]: Enviado.
+              - button "Desfazer"
+            - button "Abrir o link como quem recebeu"
+            - button "Ir para o início"
+      - region "Celular de Marina, agindo agora" [ref=f5e606]:
+        - generic [ref=f5e607]:
+          - generic [ref=f5e609]: Marina
+          - generic [ref=f5e610]: agindo agora
+        - generic [ref=f5e614]:
+          - generic [ref=f5e615]: 9:41
+          - generic [ref=f5e618]:
+            - button "Voltar" [ref=f5e619] [cursor=pointer]
+            - heading "Pagamento protegido" [level=1] [ref=f5e622]
+          - generic [ref=f5e623]:
+            - generic [ref=f5e624]:
+              - generic [ref=f5e625]: Ana Ribeiro quer pagar
+              - heading "Projeto de interiores" [level=3] [ref=f5e626]
+              - generic [ref=f5e627]: R$ 6.000,00
+              - paragraph [ref=f5e628]: "Projeto de interiores: medição, projeto 3D e acompanhamento."
+              - generic [ref=f5e629]:
+                - generic [ref=f5e630]: Prazo de entrega
+                - strong [ref=f5e631]: 20/11
+              - generic [ref=f5e632]:
+                - generic [ref=f5e633]: Endereço
+                - strong [ref=f5e634]: A combinar
+              - generic [ref=f5e635]:
+                - generic [ref=f5e636]: Liberação
+                - strong [ref=f5e637]: Por etapas
+              - generic [ref=f5e638]:
+                - generic [ref=f5e639]: 1. Medição e briefing · até 24/10
+                - strong [ref=f5e640]: R$ 1.500,00
+              - generic [ref=f5e641]:
+                - generic [ref=f5e642]: 2. Projeto 3D e memorial · até 07/11
+                - strong [ref=f5e643]: R$ 3.000,00
+              - generic [ref=f5e644]:
+                - generic [ref=f5e645]: 3. Acompanhamento da obra · até 20/11
+                - strong [ref=f5e646]: R$ 1.500,00
+            - generic [ref=f5e647]:
+              - strong [ref=f5e648]: Como a proteção funciona
+              - strong [ref=f5e653]: Fica guardado no banco
+              - strong [ref=f5e658]: Sai quando quem paga aprova
+              - strong [ref=f5e663]: Sem resposta em 7 dias, libera sozinho
+            - generic [ref=f5e664]:
+              - 'checkbox "Confiro o combinado: valor, prazo, etapas e as regras da proteção." [ref=f5e665]'
+              - generic [ref=f5e666]: "Confiro o combinado: valor, prazo, etapas e as regras da proteção."
+            - generic [ref=f5e667]:
+              - strong [ref=f5e668]: Cláusula de arbitragem
+              - paragraph [ref=f5e669]: Se a mediação do BTG não resolver, um árbitro decide no lugar da Justiça, em semanas. A decisão vale para os dois lados.
+              - button "Ler a cláusula" [ref=f5e670] [cursor=pointer]
+              - generic [ref=f5e673]:
+                - checkbox "Li e aceito a cláusula de arbitragem." [ref=f5e674]
+                - generic [ref=f5e675]: Li e aceito a cláusula de arbitragem.
+          - generic [ref=f5e676]:
+            - button "Aceitar o pagamento" [ref=f5e677] [cursor=pointer]
+            - button "Recusar" [ref=f5e678] [cursor=pointer]
+      - region "WhatsApp de Ana" [ref=f5e679]:
+        - generic [ref=f5e680]:
+          - generic [ref=f5e684]: WhatsApp de Ana
+          - generic [ref=f5e685]: sem abrir o app
+        - generic [ref=f5e689]:
+          - generic [ref=f5e690]: 9:41
+          - generic [ref=f5e697]:
+            - strong [ref=f5e698]: BTG Aval
+            - generic [ref=f5e701]: Conta comercial oficial do BTG Pactual
+          - generic [ref=f5e702]:
+            - generic [ref=f5e703]: Hoje
+            - generic [ref=f5e705]:
+              - paragraph [ref=f5e706]: "Oi, Ana! Aqui é o BTG Aval. Reconheci seu número da conta BTG. Me conte o que você combinou, do seu jeito. Por exemplo: \"cobrar pintura de R$ 4.500 da Ana até 30/11\"."
+              - generic [ref=f5e707]: 9:41
+            - generic [ref=f5e709]:
+              - paragraph [ref=f5e710]: Quero pagar a Marina 6 mil pelo projeto de interiores da varanda, até 20/11
+              - generic [ref=f5e711]: 9:41
+            - generic [ref=f5e712]:
+              - generic [ref=f5e713]:
+                - paragraph [ref=f5e714]: "Sugiro 3 etapas para projeto de interiores:1. Medição e briefing: R$ 1.500,002. Projeto 3D e memorial: R$ 3.000,003. Acompanhamento da obra: R$ 1.500,00Cada etapa só sai quando você aprovar a entrega dela."
+                - generic [ref=f5e715]: 9:41
+              - generic [ref=f5e716]:
+                - button "Usar etapas" [disabled] [ref=f5e717]
+                - button "Valor único" [disabled] [ref=f5e718]
+            - generic [ref=f5e720]:
+              - paragraph [ref=f5e721]: Usar etapas
+              - generic [ref=f5e722]: 9:41
+            - generic [ref=f5e724]:
+              - paragraph [ref=f5e725]: "Confere o que eu entendi:"
+              - generic [ref=f5e726]:
+                - strong [ref=f5e727]: Pagamento protegido
+                - generic [ref=f5e728]:
+                  - generic [ref=f5e729]: Serviço
+                  - generic [ref=f5e730]: Projeto de interiores
+                - generic [ref=f5e731]:
+                  - generic [ref=f5e732]: Valor
+                  - generic [ref=f5e733]: R$ 6.000,00
+                - generic [ref=f5e734]:
+                  - generic [ref=f5e735]: Entrega
+                  - generic [ref=f5e736]: 20/11
+                - generic [ref=f5e737]:
+                  - generic [ref=f5e738]: Endereço
+                  - generic [ref=f5e739]: A combinar
+                - generic [ref=f5e740]:
+                  - generic [ref=f5e741]: Quem recebe
+                  - generic [ref=f5e742]: Marina Costa Interiores
+                - generic [ref=f5e743]:
+                  - generic [ref=f5e744]: 1. Medição e briefing
+                  - generic [ref=f5e745]: R$ 1.500,00
+                - generic [ref=f5e746]:
+                  - generic [ref=f5e747]: 2. Projeto 3D e memorial
+                  - generic [ref=f5e748]: R$ 3.000,00
+                - generic [ref=f5e749]:
+                  - generic [ref=f5e750]: 3. Acompanhamento da obra
+                  - generic [ref=f5e751]: R$ 1.500,00
+              - generic [ref=f5e752]: 9:41
+            - generic [ref=f5e753]:
+              - generic [ref=f5e754]:
+                - paragraph [ref=f5e755]: Posso enviar?
+                - generic [ref=f5e756]: 9:41
+              - generic [ref=f5e757]:
+                - button "Enviar para Marina" [disabled] [ref=f5e758]
+                - button "Corrigir" [disabled] [ref=f5e759]
+            - generic [ref=f5e761]:
+              - paragraph [ref=f5e762]: Enviar para Marina
+              - generic [ref=f5e763]: 9:41
+            - generic [ref=f5e765]:
+              - paragraph [ref=f5e766]: Pronto! Marina recebe um aviso para conferir e aceitar. Te aviso aqui para pagar.
+              - generic [ref=f5e767]: 9:41
+            - generic [ref=f5e769]:
+              - paragraph [ref=f5e770]: "Código de segurança 8230: é o mesmo que Marina vê no app do BTG. Assim ninguém cai em link falso."
+              - generic [ref=f5e771]: 9:41
+          - generic [ref=f5e772]:
+            - textbox "Mensagem para o BTG Aval" [ref=f5e773]:
+              - /placeholder: Mensagem
+            - button "Enviar" [ref=f5e774] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f5e183]:
+    - generic [ref=f5e779]:
+      - group "Cenários" [ref=f5e780]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f5e781] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f5e782] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f5e783] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f5e784] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f5e785] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f5e786] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f5e787] [cursor=pointer]': "7"
+        - 'button "Cenário 8: Pelo WhatsApp" [ref=f5e788] [cursor=pointer]': "8"
+        - 'button "Cenário 9: No banco" [ref=f5e789] [cursor=pointer]': "9"
+      - strong [ref=f5e790]: Pelo WhatsApp
+      - generic [ref=f5e791]: Cobrar e pagar sem abrir o app.
+    - generic [ref=f5e209]:
+      - generic [ref=f5e792]:
+        - generic [ref=f5e793]: Nesta tela
+        - paragraph [ref=f5e794]: O combinado
+      - generic [ref=f5e795]:
+        - button "Pausar (espaço)" [ref=f5e796] [cursor=pointer]
+        - button "Próximo" [ref=f5e799] [cursor=pointer]
+        - generic [ref=f5e802]:
+          - group "Como avança" [ref=f5e803]:
+            - button "Eu avanço" [ref=f5e804] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f5e805] [cursor=pointer]
+          - group "Velocidade" [ref=f5e806]:
+            - button "Devagar" [ref=f5e807] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f5e808] [cursor=pointer]
+            - button "Rápido" [ref=f5e809] [cursor=pointer]
+          - generic [ref=f5e810]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f5e811] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Nesta tela · 1 de 2
+      - strong: O combinado
+      - paragraph: Quem recebe a cobrança confere valor, prazo e endereço antes de qualquer pagamento.
+  - generic [ref=f5e816]:
+    - generic [ref=f5e817]: Guardado no BTG
+    - strong [ref=f5e818]: R$ 42.000,00

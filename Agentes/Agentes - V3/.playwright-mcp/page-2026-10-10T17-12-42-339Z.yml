@@ -1,0 +1,213 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e1774]:
+      - region "Celular de Ana, agindo agora" [ref=f2e1775]:
+        - generic [ref=f2e1776]:
+          - generic [ref=f2e1778]: Ana
+          - generic [ref=f2e1779]: agindo agora
+        - generic [ref=f2e1782]:
+          - generic [ref=f2e1783]:
+            - generic [ref=f2e1784]: 9:41
+            - generic [ref=f2e1787]:
+              - button "Voltar" [ref=f2e1788] [cursor=pointer]
+              - heading "Pintura" [level=1] [ref=f2e1791]
+            - generic [ref=f2e1792]:
+              - generic [ref=f2e1793]:
+                - generic [ref=f2e1794]:
+                  - generic [ref=f2e1795]: AV-2026-004 · Horizonte Reformas
+                  - generic [ref=f2e1796]: Em andamento
+                - generic [ref=f2e1797]: R$ 16.000,00
+                - generic [ref=f2e1799]:
+                  - generic [ref=f2e1800]: Liberado R$ 0,00
+                  - generic [ref=f2e1801]: Guardado R$ 16.000,00
+              - status [ref=f2e1802]:
+                - generic [ref=f2e1805]: "Agora: aprovar a etapa 1. Libera sozinho em 7 dias."
+              - generic [ref=f2e1810]:
+                - strong [ref=f2e1811]: Seu dinheiro guardado rende
+                - generic [ref=f2e1812]: "Começa a render hoje, a 100% do CDI: cerca de R$ 133,99 até 03/11. Volta para você no fim."
+              - generic [ref=f2e1813]:
+                - strong [ref=f2e1814]: Linha do tempo
+                - list [ref=f2e1815]:
+                  - listitem [ref=f2e1816]:
+                    - generic [ref=f2e1819]:
+                      - strong [ref=f2e1820]: Combinado
+                      - generic [ref=f2e1821]: Aceito em 11/10
+                  - listitem [ref=f2e1822]:
+                    - generic [ref=f2e1825]:
+                      - strong [ref=f2e1826]: Pago e protegido
+                      - generic [ref=f2e1827]: O dinheiro está guardado no banco
+                  - listitem [ref=f2e1828]:
+                    - generic [ref=f2e1831]:
+                      - strong [ref=f2e1832]: "Etapa 1: Preparo e massa"
+                      - generic [ref=f2e1833]: Entregue. Liberação automática em 7 dias
+                  - listitem [ref=f2e1834]:
+                    - generic [ref=f2e1837]:
+                      - strong [ref=f2e1838]: "Etapa 2: Pintura e acabamento"
+                      - generic [ref=f2e1839]: Liberado quando aprovado
+                  - listitem [ref=f2e1840]:
+                    - generic [ref=f2e1843]:
+                      - strong [ref=f2e1844]: Concluído
+                      - generic [ref=f2e1845]: Todo o valor liberado
+              - generic [ref=f2e1846]:
+                - generic [ref=f2e1847]:
+                  - generic [ref=f2e1851]:
+                    - strong [ref=f2e1852]: Etapa 1 · Preparo e massa
+                    - generic [ref=f2e1853]: R$ 8.000,00 · entrega enviada 11/10
+                  - generic [ref=f2e1854]: Aprovar
+                - button "Revisar entrega" [ref=f2e1856] [cursor=pointer]
+                - generic [ref=f2e1857]:
+                  - generic [ref=f2e1861]:
+                    - strong [ref=f2e1862]: Etapa 2 · Pintura e acabamento
+                    - generic [ref=f2e1863]: R$ 8.000,00 · até 03/11
+                  - generic [ref=f2e1864]: A iniciar
+              - generic [ref=f2e1865]:
+                - generic [ref=f2e1866]:
+                  - generic [ref=f2e1867]: Prazo de entrega
+                  - strong [ref=f2e1868]: 03/11
+                - generic [ref=f2e1869]:
+                  - generic [ref=f2e1870]: Endereço
+                  - strong [ref=f2e1871]: Rua Harmonia, 410
+                - paragraph [ref=f2e1872]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+              - generic [ref=f2e1873]:
+                - button "Conversa 0 mensagens · registrada no contrato" [ref=f2e1874] [cursor=pointer]:
+                  - generic [ref=f2e1878]:
+                    - strong [ref=f2e1879]: Conversa
+                    - generic [ref=f2e1880]: 0 mensagens · registrada no contrato
+                - button "Benefícios deste pagamento Cashback em material de construção · Garantia do serviço por 90 dias · Assistência residencial 24h" [ref=f2e1883] [cursor=pointer]:
+                  - generic [ref=f2e1887]:
+                    - strong [ref=f2e1888]: Benefícios deste pagamento
+                    - generic [ref=f2e1889]: Cashback em material de construção · Garantia do serviço por 90 dias · Assistência residencial 24h
+                - button "Tirar dúvida com o assistente Prazos, etapas, seguro e disputas" [ref=f2e1892] [cursor=pointer]:
+                  - generic [ref=f2e1896]:
+                    - strong [ref=f2e1897]: Tirar dúvida com o assistente
+                    - generic [ref=f2e1898]: Prazos, etapas, seguro e disputas
+                - button "Contrato e arbitragem Assinado em 11/10 · arbitragem incluída" [ref=f2e1901] [cursor=pointer]:
+                  - generic [ref=f2e1905]:
+                    - strong [ref=f2e1906]: Contrato e arbitragem
+                    - generic [ref=f2e1907]: Assinado em 11/10 · arbitragem incluída
+            - generic [ref=f2e1911]:
+              - button "Abrir disputa" [ref=f2e1912] [cursor=pointer]
+              - button "Aprovar etapa 1" [ref=f2e1913] [cursor=pointer]
+          - status: Entrega enviada para aprovação.
+      - region "Celular de Carlos, só para ver" [ref=f2e1914]:
+        - generic [ref=f2e1915]:
+          - generic [ref=f2e1918]: Carlos
+          - generic [ref=f2e1919]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f2e1920] [cursor=pointer]
+        - generic [ref=f2e1926]:
+          - generic [ref=f2e1927]: 9:41
+          - generic [ref=f2e1930]:
+            - button "Voltar"
+            - heading "Pintura" [level=1] [ref=f2e1931]
+          - generic [ref=f2e1932]:
+            - generic [ref=f2e1933]:
+              - generic [ref=f2e1934]:
+                - generic [ref=f2e1935]: AV-2026-004 · Ana Ribeiro
+                - generic [ref=f2e1936]: Em andamento
+              - generic [ref=f2e1937]: R$ 16.000,00
+              - generic [ref=f2e1939]:
+                - generic [ref=f2e1940]: Liberado R$ 0,00
+                - generic [ref=f2e1941]: Guardado R$ 16.000,00
+            - status [ref=f2e1942]:
+              - generic [ref=f2e1945]: "Agora: Ana Ribeiro confere a etapa 1. Libera até 18/10."
+            - generic [ref=f2e1950]:
+              - strong [ref=f2e1951]: Receba hoje R$ 7.379,60
+              - generic [ref=f2e1952]: Da etapa 1, sem esperar a aprovação. Taxa já descontada.
+              - button "Receber agora"
+            - generic [ref=f2e1953]:
+              - strong [ref=f2e1954]: Linha do tempo
+              - list [ref=f2e1955]:
+                - listitem [ref=f2e1956]:
+                  - generic [ref=f2e1959]:
+                    - strong [ref=f2e1960]: Combinado
+                    - generic [ref=f2e1961]: Aceito em 11/10
+                - listitem [ref=f2e1962]:
+                  - generic [ref=f2e1965]:
+                    - strong [ref=f2e1966]: Pago e protegido
+                    - generic [ref=f2e1967]: O dinheiro está guardado no banco
+                - listitem [ref=f2e1968]:
+                  - generic [ref=f2e1971]:
+                    - strong [ref=f2e1972]: "Etapa 1: Preparo e massa"
+                    - generic [ref=f2e1973]: Entregue. Liberação automática em 7 dias
+                - listitem [ref=f2e1974]:
+                  - generic [ref=f2e1977]:
+                    - strong [ref=f2e1978]: "Etapa 2: Pintura e acabamento"
+                    - generic [ref=f2e1979]: Liberado quando aprovado
+                - listitem [ref=f2e1980]:
+                  - generic [ref=f2e1983]:
+                    - strong [ref=f2e1984]: Concluído
+                    - generic [ref=f2e1985]: Todo o valor liberado
+            - generic [ref=f2e1986]:
+              - generic [ref=f2e1987]:
+                - generic [ref=f2e1991]:
+                  - strong [ref=f2e1992]: Etapa 1 · Preparo e massa
+                  - generic [ref=f2e1993]: R$ 8.000,00 · entrega enviada 11/10
+                - generic [ref=f2e1994]: Aprovar
+              - generic [ref=f2e1995]:
+                - button "Antecipar"
+                - generic [ref=f2e1996]: Evidência em análise de segurança
+              - generic [ref=f2e1997]:
+                - generic [ref=f2e2001]:
+                  - strong [ref=f2e2002]: Etapa 2 · Pintura e acabamento
+                  - generic [ref=f2e2003]: R$ 8.000,00 · até 03/11
+                - generic [ref=f2e2004]: A iniciar
+              - generic [ref=f2e2005]:
+                - button "Subcontratar"
+            - generic [ref=f2e2006]:
+              - generic [ref=f2e2007]:
+                - generic [ref=f2e2008]: Prazo de entrega
+                - strong [ref=f2e2009]: 03/11
+              - generic [ref=f2e2010]:
+                - generic [ref=f2e2011]: Endereço
+                - strong [ref=f2e2012]: Rua Harmonia, 410
+              - paragraph [ref=f2e2013]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+            - generic [ref=f2e2014]:
+              - button "Conversa 0 mensagens · registrada no contrato":
+                - generic:
+                  - strong: Conversa
+                  - generic: 0 mensagens · registrada no contrato
+              - generic [ref=f2e2016]:
+                - strong [ref=f2e2020]: Receber antes, sempre
+                - switch "Receber antes, sempre"
+              - button "Tirar dúvida com o assistente Prazos, etapas, seguro e disputas":
+                - generic:
+                  - strong: Tirar dúvida com o assistente
+                  - generic: Prazos, etapas, seguro e disputas
+              - button "Contrato e arbitragem Assinado em 11/10 · arbitragem incluída":
+                - generic:
+                  - strong: Contrato e arbitragem
+                  - generic: Assinado em 11/10 · arbitragem incluída
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e2023]:
+      - group "Cenários" [ref=f2e2024]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e2025] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e2026] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e2027] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e2028] [cursor=pointer]': "4"
+      - strong [ref=f2e2029]: Disputa
+      - generic [ref=f2e2030]: A cliente contesta e o banco media.
+    - generic [ref=f2e184]:
+      - generic [ref=f2e2031]:
+        - generic [ref=f2e2032]: Nesta tela
+        - paragraph [ref=f2e2033]: Liberado e guardado
+      - generic [ref=f2e2034]:
+        - button "Pausar (espaço)" [ref=f2e2035] [cursor=pointer]
+        - button "Próximo" [ref=f2e2038] [cursor=pointer]
+        - generic [ref=f2e2041]:
+          - group "Como avança" [ref=f2e2042]:
+            - button "Eu avanço" [ref=f2e2043] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e2044] [cursor=pointer]
+          - group "Velocidade" [ref=f2e2045]:
+            - button "Devagar" [ref=f2e2046] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e2047] [cursor=pointer]
+            - button "Rápido" [ref=f2e2048] [cursor=pointer]
+          - generic [ref=f2e2049]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f2e2050] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Nesta tela · 1 de 3
+      - strong: Liberado e guardado
+      - paragraph: Quanto já saiu para quem trabalhou e quanto continua protegido no banco.
+  - generic [ref=f2e2055]:
+    - generic [ref=f2e2056]: Guardado no BTG
+    - strong [ref=f2e2057]: R$ 50.000,00

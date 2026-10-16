@@ -1,0 +1,2 @@
+[    7630ms] TypeError: Cannot read properties of null (reading 'click')
+    at eval (eval at <anonymous> (eval at evaluate (:368:30)), <anonymous>:16:208)

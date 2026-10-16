@@ -1,0 +1,102 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e434]:
+      - region "Celular de Ana, agindo agora" [ref=f2e435]:
+        - generic [ref=f2e436]:
+          - generic [ref=f2e438]: Ana
+          - generic [ref=f2e439]: agindo agora
+        - generic [ref=f2e442]:
+          - generic [ref=f2e443]:
+            - generic [ref=f2e444]: 9:41
+            - generic [ref=f2e447]:
+              - button "Voltar" [ref=f2e448] [cursor=pointer]
+              - heading "Pagamento protegido" [level=1] [ref=f2e451]
+            - generic [ref=f2e452]:
+              - generic [ref=f2e453]:
+                - generic [ref=f2e454]: Horizonte Reformas cobra
+                - heading "Pintura" [level=3] [ref=f2e455]
+                - generic [ref=f2e456]: R$ 16.000,00
+                - paragraph [ref=f2e457]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+                - generic [ref=f2e458]:
+                  - generic [ref=f2e459]: Prazo de entrega
+                  - strong [ref=f2e460]: 03/11
+                - generic [ref=f2e461]:
+                  - generic [ref=f2e462]: Endereço
+                  - strong [ref=f2e463]: Rua Harmonia, 410
+                - generic [ref=f2e464]:
+                  - generic [ref=f2e465]: Liberação
+                  - strong [ref=f2e466]: Quem paga define
+              - generic [ref=f2e467]:
+                - strong [ref=f2e468]: Como a proteção funciona
+                - strong [ref=f2e473]: Fica guardado no banco
+                - strong [ref=f2e478]: Sai quando quem paga aprova
+                - strong [ref=f2e483]: Sem resposta em 7 dias, libera sozinho
+              - generic [ref=f2e484]:
+                - strong [ref=f2e489]: Como o dinheiro é liberado
+                - button "Definir com o assistente" [ref=f2e490] [cursor=pointer]
+              - generic [ref=f2e493]:
+                - 'checkbox "Confiro o combinado: valor, prazo, etapas e as regras da proteção." [ref=f2e494]'
+                - generic [ref=f2e495]: "Confiro o combinado: valor, prazo, etapas e as regras da proteção."
+              - generic [ref=f2e496]:
+                - strong [ref=f2e497]: Cláusula de arbitragem
+                - paragraph [ref=f2e498]: Se a mediação do BTG não resolver, um árbitro decide no lugar da Justiça, em semanas. A decisão vale para os dois lados.
+                - button "Ler a cláusula" [ref=f2e499] [cursor=pointer]
+                - generic [ref=f2e502]:
+                  - checkbox "Li e aceito a cláusula de arbitragem." [ref=f2e503]
+                  - generic [ref=f2e504]: Li e aceito a cláusula de arbitragem.
+            - generic [ref=f2e505]:
+              - button "Aceitar e pagar" [ref=f2e506] [cursor=pointer]
+              - button "Recusar" [ref=f2e507] [cursor=pointer]
+          - status: Olá, Ana! Sua conta BTG está conectada.
+      - region "Celular de Carlos, só para ver" [ref=f2e508]:
+        - generic [ref=f2e509]:
+          - generic [ref=f2e512]: Carlos
+          - generic [ref=f2e513]: Atualizou agora
+          - button "Usar este celular" [ref=f2e516] [cursor=pointer]
+        - generic [ref=f2e522]:
+          - generic [ref=f2e523]: 9:41
+          - generic [ref=f2e526]:
+            - button "Fechar"
+          - generic [ref=f2e527]:
+            - heading "Mensagem pronta no WhatsApp" [level=2] [ref=f2e532]
+            - generic [ref=f2e533]:
+              - paragraph [ref=f2e534]: "Horizonte Reformas cobra R$ 16.000,00 com proteção: Pintura. Confira e aceite: pague.btgpactual.com.br/p/PG-001"
+              - generic [ref=f2e535]: (11) 97777-3003
+          - generic [ref=f2e536]:
+            - button "Cancelar este pagamento"
+            - button "Abrir o link como quem recebeu"
+            - button "Ir para o início"
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e539]:
+      - group "Cenários" [ref=f2e540]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e541] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e542] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e543] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e544] [cursor=pointer]': "4"
+      - strong [ref=f2e545]: O prestador cobra
+      - generic [ref=f2e546]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f2e184]:
+      - generic [ref=f2e547]:
+        - generic [ref=f2e548]: Ana · cliente
+        - paragraph [ref=f2e549]: Defina as etapas
+      - generic [ref=f2e550]:
+        - button "Pausar (espaço)" [ref=f2e551] [cursor=pointer]
+        - button "Próximo" [ref=f2e554] [cursor=pointer]
+        - generic [ref=f2e557]:
+          - group "Como avança" [ref=f2e558]:
+            - button "Eu avanço" [ref=f2e559] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e560] [cursor=pointer]
+          - group "Velocidade" [ref=f2e561]:
+            - button "Devagar" [ref=f2e562] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e563] [cursor=pointer]
+            - button "Rápido" [ref=f2e564] [cursor=pointer]
+          - generic [ref=f2e565]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f2e566] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Ana · cliente
+      - strong: Defina as etapas
+      - paragraph: Quem paga decide em quantas partes o dinheiro sai. O assistente sugere as etapas deste tipo de serviço.
+  - generic [ref=f2e571]:
+    - generic [ref=f2e572]: Guardado no BTG
+    - strong [ref=f2e573]: R$ 0,00

@@ -1,0 +1,115 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e340]:
+      - strong [ref=f1e341]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f1e342]:
+      - button "Você criar conta" [ref=f1e343] [cursor=pointer]:
+        - strong [ref=f1e344]: Você
+        - generic [ref=f1e345]: criar conta
+      - button "Marina Costa paga e recebe" [ref=f1e346] [cursor=pointer]:
+        - strong [ref=f1e347]: Marina Costa
+        - generic [ref=f1e348]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [pressed] [ref=f1e349] [cursor=pointer]:
+        - strong [ref=f1e350]: Carlos Mendes
+        - generic [ref=f1e351]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=f1e352] [cursor=pointer]:
+        - strong [ref=f1e353]: Banco
+        - generic [ref=f1e354]: operações BTG
+    - group "Relógio da demonstração" [ref=f1e355]:
+      - strong [ref=f1e358]: Hoje 04/10
+      - button "+1 dia" [ref=f1e359] [cursor=pointer]
+      - button "+7 dias" [ref=f1e360] [cursor=pointer]
+    - generic [ref=f1e361]:
+      - button "Dois celulares" [pressed] [ref=f1e362] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f1e365] [cursor=pointer]
+  - main [ref=f1e31]:
+    - generic [ref=f1e368]:
+      - region "Celular de Cliente, só para ver" [ref=f1e369]:
+        - generic [ref=f1e370]:
+          - generic [ref=f1e373]: Cliente
+          - generic [ref=f1e374]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f1e375] [cursor=pointer]
+        - generic [ref=f1e381]:
+          - generic [ref=f1e382]: 9:41
+          - generic [ref=f1e385]:
+            - img "BTG Pactual" [ref=f1e386]
+            - generic [ref=f1e387]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=f1e388]
+              - paragraph [ref=f1e389]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG"
+            - navigation "Acesso rápido" [ref=f1e390]:
+              - button "Conta BTG"
+              - button "Arbitragem"
+      - region "Celular de Carlos, agindo agora" [ref=f1e391]:
+        - generic [ref=f1e392]:
+          - generic [ref=f1e394]: Carlos
+          - generic [ref=f1e395]: agindo agora
+        - generic [ref=f1e399]:
+          - generic [ref=f1e400]: 9:41
+          - generic [ref=f1e403]:
+            - button "Voltar" [ref=f1e404] [cursor=pointer]
+            - heading "Cobrar" [level=1] [ref=f1e407]
+          - generic [ref=f1e408]:
+            - heading "Como enviar?" [level=2] [ref=f1e412]
+            - button "No app Aviso no app" [ref=f1e413] [cursor=pointer]:
+              - generic [ref=f1e415]:
+                - strong [ref=f1e416]: No app
+                - generic [ref=f1e417]: Aviso no app
+            - button "Link no WhatsApp Mensagem com o link" [ref=f1e418] [cursor=pointer]:
+              - generic [ref=f1e420]:
+                - strong [ref=f1e421]: Link no WhatsApp
+                - generic [ref=f1e422]: Mensagem com o link
+            - button "QR code Leitura na hora" [ref=f1e423] [cursor=pointer]:
+              - generic [ref=f1e425]:
+                - strong [ref=f1e426]: QR code
+                - generic [ref=f1e427]: Leitura na hora
+            - generic [ref=f1e429]:
+              - generic [ref=f1e430]: Celular com DDD
+              - textbox "Celular com DDD" [ref=f1e431]:
+                - /placeholder: (11) 99999-9999
+                - text: (11) 97777-3003
+            - generic [ref=f1e432]:
+              - generic [ref=f1e433]: "Etapas: quem paga define · até 03/11"
+              - 'heading "Pintura: pintar o apartamento todo, massa corrida e duas demãos." [level=3] [ref=f1e434]'
+              - generic [ref=f1e435]: R$ 16.000,00
+              - generic [ref=f1e436]: Rua Harmonia, 410
+          - button "Enviar cobrança de R$ 16.000,00" [ref=f1e438] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f1e103]:
+    - generic [ref=f1e443]:
+      - group "Cenários" [ref=f1e444]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f1e445] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f1e446] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f1e447] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f1e448] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f1e449] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f1e450] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f1e451] [cursor=pointer]': "7"
+        - 'button "Cenário 8: No banco" [ref=f1e452] [cursor=pointer]': "8"
+      - strong [ref=f1e453]: O prestador cobra
+      - generic [ref=f1e454]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f1e127]:
+      - generic [ref=f1e455]:
+        - generic [ref=f1e456]: Nesta tela
+        - paragraph [ref=f1e457]: Três jeitos de enviar
+      - generic [ref=f1e458]:
+        - button "Pausar (espaço)" [ref=f1e459] [cursor=pointer]
+        - button "Próximo" [ref=f1e462] [cursor=pointer]
+        - generic [ref=f1e465]:
+          - group "Como avança" [ref=f1e466]:
+            - button "Eu avanço" [ref=f1e467] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f1e468] [cursor=pointer]
+          - group "Velocidade" [ref=f1e469]:
+            - button "Devagar" [ref=f1e470] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f1e471] [cursor=pointer]
+            - button "Rápido" [ref=f1e472] [cursor=pointer]
+          - generic [ref=f1e473]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f1e474] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Nesta tela · 1 de 2
+      - strong: Três jeitos de enviar
+      - paragraph: Aviso no app, link no WhatsApp ou QR na hora. Quem não tem conta abre uma pelo link.
+  - generic [ref=f1e479]:
+    - generic [ref=f1e480]: Guardado no BTG
+    - strong [ref=f1e481]: R$ 0,00

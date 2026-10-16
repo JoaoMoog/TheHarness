@@ -1,0 +1,130 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - strong [ref=e4]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=e5]:
+      - button "Você criar conta" [pressed] [ref=e6] [cursor=pointer]:
+        - strong [ref=e7]: Você
+        - generic [ref=e8]: criar conta
+      - button "Marina Costa paga e recebe" [ref=e9] [cursor=pointer]:
+        - strong [ref=e10]: Marina Costa
+        - generic [ref=e11]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [ref=e12] [cursor=pointer]:
+        - strong [ref=e13]: Carlos Mendes
+        - generic [ref=e14]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=e15] [cursor=pointer]:
+        - strong [ref=e16]: Banco
+        - generic [ref=e17]: operações BTG
+    - group "Relógio da demonstração" [ref=e18]:
+      - strong [ref=e21]: Hoje 04/10
+      - button "+1 dia" [ref=e22] [cursor=pointer]
+      - button "+7 dias" [ref=e23] [cursor=pointer]
+    - generic [ref=e24]:
+      - button "Dois celulares" [pressed] [ref=e25] [cursor=pointer]
+      - button "Reiniciar demo" [ref=e28] [cursor=pointer]
+  - main [ref=e31]:
+    - generic [ref=e32]:
+      - region "Celular de Cliente, agindo agora" [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e36]: Cliente
+          - generic [ref=e37]: agindo agora
+        - generic [ref=e41]:
+          - generic [ref=e42]: 9:41
+          - generic [ref=e45]:
+            - img "BTG Pactual" [ref=e46]
+            - generic [ref=e47]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=e48]
+              - paragraph [ref=e49]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG" [ref=e50] [cursor=pointer]
+            - navigation "Acesso rápido" [ref=e51]:
+              - button "Conta BTG" [ref=e52] [cursor=pointer]
+              - button "Arbitragem" [ref=e56] [cursor=pointer]
+      - region "Celular de Carlos, só para ver" [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e64]: Carlos
+          - generic [ref=e65]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=e66] [cursor=pointer]
+        - generic [ref=e72]:
+          - generic [ref=e73]: 9:41
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - button "CM Olá, Carlos":
+                  - generic: CM
+                  - generic:
+                    - text: Olá,
+                    - strong: Carlos
+                - generic [ref=e79]:
+                  - button "Avisos"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=e80]
+              - generic [ref=e81]:
+                - generic [ref=e82]:
+                  - generic [ref=e83]: Guardado nos seus pagamentos
+                  - strong [ref=e84]: R$ 0,00
+                - button "Ocultar valores"
+              - paragraph [ref=e85]: 0 a pagar · 0 a receber
+              - generic [ref=e86]:
+                - button "Saldo para pagar R$ 48.120,00":
+                  - generic: Saldo para pagar
+                  - strong: R$ 48.120,00
+                - button "Pode pagar com empréstimo na hora R$ 50.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 50.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=e87]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Benefícios"
+              - button "Selo"
+              - button "Antecipar"
+              - button "Disputas"
+            - generic [ref=e89]:
+              - paragraph [ref=e90]: Vai pagar um serviço? Você tem R$ 50.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=e94]:
+              - button "A pagar"
+              - button "A receber"
+              - button "Concluídos"
+            - generic [ref=e95]:
+              - heading "Pagamentos protegidos" [level=3] [ref=e97]
+              - paragraph [ref=e98]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=e99]:
+              - generic [ref=e102]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=e103]:
+    - generic [ref=e104]:
+      - generic [ref=e106]:
+        - group "Cenários" [ref=e107]:
+          - 'button "Cenário 1: O prestador cobra" [ref=e108] [cursor=pointer]': "1"
+          - 'button "Cenário 2: Entregar e liberar" [ref=e109] [cursor=pointer]': "2"
+          - 'button "Cenário 3: O cliente paga um prestador" [ref=e110] [cursor=pointer]': "3"
+          - 'button "Cenário 4: Pagar em conjunto" [ref=e111] [cursor=pointer]': "4"
+          - 'button "Cenário 5: QR na hora" [ref=e112] [cursor=pointer]': "5"
+          - 'button "Cenário 6: Disputa" [ref=e113] [cursor=pointer]': "6"
+          - 'button "Cenário 7: Antecipação" [ref=e114] [cursor=pointer]': "7"
+          - 'button "Cenário 8: No banco" [ref=e115] [cursor=pointer]': "8"
+        - strong [ref=e116]: O prestador cobra
+        - generic [ref=e117]: WhatsApp, conta na hora, cartão com seguro.
+      - generic [ref=e118]:
+        - generic [ref=e119]: Carlos
+        - paragraph [ref=e120]: Toque em Cobrar
+        - generic [ref=e121]: Passo 1 de 20
+        - generic [ref=e122]:
+          - paragraph [ref=e123]: Carlos registra a pintura que combinou.
+          - button "Ir para Carlos" [ref=e124] [cursor=pointer]
+    - generic [ref=e128]:
+      - button "Apresentar este cenário" [ref=e129] [cursor=pointer]
+      - generic [ref=e132]:
+        - button "Versão executiva · 10 min" [ref=e133] [cursor=pointer]
+        - button "Ver cenários" [ref=e134] [cursor=pointer]
+      - generic [ref=e135]:
+        - group "Como avança" [ref=e136]:
+          - button "Eu avanço" [pressed] [ref=e137] [cursor=pointer]
+          - button "Automático" [ref=e138] [cursor=pointer]
+        - generic [ref=e139]:
+          - button "Voltar" [ref=e140] [cursor=pointer]
+          - button "Pular" [ref=e141] [cursor=pointer]

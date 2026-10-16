@@ -1,0 +1,315 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e2224]:
+      - strong [ref=f1e2225]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f1e2226]:
+      - button "Ana Ribeiro sua conta" [ref=f1e2227] [cursor=pointer]:
+        - strong [ref=f1e2228]: Ana Ribeiro
+        - generic [ref=f1e2229]: sua conta
+      - button "Marina Costa paga e recebe" [ref=f1e2230] [cursor=pointer]:
+        - strong [ref=f1e2231]: Marina Costa
+        - generic [ref=f1e2232]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [ref=f1e2233] [cursor=pointer]:
+        - strong [ref=f1e2234]: Carlos Mendes
+        - generic [ref=f1e2235]: Horizonte Reformas
+      - button "Banco operações BTG" [pressed] [ref=f1e2236] [cursor=pointer]:
+        - strong [ref=f1e2237]: Banco
+        - generic [ref=f1e2238]: operações BTG
+    - group "Relógio da demonstração" [ref=f1e2239]:
+      - strong [ref=f1e2242]: Hoje 11/10
+      - button "+1 dia" [ref=f1e2243] [cursor=pointer]
+      - button "+7 dias" [ref=f1e2244] [cursor=pointer]
+    - generic [ref=f1e2245]:
+      - button "Dois celulares" [pressed] [ref=f1e2246] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f1e2249] [cursor=pointer]
+  - main [ref=f1e31]:
+    - generic [ref=f1e2252]:
+      - complementary [ref=f1e2253]:
+        - generic [ref=f1e2254]:
+          - img "BTG Pactual" [ref=f1e2255]
+          - generic [ref=f1e2256]: Aval
+        - navigation "Áreas" [ref=f1e2257]:
+          - button "Visão geral" [ref=f1e2258] [cursor=pointer]
+          - button "Operações" [ref=f1e2262] [cursor=pointer]
+          - button "Fila de trabalho" [ref=f1e2266] [cursor=pointer]
+          - button "Clientes e limites" [ref=f1e2270] [cursor=pointer]
+          - button "Crédito" [ref=f1e2274] [cursor=pointer]
+          - button "Seguros" [ref=f1e2278] [cursor=pointer]
+          - button "Ofertas" [ref=f1e2282] [cursor=pointer]
+          - button "Receita" [ref=f1e2286] [cursor=pointer]
+          - button "Funding" [ref=f1e2290] [cursor=pointer]
+          - button "Risco e conluio" [ref=f1e2294] [cursor=pointer]
+          - button "Compliance" [ref=f1e2298] [cursor=pointer]
+          - button "API" [ref=f1e2302] [cursor=pointer]
+        - generic [ref=f1e2306]:
+          - generic [ref=f1e2307]: LP
+          - generic [ref=f1e2308]:
+            - strong [ref=f1e2309]: Luiza Prado
+            - generic [ref=f1e2310]: Operações · BTG
+      - main [ref=f1e2311]:
+        - generic [ref=f1e2312]:
+          - heading "Ofertas no pagamento" [level=1] [ref=f1e2313]
+          - generic [ref=f1e2314]: Buscar contrato, CPF ou CNPJ
+        - generic [ref=f1e2318]:
+          - generic [ref=f1e2319]:
+            - generic [ref=f1e2320]:
+              - generic [ref=f1e2321]: Ofertas mostradas
+              - strong [ref=f1e2322]: "13"
+              - generic [ref=f1e2323]: Dentro do fluxo de pagamento
+            - generic [ref=f1e2324]:
+              - generic [ref=f1e2325]: Aceitas
+              - strong [ref=f1e2326]: "8"
+              - generic [ref=f1e2327]: Conversão de 62%
+            - generic [ref=f1e2328]:
+              - generic [ref=f1e2329]: Receita das ofertas
+              - strong [ref=f1e2330]: R$ 3.755,98
+              - generic [ref=f1e2331]: Juros, tarifas e prêmios
+            - generic [ref=f1e2332]:
+              - generic [ref=f1e2333]: Captação do guardado
+              - strong [ref=f1e2334]: R$ 66.000,00
+              - generic [ref=f1e2335]: Rende 100% do CDI a quem paga
+          - generic [ref=f1e2336]:
+            - heading "Funil por produto" [level=2] [ref=f1e2337]
+            - table [ref=f1e2338]:
+              - rowgroup [ref=f1e2339]:
+                - row [ref=f1e2340]:
+                  - columnheader "Produto" [ref=f1e2341]
+                  - columnheader "Mostradas" [ref=f1e2342]
+                  - columnheader "Aceitas" [ref=f1e2343]
+                  - columnheader "Conversão" [ref=f1e2344]
+                  - columnheader "Resultado" [ref=f1e2345]
+              - rowgroup [ref=f1e2346]:
+                - row [ref=f1e2347]:
+                  - cell "Empréstimo na hora Parcelar sem cartão no pagamento" [ref=f1e2348]:
+                    - strong [ref=f1e2349]: Empréstimo na hora
+                    - generic [ref=f1e2350]: Parcelar sem cartão no pagamento
+                  - cell "3" [ref=f1e2351]
+                  - cell "1" [ref=f1e2352]
+                  - cell "33%" [ref=f1e2353]
+                  - cell "R$ 1.377,18 receita" [ref=f1e2355]:
+                    - strong [ref=f1e2356]: R$ 1.377,18
+                    - generic [ref=f1e2357]: receita
+                - row [ref=f1e2358]:
+                  - cell "Aumento de limite Cartão BTG, só o que o pagamento precisa" [ref=f1e2359]:
+                    - strong [ref=f1e2360]: Aumento de limite
+                    - generic [ref=f1e2361]: Cartão BTG, só o que o pagamento precisa
+                  - cell "1" [ref=f1e2362]
+                  - cell "1" [ref=f1e2363]
+                  - cell "100%" [ref=f1e2364]
+                  - cell "R$ 1.758,40 receita" [ref=f1e2366]:
+                    - strong [ref=f1e2367]: R$ 1.758,40
+                    - generic [ref=f1e2368]: receita
+                - row [ref=f1e2369]:
+                  - cell "Antecipação Quem recebe, sobre a entrega enviada" [ref=f1e2370]:
+                    - strong [ref=f1e2371]: Antecipação
+                    - generic [ref=f1e2372]: Quem recebe, sobre a entrega enviada
+                  - cell "2" [ref=f1e2373]
+                  - cell "1" [ref=f1e2374]
+                  - cell "50%" [ref=f1e2375]
+                  - cell "R$ 220,40 receita" [ref=f1e2377]:
+                    - strong [ref=f1e2378]: R$ 220,40
+                    - generic [ref=f1e2379]: receita
+                - row [ref=f1e2380]:
+                  - cell "Rendimento do guardado 100% do CDI para quem paga · captação" [ref=f1e2381]:
+                    - strong [ref=f1e2382]: Rendimento do guardado
+                    - generic [ref=f1e2383]: 100% do CDI para quem paga · captação
+                  - cell "4" [ref=f1e2384]
+                  - cell "4" [ref=f1e2385]
+                  - cell "100%" [ref=f1e2386]
+                  - cell "R$ 66.000,00 captado" [ref=f1e2388]:
+                    - strong [ref=f1e2389]: R$ 66.000,00
+                    - generic [ref=f1e2390]: captado
+                - row [ref=f1e2391]:
+                  - cell "Seguro do serviço Opcional, escolhido por quem paga" [ref=f1e2392]:
+                    - strong [ref=f1e2393]: Seguro do serviço
+                    - generic [ref=f1e2394]: Opcional, escolhido por quem paga
+                  - cell "3" [ref=f1e2395]
+                  - cell "1" [ref=f1e2396]
+                  - cell "33%" [ref=f1e2397]
+                  - cell "R$ 400,00 receita" [ref=f1e2399]:
+                    - strong [ref=f1e2400]: R$ 400,00
+                    - generic [ref=f1e2401]: receita
+          - generic [ref=f1e2402]:
+            - heading "Últimas ofertas" [level=2] [ref=f1e2403]
+            - table [ref=f1e2404]:
+              - rowgroup [ref=f1e2405]:
+                - row [ref=f1e2406]:
+                  - columnheader "Dia" [ref=f1e2407]
+                  - columnheader "Oferta" [ref=f1e2408]
+                  - columnheader "Pessoa" [ref=f1e2409]
+                  - columnheader "Situação" [ref=f1e2410]
+                  - columnheader "Valor" [ref=f1e2411]
+              - rowgroup [ref=f1e2412]:
+                - row [ref=f1e2413]:
+                  - cell "11/10" [ref=f1e2414]
+                  - cell "Antecipação AV-2026-004" [ref=f1e2415]:
+                    - strong [ref=f1e2416]: Antecipação
+                    - generic [ref=f1e2417]: AV-2026-004
+                  - cell "Carlos Mendes" [ref=f1e2418]
+                  - cell "Aceita" [ref=f1e2419]
+                  - cell "R$ 7.379,60" [ref=f1e2421]
+                - row [ref=f1e2422]:
+                  - cell "11/10" [ref=f1e2423]
+                  - cell "Rendimento do guardado AV-2026-004" [ref=f1e2424]:
+                    - strong [ref=f1e2425]: Rendimento do guardado
+                    - generic [ref=f1e2426]: AV-2026-004
+                  - cell "Ana Ribeiro" [ref=f1e2427]
+                  - cell "Aceita" [ref=f1e2428]
+                  - cell "R$ 16.000,00" [ref=f1e2430]
+                - row [ref=f1e2431]:
+                  - cell "11/10" [ref=f1e2432]
+                  - cell "Seguro do serviço AV-2026-004" [ref=f1e2433]:
+                    - strong [ref=f1e2434]: Seguro do serviço
+                    - generic [ref=f1e2435]: AV-2026-004
+                  - cell "Ana Ribeiro" [ref=f1e2436]
+                  - cell "Mostrada" [ref=f1e2437]
+                  - cell "R$ 400,00" [ref=f1e2439]
+                - row [ref=f1e2440]:
+                  - cell "11/10" [ref=f1e2441]
+                  - cell "Rendimento do guardado AV-2026-003" [ref=f1e2442]:
+                    - strong [ref=f1e2443]: Rendimento do guardado
+                    - generic [ref=f1e2444]: AV-2026-003
+                  - cell "Ana Ribeiro" [ref=f1e2445]
+                  - cell "Aceita" [ref=f1e2446]
+                  - cell "R$ 16.000,00" [ref=f1e2448]
+                - row [ref=f1e2449]:
+                  - cell "11/10" [ref=f1e2450]
+                  - cell "Empréstimo na hora AV-2026-003" [ref=f1e2451]:
+                    - strong [ref=f1e2452]: Empréstimo na hora
+                    - generic [ref=f1e2453]: AV-2026-003
+                  - cell "Marina Costa" [ref=f1e2454]
+                  - cell "Mostrada" [ref=f1e2455]
+                  - cell "R$ 5.333,33" [ref=f1e2457]
+                - row [ref=f1e2458]:
+                  - cell "11/10" [ref=f1e2459]
+                  - cell "Rendimento do guardado AV-2026-002" [ref=f1e2460]:
+                    - strong [ref=f1e2461]: Rendimento do guardado
+                    - generic [ref=f1e2462]: AV-2026-002
+                  - cell "Ana Ribeiro" [ref=f1e2463]
+                  - cell "Aceita" [ref=f1e2464]
+                  - cell "R$ 18.000,00" [ref=f1e2466]
+                - row [ref=f1e2467]:
+                  - cell "11/10" [ref=f1e2468]
+                  - cell "Seguro do serviço AV-2026-002" [ref=f1e2469]:
+                    - strong [ref=f1e2470]: Seguro do serviço
+                    - generic [ref=f1e2471]: AV-2026-002
+                  - cell "Ana Ribeiro" [ref=f1e2472]
+                  - cell "Mostrada" [ref=f1e2473]
+                  - cell "R$ 450,00" [ref=f1e2475]
+                - row [ref=f1e2476]:
+                  - cell "11/10" [ref=f1e2477]
+                  - cell "Empréstimo na hora AV-2026-002" [ref=f1e2478]:
+                    - strong [ref=f1e2479]: Empréstimo na hora
+                    - generic [ref=f1e2480]: AV-2026-002
+                  - cell "Ana Ribeiro" [ref=f1e2481]
+                  - cell "Aceita" [ref=f1e2482]
+                  - cell "R$ 18.000,00" [ref=f1e2484]
+                - row [ref=f1e2485]:
+                  - cell "04/10" [ref=f1e2486]
+                  - cell "Antecipação AV-2026-001" [ref=f1e2487]:
+                    - strong [ref=f1e2488]: Antecipação
+                    - generic [ref=f1e2489]: AV-2026-001
+                  - cell "Carlos Mendes" [ref=f1e2490]
+                  - cell "Mostrada" [ref=f1e2491]
+                  - cell "R$ 7.379,60" [ref=f1e2493]
+                - row [ref=f1e2494]:
+                  - cell "04/10" [ref=f1e2495]
+                  - cell "Rendimento do guardado AV-2026-001" [ref=f1e2496]:
+                    - strong [ref=f1e2497]: Rendimento do guardado
+                    - generic [ref=f1e2498]: AV-2026-001
+                  - cell "Ana Ribeiro" [ref=f1e2499]
+                  - cell "Aceita" [ref=f1e2500]
+                  - cell "R$ 16.000,00" [ref=f1e2502]
+                - row [ref=f1e2503]:
+                  - cell "04/10" [ref=f1e2504]
+                  - cell "Seguro do serviço AV-2026-001" [ref=f1e2505]:
+                    - strong [ref=f1e2506]: Seguro do serviço
+                    - generic [ref=f1e2507]: AV-2026-001
+                  - cell "Ana Ribeiro" [ref=f1e2508]
+                  - cell "Aceita" [ref=f1e2509]
+                  - cell "R$ 410,00" [ref=f1e2511]
+                - row [ref=f1e2512]:
+                  - cell "04/10" [ref=f1e2513]
+                  - cell "Empréstimo na hora AV-2026-001" [ref=f1e2514]:
+                    - strong [ref=f1e2515]: Empréstimo na hora
+                    - generic [ref=f1e2516]: AV-2026-001
+                  - cell "Ana Ribeiro" [ref=f1e2517]
+                  - cell "Mostrada" [ref=f1e2518]
+                  - cell "R$ 16.400,00" [ref=f1e2520]
+  - contentinfo "Controle da apresentação" [ref=f1e103]:
+    - generic [ref=f1e2522]:
+      - group "Cenários" [ref=f1e2523]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f1e2524] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f1e2525] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f1e2526] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f1e2527] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f1e2528] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f1e2529] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f1e2530] [cursor=pointer]': "7"
+        - 'button "Cenário 8: No banco" [ref=f1e2531] [cursor=pointer]': "8"
+      - strong [ref=f1e2532]: No banco
+      - generic [ref=f1e2533]: O resultado das ofertas.
+    - generic [ref=f1e127]:
+      - dialog "Aval em números" [ref=f1e2534]:
+        - generic [ref=f1e2535]:
+          - generic [ref=f1e2536]: O Aval em 10 minutos
+          - heading "O Aval em números" [level=2] [ref=f1e2537]
+          - generic [ref=f1e2538]:
+            - generic [ref=f1e2539]:
+              - strong [ref=f1e2540]: R$ 66.000,00
+              - generic [ref=f1e2541]: guardados no BTG
+            - generic [ref=f1e2542]:
+              - strong [ref=f1e2543]: R$ 22.800,00
+              - generic [ref=f1e2544]: liberados para quem trabalhou
+            - generic [ref=f1e2545]:
+              - strong [ref=f1e2546]: R$ 7.379,60
+              - generic [ref=f1e2547]: antecipados ao prestador
+            - generic [ref=f1e2548]:
+              - strong [ref=f1e2549]: R$ 3.755,98
+              - generic [ref=f1e2550]: de receita para o banco
+            - generic [ref=f1e2551]:
+              - strong [ref=f1e2552]: 8 de 13
+              - generic [ref=f1e2553]: ofertas do banco aceitas
+            - generic [ref=f1e2554]:
+              - strong [ref=f1e2555]: "2"
+              - generic [ref=f1e2556]: contas abertas na hora
+            - generic [ref=f1e2557]:
+              - strong [ref=f1e2558]: "1"
+              - generic [ref=f1e2559]: disputa resolvida no app
+            - generic [ref=f1e2560]:
+              - strong [ref=f1e2561]: "4"
+              - generic [ref=f1e2562]: pagamentos protegidos
+          - list [ref=f1e2563]:
+            - listitem [ref=f1e2564]:
+              - generic [ref=f1e2567]:
+                - strong [ref=f1e2568]: O prestador cobra
+                - generic [ref=f1e2569]: Uma cobrança pelo WhatsApp virou cliente novo, cartão, aumento de limite e seguro, em minutos.
+            - listitem [ref=f1e2570]:
+              - generic [ref=f1e2573]:
+                - strong [ref=f1e2574]: O cliente paga um prestador
+                - generic [ref=f1e2575]: O crédito é oferecido no momento exato da necessidade, e o dinheiro continua protegido.
+            - listitem [ref=f1e2576]:
+              - generic [ref=f1e2579]:
+                - strong [ref=f1e2580]: Disputa
+                - generic [ref=f1e2581]: Conflito resolvido dentro do app, em dias, com o dinheiro seguro o tempo todo.
+            - listitem [ref=f1e2582]:
+              - generic [ref=f1e2585]:
+                - strong [ref=f1e2586]: No banco
+                - generic [ref=f1e2587]: Cada pagamento protegido é uma porta para crédito, seguro, captação e cliente novo.
+          - generic [ref=f1e2588]:
+            - button "Ver de novo" [ref=f1e2589] [cursor=pointer]
+            - button "Fechar" [ref=f1e2590] [cursor=pointer]
+      - generic [ref=f1e2591]:
+        - button "Apresentar este cenário" [ref=f1e2592] [cursor=pointer]
+        - generic [ref=f1e2595]:
+          - button "Versão executiva · 10 min" [ref=f1e2596] [cursor=pointer]
+          - button "Ver cenários" [ref=f1e2597] [cursor=pointer]
+        - generic [ref=f1e2598]:
+          - group "Como avança" [ref=f1e2599]:
+            - button "Eu avanço" [ref=f1e2600] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f1e2601] [cursor=pointer]
+          - group "Velocidade" [ref=f1e2602]:
+            - button "Devagar" [ref=f1e2603] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f1e2604] [cursor=pointer]
+            - button "Rápido" [ref=f1e2605] [cursor=pointer]

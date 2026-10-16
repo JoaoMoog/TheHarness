@@ -1,0 +1,150 @@
+- generic [active] [ref=f5e1]:
+  - main [ref=f5e34]:
+    - generic [ref=f5e225]:
+      - region "Celular de Ana, só para ver" [ref=f5e226]:
+        - generic [ref=f5e227]:
+          - generic [ref=f5e230]: Ana
+          - generic [ref=f5e231]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f5e232] [cursor=pointer]
+        - generic [ref=f5e238]:
+          - generic [ref=f5e239]: 9:41
+          - generic [ref=f5e242]:
+            - generic [ref=f5e243]:
+              - generic [ref=f5e244]:
+                - button "AR Olá, Ana":
+                  - generic: AR
+                  - generic:
+                    - text: Olá,
+                    - strong: Ana
+                - generic [ref=f5e245]:
+                  - button "Avisos, 18 não lidos":
+                    - generic: 9+
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f5e246]
+              - generic [ref=f5e247]:
+                - generic [ref=f5e248]:
+                  - generic [ref=f5e249]: Guardado nos seus pagamentos
+                  - strong [ref=f5e250]: R$ 42.000,00
+                - button "Ocultar valores"
+              - paragraph [ref=f5e251]: 3 a pagar · 0 a receber
+              - generic [ref=f5e252]:
+                - button "Saldo para pagar R$ 9.707,33":
+                  - generic: Saldo para pagar
+                  - strong: R$ 9.707,33
+                - button "Pode pagar com empréstimo na hora R$ 622,82":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 622,82
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f5e253]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f5e254]:
+              - generic [ref=f5e255]:
+                - heading "Para hoje" [level=3] [ref=f5e256]
+                - generic [ref=f5e257]: Hoje 11/Out
+              - button "Aprovar entrega Horizonte Reformas · etapa 2 R$ 8.000,00":
+                - generic:
+                  - generic: Aprovar entrega
+                  - strong: Horizonte Reformas · etapa 2
+                - generic: R$ 8.000,00
+              - button "Serviço concluído Avaliar Horizonte Reformas":
+                - generic:
+                  - generic: Serviço concluído
+                  - strong: Avaliar Horizonte Reformas
+            - generic [ref=f5e258]:
+              - button "A pagar 3"
+              - button "A receber"
+              - button "Concluídos 1"
+            - generic [ref=f5e259]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f5e261]
+              - button "Aprovar entrega Pintura Horizonte Reformas R$ 16.000,00":
+                - generic:
+                  - generic: Aprovar entrega
+                  - strong: Pintura
+                  - generic: Horizonte Reformas
+                - generic: R$ 16.000,00
+              - button "Protegido Pintura Horizonte Reformas R$ 16.000,00":
+                - generic:
+                  - generic: Protegido
+                  - strong: Pintura
+                  - generic: Horizonte Reformas
+                - generic: R$ 16.000,00
+              - button "Protegido Projeto de interiores Marina Costa Interiores R$ 18.000,00":
+                - generic:
+                  - generic: Protegido
+                  - strong: Projeto de interiores
+                  - generic: Marina Costa Interiores
+                - generic: R$ 18.000,00
+            - paragraph [ref=f5e262]:
+              - generic [ref=f5e265]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+      - region "Celular de Carlos, agindo agora" [ref=f5e266]:
+        - generic [ref=f5e267]:
+          - generic [ref=f5e269]: Carlos
+          - generic [ref=f5e270]: agindo agora
+        - generic [ref=f5e274]:
+          - generic [ref=f5e275]: 9:41
+          - generic [ref=f5e278]:
+            - button "Voltar" [ref=f5e279] [cursor=pointer]
+            - heading "Seu selo" [level=1] [ref=f5e282]
+          - generic [ref=f5e283]:
+            - generic [ref=f5e284]:
+              - generic [ref=f5e285]: Aceito pagamento protegido
+              - strong [ref=f5e288]: Horizonte Reformas
+              - generic [ref=f5e292]: Leia o QR para pagar com o dinheiro guardado até a entrega · BTG Aval
+            - generic [ref=f5e293]: Quem lê o QR cai direto numa cobrança sua. Use no WhatsApp, no Instagram e no orçamento.
+          - generic [ref=f5e297]:
+            - button "Compartilhar o selo" [ref=f5e298] [cursor=pointer]
+            - button "Indicar o Aval a um colega" [ref=f5e301] [cursor=pointer]
+      - region "WhatsApp de Carlos" [ref=f5e302]:
+        - generic [ref=f5e303]:
+          - generic [ref=f5e307]: WhatsApp de Carlos
+          - generic [ref=f5e308]: sem abrir o app
+        - generic [ref=f5e312]:
+          - generic [ref=f5e313]: 9:41
+          - generic [ref=f5e320]:
+            - strong [ref=f5e321]: BTG Aval
+            - generic [ref=f5e324]: Conta comercial oficial do BTG Pactual
+          - generic [ref=f5e325]:
+            - generic [ref=f5e326]: Hoje
+            - generic [ref=f5e328]:
+              - paragraph [ref=f5e329]: "Oi, Carlos! Aqui é o BTG Aval. Reconheci seu número da conta BTG. Me conte o que você combinou, do seu jeito. Por exemplo: \"cobrar pintura de R$ 4.500 da Ana até 30/11\"."
+              - generic [ref=f5e330]: 9:41
+          - generic [ref=f5e331]:
+            - textbox "Mensagem para o BTG Aval" [ref=f5e332]:
+              - /placeholder: Mensagem
+            - button "Enviar" [ref=f5e333] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f5e183]:
+    - generic [ref=f5e337]:
+      - group "Cenários" [ref=f5e338]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f5e339] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f5e340] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f5e341] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f5e342] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f5e343] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f5e344] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f5e345] [cursor=pointer]': "7"
+        - 'button "Cenário 8: Pelo WhatsApp" [ref=f5e346] [cursor=pointer]': "8"
+        - 'button "Cenário 9: No banco" [ref=f5e347] [cursor=pointer]': "9"
+      - strong [ref=f5e348]: Pelo WhatsApp
+      - generic [ref=f5e349]: Cobrar e pagar sem abrir o app.
+    - generic [ref=f5e350]:
+      - button "Pausar (espaço)" [ref=f5e351] [cursor=pointer]
+      - button "Próximo" [ref=f5e354] [cursor=pointer]
+      - generic [ref=f5e357]:
+        - group "Como avança" [ref=f5e358]:
+          - button "Eu avanço" [ref=f5e359] [cursor=pointer]
+          - button "Automático" [pressed] [ref=f5e360] [cursor=pointer]
+        - group "Velocidade" [ref=f5e361]:
+          - button "Devagar" [ref=f5e362] [cursor=pointer]
+          - button "Normal" [pressed] [ref=f5e363] [cursor=pointer]
+          - button "Rápido" [ref=f5e364] [cursor=pointer]
+        - generic [ref=f5e365]: Espaço pausa · → próximo · Esc sai
+      - button "Sair (Esc)" [ref=f5e366] [cursor=pointer]
+  - generic [ref=f5e372]:
+    - generic [ref=f5e373]: Guardado no BTG
+    - strong [ref=f5e374]: R$ 42.000,00

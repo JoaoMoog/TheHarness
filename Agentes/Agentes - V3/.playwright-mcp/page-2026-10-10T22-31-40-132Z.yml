@@ -1,0 +1,106 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e34]:
+    - generic [ref=f15e152]:
+      - region "Celular de Cliente, só para ver" [ref=f15e153]:
+        - generic [ref=f15e154]:
+          - generic [ref=f15e157]: Cliente
+          - generic [ref=f15e158]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f15e159] [cursor=pointer]
+        - generic [ref=f15e165]:
+          - generic [ref=f15e166]: 9:41
+          - generic [ref=f15e169]:
+            - img "BTG Pactual" [ref=f15e170]
+            - generic [ref=f15e171]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=f15e172]
+              - paragraph [ref=f15e173]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG"
+            - navigation "Acesso rápido" [ref=f15e174]:
+              - button "Conta BTG"
+              - button "Arbitragem"
+      - region "Celular de Carlos, agindo agora" [ref=f15e175]:
+        - generic [ref=f15e176]:
+          - generic [ref=f15e178]: Carlos
+          - generic [ref=f15e179]: agindo agora
+        - generic [ref=f15e182]:
+          - generic [ref=f15e183]:
+            - generic [ref=f15e184]: 9:41
+            - generic [ref=f15e187]:
+              - button "Voltar" [ref=f15e188] [cursor=pointer]
+              - heading "Cobrar" [level=1] [ref=f15e191]
+            - generic [ref=f15e192]:
+              - heading "Como enviar?" [level=2] [ref=f15e196]
+              - button "No app Aviso no app" [ref=f15e197] [cursor=pointer]:
+                - generic [ref=f15e199]:
+                  - strong [ref=f15e200]: No app
+                  - generic [ref=f15e201]: Aviso no app
+              - button "Link no WhatsApp Mensagem com o link" [ref=f15e202] [cursor=pointer]:
+                - generic [ref=f15e204]:
+                  - strong [ref=f15e205]: Link no WhatsApp
+                  - generic [ref=f15e206]: Mensagem com o link
+              - button "QR code Leitura na hora" [ref=f15e207] [cursor=pointer]:
+                - generic [ref=f15e209]:
+                  - strong [ref=f15e210]: QR code
+                  - generic [ref=f15e211]: Leitura na hora
+              - generic [ref=f15e213]:
+                - generic [ref=f15e214]: Celular com DDD
+                - textbox "Celular com DDD" [ref=f15e215]:
+                  - /placeholder: (11) 99999-9999
+                  - text: (11) 97777-3003
+              - generic [ref=f15e216]:
+                - strong [ref=f15e221]: Sua sugestão de marcos
+                - generic [ref=f15e222]:
+                  - generic [ref=f15e223]: Marco 1 · Preparo e massa
+                  - strong [ref=f15e224]: R$ 9.600,00 · 60%
+                - generic [ref=f15e225]:
+                  - generic [ref=f15e226]: Marco 2 · Pintura e acabamento
+                  - strong [ref=f15e227]: R$ 6.400,00 · 40%
+                - button "Alterar a sugestão" [ref=f15e228] [cursor=pointer]
+              - generic [ref=f15e231]:
+                - generic [ref=f15e232]: Marcos sugeridos · quem paga decide · até 03/11
+                - 'heading "Pintura: pintar o apartamento todo, massa corrida e duas demãos." [level=3] [ref=f15e233]'
+                - generic [ref=f15e234]: R$ 16.000,00
+                - generic [ref=f15e235]: Rua Harmonia, 410
+            - button "Enviar cobrança de R$ 16.000,00" [ref=f15e237] [cursor=pointer]
+          - status: 2 marcos definidos.
+  - contentinfo "Controle da apresentação" [ref=f15e106]:
+    - generic [ref=f15e242]:
+      - group "Cenários" [ref=f15e243]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f15e244] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f15e245] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f15e246] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Disputa" [ref=f15e247] [cursor=pointer]': "4"
+        - 'button "Cenário 5: Antecipação" [ref=f15e248] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Pelo WhatsApp" [ref=f15e249] [cursor=pointer]': "6"
+        - 'button "Cenário 7: No banco" [ref=f15e250] [cursor=pointer]': "7"
+      - strong [ref=f15e251]: O prestador cobra
+      - generic [ref=f15e252]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f15e131]:
+      - generic [ref=f15e253]:
+        - generic [ref=f15e254]: Carlos · prestador
+        - paragraph [ref=f15e255]: Envie a cobrança
+      - generic [ref=f15e256]:
+        - button "Pausar (espaço)" [ref=f15e257] [cursor=pointer]
+        - button "Próximo" [ref=f15e260] [cursor=pointer]
+        - generic [ref=f15e263]:
+          - group "Como avança" [ref=f15e264]:
+            - button "Eu avanço" [ref=f15e265] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f15e266] [cursor=pointer]
+          - group "Velocidade" [ref=f15e267]:
+            - button "Devagar" [ref=f15e268] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f15e269] [cursor=pointer]
+            - button "Rápido" [ref=f15e270] [cursor=pointer]
+          - generic [ref=f15e271]: Espaço pausa · → próximo · F tela cheia · Esc sai
+        - generic "Pilares do escopo" [ref=f15e272]:
+          - generic "Pilar 1 · Custódia por marcos" [ref=f15e273]: Custódia por marcos
+          - generic "Pilar 2 · Crédito e antecipação" [ref=f15e276]: Crédito e antecipação
+          - generic "Pilar 3 · Banco" [ref=f15e279]: Banco
+        - button "Tela cheia (F)" [ref=f15e282] [cursor=pointer]
+        - button "Sair (Esc)" [ref=f15e285] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Carlos · prestador
+      - strong: Envie a cobrança
+      - paragraph: Vai pelo WhatsApp, com um link seguro do BTG e um código de segurança. A cliente nunca usou o Aval.
+  - generic [ref=f15e291]:
+    - generic [ref=f15e292]: Guardado no BTG
+    - strong [ref=f15e293]: R$ 0,00

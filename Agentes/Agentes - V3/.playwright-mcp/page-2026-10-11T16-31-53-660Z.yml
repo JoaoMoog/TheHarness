@@ -1,0 +1,37 @@
+- generic [ref=e1]:
+  - banner "Demo" [ref=e32]:
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - strong [ref=e35]: Demo
+        - button "Fechar" [ref=e36] [cursor=pointer]
+      - generic [ref=e39]:
+        - generic [ref=e40]: Ver como
+        - group "Ver como" [ref=e41]:
+          - button "Você criar conta" [pressed] [ref=e42] [cursor=pointer]:
+            - strong [ref=e43]: Você
+            - generic [ref=e44]: criar conta
+          - button "Marina Costa paga e recebe" [ref=e45] [cursor=pointer]:
+            - strong [ref=e46]: Marina Costa
+            - generic [ref=e47]: paga e recebe
+          - button "Carlos Mendes Horizonte Reformas" [ref=e48] [cursor=pointer]:
+            - strong [ref=e49]: Carlos Mendes
+            - generic [ref=e50]: Horizonte Reformas
+      - generic [ref=e51]:
+        - generic [ref=e52]: Relógio
+        - group "Relógio da demonstração" [ref=e53]:
+          - strong [ref=e56]: Hoje 04/10
+          - button "+1 dia" [ref=e57] [cursor=pointer]
+          - button "+7 dias" [ref=e58] [cursor=pointer]
+      - button "Reiniciar demo" [ref=e59] [cursor=pointer]
+  - main [ref=e2]:
+    - generic [ref=e9]:
+      - img "BTG Pactual" [ref=e10]
+      - generic [ref=e11]:
+        - heading "Que bom te ver por aqui!" [level=1] [ref=e12]
+        - paragraph [ref=e13]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+        - button "Entrar com a conta BTG" [ref=e14] [cursor=pointer]
+      - navigation "Acesso rápido" [ref=e15]:
+        - button "Conta BTG" [ref=e16] [cursor=pointer]
+        - button "Arbitragem" [ref=e20] [cursor=pointer]
+        - button "Ajuda" [ref=e24] [cursor=pointer]
+  - button "Demo" [active] [ref=e28] [cursor=pointer]

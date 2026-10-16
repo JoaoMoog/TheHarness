@@ -1,0 +1,132 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e1421]:
+      - strong [ref=f1e1422]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f1e1423]:
+      - button "Ana Ribeiro sua conta" [pressed] [ref=f1e1424] [cursor=pointer]:
+        - strong [ref=f1e1425]: Ana Ribeiro
+        - generic [ref=f1e1426]: sua conta
+      - button "Marina Costa paga e recebe" [ref=f1e1427] [cursor=pointer]:
+        - strong [ref=f1e1428]: Marina Costa
+        - generic [ref=f1e1429]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [ref=f1e1430] [cursor=pointer]:
+        - strong [ref=f1e1431]: Carlos Mendes
+        - generic [ref=f1e1432]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=f1e1433] [cursor=pointer]:
+        - strong [ref=f1e1434]: Banco
+        - generic [ref=f1e1435]: operações BTG
+    - group "Relógio da demonstração" [ref=f1e1436]:
+      - strong [ref=f1e1439]: Hoje 11/10
+      - button "+1 dia" [ref=f1e1440] [cursor=pointer]
+      - button "+7 dias" [ref=f1e1441] [cursor=pointer]
+    - generic [ref=f1e1442]:
+      - button "Dois celulares" [pressed] [ref=f1e1443] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f1e1446] [cursor=pointer]
+  - main [ref=f1e31]:
+    - generic [ref=f1e1449]:
+      - region "Celular de Ana, agindo agora" [ref=f1e1450]:
+        - generic [ref=f1e1451]:
+          - generic [ref=f1e1453]: Ana
+          - generic [ref=f1e1454]: agindo agora
+        - generic [ref=f1e1457]:
+          - generic [ref=f1e1458]:
+            - generic [ref=f1e1459]: 9:41
+            - generic [ref=f1e1462]:
+              - button "Voltar" [ref=f1e1463] [cursor=pointer]
+              - heading "Pagamento protegido" [level=1] [ref=f1e1466]
+            - generic [ref=f1e1467]:
+              - generic [ref=f1e1468]:
+                - generic [ref=f1e1469]: Horizonte Reformas cobra
+                - heading "Pintura" [level=3] [ref=f1e1470]
+                - generic [ref=f1e1471]: R$ 16.000,00
+                - paragraph [ref=f1e1472]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+                - generic [ref=f1e1473]:
+                  - generic [ref=f1e1474]: Prazo de entrega
+                  - strong [ref=f1e1475]: 03/11
+                - generic [ref=f1e1476]:
+                  - generic [ref=f1e1477]: Endereço
+                  - strong [ref=f1e1478]: Rua Harmonia, 410
+                - generic [ref=f1e1479]:
+                  - generic [ref=f1e1480]: Liberação
+                  - strong [ref=f1e1481]: Quem paga define
+              - generic [ref=f1e1482]:
+                - strong [ref=f1e1483]: Como a proteção funciona
+                - strong [ref=f1e1488]: Fica guardado no banco
+                - strong [ref=f1e1493]: Sai quando quem paga aprova
+                - strong [ref=f1e1498]: Sem resposta em 7 dias, libera sozinho
+              - generic [ref=f1e1499]:
+                - strong [ref=f1e1504]: Como o dinheiro é liberado
+                - generic [ref=f1e1505]:
+                  - generic [ref=f1e1506]: 1. Preparo e massa
+                  - strong [ref=f1e1507]: R$ 8.000,00
+                - generic [ref=f1e1508]:
+                  - generic [ref=f1e1509]: 2. Pintura e acabamento
+                  - strong [ref=f1e1510]: R$ 8.000,00
+                - button "Alterar com o assistente" [ref=f1e1511] [cursor=pointer]
+              - generic [ref=f1e1514]:
+                - checkbox "Confiro o combinado e aceito as condições e a cláusula de arbitragem." [checked] [ref=f1e1515]
+                - generic [ref=f1e1516]: Confiro o combinado e aceito as condições e a cláusula de arbitragem.
+            - generic [ref=f1e1517]:
+              - button "Aceitar e pagar" [ref=f1e1518] [cursor=pointer]
+              - button "Recusar" [ref=f1e1519] [cursor=pointer]
+          - status: 2 etapas definidas.
+      - region "Celular de Carlos, só para ver" [ref=f1e1520]:
+        - generic [ref=f1e1521]:
+          - generic [ref=f1e1524]: Carlos
+          - generic [ref=f1e1525]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f1e1526] [cursor=pointer]
+        - generic [ref=f1e1532]:
+          - generic [ref=f1e1533]: 9:41
+          - generic [ref=f1e1536]:
+            - button "Fechar"
+          - generic [ref=f1e1537]:
+            - heading "Mensagem pronta no WhatsApp" [level=2] [ref=f1e1542]
+            - generic [ref=f1e1543]:
+              - paragraph [ref=f1e1544]: "Horizonte Reformas cobra R$ 16.000,00 com proteção: Pintura. Confira e aceite: pague.btgpactual.com.br/p/PG-003"
+              - generic [ref=f1e1545]: (11) 97777-3003
+          - generic [ref=f1e1546]:
+            - status [ref=f1e1547]:
+              - generic [ref=f1e1548]: Enviado.
+              - button "Desfazer"
+            - button "Abrir o link como quem recebeu"
+            - button "Ir para o início"
+  - contentinfo "Controle da apresentação" [ref=f1e103]:
+    - generic [ref=f1e1551]:
+      - group "Cenários" [ref=f1e1552]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f1e1553] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f1e1554] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f1e1555] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f1e1556] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f1e1557] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f1e1558] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f1e1559] [cursor=pointer]': "7"
+        - 'button "Cenário 8: No banco" [ref=f1e1560] [cursor=pointer]': "8"
+      - strong [ref=f1e1561]: Pagar em conjunto
+      - generic [ref=f1e1562]: Três pessoas dividem a mesma cobrança.
+    - generic [ref=f1e127]:
+      - status [ref=f1e1563]:
+        - generic [ref=f1e1564]:
+          - generic [ref=f1e1565]: Preparando
+          - heading "Disputa" [level=2] [ref=f1e1566]
+          - paragraph [ref=f1e1567]: "Passando por trás: Pagar em conjunto"
+          - button "Sair" [ref=f1e1569] [cursor=pointer]
+      - generic [ref=f1e1570]:
+        - generic [ref=f1e1571]: Ana · cliente
+        - paragraph [ref=f1e1572]: Pague
+      - generic [ref=f1e1573]:
+        - button "Pausar (espaço)" [ref=f1e1574] [cursor=pointer]
+        - button "Próximo" [ref=f1e1577] [cursor=pointer]
+        - generic [ref=f1e1580]:
+          - group "Como avança" [ref=f1e1581]:
+            - button "Eu avanço" [ref=f1e1582] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f1e1583] [cursor=pointer]
+          - group "Velocidade" [ref=f1e1584]:
+            - button "Devagar" [ref=f1e1585] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f1e1586] [cursor=pointer]
+            - button "Rápido" [ref=f1e1587] [cursor=pointer]
+          - generic [ref=f1e1588]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f1e1589] [cursor=pointer]
+  - generic [ref=f1e1594]:
+    - generic [ref=f1e1595]: Guardado no BTG
+    - strong [ref=f1e1596]: R$ 18.000,00

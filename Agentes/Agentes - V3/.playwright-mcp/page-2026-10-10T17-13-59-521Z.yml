@@ -1,0 +1,161 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e2591]:
+      - complementary [ref=f2e2592]:
+        - generic [ref=f2e2593]:
+          - img "BTG Pactual" [ref=f2e2594]
+          - generic [ref=f2e2595]: Aval
+        - navigation "Áreas" [ref=f2e2596]:
+          - button "Visão geral" [ref=f2e2597] [cursor=pointer]
+          - button "Operações" [ref=f2e2601] [cursor=pointer]
+          - button "Fila de trabalho" [ref=f2e2605] [cursor=pointer]
+          - button "Clientes e limites" [ref=f2e2609] [cursor=pointer]
+          - button "Crédito" [ref=f2e2613] [cursor=pointer]
+          - button "Seguros" [ref=f2e2617] [cursor=pointer]
+          - button "Ofertas" [ref=f2e2621] [cursor=pointer]
+          - button "Receita" [ref=f2e2625] [cursor=pointer]
+          - button "Funding" [ref=f2e2629] [cursor=pointer]
+          - button "Risco e conluio" [ref=f2e2633] [cursor=pointer]
+          - button "Compliance" [ref=f2e2637] [cursor=pointer]
+          - button "API" [ref=f2e2641] [cursor=pointer]
+        - generic [ref=f2e2645]:
+          - generic [ref=f2e2646]: LP
+          - generic [ref=f2e2647]:
+            - strong [ref=f2e2648]: Luiza Prado
+            - generic [ref=f2e2649]: Operações · BTG
+      - main [ref=f2e2650]:
+        - generic [ref=f2e2651]:
+          - heading "Compliance e auditoria" [level=1] [ref=f2e2652]
+          - generic [ref=f2e2653]: Buscar contrato, CPF ou CNPJ
+        - generic [ref=f2e2657]:
+          - generic [ref=f2e2658]:
+            - generic [ref=f2e2659]:
+              - generic [ref=f2e2660]: Decisões registradas
+              - strong [ref=f2e2661]: "4"
+              - generic [ref=f2e2662]: Pessoa ou regra
+            - generic [ref=f2e2663]:
+              - generic [ref=f2e2664]: Dinheiro movido sem pessoa ou regra
+              - strong [ref=f2e2665]: "0"
+              - generic [ref=f2e2666]: Toda liberação tem quem decidiu
+            - generic [ref=f2e2667]:
+              - generic [ref=f2e2668]: Alertas PLD abertos
+              - strong [ref=f2e2669]: "1"
+              - generic [ref=f2e2670]: Prazo regulatório em dia
+            - generic [ref=f2e2671]:
+              - generic [ref=f2e2672]: Pedidos LGPD
+              - strong [ref=f2e2673]: "2"
+              - generic [ref=f2e2674]: Atendidos no prazo
+          - generic [ref=f2e2675]:
+            - heading "Trilha de auditoria" [level=2] [ref=f2e2676]
+            - table [ref=f2e2677]:
+              - rowgroup [ref=f2e2678]:
+                - row [ref=f2e2679]:
+                  - columnheader "Data" [ref=f2e2680]
+                  - columnheader "Quem decidiu" [ref=f2e2681]
+                  - columnheader "O quê" [ref=f2e2682]
+                  - columnheader "Detalhe" [ref=f2e2683]
+                  - columnheader "Ref." [ref=f2e2684]
+              - rowgroup [ref=f2e2685]:
+                - row [ref=f2e2686]:
+                  - cell "11/10" [ref=f2e2687]
+                  - cell [ref=f2e2688]:
+                    - strong [ref=f2e2689]: Partes em acordo
+                  - cell "Acordo na mediação" [ref=f2e2690]
+                  - cell "DP-001 · R$ 6.800,00 ao prestador, R$ 1.200,00 devolvidos" [ref=f2e2691]
+                  - cell "DP-001" [ref=f2e2692]
+                - row [ref=f2e2693]:
+                  - cell "11/10" [ref=f2e2694]
+                  - cell [ref=f2e2695]:
+                    - strong [ref=f2e2696]: Luiza Prado · mediadora
+                  - cell "Proposta de acordo enviada" [ref=f2e2697]
+                  - 'cell "DP-001 · Os dois lados têm provas: divisão proporcional, com perícia se preciso" [ref=f2e2698]'
+                  - cell "DP-001" [ref=f2e2699]
+                - row [ref=f2e2700]:
+                  - cell "11/10" [ref=f2e2701]
+                  - cell [ref=f2e2702]:
+                    - strong [ref=f2e2703]: "Regra: liberado sozinho"
+                  - cell "Liberação de etapa" [ref=f2e2704]
+                  - cell "AV-2026-001 etapa 2 · Liberado sozinho (7 dias sem resposta)" [ref=f2e2705]
+                  - cell "AV-2026-001" [ref=f2e2706]
+                - row [ref=f2e2707]:
+                  - cell "04/10" [ref=f2e2708]
+                  - cell [ref=f2e2709]:
+                    - strong [ref=f2e2710]: Ana Ribeiro
+                  - cell "Liberação de etapa" [ref=f2e2711]
+                  - cell "AV-2026-001 etapa 1 · Aprovação manual" [ref=f2e2712]
+                  - cell "AV-2026-001" [ref=f2e2713]
+          - generic [ref=f2e2714]:
+            - generic [ref=f2e2715]:
+              - heading "Prevenção à lavagem (PLD)" [level=2] [ref=f2e2716]
+              - table [ref=f2e2717]:
+                - rowgroup [ref=f2e2718]:
+                  - row [ref=f2e2719]:
+                    - columnheader "Alerta" [ref=f2e2720]
+                    - columnheader "Sinal" [ref=f2e2721]
+                    - columnheader "Cliente" [ref=f2e2722]
+                    - columnheader "Situação" [ref=f2e2723]
+                - rowgroup [ref=f2e2724]:
+                  - row [ref=f2e2725]:
+                    - cell "PLD-118" [ref=f2e2726]
+                    - cell "Pix fracionado em 9 transferências" [ref=f2e2727]
+                    - cell "Volt Serviços" [ref=f2e2728]
+                    - cell "Comunicado ao COAF" [ref=f2e2729]
+                  - row [ref=f2e2730]:
+                    - cell "PLD-121" [ref=f2e2731]
+                    - cell "Valor incompatível com a renda" [ref=f2e2732]
+                    - cell "Conta nova" [ref=f2e2733]
+                    - cell "Em análise" [ref=f2e2734]
+            - generic [ref=f2e2735]:
+              - heading "LGPD" [level=2] [ref=f2e2736]
+              - table [ref=f2e2737]:
+                - rowgroup [ref=f2e2738]:
+                  - row [ref=f2e2739]:
+                    - columnheader "Pedido" [ref=f2e2740]
+                    - columnheader "Tipo" [ref=f2e2741]
+                    - columnheader "Titular" [ref=f2e2742]
+                    - columnheader "Situação" [ref=f2e2743]
+                - rowgroup [ref=f2e2744]:
+                  - row [ref=f2e2745]:
+                    - cell "LG-044" [ref=f2e2746]
+                    - cell "Exportação de dados" [ref=f2e2747]
+                    - cell "Cliente PF" [ref=f2e2748]
+                    - cell "Entregue em 2 dias" [ref=f2e2749]
+                  - row [ref=f2e2750]:
+                    - cell "LG-047" [ref=f2e2751]
+                    - cell "Revogação de Open Finance" [ref=f2e2752]
+                    - cell "Cliente PF" [ref=f2e2753]
+                    - cell "Concluída" [ref=f2e2754]
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e2757]:
+      - group "Cenários" [ref=f2e2758]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e2759] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e2760] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e2761] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e2762] [cursor=pointer]': "4"
+      - strong [ref=f2e2763]: No banco
+      - generic [ref=f2e2764]: Ofertas, receita, risco e quem decidiu.
+    - generic [ref=f2e184]:
+      - generic [ref=f2e2765]:
+        - generic [ref=f2e2766]: Banco BTG
+        - paragraph [ref=f2e2767]: Veja quem decidiu
+      - generic [ref=f2e2768]:
+        - button "Pausar (espaço)" [ref=f2e2769] [cursor=pointer]
+        - button "Próximo" [ref=f2e2772] [cursor=pointer]
+        - generic [ref=f2e2775]:
+          - group "Como avança" [ref=f2e2776]:
+            - button "Eu avanço" [ref=f2e2777] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e2778] [cursor=pointer]
+          - group "Velocidade" [ref=f2e2779]:
+            - button "Devagar" [ref=f2e2780] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e2781] [cursor=pointer]
+            - button "Rápido" [ref=f2e2782] [cursor=pointer]
+          - generic [ref=f2e2783]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f2e2784] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Banco BTG
+      - strong: Veja quem decidiu
+      - paragraph: Todo real que se moveu tem uma pessoa ou uma regra por trás, inclusive o acordo da disputa desta apresentação.
+  - generic [ref=f2e2789]:
+    - generic [ref=f2e2790]: Guardado no BTG
+    - strong [ref=f2e2791]: R$ 42.000,00

@@ -1,0 +1,233 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e31]:
+    - generic [ref=f2e1259]:
+      - region "Celular de Ana, agindo agora" [ref=f2e1260]:
+        - generic [ref=f2e1261]:
+          - generic [ref=f2e1263]: Ana
+          - generic [ref=f2e1264]: agindo agora
+        - generic [ref=f2e1267]:
+          - generic [ref=f2e1268]:
+            - generic [ref=f2e1269]: 9:41
+            - generic [ref=f2e1272]:
+              - button "Voltar" [ref=f2e1273] [cursor=pointer]
+              - heading "Pagar" [level=1] [ref=f2e1276]
+            - generic [ref=f2e1277]:
+              - generic [ref=f2e1278]:
+                - generic [ref=f2e1279]: Marina Costa Interiores · Projeto de interiores
+                - generic [ref=f2e1280]: R$ 18.000,00
+                - generic [ref=f2e1281]:
+                  - generic [ref=f2e1282]: "Já incluso: seguro de arbitragem"
+                  - strong [ref=f2e1283]: R$ 72,00
+              - generic [ref=f2e1288]:
+                - strong [ref=f2e1289]: Seu saldo não cobre
+                - generic [ref=f2e1290]: Parcele em 6x de R$ 3.229,53 com empréstimo na hora.
+                - button "Ver opções de empréstimo" [ref=f2e1291] [cursor=pointer]
+              - generic [ref=f2e1293]:
+                - strong [ref=f2e1297]: Seguro do serviço
+                - generic [ref=f2e1298]: +R$ 450,00
+                - switch "Seguro do serviço" [ref=f2e1299] [cursor=pointer]
+              - generic [ref=f2e1302]:
+                - strong [ref=f2e1306]: Usar 1.600 pontos
+                - generic [ref=f2e1307]: −R$ 160,00
+                - switch "Usar 1.600 pontos" [ref=f2e1308] [cursor=pointer]
+              - heading "Como você quer pagar?" [level=3] [ref=f2e1310]
+              - button "Saldo da conta BTG Saldo R$ 15.040,66" [disabled] [ref=f2e1311]:
+                - generic [ref=f2e1313]:
+                  - strong [ref=f2e1314]: Saldo da conta BTG
+                  - generic [ref=f2e1315]: Saldo R$ 15.040,66
+              - button "Guardar no cofrinho e pagar depois" [ref=f2e1316] [cursor=pointer]
+              - button "Empréstimo na hora 6x de R$ 3.229,53 R$ 19.377,18" [ref=f2e1319] [cursor=pointer]:
+                - generic [ref=f2e1321]:
+                  - strong [ref=f2e1322]: Empréstimo na hora
+                  - generic [ref=f2e1323]: 6x de R$ 3.229,53
+                - strong [ref=f2e1324]: R$ 19.377,18
+              - button "Cartão de crédito BTG Até 12x · 3x sem juros · limite livre R$ 41,60" [ref=f2e1325] [cursor=pointer]:
+                - generic [ref=f2e1327]:
+                  - strong [ref=f2e1328]: Cartão de crédito BTG
+                  - generic [ref=f2e1329]: Até 12x · 3x sem juros · limite livre R$ 41,60
+              - button "Pix De qualquer banco R$ 18.000,00" [ref=f2e1330] [cursor=pointer]:
+                - generic [ref=f2e1332]:
+                  - strong [ref=f2e1333]: Pix
+                  - generic [ref=f2e1334]: De qualquer banco
+                - strong [ref=f2e1335]: R$ 18.000,00
+              - button "Pagar em conjunto com outras pessoas" [ref=f2e1336] [cursor=pointer]
+              - paragraph [ref=f2e1339]: Fica guardado até você aprovar.
+            - button "Pagar R$ 18.000,00 com Pix" [ref=f2e1343] [cursor=pointer]
+          - dialog "Pagar com crédito" [ref=f2e1346]:
+            - generic [ref=f2e1348]:
+              - heading "Pagar com crédito" [level=2] [ref=f2e1349]
+              - button "Fechar" [ref=f2e1350] [cursor=pointer]
+            - generic [ref=f2e1353]:
+              - paragraph [ref=f2e1354]: Projeto de interiores · R$ 18.000,00
+              - generic [ref=f2e1355]:
+                - article [ref=f2e1356]:
+                  - strong [ref=f2e1357]: Empréstimo na hora
+                  - generic [ref=f2e1358]:
+                    - generic [ref=f2e1359]: Parcela
+                    - strong [ref=f2e1360]: 6x de R$ 3.229,53
+                  - generic [ref=f2e1361]:
+                    - generic [ref=f2e1362]: Total
+                    - strong [ref=f2e1363]: R$ 19.377,18
+                  - generic [ref=f2e1364]:
+                    - generic [ref=f2e1365]: Custo total
+                    - strong [ref=f2e1366]: 29,05% ao ano
+                  - generic [ref=f2e1367]:
+                    - generic [ref=f2e1368]: 1ª parcela
+                    - strong [ref=f2e1369]: em 30 dias
+                  - button "Escolher" [ref=f2e1370] [cursor=pointer]
+                - article [ref=f2e1371]:
+                  - strong [ref=f2e1372]: Cartão BTG
+                  - generic [ref=f2e1373]:
+                    - generic [ref=f2e1374]: Parcela
+                    - strong [ref=f2e1375]: 6x de R$ 3.321,65
+                  - generic [ref=f2e1376]:
+                    - generic [ref=f2e1377]: Total
+                    - strong [ref=f2e1378]: R$ 19.929,90
+                  - generic [ref=f2e1379]:
+                    - generic [ref=f2e1380]: Juros
+                    - strong [ref=f2e1381]: 2,99% ao mês
+                  - generic [ref=f2e1382]:
+                    - generic [ref=f2e1383]: Limite
+                    - strong [ref=f2e1384]: faltam R$ 19.888,30
+                  - generic [ref=f2e1385]: O banco aumenta o limite na hora, só para este pagamento.
+                  - button "Escolher" [ref=f2e1386] [cursor=pointer]
+              - generic [ref=f2e1387]:
+                - generic [ref=f2e1388]:
+                  - strong [ref=f2e1389]: "Sua nota hoje: regular"
+                  - generic [ref=f2e1390]: "620"
+                - img "Nota 620 de 1000" [ref=f2e1391]
+                - generic [ref=f2e1393]: "Ela já está no preço das opções acima. Para melhorar:"
+                - list [ref=f2e1394]:
+                  - listitem [ref=f2e1395]:
+                    - text: Ative o Pix Automático nas parcelas e nunca pague atrasado.
+                    - button "Ativar" [ref=f2e1396] [cursor=pointer]
+                  - listitem [ref=f2e1397]:
+                    - text: Traga dados de outros bancos pelo Open Finance, no app do BTG.
+                    - button "Fazer" [ref=f2e1398] [cursor=pointer]
+                  - listitem [ref=f2e1399]: Conclua pagamentos protegidos. Cada um conta a seu favor.
+                - button "Ver a nota completa no app do BTG" [ref=f2e1400] [cursor=pointer]
+      - region "Celular de Marina, só para ver" [ref=f2e1401]:
+        - generic [ref=f2e1402]:
+          - generic [ref=f2e1405]: Marina
+          - generic [ref=f2e1406]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f2e1407] [cursor=pointer]
+        - generic [ref=f2e1413]:
+          - generic [ref=f2e1414]: 9:41
+          - generic [ref=f2e1417]:
+            - button "Voltar"
+            - heading "Projeto de interiores" [level=1] [ref=f2e1418]
+          - generic [ref=f2e1419]:
+            - generic [ref=f2e1420]:
+              - generic [ref=f2e1421]:
+                - generic [ref=f2e1422]: AV-2026-002 · Ana Ribeiro
+                - generic [ref=f2e1423]: Aguardando pagamento
+              - generic [ref=f2e1424]: R$ 18.000,00
+              - generic [ref=f2e1426]:
+                - generic [ref=f2e1427]: Liberado R$ 0,00
+                - generic [ref=f2e1428]: Guardado R$ 0,00
+            - status [ref=f2e1429]:
+              - generic [ref=f2e1432]: "Agora: esperando Ana Ribeiro pagar."
+            - generic [ref=f2e1433]:
+              - strong [ref=f2e1434]: Linha do tempo
+              - list [ref=f2e1435]:
+                - listitem [ref=f2e1436]:
+                  - generic [ref=f2e1439]:
+                    - strong [ref=f2e1440]: Combinado
+                    - generic [ref=f2e1441]: Aceito em 11/10
+                - listitem [ref=f2e1442]:
+                  - generic [ref=f2e1445]:
+                    - strong [ref=f2e1446]: Pago e protegido
+                    - generic [ref=f2e1447]: Aguardando o pagamento
+                - listitem [ref=f2e1448]:
+                  - generic [ref=f2e1451]:
+                    - strong [ref=f2e1452]: "Etapa 1: Medição e briefing"
+                    - generic [ref=f2e1453]: Liberado quando aprovado
+                - listitem [ref=f2e1454]:
+                  - generic [ref=f2e1457]:
+                    - strong [ref=f2e1458]: "Etapa 2: Projeto 3D e memorial"
+                    - generic [ref=f2e1459]: Liberado quando aprovado
+                - listitem [ref=f2e1460]:
+                  - generic [ref=f2e1463]:
+                    - strong [ref=f2e1464]: "Etapa 3: Acompanhamento da obra"
+                    - generic [ref=f2e1465]: Liberado quando aprovado
+                - listitem [ref=f2e1466]:
+                  - generic [ref=f2e1469]:
+                    - strong [ref=f2e1470]: Concluído
+                    - generic [ref=f2e1471]: Todo o valor liberado
+            - generic [ref=f2e1472]:
+              - generic [ref=f2e1473]:
+                - generic [ref=f2e1477]:
+                  - strong [ref=f2e1478]: Etapa 1 · Medição e briefing
+                  - generic [ref=f2e1479]: R$ 4.500,00 · até 21/10
+                - generic [ref=f2e1480]: A iniciar
+              - generic [ref=f2e1481]:
+                - button "Subcontratar"
+              - generic [ref=f2e1482]:
+                - generic [ref=f2e1486]:
+                  - strong [ref=f2e1487]: Etapa 2 · Projeto 3D e memorial
+                  - generic [ref=f2e1488]: R$ 9.000,00 · até 31/10
+                - generic [ref=f2e1489]: A iniciar
+              - generic [ref=f2e1490]:
+                - button "Subcontratar"
+              - generic [ref=f2e1491]:
+                - generic [ref=f2e1495]:
+                  - strong [ref=f2e1496]: Etapa 3 · Acompanhamento da obra
+                  - generic [ref=f2e1497]: R$ 4.500,00 · até 10/11
+                - generic [ref=f2e1498]: A iniciar
+              - generic [ref=f2e1499]:
+                - button "Subcontratar"
+            - generic [ref=f2e1500]:
+              - generic [ref=f2e1501]:
+                - generic [ref=f2e1502]: Prazo de entrega
+                - strong [ref=f2e1503]: 10/11
+              - generic [ref=f2e1504]:
+                - generic [ref=f2e1505]: Endereço
+                - strong [ref=f2e1506]: Rua Harmonia, 410
+              - paragraph [ref=f2e1507]: "Projeto de interiores: projeto de interiores da sala e da cozinha. Inclui medição, projeto 3D e acompanhamento."
+            - generic [ref=f2e1508]:
+              - button "Conversa 0 mensagens · registrada no contrato":
+                - generic:
+                  - strong: Conversa
+                  - generic: 0 mensagens · registrada no contrato
+              - button "Tirar dúvida com o assistente Prazos, etapas, seguro e disputas":
+                - generic:
+                  - strong: Tirar dúvida com o assistente
+                  - generic: Prazos, etapas, seguro e disputas
+              - button "Contrato e arbitragem Assinado em 11/10 · arbitragem incluída":
+                - generic:
+                  - strong: Contrato e arbitragem
+                  - generic: Assinado em 11/10 · arbitragem incluída
+  - contentinfo "Controle da apresentação" [ref=f2e160]:
+    - generic [ref=f2e1511]:
+      - group "Cenários" [ref=f2e1512]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f2e1513] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f2e1514] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f2e1515] [cursor=pointer]': "3"
+        - 'button "Cenário 4: No banco" [ref=f2e1516] [cursor=pointer]': "4"
+      - strong [ref=f2e1517]: O cliente paga um prestador
+      - generic [ref=f2e1518]: A cliente paga a Marina com o empréstimo na hora.
+    - generic [ref=f2e184]:
+      - generic [ref=f2e1519]:
+        - generic [ref=f2e1520]: Nesta tela
+        - paragraph [ref=f2e1521]: A nota de crédito
+      - generic [ref=f2e1522]:
+        - button "Pausar (espaço)" [ref=f2e1523] [cursor=pointer]
+        - button "Próximo" [ref=f2e1526] [cursor=pointer]
+        - generic [ref=f2e1529]:
+          - group "Como avança" [ref=f2e1530]:
+            - button "Eu avanço" [ref=f2e1531] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f2e1532] [cursor=pointer]
+          - group "Velocidade" [ref=f2e1533]:
+            - button "Devagar" [ref=f2e1534] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f2e1535] [cursor=pointer]
+            - button "Rápido" [ref=f2e1536] [cursor=pointer]
+          - generic [ref=f2e1537]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f2e1538] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Nesta tela · 2 de 2
+      - strong: A nota de crédito
+      - paragraph: Mostra a nota da pessoa e como melhorar, sempre ligada a pagar bem.
+  - generic [ref=f2e1543]:
+    - generic [ref=f2e1544]: Guardado no BTG
+    - strong [ref=f2e1545]: R$ 0,00

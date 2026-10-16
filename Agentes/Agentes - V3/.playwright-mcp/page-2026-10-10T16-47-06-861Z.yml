@@ -1,0 +1,189 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e1597]:
+      - strong [ref=f1e1598]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f1e1599]:
+      - button "Ana Ribeiro sua conta" [ref=f1e1600] [cursor=pointer]:
+        - strong [ref=f1e1601]: Ana Ribeiro
+        - generic [ref=f1e1602]: sua conta
+      - button "Marina Costa paga e recebe" [ref=f1e1603] [cursor=pointer]:
+        - strong [ref=f1e1604]: Marina Costa
+        - generic [ref=f1e1605]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [pressed] [ref=f1e1606] [cursor=pointer]:
+        - strong [ref=f1e1607]: Carlos Mendes
+        - generic [ref=f1e1608]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=f1e1609] [cursor=pointer]:
+        - strong [ref=f1e1610]: Banco
+        - generic [ref=f1e1611]: operações BTG
+    - group "Relógio da demonstração" [ref=f1e1612]:
+      - strong [ref=f1e1615]: Hoje 11/10
+      - button "+1 dia" [ref=f1e1616] [cursor=pointer]
+      - button "+7 dias" [ref=f1e1617] [cursor=pointer]
+    - generic [ref=f1e1618]:
+      - button "Dois celulares" [pressed] [ref=f1e1619] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f1e1622] [cursor=pointer]
+  - main [ref=f1e31]:
+    - generic [ref=f1e1625]:
+      - region "Celular de Ana, só para ver" [ref=f1e1626]:
+        - generic [ref=f1e1627]:
+          - generic [ref=f1e1630]: Ana
+          - generic [ref=f1e1631]: Atualizou agora
+          - button "Usar este celular" [ref=f1e1634] [cursor=pointer]
+        - generic [ref=f1e1640]:
+          - generic [ref=f1e1641]: 9:41
+          - generic [ref=f1e1644]:
+            - button "Voltar"
+            - heading "Pintura" [level=1] [ref=f1e1645]
+          - generic [ref=f1e1646]:
+            - generic [ref=f1e1647]:
+              - generic [ref=f1e1648]:
+                - generic [ref=f1e1649]: AV-2026-004 · Horizonte Reformas
+                - generic [ref=f1e1650]: Em andamento
+              - generic [ref=f1e1651]: R$ 16.000,00
+              - generic [ref=f1e1653]:
+                - generic [ref=f1e1654]: Liberado R$ 0,00
+                - generic [ref=f1e1655]: Guardado R$ 16.000,00
+            - status [ref=f1e1656]:
+              - generic [ref=f1e1659]: "Agora: Horizonte Reformas faz a etapa 1. Prazo 23/10."
+            - generic [ref=f1e1664]:
+              - strong [ref=f1e1665]: Seu dinheiro guardado rende
+              - generic [ref=f1e1666]: "Rende 100% do CDI enquanto está guardado: R$ 0,00 até hoje. Volta para você no fim."
+            - generic [ref=f1e1667]:
+              - strong [ref=f1e1668]: Linha do tempo
+              - list [ref=f1e1669]:
+                - listitem [ref=f1e1670]:
+                  - generic [ref=f1e1673]:
+                    - strong [ref=f1e1674]: Combinado
+                    - generic [ref=f1e1675]: Aceito em 11/10
+                - listitem [ref=f1e1676]:
+                  - generic [ref=f1e1679]:
+                    - strong [ref=f1e1680]: Pago e protegido
+                    - generic [ref=f1e1681]: O dinheiro está guardado no banco
+                - listitem [ref=f1e1682]:
+                  - generic [ref=f1e1685]:
+                    - strong [ref=f1e1686]: "Etapa 1: Preparo e massa"
+                    - generic [ref=f1e1687]: Em execução
+                - listitem [ref=f1e1688]:
+                  - generic [ref=f1e1691]:
+                    - strong [ref=f1e1692]: "Etapa 2: Pintura e acabamento"
+                    - generic [ref=f1e1693]: Liberado quando aprovado
+                - listitem [ref=f1e1694]:
+                  - generic [ref=f1e1697]:
+                    - strong [ref=f1e1698]: Concluído
+                    - generic [ref=f1e1699]: Todo o valor liberado
+            - generic [ref=f1e1700]:
+              - generic [ref=f1e1701]:
+                - generic [ref=f1e1705]:
+                  - strong [ref=f1e1706]: Etapa 1 · Preparo e massa
+                  - generic [ref=f1e1707]: R$ 8.000,00 · até 23/10
+                - generic [ref=f1e1708]: Em execução
+              - generic [ref=f1e1709]:
+                - generic [ref=f1e1713]:
+                  - strong [ref=f1e1714]: Etapa 2 · Pintura e acabamento
+                  - generic [ref=f1e1715]: R$ 8.000,00 · até 03/11
+                - generic [ref=f1e1716]: A iniciar
+            - generic [ref=f1e1717]:
+              - generic [ref=f1e1718]:
+                - generic [ref=f1e1719]: Prazo de entrega
+                - strong [ref=f1e1720]: 03/11
+              - generic [ref=f1e1721]:
+                - generic [ref=f1e1722]: Endereço
+                - strong [ref=f1e1723]: Rua Harmonia, 410
+              - paragraph [ref=f1e1724]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+            - generic [ref=f1e1725]:
+              - button "Conversa 0 mensagens · registrada no contrato":
+                - generic:
+                  - strong: Conversa
+                  - generic: 0 mensagens · registrada no contrato
+              - button "Benefícios deste pagamento Cashback em material de construção · Garantia do serviço por 90 dias · Assistência residencial 24h":
+                - generic:
+                  - strong: Benefícios deste pagamento
+                  - generic: Cashback em material de construção · Garantia do serviço por 90 dias · Assistência residencial 24h
+              - button "Tirar dúvida com o assistente Prazos, etapas, seguro e disputas":
+                - generic:
+                  - strong: Tirar dúvida com o assistente
+                  - generic: Prazos, etapas, seguro e disputas
+              - button "Contrato e arbitragem Assinado em 11/10 · arbitragem incluída":
+                - generic:
+                  - strong: Contrato e arbitragem
+                  - generic: Assinado em 11/10 · arbitragem incluída
+          - generic [ref=f1e1727]:
+            - button "Abrir disputa"
+      - region "Celular de Carlos, agindo agora" [ref=f1e1728]:
+        - generic [ref=f1e1729]:
+          - generic [ref=f1e1731]: Carlos
+          - generic [ref=f1e1732]: agindo agora
+        - generic [ref=f1e1736]:
+          - generic [ref=f1e1737]: 9:41
+          - generic [ref=f1e1740]:
+            - button "Voltar" [ref=f1e1741] [cursor=pointer]
+            - heading "Enviar entrega" [level=1] [ref=f1e1744]
+          - generic [ref=f1e1745]:
+            - generic [ref=f1e1746]:
+              - strong [ref=f1e1747]: Etapa 1 · Preparo e massa
+              - generic [ref=f1e1748]: Ana Ribeiro · R$ 8.000,00 · até 23/10
+            - generic [ref=f1e1749]:
+              - generic [ref=f1e1750]: Legenda do próximo anexo
+              - textbox "Legenda do próximo anexo" [ref=f1e1751]:
+                - /placeholder: "Ex.: Piso rejuntado no box"
+            - generic [ref=f1e1752]:
+              - button "Foto Adicionar" [ref=f1e1753] [cursor=pointer]:
+                - strong [ref=f1e1756]: Foto
+                - generic [ref=f1e1757]: Adicionar
+              - button "Vídeo Adicionar" [ref=f1e1758] [cursor=pointer]:
+                - strong [ref=f1e1761]: Vídeo
+                - generic [ref=f1e1762]: Adicionar
+              - button "Documento Adicionar" [ref=f1e1763] [cursor=pointer]:
+                - strong [ref=f1e1766]: Documento
+                - generic [ref=f1e1767]: Adicionar
+              - button "Local Adicionar" [ref=f1e1768] [cursor=pointer]:
+                - strong [ref=f1e1771]: Local
+                - generic [ref=f1e1772]: Adicionar
+            - generic [ref=f1e1774]:
+              - generic [ref=f1e1775]: Descrição do que foi feito
+              - textbox "Descrição do que foi feito" [ref=f1e1776]:
+                - /placeholder: ""
+                - text: "Preparo e massa: concluído conforme o combinado, com fotos do antes e depois."
+            - generic [ref=f1e1777]:
+              - strong [ref=f1e1778]: Itens combinados da etapa
+              - generic [ref=f1e1779]: Preparo e massa
+          - button "Enviar para aprovação" [ref=f1e1784] [cursor=pointer]
+  - contentinfo "Controle da apresentação" [ref=f1e103]:
+    - generic [ref=f1e1787]:
+      - group "Cenários" [ref=f1e1788]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f1e1789] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f1e1790] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f1e1791] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f1e1792] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f1e1793] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f1e1794] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f1e1795] [cursor=pointer]': "7"
+        - 'button "Cenário 8: No banco" [ref=f1e1796] [cursor=pointer]': "8"
+      - strong [ref=f1e1797]: Disputa
+      - generic [ref=f1e1798]: A cliente contesta e o banco media.
+    - generic [ref=f1e127]:
+      - generic [ref=f1e1799]:
+        - generic [ref=f1e1800]: Carlos · prestador
+        - paragraph [ref=f1e1801]: Anexe uma foto
+      - generic [ref=f1e1802]:
+        - button "Pausar (espaço)" [ref=f1e1803] [cursor=pointer]
+        - button "Próximo" [ref=f1e1806] [cursor=pointer]
+        - generic [ref=f1e1809]:
+          - group "Como avança" [ref=f1e1810]:
+            - button "Eu avanço" [ref=f1e1811] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f1e1812] [cursor=pointer]
+          - group "Velocidade" [ref=f1e1813]:
+            - button "Devagar" [ref=f1e1814] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f1e1815] [cursor=pointer]
+            - button "Rápido" [ref=f1e1816] [cursor=pointer]
+          - generic [ref=f1e1817]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f1e1818] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Carlos · prestador
+      - strong: Anexe uma foto
+      - paragraph: A foto é a prova da entrega e fica registrada no contrato.
+  - generic [ref=f1e1823]:
+    - generic [ref=f1e1824]: Guardado no BTG
+    - strong [ref=f1e1825]: R$ 50.000,00

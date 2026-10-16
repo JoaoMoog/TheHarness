@@ -1,0 +1,111 @@
+- generic [active] [ref=f11e1]:
+  - main [ref=f11e34]:
+    - generic [ref=f11e148]:
+      - region "Celular de Cliente, agindo agora" [ref=f11e149]:
+        - generic [ref=f11e150]:
+          - generic [ref=f11e152]: Cliente
+          - generic [ref=f11e153]: agindo agora
+        - generic [ref=f11e157]:
+          - generic [ref=f11e158]: 9:41
+          - generic [ref=f11e161]:
+            - img "BTG Pactual" [ref=f11e162]
+            - generic [ref=f11e163]:
+              - heading "Que bom te ver por aqui!" [level=1] [ref=f11e164]
+              - paragraph [ref=f11e165]: Pague o que combinou. O dinheiro fica guardado até a entrega.
+              - button "Entrar com a conta BTG" [ref=f11e166] [cursor=pointer]
+            - navigation "Acesso rápido" [ref=f11e167]:
+              - button "Conta BTG" [ref=f11e168] [cursor=pointer]
+              - button "Arbitragem" [ref=f11e172] [cursor=pointer]
+      - region "Celular de Marina, só para ver" [ref=f11e176]:
+        - generic [ref=f11e177]:
+          - generic [ref=f11e180]: Marina
+          - generic [ref=f11e181]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f11e182] [cursor=pointer]
+        - generic [ref=f11e188]:
+          - generic [ref=f11e189]: 9:41
+          - generic [ref=f11e192]:
+            - generic [ref=f11e193]:
+              - generic [ref=f11e194]:
+                - button "MC Olá, Marina":
+                  - generic: MC
+                  - generic:
+                    - text: Olá,
+                    - strong: Marina
+                - generic [ref=f11e195]:
+                  - button "Avisos"
+                  - button "Pagamentos"
+              - heading "Pagamento protegido" [level=2] [ref=f11e196]
+              - generic [ref=f11e197]:
+                - generic [ref=f11e198]:
+                  - generic [ref=f11e199]: Guardado nos seus pagamentos
+                  - strong [ref=f11e200]: R$ 0,00
+                - button "Ocultar valores"
+              - paragraph [ref=f11e201]: 0 a pagar · 0 a receber
+              - generic [ref=f11e202]:
+                - button "Saldo para pagar R$ 12.843,50":
+                  - generic: Saldo para pagar
+                  - strong: R$ 12.843,50
+                - button "Pode pagar com empréstimo na hora R$ 20.000,00":
+                  - generic: Pode pagar com empréstimo na hora
+                  - strong: R$ 20.000,00
+              - button "Movimentos dos pagamentos"
+            - navigation "Atalhos" [ref=f11e203]:
+              - button "Cobrar"
+              - button "Pagar"
+              - button "Ler QR"
+              - button "Assistente"
+              - button "Disputas"
+              - button "Benefícios"
+            - generic [ref=f11e205]:
+              - paragraph [ref=f11e206]: Vai pagar um serviço? Você tem R$ 20.000,00 de empréstimo na hora.
+              - button "Pagar"
+            - generic [ref=f11e210]:
+              - button "A pagar"
+              - button "A receber"
+              - button "Concluídos"
+            - generic [ref=f11e211]:
+              - heading "Pagamentos protegidos" [level=3] [ref=f11e213]
+              - paragraph [ref=f11e214]: Nada por aqui. Use Cobrar ou Pagar para começar.
+            - paragraph [ref=f11e215]:
+              - generic [ref=f11e218]: Dinheiro protegido até cada aprovação. Valor guardado, crédito e seguros operados pelo BTG.
+          - button "Menu"
+  - contentinfo "Controle da apresentação" [ref=f11e106]:
+    - generic [ref=f11e131]:
+      - dialog "Combina, guarda e libera" [ref=f11e289]:
+        - banner [ref=f11e290]:
+          - img "BTG Pactual" [ref=f11e291]
+          - navigation "Slides" [ref=f11e292]:
+            - button "O que é" [ref=f11e293] [cursor=pointer]
+            - button "Problema" [ref=f11e295] [cursor=pointer]
+            - button "Solução" [ref=f11e297] [cursor=pointer]
+            - button "Impacto" [ref=f11e299] [cursor=pointer]
+            - button "Exemplo" [ref=f11e301] [cursor=pointer]
+        - generic [ref=f11e303]:
+          - heading "Combina, guarda e libera" [level=1] [ref=f11e304]
+          - generic [ref=f11e305]:
+            - generic [ref=f11e306]:
+              - generic [ref=f11e310]: Combina
+              - paragraph [ref=f11e311]: App, link ou WhatsApp
+            - generic [ref=f11e314]:
+              - generic [ref=f11e318]: Guarda
+              - paragraph [ref=f11e319]: No BTG, rendendo CDI
+            - generic [ref=f11e322]:
+              - generic [ref=f11e326]: Libera
+              - paragraph [ref=f11e327]: Por etapa aprovada
+          - generic [ref=f11e328]: Deu errado? O BTG media
+        - contentinfo [ref=f11e332]:
+          - button "Voltar" [ref=f11e333] [cursor=pointer]
+          - button "Pular para a demonstração" [ref=f11e336] [cursor=pointer]
+          - button "Próximo" [ref=f11e337] [cursor=pointer]
+      - generic [ref=f11e340]:
+        - button "Avançar (→)" [ref=f11e341] [cursor=pointer]
+        - generic [ref=f11e344]:
+          - strong [ref=f11e345]: Avançar
+          - generic [ref=f11e346]: →, espaço ou passador
+        - group "Como avança" [ref=f11e348]:
+          - button "Eu avanço" [pressed] [ref=f11e349] [cursor=pointer]
+          - button "Automático" [ref=f11e350] [cursor=pointer]
+        - button "Sair (Esc)" [ref=f11e351] [cursor=pointer]
+  - generic [ref=f11e286]:
+    - generic [ref=f11e287]: Guardado no BTG
+    - strong [ref=f11e288]: R$ 0,00

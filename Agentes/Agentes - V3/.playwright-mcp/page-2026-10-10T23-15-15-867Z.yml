@@ -1,0 +1,171 @@
+- generic [active] [ref=f24e1]:
+  - banner [ref=f24e2]:
+    - generic [ref=f24e3]:
+      - strong [ref=f24e4]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f24e5]:
+      - button "Ana Ribeiro sua conta" [ref=f24e6] [cursor=pointer]:
+        - strong [ref=f24e7]: Ana Ribeiro
+        - generic [ref=f24e8]: sua conta
+      - button "Marina Costa paga e recebe" [ref=f24e9] [cursor=pointer]:
+        - strong [ref=f24e10]: Marina Costa
+        - generic [ref=f24e11]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [ref=f24e12] [cursor=pointer]:
+        - strong [ref=f24e13]: Carlos Mendes
+        - generic [ref=f24e14]: Horizonte Reformas
+      - button "Banco operações BTG" [pressed] [ref=f24e15] [cursor=pointer]:
+        - strong [ref=f24e16]: Banco
+        - generic [ref=f24e17]: operações BTG
+    - group "Relógio da demonstração" [ref=f24e18]:
+      - strong [ref=f24e21]: Hoje 11/10
+      - button "+1 dia" [ref=f24e22] [cursor=pointer]
+      - button "+7 dias" [ref=f24e23] [cursor=pointer]
+    - generic [ref=f24e24]:
+      - button "Dois celulares" [pressed] [ref=f24e25] [cursor=pointer]
+      - button "WhatsApp" [ref=f24e28] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f24e31] [cursor=pointer]
+  - main [ref=f24e34]:
+    - generic [ref=f24e35]:
+      - complementary [ref=f24e36]:
+        - generic [ref=f24e37]:
+          - img "BTG Pactual" [ref=f24e38]
+          - generic [ref=f24e39]: Aval
+        - navigation "Áreas" [ref=f24e40]:
+          - button "Visão geral" [ref=f24e41] [cursor=pointer]
+          - button "Operações" [ref=f24e45] [cursor=pointer]
+          - button "Fila de trabalho" [ref=f24e49] [cursor=pointer]
+          - button "Clientes e limites" [ref=f24e53] [cursor=pointer]
+          - button "Crédito" [ref=f24e57] [cursor=pointer]
+          - button "Seguros" [ref=f24e61] [cursor=pointer]
+          - button "Ofertas" [ref=f24e65] [cursor=pointer]
+          - button "Receita" [ref=f24e69] [cursor=pointer]
+          - button "Funding" [ref=f24e73] [cursor=pointer]
+          - button "Risco e conluio" [ref=f24e77] [cursor=pointer]
+          - button "Compliance" [ref=f24e81] [cursor=pointer]
+          - button "API" [ref=f24e85] [cursor=pointer]
+        - generic [ref=f24e89]:
+          - generic [ref=f24e90]: LP
+          - generic [ref=f24e91]:
+            - strong [ref=f24e92]: Luiza Prado
+            - generic [ref=f24e93]: Operações · BTG
+      - main [ref=f24e94]:
+        - generic [ref=f24e95]:
+          - heading "Visão geral" [level=1] [ref=f24e96]
+          - generic [ref=f24e97]: Buscar contrato, CPF ou CNPJ
+        - generic [ref=f24e101]:
+          - generic [ref=f24e102]:
+            - generic [ref=f24e103]: Últimos 30 dias
+            - generic [ref=f24e104]: Todos os produtos
+            - generic [ref=f24e105]: Todas as regiões
+          - generic [ref=f24e106]:
+            - generic [ref=f24e107]:
+              - generic [ref=f24e108]: Em custódia
+              - strong [ref=f24e109]: R$ 4.848.000,00
+              - generic [ref=f24e110]: +6,1% em 30 dias
+            - generic [ref=f24e111]:
+              - generic [ref=f24e112]: Contratos ativos
+              - strong [ref=f24e113]: "1.285"
+              - generic [ref=f24e114]: +92 em 30 dias
+            - generic [ref=f24e115]:
+              - generic [ref=f24e116]: Disputas abertas
+              - strong [ref=f24e117]: "22"
+              - generic [ref=f24e118]: 1,8% dos contratos
+            - generic [ref=f24e119]:
+              - generic [ref=f24e120]: Parcelas atrasadas
+              - strong [ref=f24e121]: 2,4%
+              - generic [ref=f24e122]: +0,3 p.p. em 30 dias
+          - generic [ref=f24e123]:
+            - generic [ref=f24e124]:
+              - heading "Novas custódias por dia" [level=2] [ref=f24e125]
+              - generic [ref=f24e126]: R$ mil · últimos 30 dias · hoje inclui os pagamentos desta demonstração
+              - img "Barras com as novas custódias diárias, de cerca de R$ 70 mil a R$ 220 mil" [ref=f24e127]:
+                - emphasis [ref=f24e129]: "250"
+                - emphasis [ref=f24e131]: "200"
+                - emphasis [ref=f24e133]: "150"
+                - emphasis [ref=f24e135]: "100"
+                - emphasis [ref=f24e137]: "50"
+                - emphasis [ref=f24e139]: "0"
+                - generic [ref=f24e140]:
+                  - 'generic "Dia 1: R$ 92 mil" [ref=f24e141]'
+                  - 'generic "Dia 2: R$ 110 mil" [ref=f24e142]'
+                  - 'generic "Dia 3: R$ 98 mil" [ref=f24e143]'
+                  - 'generic "Dia 4: R$ 130 mil" [ref=f24e144]'
+                  - 'generic "Dia 5: R$ 124 mil" [ref=f24e145]'
+                  - 'generic "Dia 6: R$ 88 mil" [ref=f24e146]'
+                  - 'generic "Dia 7: R$ 70 mil" [ref=f24e147]'
+                  - 'generic "Dia 8: R$ 140 mil" [ref=f24e148]'
+                  - 'generic "Dia 9: R$ 152 mil" [ref=f24e149]'
+                  - 'generic "Dia 10: R$ 138 mil" [ref=f24e150]'
+                  - 'generic "Dia 11: R$ 160 mil" [ref=f24e151]'
+                  - 'generic "Dia 12: R$ 149 mil" [ref=f24e152]'
+                  - 'generic "Dia 13: R$ 120 mil" [ref=f24e153]'
+                  - 'generic "Dia 14: R$ 96 mil" [ref=f24e154]'
+                  - 'generic "Dia 15: R$ 170 mil" [ref=f24e155]'
+                  - 'generic "Dia 16: R$ 182 mil" [ref=f24e156]'
+                  - 'generic "Dia 17: R$ 165 mil" [ref=f24e157]'
+                  - 'generic "Dia 18: R$ 190 mil" [ref=f24e158]'
+                  - 'generic "Dia 19: R$ 178 mil" [ref=f24e159]'
+                  - 'generic "Dia 20: R$ 150 mil" [ref=f24e160]'
+                  - 'generic "Dia 21: R$ 120 mil" [ref=f24e161]'
+                  - 'generic "Dia 22: R$ 198 mil" [ref=f24e162]'
+                  - 'generic "Dia 23: R$ 210 mil" [ref=f24e163]'
+                  - 'generic "Dia 24: R$ 186 mil" [ref=f24e164]'
+                  - 'generic "Dia 25: R$ 205 mil" [ref=f24e165]'
+                  - 'generic "Dia 26: R$ 220 mil" [ref=f24e166]'
+                  - 'generic "Dia 27: R$ 214 mil" [ref=f24e167]'
+                  - 'generic "Dia 28: R$ 180 mil" [ref=f24e168]'
+                  - 'generic "Dia 29: R$ 160 mil" [ref=f24e169]'
+                  - 'generic "Dia 30: R$ 216 mil" [ref=f24e170]'
+              - generic [ref=f24e171]:
+                - generic [ref=f24e172]: 12/09
+                - generic [ref=f24e173]: 26/09
+                - generic [ref=f24e174]: 11/10
+              - group [ref=f24e175]:
+                - generic "Ver como tabela" [ref=f24e176] [cursor=pointer]
+            - generic [ref=f24e178]:
+              - heading "Precisa de você" [level=2] [ref=f24e179]
+              - button "7 disputas vencem em 48 h Mediação" [ref=f24e180] [cursor=pointer]:
+                - generic [ref=f24e184]:
+                  - strong [ref=f24e185]: 7 disputas vencem em 48 h
+                  - generic [ref=f24e186]: Mediação
+              - button "12 contas em análise KYC e antifraude" [ref=f24e189] [cursor=pointer]:
+                - generic [ref=f24e193]:
+                  - strong [ref=f24e194]: 12 contas em análise
+                  - generic [ref=f24e195]: KYC e antifraude
+              - button "3 limites para revisar Clientes e limites" [ref=f24e198] [cursor=pointer]:
+                - generic [ref=f24e202]:
+                  - strong [ref=f24e203]: 3 limites para revisar
+                  - generic [ref=f24e204]: Clientes e limites
+  - contentinfo "Controle da apresentação" [ref=f24e207]:
+    - generic [ref=f24e208]:
+      - generic [ref=f24e211]:
+        - group "Cenários" [ref=f24e212]:
+          - 'button "Cenário 1: O prestador cobra" [ref=f24e213] [cursor=pointer]': "1"
+          - 'button "Cenário 2: Entregar e liberar" [ref=f24e214] [cursor=pointer]': "2"
+          - 'button "Cenário 3: O cliente paga um prestador" [ref=f24e215] [cursor=pointer]': "3"
+          - 'button "Cenário 4: Pagar em conjunto" [ref=f24e216] [cursor=pointer]': "4"
+          - 'button "Cenário 5: QR na hora" [ref=f24e217] [cursor=pointer]': "5"
+          - 'button "Cenário 6: Disputa" [ref=f24e218] [cursor=pointer]': "6"
+          - 'button "Cenário 7: Antecipação" [ref=f24e219] [cursor=pointer]': "7"
+          - 'button "Cenário 8: Pelo WhatsApp" [ref=f24e220] [cursor=pointer]': "8"
+          - 'button "Cenário 9: No banco" [ref=f24e221] [cursor=pointer]': "9"
+        - strong [ref=f24e222]: No banco
+        - generic [ref=f24e223]: Ofertas, receita, risco e quem decidiu.
+      - generic [ref=f24e224]:
+        - paragraph [ref=f24e225]: Cenário concluído.
+        - paragraph [ref=f24e228]: Fim da apresentação.
+    - generic [ref=f24e230]:
+      - button "Apresentar este cenário" [ref=f24e231] [cursor=pointer]
+      - generic [ref=f24e234]:
+        - button "Versão executiva · 24 min" [ref=f24e235] [cursor=pointer]
+        - generic [ref=f24e236]:
+          - button "Slides de abertura" [ref=f24e237] [cursor=pointer]
+          - button "Ver cenários" [ref=f24e238] [cursor=pointer]
+          - button "Tela cheia (F)" [ref=f24e239] [cursor=pointer]
+      - generic [ref=f24e242]:
+        - group "Como avança" [ref=f24e243]:
+          - button "Eu avanço" [pressed] [ref=f24e244] [cursor=pointer]
+          - button "Automático" [ref=f24e245] [cursor=pointer]
+        - generic [ref=f24e246]:
+          - button "Voltar" [ref=f24e247] [cursor=pointer]
+          - button "Pular" [ref=f24e248] [cursor=pointer]

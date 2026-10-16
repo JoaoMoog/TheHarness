@@ -1,0 +1,115 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e636]:
+      - strong [ref=f1e637]: Aval
+      - text: Protótipo navegável
+    - group "Ver como" [ref=f1e638]:
+      - button "Ana Ribeiro sua conta" [pressed] [ref=f1e639] [cursor=pointer]:
+        - strong [ref=f1e640]: Ana Ribeiro
+        - generic [ref=f1e641]: sua conta
+      - button "Marina Costa paga e recebe" [ref=f1e642] [cursor=pointer]:
+        - strong [ref=f1e643]: Marina Costa
+        - generic [ref=f1e644]: paga e recebe
+      - button "Carlos Mendes Horizonte Reformas" [ref=f1e645] [cursor=pointer]:
+        - strong [ref=f1e646]: Carlos Mendes
+        - generic [ref=f1e647]: Horizonte Reformas
+      - button "Banco operações BTG" [ref=f1e648] [cursor=pointer]:
+        - strong [ref=f1e649]: Banco
+        - generic [ref=f1e650]: operações BTG
+    - group "Relógio da demonstração" [ref=f1e651]:
+      - strong [ref=f1e654]: Hoje 04/10
+      - button "+1 dia" [ref=f1e655] [cursor=pointer]
+      - button "+7 dias" [ref=f1e656] [cursor=pointer]
+    - generic [ref=f1e657]:
+      - button "Dois celulares" [pressed] [ref=f1e658] [cursor=pointer]
+      - button "Reiniciar demo" [ref=f1e661] [cursor=pointer]
+  - main [ref=f1e31]:
+    - generic [ref=f1e664]:
+      - region "Celular de Ana, agindo agora" [ref=f1e665]:
+        - generic [ref=f1e666]:
+          - generic [ref=f1e668]: Ana
+          - generic [ref=f1e669]: agindo agora
+        - generic [ref=f1e673]:
+          - generic [ref=f1e674]: 9:41
+          - generic [ref=f1e677]:
+            - button "Voltar" [ref=f1e678] [cursor=pointer]
+            - heading "Etapas com o assistente" [level=1] [ref=f1e681]
+          - generic [ref=f1e682]:
+            - paragraph [ref=f1e687]: Você define como o dinheiro é liberado. O assistente sugere; quem decide é você.
+            - paragraph [ref=f1e693]: Vou te ajudar a dividir "Pintura" de R$ 16.000,00. É assim que uma pintura costuma andar. Cada etapa só é paga a quem faz quando você aprovar.
+            - generic [ref=f1e694]:
+              - generic [ref=f1e695]:
+                - strong [ref=f1e696]: 2 etapas
+                - generic [ref=f1e697]: Sugestão do assistente
+              - generic [ref=f1e698]:
+                - generic [ref=f1e699]: 1. Preparo e massa
+                - strong [ref=f1e700]: R$ 8.000,00
+              - generic [ref=f1e701]:
+                - generic [ref=f1e702]: 2. Pintura e acabamento
+                - strong [ref=f1e703]: R$ 8.000,00
+            - generic [ref=f1e704]:
+              - button "Quero 2 etapas" [ref=f1e705] [cursor=pointer]
+              - button "Quero 3 etapas" [ref=f1e706] [cursor=pointer]
+              - button "Valor único" [ref=f1e707] [cursor=pointer]
+              - button "Como funcionam as etapas?" [ref=f1e708] [cursor=pointer]
+            - generic [ref=f1e709]:
+              - textbox "Mensagem para o assistente" [ref=f1e710]:
+                - /placeholder: Pergunte ou peça uma mudança
+              - button "Enviar" [ref=f1e711] [cursor=pointer]
+          - button "Usar estas 2 etapas" [ref=f1e715] [cursor=pointer]
+      - region "Celular de Carlos, só para ver" [ref=f1e718]:
+        - generic [ref=f1e719]:
+          - generic [ref=f1e722]: Carlos
+          - generic [ref=f1e723]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f1e724] [cursor=pointer]
+        - generic [ref=f1e730]:
+          - generic [ref=f1e731]: 9:41
+          - generic [ref=f1e734]:
+            - button "Fechar"
+          - generic [ref=f1e735]:
+            - heading "Mensagem pronta no WhatsApp" [level=2] [ref=f1e740]
+            - generic [ref=f1e741]:
+              - paragraph [ref=f1e742]: "Horizonte Reformas cobra R$ 16.000,00 com proteção: Pintura. Confira e aceite: pague.btgpactual.com.br/p/PG-001"
+              - generic [ref=f1e743]: (11) 97777-3003
+          - generic [ref=f1e744]:
+            - button "Cancelar este pagamento"
+            - button "Abrir o link como quem recebeu"
+            - button "Ir para o início"
+  - contentinfo "Controle da apresentação" [ref=f1e103]:
+    - generic [ref=f1e747]:
+      - group "Cenários" [ref=f1e748]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f1e749] [cursor=pointer]': "1"
+        - 'button "Cenário 2: Entregar e liberar" [ref=f1e750] [cursor=pointer]': "2"
+        - 'button "Cenário 3: O cliente paga um prestador" [ref=f1e751] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pagar em conjunto" [ref=f1e752] [cursor=pointer]': "4"
+        - 'button "Cenário 5: QR na hora" [ref=f1e753] [cursor=pointer]': "5"
+        - 'button "Cenário 6: Disputa" [ref=f1e754] [cursor=pointer]': "6"
+        - 'button "Cenário 7: Antecipação" [ref=f1e755] [cursor=pointer]': "7"
+        - 'button "Cenário 8: No banco" [ref=f1e756] [cursor=pointer]': "8"
+      - strong [ref=f1e757]: O prestador cobra
+      - generic [ref=f1e758]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f1e127]:
+      - generic [ref=f1e759]:
+        - generic [ref=f1e760]: Ana · cliente
+        - paragraph [ref=f1e761]: Use a sugestão
+      - generic [ref=f1e762]:
+        - button "Pausar (espaço)" [ref=f1e763] [cursor=pointer]
+        - button "Próximo" [ref=f1e766] [cursor=pointer]
+        - generic [ref=f1e769]:
+          - group "Como avança" [ref=f1e770]:
+            - button "Eu avanço" [ref=f1e771] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f1e772] [cursor=pointer]
+          - group "Velocidade" [ref=f1e773]:
+            - button "Devagar" [ref=f1e774] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f1e775] [cursor=pointer]
+            - button "Rápido" [ref=f1e776] [cursor=pointer]
+          - generic [ref=f1e777]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f1e778] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Ana · cliente
+      - strong: Use a sugestão
+      - paragraph: Cada etapa vira um valor que só sai quando for aprovada. Dá para ajustar conversando.
+  - generic [ref=f1e783]:
+    - generic [ref=f1e784]: Guardado no BTG
+    - strong [ref=f1e785]: R$ 0,00

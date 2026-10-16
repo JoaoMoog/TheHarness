@@ -1,0 +1,90 @@
+- generic [active] [ref=f6e1]:
+  - main [ref=f6e34]:
+    - generic [ref=f6e629]:
+      - region "Celular de Cliente, agindo agora" [ref=f6e630]:
+        - generic [ref=f6e631]:
+          - generic [ref=f6e633]: Cliente
+          - generic [ref=f6e634]: agindo agora
+        - generic [ref=f6e638]:
+          - generic [ref=f6e639]: 9:41
+          - generic [ref=f6e642]:
+            - button "Voltar" [ref=f6e643] [cursor=pointer]
+            - heading "Pagamento protegido" [level=1] [ref=f6e646]
+          - generic [ref=f6e647]:
+            - generic [ref=f6e648]:
+              - generic [ref=f6e649]: Horizonte Reformas cobra
+              - heading "Pintura" [level=3] [ref=f6e650]
+              - generic [ref=f6e651]: R$ 16.000,00
+              - paragraph [ref=f6e652]: "Pintura: pintar o apartamento todo, massa corrida e duas demãos."
+              - generic [ref=f6e653]:
+                - generic [ref=f6e654]: Prazo de entrega
+                - strong [ref=f6e655]: 03/11
+              - generic [ref=f6e656]:
+                - generic [ref=f6e657]: Endereço
+                - strong [ref=f6e658]: Rua Harmonia, 410
+              - generic [ref=f6e659]:
+                - generic [ref=f6e660]: Liberação
+                - strong [ref=f6e661]: Quem paga define
+            - generic [ref=f6e662]:
+              - strong [ref=f6e667]: Código de segurança 8225
+              - paragraph [ref=f6e668]: O mesmo código aparece em Avisos no app do BTG. Se não aparecer, não pague. O BTG nunca pede senha ou código por mensagem.
+            - generic [ref=f6e669]:
+              - strong [ref=f6e670]: Como a proteção funciona
+              - strong [ref=f6e675]: Fica guardado no banco
+              - strong [ref=f6e680]: Sai quando quem paga aprova
+              - strong [ref=f6e685]: Sem resposta em 7 dias, libera sozinho
+            - generic [ref=f6e686]: Entre com a conta BTG para pagar.
+          - button "Entrar com a conta BTG" [ref=f6e691] [cursor=pointer]
+      - region "Celular de Carlos, só para ver" [ref=f6e694]:
+        - generic [ref=f6e695]:
+          - generic [ref=f6e698]: Carlos
+          - generic [ref=f6e699]: vê ao mesmo tempo
+          - button "Usar este celular" [ref=f6e700] [cursor=pointer]
+        - generic [ref=f6e706]:
+          - generic [ref=f6e707]: 9:41
+          - generic [ref=f6e710]:
+            - button "Fechar"
+          - generic [ref=f6e711]:
+            - heading "Mensagem pronta no WhatsApp" [level=2] [ref=f6e716]
+            - generic [ref=f6e717]:
+              - paragraph [ref=f6e718]: "Horizonte Reformas cobra R$ 16.000,00 com proteção: Pintura. Confira e aceite: pague.btgpactual.com.br/p/PG-001 · Código de segurança 8225, o mesmo que aparece no app do BTG."
+              - generic [ref=f6e719]: (11) 97777-3003
+          - generic [ref=f6e720]:
+            - button "Cancelar este pagamento"
+            - button "Abrir o link como quem recebeu"
+            - button "Ir para o início"
+  - contentinfo "Controle da apresentação" [ref=f6e363]:
+    - generic [ref=f6e723]:
+      - group "Cenários" [ref=f6e724]:
+        - 'button "Cenário 1: O prestador cobra" [ref=f6e725] [cursor=pointer]': "1"
+        - 'button "Cenário 2: O cliente paga um prestador" [ref=f6e726] [cursor=pointer]': "2"
+        - 'button "Cenário 3: Disputa" [ref=f6e727] [cursor=pointer]': "3"
+        - 'button "Cenário 4: Pelo WhatsApp" [ref=f6e728] [cursor=pointer]': "4"
+        - 'button "Cenário 5: No banco" [ref=f6e729] [cursor=pointer]': "5"
+      - strong [ref=f6e730]: O prestador cobra
+      - generic [ref=f6e731]: WhatsApp, conta na hora, cartão com seguro.
+    - generic [ref=f6e387]:
+      - generic [ref=f6e732]:
+        - generic [ref=f6e733]: Nesta tela
+        - paragraph [ref=f6e734]: Como a proteção funciona
+      - generic [ref=f6e735]:
+        - button "Pausar (espaço)" [ref=f6e736] [cursor=pointer]
+        - button "Próximo" [ref=f6e739] [cursor=pointer]
+        - generic [ref=f6e742]:
+          - group "Como avança" [ref=f6e743]:
+            - button "Eu avanço" [ref=f6e744] [cursor=pointer]
+            - button "Automático" [pressed] [ref=f6e745] [cursor=pointer]
+          - group "Velocidade" [ref=f6e746]:
+            - button "Devagar" [ref=f6e747] [cursor=pointer]
+            - button "Normal" [pressed] [ref=f6e748] [cursor=pointer]
+            - button "Rápido" [ref=f6e749] [cursor=pointer]
+          - generic [ref=f6e750]: Espaço pausa · → próximo · Esc sai
+        - button "Sair (Esc)" [ref=f6e751] [cursor=pointer]
+  - generic:
+    - status:
+      - generic: Nesta tela · 2 de 2
+      - strong: Como a proteção funciona
+      - paragraph: "Três regras simples: fica guardado, sai quando quem paga aprova, e sem resposta em 7 dias sai sozinho."
+  - generic [ref=f6e756]:
+    - generic [ref=f6e757]: Guardado no BTG
+    - strong [ref=f6e758]: R$ 0,00
