@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T13:10:03Z",
+  "title": "Design System: CLARA · SAP Analytics Studio",
+  "extensions": {
+    "colorMeta": {
+      "navy": {
+        "role": "primary",
+        "displayName": "Navy do shell",
+        "tonalRamp": [
+          "oklch(15% 0.0582 252.87)",
+          "oklch(26.43% 0.0582 252.87)",
+          "oklch(37.86% 0.0582 252.87)",
+          "oklch(49.29% 0.0582 252.87)",
+          "oklch(60.71% 0.0582 252.87)",
+          "oklch(72.14% 0.0582 252.87)",
+          "oklch(83.57% 0.0582 252.87)",
+          "oklch(95% 0.0582 252.87)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Texto principal",
+        "tonalRamp": [
+          "oklch(15% 0.0483 253.85)",
+          "oklch(26.43% 0.0483 253.85)",
+          "oklch(37.86% 0.0483 253.85)",
+          "oklch(49.29% 0.0483 253.85)",
+          "oklch(60.71% 0.0483 253.85)",
+          "oklch(72.14% 0.0483 253.85)",
+          "oklch(83.57% 0.0483 253.85)",
+          "oklch(95% 0.0483 253.85)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Texto de apoio",
+        "tonalRamp": [
+          "oklch(15% 0.0396 256.41)",
+          "oklch(26.43% 0.0396 256.41)",
+          "oklch(37.86% 0.0396 256.41)",
+          "oklch(49.29% 0.0396 256.41)",
+          "oklch(60.71% 0.0396 256.41)",
+          "oklch(72.14% 0.0396 256.41)",
+          "oklch(83.57% 0.0396 256.41)",
+          "oklch(95% 0.0396 256.41)"
+        ]
+      },
+      "blue": {
+        "role": "primary",
+        "displayName": "Azul de ação",
+        "tonalRamp": [
+          "oklch(15% 0.1625 255.02)",
+          "oklch(26.43% 0.1625 255.02)",
+          "oklch(37.86% 0.1625 255.02)",
+          "oklch(49.29% 0.1625 255.02)",
+          "oklch(60.71% 0.1625 255.02)",
+          "oklch(72.14% 0.1625 255.02)",
+          "oklch(83.57% 0.1625 255.02)",
+          "oklch(95% 0.1625 255.02)"
+        ]
+      },
+      "blue-hover": {
+        "role": "primary",
+        "displayName": "Azul de ação em hover",
+        "tonalRamp": [
+          "oklch(15% 0.1524 256.07)",
+          "oklch(26.43% 0.1524 256.07)",
+          "oklch(37.86% 0.1524 256.07)",
+          "oklch(49.29% 0.1524 256.07)",
+          "oklch(60.71% 0.1524 256.07)",
+          "oklch(72.14% 0.1524 256.07)",
+          "oklch(83.57% 0.1524 256.07)",
+          "oklch(95% 0.1524 256.07)"
+        ]
+      },
+      "blue-soft": {
+        "role": "primary",
+        "displayName": "Azul de seleção",
+        "tonalRamp": [
+          "oklch(15% 0.0159 253.90)",
+          "oklch(26.43% 0.0159 253.90)",
+          "oklch(37.86% 0.0159 253.90)",
+          "oklch(49.29% 0.0159 253.90)",
+          "oklch(60.71% 0.0159 253.90)",
+          "oklch(72.14% 0.0159 253.90)",
+          "oklch(83.57% 0.0159 253.90)",
+          "oklch(95% 0.0159 253.90)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Fundo frio",
+        "tonalRamp": [
+          "oklch(15% 0.0045 258.32)",
+          "oklch(26.43% 0.0045 258.32)",
+          "oklch(37.86% 0.0045 258.32)",
+          "oklch(49.29% 0.0045 258.32)",
+          "oklch(60.71% 0.0045 258.32)",
+          "oklch(72.14% 0.0045 258.32)",
+          "oklch(83.57% 0.0045 258.32)",
+          "oklch(95% 0.0045 258.32)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Superfície branca",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0.00)",
+          "oklch(26.43% 0.0000 0.00)",
+          "oklch(37.86% 0.0000 0.00)",
+          "oklch(49.29% 0.0000 0.00)",
+          "oklch(60.71% 0.0000 0.00)",
+          "oklch(72.14% 0.0000 0.00)",
+          "oklch(83.57% 0.0000 0.00)",
+          "oklch(95% 0.0000 0.00)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Divisores",
+        "tonalRamp": [
+          "oklch(15% 0.0126 255.51)",
+          "oklch(26.43% 0.0126 255.51)",
+          "oklch(37.86% 0.0126 255.51)",
+          "oklch(49.29% 0.0126 255.51)",
+          "oklch(60.71% 0.0126 255.51)",
+          "oklch(72.14% 0.0126 255.51)",
+          "oklch(83.57% 0.0126 255.51)",
+          "oklch(95% 0.0126 255.51)"
+        ]
+      },
+      "success": {
+        "role": "secondary",
+        "displayName": "Saldo favorável",
+        "tonalRamp": [
+          "oklch(15% 0.0951 162.51)",
+          "oklch(26.43% 0.0951 162.51)",
+          "oklch(37.86% 0.0951 162.51)",
+          "oklch(49.29% 0.0951 162.51)",
+          "oklch(60.71% 0.0951 162.51)",
+          "oklch(72.14% 0.0951 162.51)",
+          "oklch(83.57% 0.0951 162.51)",
+          "oklch(95% 0.0951 162.51)"
+        ]
+      },
+      "danger": {
+        "role": "secondary",
+        "displayName": "Desvio desfavorável",
+        "tonalRamp": [
+          "oklch(15% 0.1507 28.71)",
+          "oklch(26.43% 0.1507 28.71)",
+          "oklch(37.86% 0.1507 28.71)",
+          "oklch(49.29% 0.1507 28.71)",
+          "oklch(60.71% 0.1507 28.71)",
+          "oklch(72.14% 0.1507 28.71)",
+          "oklch(83.57% 0.1507 28.71)",
+          "oklch(95% 0.1507 28.71)"
+        ]
+      },
+      "warning": {
+        "role": "secondary",
+        "displayName": "Atenção",
+        "tonalRamp": [
+          "oklch(15% 0.1082 71.46)",
+          "oklch(26.43% 0.1082 71.46)",
+          "oklch(37.86% 0.1082 71.46)",
+          "oklch(49.29% 0.1082 71.46)",
+          "oklch(60.71% 0.1082 71.46)",
+          "oklch(72.14% 0.1082 71.46)",
+          "oklch(83.57% 0.1082 71.46)",
+          "oklch(95% 0.1082 71.46)"
+        ]
+      },
+      "field-border": {
+        "role": "neutral",
+        "displayName": "Borda de campo",
+        "tonalRamp": [
+          "oklch(15% 0.0211 254.93)",
+          "oklch(26.43% 0.0211 254.93)",
+          "oklch(37.86% 0.0211 254.93)",
+          "oklch(49.29% 0.0211 254.93)",
+          "oklch(60.71% 0.0211 254.93)",
+          "oklch(72.14% 0.0211 254.93)",
+          "oklch(83.57% 0.0211 254.93)",
+          "oklch(95% 0.0211 254.93)"
+        ]
+      },
+      "chart-actual": {
+        "role": "secondary",
+        "displayName": "Realizado",
+        "tonalRamp": [
+          "oklch(15% 0.1773 255.67)",
+          "oklch(26.43% 0.1773 255.67)",
+          "oklch(37.86% 0.1773 255.67)",
+          "oklch(49.29% 0.1773 255.67)",
+          "oklch(60.71% 0.1773 255.67)",
+          "oklch(72.14% 0.1773 255.67)",
+          "oklch(83.57% 0.1773 255.67)",
+          "oklch(95% 0.1773 255.67)"
+        ]
+      },
+      "chart-budget": {
+        "role": "secondary",
+        "displayName": "Orçamento em barras",
+        "tonalRamp": [
+          "oklch(15% 0.0349 253.74)",
+          "oklch(26.43% 0.0349 253.74)",
+          "oklch(37.86% 0.0349 253.74)",
+          "oklch(49.29% 0.0349 253.74)",
+          "oklch(60.71% 0.0349 253.74)",
+          "oklch(72.14% 0.0349 253.74)",
+          "oklch(83.57% 0.0349 253.74)",
+          "oklch(95% 0.0349 253.74)"
+        ]
+      },
+      "chart-budget-line": {
+        "role": "secondary",
+        "displayName": "Orçamento em linha",
+        "tonalRamp": [
+          "oklch(15% 0.0414 254.36)",
+          "oklch(26.43% 0.0414 254.36)",
+          "oklch(37.86% 0.0414 254.36)",
+          "oklch(49.29% 0.0414 254.36)",
+          "oklch(60.71% 0.0414 254.36)",
+          "oklch(72.14% 0.0414 254.36)",
+          "oklch(83.57% 0.0414 254.36)",
+          "oklch(95% 0.0414 254.36)"
+        ]
+      },
+      "chart-projection": {
+        "role": "secondary",
+        "displayName": "Projeção",
+        "tonalRamp": [
+          "oklch(15% 0.0865 194.88)",
+          "oklch(26.43% 0.0865 194.88)",
+          "oklch(37.86% 0.0865 194.88)",
+          "oklch(49.29% 0.0865 194.88)",
+          "oklch(60.71% 0.0865 194.88)",
+          "oklch(72.14% 0.0865 194.88)",
+          "oklch(83.57% 0.0865 194.88)",
+          "oklch(95% 0.0865 194.88)"
+        ]
+      },
+      "chart-over-budget": {
+        "role": "secondary",
+        "displayName": "Desvio em gráfico",
+        "tonalRamp": [
+          "oklch(15% 0.1511 31.65)",
+          "oklch(26.43% 0.1511 31.65)",
+          "oklch(37.86% 0.1511 31.65)",
+          "oklch(49.29% 0.1511 31.65)",
+          "oklch(60.71% 0.1511 31.65)",
+          "oklch(72.14% 0.1511 31.65)",
+          "oklch(83.57% 0.1511 31.65)",
+          "oklch(95% 0.1511 31.65)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Título de página",
+        "purpose": "Hierarquia principal da análise."
+      },
+      "title": {
+        "displayName": "Título de painel",
+        "purpose": "Identificar gráficos, tabelas e seções."
+      },
+      "body": {
+        "displayName": "Base da interface",
+        "purpose": "Base global Figtree; componentes densos têm tamanhos próprios."
+      },
+      "label": {
+        "displayName": "Controle compacto",
+        "purpose": "Botões e rótulos de campos."
+      },
+      "conversation": {
+        "displayName": "Mensagem do assistente",
+        "purpose": "Conteúdo da conversa em coluna estreita."
+      },
+      "metric": {
+        "displayName": "Valor financeiro",
+        "purpose": "Indicadores com números tabulares."
+      },
+      "wordmark": {
+        "displayName": "Marca CLARA",
+        "purpose": "Identidade tipográfica no cabeçalho."
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog",
+        "value": "0 24px 90px #102a4840",
+        "purpose": "Diálogo nativo sobre o workspace."
+      },
+      {
+        "name": "assistant-overlay",
+        "value": "-12px 0 48px #142c4729",
+        "purpose": "Painel direito sobreposto até 1099px."
+      },
+      {
+        "name": "floating-assistant",
+        "value": "0 6px 18px #1268c430",
+        "purpose": "Botão para reabrir o assistente em telas menores."
+      },
+      {
+        "name": "toast",
+        "value": "0 8px 24px #142c4729",
+        "purpose": "Confirmação transitória."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "background-color .15s ease, color .15s ease, border-color .15s ease",
+        "purpose": "Hover de botões."
+      },
+      {
+        "name": "toast-transition",
+        "value": "transform .18s ease-out, opacity .18s ease-out",
+        "purpose": "Entrada e saída de confirmação."
+      },
+      {
+        "name": "mobile-navigation",
+        "value": "transform .18s ease-out",
+        "purpose": "Deslocamento do painel de navegação."
+      },
+      {
+        "name": "generation-progress",
+        "value": "1.3s ease-in-out infinite",
+        "purpose": "Linha de preparação; respeita preferência por movimento reduzido."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none !important; transition: none !important; scroll-behavior: auto !important",
+        "purpose": "Aplicado a elementos e pseudo-elementos em prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1700px"
+      },
+      {
+        "name": "compact-desktop-min",
+        "value": "1100px"
+      },
+      {
+        "name": "compact-desktop-max",
+        "value": "1430px"
+      },
+      {
+        "name": "assistant-overlay-max",
+        "value": "1099px"
+      },
+      {
+        "name": "mobile-max",
+        "value": "767px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal compacta, com foco e estados de disponibilidade.",
+      "html": "<button class=\"ds-primary\">Salvar dashboard</button>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:7px 12px;border:1px solid #c9d3df;border-radius:5px;font:500 11px/1.5 Figtree,sans-serif;cursor:pointer;transition:background-color .15s ease,color .15s ease,border-color .15s ease;background:var(--blue,#1268c4);border-color:var(--blue,#1268c4);color:var(--surface,#fff)}.ds-primary:hover{background:var(--blue-hover,#0755aa);border-color:var(--blue-hover,#0755aa)}.ds-primary:focus-visible{outline:2px solid var(--blue,#1268c4);outline-offset:3px}.ds-primary:disabled{opacity:.5;cursor:not-allowed}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ação secundária branca e delimitada.",
+      "html": "<button class=\"ds-secondary\">Compartilhar</button>",
+      "css": ".ds-secondary{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:7px 12px;border:1px solid #c9d3df;border-radius:5px;font:500 11px/1.5 Figtree,sans-serif;cursor:pointer;transition:background-color .15s ease,color .15s ease,border-color .15s ease;background:var(--surface,#fff);color:var(--ink,#20334a)}.ds-secondary:hover{background:#f0f5fb;border-color:#a1bad9}.ds-secondary:focus-visible{outline:2px solid var(--blue,#1268c4);outline-offset:3px}.ds-secondary:disabled{opacity:.5;cursor:not-allowed}"
+    },
+    {
+      "name": "Quiet button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Ação de apoio que não compete com a ação principal.",
+      "html": "<button class=\"ds-quiet\">Restaurar base</button>",
+      "css": ".ds-quiet{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:7px 12px;border:1px solid #c9d3df;border-radius:5px;font:500 11px/1.5 Figtree,sans-serif;cursor:pointer;transition:background-color .15s ease,color .15s ease,border-color .15s ease;padding-left:8px;padding-right:8px;background:transparent;border-color:transparent;color:var(--muted,#607086)}.ds-quiet:hover{background:#eaf0f7;color:var(--blue,#1268c4)}.ds-quiet:focus-visible{outline:2px solid var(--blue,#1268c4);outline-offset:3px}.ds-quiet:disabled{opacity:.5;cursor:not-allowed}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo rotulado usado em edição e diálogos.",
+      "html": "<label class=\"ds-field\">Nome do dashboard<input class=\"ds-input\" value=\"Desempenho financeiro\" /></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:7px;font:500 11px/1.5 Figtree,sans-serif;color:var(--ink,#20334a)}.ds-input{height:38px;padding:0 10px;min-width:0;color:var(--ink,#20334a);background:var(--surface,#fff);border:1px solid #c7d1de;border-radius:5px;font:400 12px/1.5 Figtree,sans-serif;caret-color:var(--blue,#1268c4)}.ds-input:focus-visible{outline:2px solid var(--blue,#1268c4);outline-offset:3px}"
+    },
+    {
+      "name": "Active navigation",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "Destino atual da navegação lateral.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegação de exemplo\"><button class=\"ds-nav-active\" aria-current=\"page\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1\"/></svg><span>Dashboards</span></button></nav>",
+      "css": ".ds-nav{display:flex;flex-direction:column;gap:4px}.ds-nav-active{display:flex;align-items:center;gap:11px;min-height:41px;padding:9px 12px;border:0;border-radius:6px;text-align:left;background:var(--blue-soft,#eaf2fc);color:#105caa;font:600 12px/1.5 Figtree,sans-serif;cursor:pointer;transition:background-color .15s ease,color .15s ease}.ds-nav-active:hover{background:var(--blue-soft,#eaf2fc)}.ds-nav-active:focus-visible{outline:2px solid var(--blue,#1268c4);outline-offset:3px}"
+    },
+    {
+      "name": "Status badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Metadado estático, sem comportamento de botão.",
+      "html": "<span class=\"ds-badge\">Demonstração</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;gap:5px;border-radius:4px;padding:3px 7px;background:#f0f3f7;color:#53647a;font:500 10px/1.5 Figtree,sans-serif;white-space:nowrap}"
+    },
+    {
+      "name": "Analytical panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Superfície plana para gráficos e tabelas, com título e contexto.",
+      "html": "<section class=\"ds-panel\"><div class=\"ds-panel-heading\"><div><h2>Realizado x orçamento</h2><p>Por centro de custo · valores em R$</p></div></div></section>",
+      "css": ".ds-panel{border:1px solid var(--line,#e0e6ee);border-radius:var(--radius,8px);background:var(--surface,#fff);color:var(--ink,#20334a);min-width:0;overflow:hidden;font-family:Figtree,sans-serif}.ds-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px 10px}.ds-panel-heading h2{margin:0;font-size:15px;font-weight:600;line-height:1.4;letter-spacing:-.01em}.ds-panel-heading p{margin:4px 0 0;color:var(--muted,#607086);font-size:10px;line-height:1.6}"
+    },
+    {
+      "name": "Metric strip",
+      "kind": "custom",
+      "refersTo": "metric-strip",
+      "description": "Indicadores alinhados com valores tabulares e divisórias internas.",
+      "html": "<div class=\"ds-metrics\"><div class=\"ds-metric\"><span>Realizado</span><strong>R$ 8,19 mi</strong><small>R$ 8.190.000 · acumulado</small></div><div class=\"ds-metric\"><span>Saldo disponível</span><strong class=\"ds-positive\">R$ 129.000</strong><small>Abaixo do orçamento</small></div></div>",
+      "css": ".ds-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:var(--surface,#fff);border:1px solid var(--line,#e0e6ee);border-radius:var(--radius,8px);padding:19px 0;font-family:Figtree,sans-serif;color:var(--ink,#20334a)}.ds-metric{padding:0 20px;border-right:1px solid var(--line,#e0e6ee);min-width:0}.ds-metric:last-child{border-right:0}.ds-metric>span{font-size:11px;color:var(--muted,#607086);display:block;margin-bottom:6px}.ds-metric>strong{font-size:28px;line-height:1.3;letter-spacing:-.035em;font-weight:600;font-variant-numeric:tabular-nums;display:block;white-space:nowrap}.ds-metric small{display:block;font-size:9px;margin-top:7px;color:var(--muted,#607086)}.ds-positive{color:var(--success,#217453)}"
+    },
+    {
+      "name": "Assistant composer",
+      "kind": "custom",
+      "refersTo": "composer",
+      "description": "Campo de mensagem com foco no contêiner e botão de envio.",
+      "html": "<div class=\"ds-composer\"><textarea class=\"ds-composer-input\" aria-label=\"Mensagem para CLARA\" placeholder=\"Peça uma análise ou ajuste…\"></textarea><div class=\"ds-composer-tools\"><span>Dados SAP · demonstração</span><button class=\"ds-send\" aria-label=\"Enviar mensagem\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m5 12 7-7 7 7M12 19V5\"/></svg></button></div></div>",
+      "css": ".ds-composer{border:1px solid #bacbdf;border-radius:8px;background:var(--surface,#fff);transition:border-color .15s;font-family:Figtree,sans-serif}.ds-composer:focus-within{border-color:var(--blue,#1268c4)}.ds-composer-input{height:66px;width:100%;border:0;background:transparent;border-radius:8px;font:400 11px/1.5 Figtree,sans-serif;color:var(--ink,#20334a);resize:none;outline:none;padding:12px;box-sizing:border-box}.ds-composer-input:focus-visible{outline:0}.ds-composer-input::placeholder{color:#697a8f;opacity:1}.ds-composer-tools{display:flex;justify-content:space-between;align-items:center;padding:0 8px 8px;color:var(--muted,#607086);font-size:9px}.ds-send{width:28px;height:28px;display:grid;place-items:center;border:0;border-radius:5px;background:var(--blue,#1268c4);color:var(--surface,#fff);cursor:pointer}.ds-send:focus-visible{outline:2px solid var(--blue,#1268c4);outline-offset:3px}.ds-send:disabled{background:#b4c5d8;color:#fff;cursor:not-allowed}"
+    }
+  ],
+  "narrative": {
+    "northStar": "SAP Analytics Cloud/Fiori com identidade CLARA",
+    "overview": "A direção escolhida pelo usuário combina a organização de um ambiente analítico empresarial SAP com a marca CLARA e Figtree. O cabeçalho navy ancora o ambiente; superfícies frias e claras sustentam filtros, indicadores, gráficos e tabelas. A densidade é profissional, com hierarquia compacta e números destacados. O nome acima registra a referência escolhida, sem inventar um conceito de marca aprovado.\n\nO caminho foi code-led: não houve concept seed nem composição em imagem aprovada. Este documento registra o que está implementado em `styles.css` e nos componentes React do protótipo. A referência BTG da aplicação principal não define esta direção. A extração não substitui o veredito final de revisão, ainda pendente no momento do registro.",
+    "keyCharacteristics": [
+      "Cabeçalho navy e superfícies frias de baixo relevo.",
+      "Figtree em toda a interface, com números tabulares nas métricas e tabelas.",
+      "Azul para ação, seleção e realizado; orçamento em azul acinzentado.",
+      "Conteúdo analítico central e painel contextual à direita.",
+      "Bordas discretas e raios compactos; sombras concentradas em sobreposições."
+    ],
+    "rules": [
+      {
+        "name": "The Evidence Rule",
+        "body": "Preserve os rótulos de realizado, orçamento, projeção e simulação junto às cores. Cor sozinha não comunica a natureza do número.",
+        "section": "colors"
+      },
+      {
+        "name": "The Numeric Alignment Rule",
+        "body": "Preserve números tabulares nas métricas e tabelas e alinhe valores comparáveis em colunas.",
+        "section": "typography"
+      },
+      {
+        "name": "The Overlay Depth Rule",
+        "body": "Use relevo para indicar conteúdo sobreposto; mantenha os painéis analíticos apoiados em bordas e variação tonal.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** manter a identidade CLARA/Figtree dentro da organização empresarial inspirada em SAP Analytics Cloud/Fiori.",
+      "**Do** preservar a distinção visual e textual entre realizado, orçamento, simulação e projeção.",
+      "**Do** usar bordas e superfícies tonais para estruturar os painéis e reservar sombras às sobreposições.",
+      "**Do** preservar foco visível, nomes de controles, números tabulares e a alternativa de tabela existente.",
+      "**Do** manter o contexto do assistente e o conteúdo analítico legíveis ao mudar o tamanho da tela."
+    ],
+    "donts": [
+      "**Don't** importar a referência BTG da aplicação principal como regra visual deste protótipo.",
+      "**Don't** apresentar a referência SAP como adoção de biblioteca oficial ou vínculo de marca.",
+      "**Don't** comunicar disponibilidade, desvio ou natureza de uma medida somente por cor.",
+      "**Don't** tratar esta extração de código como aprovação final de legibilidade, acessibilidade ou comportamento.",
+      "**Don't** promover o pequeno rótulo em caixa alta das sugestões a um padrão de títulos ou identidade."
+    ]
+  }
+}

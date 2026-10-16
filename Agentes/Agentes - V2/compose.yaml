@@ -1,0 +1,26 @@
+services:
+  clara:
+    image: clara-studio:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      CLARA_STORAGE_MODE: memory
+      AUTH_MODE: demo
+      AI_PROVIDER: demo
+      STUDIO_DATA_PROVIDER: demo
+      STUDIO_AI_PROVIDER: demo
+      PUBLIC_APP_URL: http://localhost:3000
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    init: true
+    mem_limit: 768m
+    cpus: 1.0
+    stop_grace_period: 20s

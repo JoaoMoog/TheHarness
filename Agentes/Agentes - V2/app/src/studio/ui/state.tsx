@@ -1,0 +1,14 @@
+import {createContext,useContext} from 'react';
+import {documentSchema,initialDocument,type DashboardDocument,type QueryResult,type Proposal,type StudioCommand} from '../contracts';
+import type {bootstrapStudio} from '@/server/studio/service';
+export type Bootstrap=ReturnType<typeof bootstrapStudio>;
+export type Screen='dashboard'|'overview'|'library'|'explore'|'planning'|'scenarios'|'models'|'connections'|'admin';
+export type ChartKind=DashboardDocument['chart'];
+export type Snapshot=Omit<DashboardDocument,'period'>&{period:string};
+export type State=Snapshot&{screen:Screen;draft:string;percent:number;reader:boolean;previewReader:boolean;connection:boolean;savedId:string|null;messages:{role:'user'|'assistant';text:string}[];comments:Bootstrap['state']['comments']};
+export const initial=initialDocument;
+export const initialState:State={...initialDocument,screen:'dashboard',draft:'',percent:5,reader:false,previewReader:false,connection:true,savedId:null,messages:[],comments:[]};
+export const snapshot=(s:State)=>documentSchema.parse(Object.fromEntries(Object.keys(initialDocument).map(k=>[k,s[k as keyof State]])));
+export type Context={s:State;set:(patch:Partial<State>|((s:State)=>Partial<State>))=>void;go:(screen:Screen)=>void;modal:(kind:string)=>void;toast:(text:string)=>void;chat:boolean;setChat:(open:boolean)=>void;editor:boolean;setEditor:(open:boolean)=>void;data:QueryResult;base:QueryResult;send:(text:string)=>void;proposal:Proposal|null;apply:()=>void;busy:number;undo:()=>void;canUndo:boolean;save:()=>void;exportCsv:()=>void;server:Bootstrap;command:(command:StudioCommand)=>Promise<{targetId?:string;state:Bootstrap['state']}|null>;reload:(workspaceId?:string)=>Promise<void>;openBoard:(id:string)=>void;pending:boolean;catalog:any;logout:()=>void};
+export const AppContext=createContext<Context&{lastError:string;drafts:Map<string,unknown>}>(null!);
+export const useApp=()=>useContext(AppContext);

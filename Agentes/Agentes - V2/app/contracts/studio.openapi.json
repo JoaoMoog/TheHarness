@@ -1,0 +1,3029 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CLARA Studio API",
+    "version": "1.0.0",
+    "description": "API de análise financeira. Cookie HttpOnly e Origin nas mutações. Armazenamento temporário na avaliação; uma réplica. Comandos exigem revisão global e operationId (últimos 50 recibos por espaço). Demo e SAP compartilham o contrato canônico BRL. SAP somente leitura."
+  },
+  "servers": [
+    {
+      "url": "/api/v1/studio"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "DashboardDocument": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "center": {
+            "default": "all",
+            "type": "string",
+            "maxLength": 100
+          },
+          "period": {
+            "default": "all",
+            "type": "string",
+            "enum": [
+              "all",
+              "q3"
+            ]
+          },
+          "company": {
+            "default": "all",
+            "type": "string",
+            "maxLength": 100
+          },
+          "schemaVersion": {
+            "default": 1,
+            "type": "number",
+            "const": 1
+          },
+          "sourceId": {
+            "default": "finance",
+            "type": "string",
+            "const": "finance"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "chart": {
+            "default": "column",
+            "type": "string",
+            "enum": [
+              "column",
+              "bar",
+              "line",
+              "donut",
+              "waterfall",
+              "table",
+              "indicator",
+              "text"
+            ]
+          },
+          "chartTitle": {
+            "default": "Realizado x orçamento",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "highlight": {
+            "default": false,
+            "type": "boolean"
+          },
+          "showMetric": {
+            "default": true,
+            "type": "boolean"
+          },
+          "showChart": {
+            "default": true,
+            "type": "boolean"
+          },
+          "duplicate": {
+            "default": false,
+            "type": "boolean"
+          },
+          "reversed": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "center",
+          "period",
+          "company",
+          "schemaVersion",
+          "sourceId",
+          "title",
+          "chart",
+          "chartTitle",
+          "highlight",
+          "showMetric",
+          "showChart",
+          "duplicate",
+          "reversed"
+        ],
+        "additionalProperties": false
+      },
+      "Mutation": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "operationId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "command": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "dashboard.save"
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
+                  "document": {
+                    "type": "object",
+                    "properties": {
+                      "center": {
+                        "default": "all",
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "period": {
+                        "default": "all",
+                        "type": "string",
+                        "enum": [
+                          "all",
+                          "q3"
+                        ]
+                      },
+                      "company": {
+                        "default": "all",
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "schemaVersion": {
+                        "default": 1,
+                        "type": "number",
+                        "const": 1
+                      },
+                      "sourceId": {
+                        "default": "finance",
+                        "type": "string",
+                        "const": "finance"
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "chart": {
+                        "default": "column",
+                        "type": "string",
+                        "enum": [
+                          "column",
+                          "bar",
+                          "line",
+                          "donut",
+                          "waterfall",
+                          "table",
+                          "indicator",
+                          "text"
+                        ]
+                      },
+                      "chartTitle": {
+                        "default": "Realizado x orçamento",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "highlight": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "showMetric": {
+                        "default": true,
+                        "type": "boolean"
+                      },
+                      "showChart": {
+                        "default": true,
+                        "type": "boolean"
+                      },
+                      "duplicate": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "reversed": {
+                        "default": false,
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "title"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "type",
+                  "document"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "dashboard.duplicate"
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "dashboard.delete"
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "dashboard.favorite"
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
+                  "favorite": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "favorite"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "dashboard.restore"
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
+                  "versionId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "versionId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "comment.add"
+                  },
+                  "boardId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "type",
+                  "boardId",
+                  "text"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "plan.save"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "budgets": {
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1000000000000
+                    }
+                  }
+                },
+                "required": [
+                  "type",
+                  "name",
+                  "budgets"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "plan.delete"
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "scenario.save"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "required": [
+                  "type",
+                  "name",
+                  "percent"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "scenario.delete"
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "model.save"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "formula": {
+                    "type": "string",
+                    "enum": [
+                      "budget-actual",
+                      "actual-budget",
+                      "actual/budget"
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "name",
+                  "formula"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "source.toggle"
+                  },
+                  "paused": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "type",
+                  "paused"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "required": [
+          "revision",
+          "operationId",
+          "command"
+        ],
+        "additionalProperties": false
+      },
+      "Query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "center": {
+            "default": "all",
+            "type": "string",
+            "maxLength": 100
+          },
+          "period": {
+            "default": "all",
+            "type": "string",
+            "enum": [
+              "all",
+              "q3"
+            ]
+          },
+          "company": {
+            "default": "all",
+            "type": "string",
+            "maxLength": 100
+          },
+          "search": {
+            "default": "",
+            "type": "string",
+            "maxLength": 120
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "default": 100,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssistantInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "document": {
+            "type": "object",
+            "properties": {
+              "center": {
+                "default": "all",
+                "type": "string",
+                "maxLength": 100
+              },
+              "period": {
+                "default": "all",
+                "type": "string",
+                "enum": [
+                  "all",
+                  "q3"
+                ]
+              },
+              "company": {
+                "default": "all",
+                "type": "string",
+                "maxLength": 100
+              },
+              "schemaVersion": {
+                "default": 1,
+                "type": "number",
+                "const": 1
+              },
+              "sourceId": {
+                "default": "finance",
+                "type": "string",
+                "const": "finance"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "chart": {
+                "default": "column",
+                "type": "string",
+                "enum": [
+                  "column",
+                  "bar",
+                  "line",
+                  "donut",
+                  "waterfall",
+                  "table",
+                  "indicator",
+                  "text"
+                ]
+              },
+              "chartTitle": {
+                "default": "Realizado x orçamento",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "highlight": {
+                "default": false,
+                "type": "boolean"
+              },
+              "showMetric": {
+                "default": true,
+                "type": "boolean"
+              },
+              "showChart": {
+                "default": true,
+                "type": "boolean"
+              },
+              "duplicate": {
+                "default": false,
+                "type": "boolean"
+              },
+              "reversed": {
+                "default": false,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "title"
+            ],
+            "additionalProperties": false
+          },
+          "percent": {
+            "default": 5,
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "prompt",
+          "document"
+        ],
+        "additionalProperties": false
+      },
+      "AssistantOutput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "clarify"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "proposal": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "create",
+                      "filter",
+                      "chart",
+                      "highlight",
+                      "metric",
+                      "scenario",
+                      "forecast"
+                    ]
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  "patch": {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "sourceId": {
+                        "type": "string",
+                        "const": "finance"
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "center": {
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "period": {
+                        "type": "string",
+                        "enum": [
+                          "all",
+                          "q3"
+                        ]
+                      },
+                      "company": {
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "chart": {
+                        "type": "string",
+                        "enum": [
+                          "column",
+                          "bar",
+                          "line",
+                          "donut",
+                          "waterfall",
+                          "table",
+                          "indicator",
+                          "text"
+                        ]
+                      },
+                      "chartTitle": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "highlight": {
+                        "type": "boolean"
+                      },
+                      "showMetric": {
+                        "type": "boolean"
+                      },
+                      "showChart": {
+                        "type": "boolean"
+                      },
+                      "duplicate": {
+                        "type": "boolean"
+                      },
+                      "reversed": {
+                        "type": "boolean"
+                      },
+                      "percent": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      "screen": {
+                        "type": "string",
+                        "enum": [
+                          "dashboard",
+                          "scenarios"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "kind",
+                  "title",
+                  "description",
+                  "patch"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider": {
+            "type": "string"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "enum": [
+                    "user",
+                    "assistant"
+                  ]
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "text"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "proposal",
+          "provider",
+          "messages"
+        ],
+        "additionalProperties": false
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "requestId": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false
+      },
+      "Bootstrap": {
+        "type": "object",
+        "properties": {
+          "actor": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "demo": {
+                "type": "boolean"
+              },
+              "auth": {
+                "type": "string",
+                "enum": [
+                  "demo",
+                  "local",
+                  "msal"
+                ]
+              },
+              "email": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "demo"
+            ],
+            "additionalProperties": false
+          },
+          "workspace": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "personal": {
+                "type": "boolean"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "reader",
+                  "editor",
+                  "admin"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "owner",
+              "name",
+              "personal",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "personal": {
+                  "type": "boolean"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "reader",
+                    "editor",
+                    "admin"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "owner",
+                "name",
+                "personal",
+                "role"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "state": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string"
+              },
+              "schemaVersion": {
+                "const": 1
+              },
+              "revision": {
+                "type": "integer"
+              },
+              "boards": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "document": {
+                      "$ref": "#/components/schemas/DashboardDocument"
+                    },
+                    "favorite": {
+                      "type": "boolean"
+                    },
+                    "revision": {
+                      "type": "integer"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "versions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "at": {
+                            "type": "string"
+                          },
+                          "document": {
+                            "$ref": "#/components/schemas/DashboardDocument"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "at",
+                          "document"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "document",
+                    "favorite",
+                    "revision",
+                    "updatedAt",
+                    "versions"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "plans": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "budgets": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "baseRevision": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "createdBy": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "budgets",
+                    "total",
+                    "baseRevision",
+                    "createdAt",
+                    "createdBy"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "scenarios": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "percent": {
+                      "type": "number"
+                    },
+                    "saving": {
+                      "type": "number"
+                    },
+                    "actual": {
+                      "type": "number"
+                    },
+                    "balance": {
+                      "type": "number"
+                    },
+                    "baseRevision": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "createdBy": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "percent",
+                    "saving",
+                    "actual",
+                    "balance",
+                    "baseRevision",
+                    "createdAt",
+                    "createdBy"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "measure": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "formula": {
+                    "type": "string",
+                    "enum": [
+                      "budget-actual",
+                      "actual-budget",
+                      "actual/budget"
+                    ]
+                  }
+                },
+                "required": [
+                  "name",
+                  "formula"
+                ],
+                "additionalProperties": false
+              },
+              "comments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "boardId": {
+                      "type": "string"
+                    },
+                    "authorId": {
+                      "type": "string"
+                    },
+                    "author": {
+                      "type": "string"
+                    },
+                    "text": {
+                      "type": "string"
+                    },
+                    "at": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "boardId",
+                    "authorId",
+                    "author",
+                    "text",
+                    "at"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "sourcePaused": {
+                "type": "boolean"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "owner",
+              "schemaVersion",
+              "revision",
+              "boards",
+              "plans",
+              "scenarios",
+              "measure",
+              "comments",
+              "sourcePaused",
+              "updatedAt"
+            ],
+            "additionalProperties": false
+          },
+          "runtime": {
+            "type": "object",
+            "properties": {
+              "storage": {
+                "enum": [
+                  "memory",
+                  "sqlite"
+                ]
+              },
+              "temporary": {
+                "type": "boolean"
+              },
+              "dataProvider": {
+                "type": "string"
+              },
+              "aiProvider": {
+                "type": "string"
+              },
+              "sso": {
+                "type": "string"
+              },
+              "persistence": {
+                "type": "string"
+              },
+              "sap": {
+                "type": "string"
+              },
+              "ai": {
+                "type": "string"
+              },
+              "replicas": {
+                "const": 1
+              }
+            },
+            "required": [
+              "storage",
+              "temporary",
+              "dataProvider",
+              "aiProvider",
+              "sso",
+              "persistence",
+              "sap",
+              "ai",
+              "replicas"
+            ],
+            "additionalProperties": false
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "enum": [
+                    "user",
+                    "assistant"
+                  ]
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "text"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "targetId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor",
+          "workspace",
+          "workspaces",
+          "state",
+          "runtime",
+          "messages"
+        ],
+        "additionalProperties": false
+      },
+      "QueryResult": {
+        "type": "object",
+        "properties": {
+          "actual": {
+            "type": "number"
+          },
+          "budget": {
+            "type": "number"
+          },
+          "balance": {
+            "type": "number"
+          },
+          "execution": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "actual": {
+                  "type": "number"
+                },
+                "budget": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "name",
+                "code",
+                "owner",
+                "actual",
+                "budget"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "months": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "month": {
+                  "type": "string"
+                },
+                "index": {
+                  "type": "integer"
+                },
+                "actual": {
+                  "type": "number"
+                },
+                "budget": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "month",
+                "index",
+                "actual",
+                "budget"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "center": {
+                  "type": "string"
+                },
+                "company": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                },
+                "month": {
+                  "type": "string"
+                },
+                "index": {
+                  "type": "integer"
+                },
+                "actual": {
+                  "type": "number"
+                },
+                "budget": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "center",
+                "company",
+                "date",
+                "month",
+                "index",
+                "actual",
+                "budget"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "matchedCount": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "lineage": {
+            "type": "object",
+            "properties": {
+              "sourceId": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "unit": {
+                "const": "BRL"
+              },
+              "filters": {
+                "type": "object",
+                "properties": {
+                  "center": {
+                    "type": "string"
+                  },
+                  "period": {
+                    "enum": [
+                      "all",
+                      "q3"
+                    ]
+                  },
+                  "company": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "center",
+                  "period",
+                  "company"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "sourceId",
+              "revision",
+              "provider",
+              "updatedAt",
+              "unit",
+              "filters"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "actual",
+          "budget",
+          "balance",
+          "execution",
+          "groups",
+          "months",
+          "rows",
+          "count",
+          "matchedCount",
+          "offset",
+          "limit",
+          "lineage"
+        ],
+        "additionalProperties": false
+      },
+      "Catalog": {
+        "type": "object",
+        "properties": {
+          "sourceId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "rowCount": {
+            "type": "integer"
+          },
+          "periods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "centers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "companies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "aggregation": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "type",
+                "role"
+              ]
+            }
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "records": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "bytes": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "records",
+              "page",
+              "bytes"
+            ],
+            "additionalProperties": false
+          },
+          "semantics": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "sourceId",
+          "name",
+          "revision",
+          "provider",
+          "updatedAt",
+          "unit",
+          "rowCount",
+          "periods",
+          "centers",
+          "companies",
+          "fields",
+          "limits",
+          "semantics"
+        ],
+        "additionalProperties": false
+      },
+      "ScenarioPreview": {
+        "type": "object",
+        "properties": {
+          "percent": {
+            "type": "number"
+          },
+          "saving": {
+            "type": "number"
+          },
+          "actual": {
+            "type": "number"
+          },
+          "balance": {
+            "type": "number"
+          },
+          "baseRevision": {
+            "type": "string"
+          },
+          "base": {
+            "$ref": "#/components/schemas/QueryResult"
+          },
+          "forecast": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "month": {
+                  "type": "string"
+                },
+                "forecast": {
+                  "type": "number"
+                },
+                "budget": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "month",
+                "forecast",
+                "budget"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "percent",
+          "saving",
+          "actual",
+          "balance",
+          "baseRevision",
+          "base",
+          "forecast"
+        ],
+        "additionalProperties": false
+      },
+      "Config": {
+        "type": "object",
+        "properties": {
+          "runtime": {
+            "type": "object",
+            "properties": {
+              "storage": {
+                "enum": [
+                  "memory",
+                  "sqlite"
+                ]
+              },
+              "temporary": {
+                "type": "boolean"
+              },
+              "dataProvider": {
+                "type": "string"
+              },
+              "aiProvider": {
+                "type": "string"
+              },
+              "sso": {
+                "type": "string"
+              },
+              "persistence": {
+                "type": "string"
+              },
+              "sap": {
+                "type": "string"
+              },
+              "ai": {
+                "type": "string"
+              },
+              "replicas": {
+                "const": 1
+              }
+            },
+            "required": [
+              "storage",
+              "temporary",
+              "dataProvider",
+              "aiProvider",
+              "sso",
+              "persistence",
+              "sap",
+              "ai",
+              "replicas"
+            ],
+            "additionalProperties": false
+          },
+          "demo": {
+            "type": "boolean"
+          },
+          "sso": {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string"
+              },
+              "tenantId": {
+                "type": "string"
+              },
+              "scope": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "clientId",
+              "tenantId",
+              "scope"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "runtime",
+          "demo",
+          "sso"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "session": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "prometeu-session"
+      }
+    }
+  },
+  "paths": {
+    "/config": {
+      "get": {
+        "summary": "Configuração pública sem segredos",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Config"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session": {
+      "post": {
+        "summary": "Criar sessão demonstrativa isolada",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 80
+                  }
+                },
+                "required": [],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bootstrap"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bootstrap": {
+      "get": {
+        "summary": "Estado do espaço e conversa privada",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bootstrap"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog": {
+      "get": {
+        "summary": "Metadados e semântica da fonte financeira",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalog"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/query": {
+      "post": {
+        "summary": "Consultar dados com filtros e paginação de registros",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Query"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/commands": {
+      "post": {
+        "summary": "Executar comando autorizado e idempotente",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mutation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bootstrap"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant": {
+      "post": {
+        "summary": "Obter proposta de análise; não salva dashboard",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssistantInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scenario": {
+      "post": {
+        "summary": "Calcular redução em Tecnologia sobre base completa",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "required": [
+                  "percent"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioPreview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi": {
+      "get": {
+        "summary": "Obter este contrato OpenAPI",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

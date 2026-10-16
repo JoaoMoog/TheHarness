@@ -1,0 +1,1 @@
+Pre-existing repository asset copied unchanged from Agentes/Agentes - V2/web/img/btg-logo-navy.png at commit 42d16f550ca9fde35d4d39a69c9f3e112af494ad. User explicitly approved this repository's BTG-like assets as a provisional visual reference. Not an official design-system package.

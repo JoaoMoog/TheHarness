@@ -1,0 +1,24 @@
+.analysis-controls { border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:24px; }
+.analysis-controls>summary { padding:16px 20px;cursor:pointer;font-weight:500; }
+.analysis-controls-body { padding:0 20px 20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px; }
+.analysis-controls-body section { min-width:0;border-top:1px solid var(--line);padding-top:20px; }
+.analysis-controls-body h3 { margin-bottom:12px; }
+.analysis-controls-body p { margin:8px 0 16px;color:var(--text-secondary);font-size:13px;max-width:65ch; }
+.analysis-controls-body .field { display:grid;gap:6px;margin-bottom:16px; }
+.analysis-checks { display:grid;gap:8px;border:0;margin:12px 0;padding:0;max-height:240px;overflow:auto; }
+.analysis-checks label { display:flex;align-items:center;gap:10px;min-height:44px;padding:4px; }
+.analysis-checks input { width:18px;height:18px;accent-color:var(--primary);flex-shrink:0; }
+.analysis-selection { border-top:1px solid var(--line);padding:12px 0; }
+.analysis-selection summary { cursor:pointer; }
+.analysis-actions,.formula-fields,.executive-actions { display:flex;flex-wrap:wrap;gap:12px;margin:12px 0; }
+.additional-metrics { display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:20px 0; }
+.additional-metrics article { padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:12px; }
+.additional-metrics strong { display:block;font-size:28px;font-variant-numeric:tabular-nums;margin-top:8px; }
+.analysis-comparison,.analysis-quality { padding:20px;border:1px solid var(--line);border-radius:12px;margin:20px 0;background:var(--surface); }
+.analysis-quality summary,.chart-values summary { cursor:pointer;min-height:44px;display:flex;align-items:center; }
+.analysis-comparison p,.analysis-quality p { margin:8px 0;font-size:13px;color:var(--text-secondary); }
+.chart-values { margin-top:12px;font-size:13px; }
+.chart-values table { width:100%; }
+.executive-preview iframe { width:100%;height:600px;border:1px solid var(--line);border-radius:12px;background:white;margin-top:16px; }
+.executive-preview p { color:var(--text-secondary);font-size:13px;margin:8px 0; }
+@media(max-width:767px){.analysis-controls-body{grid-template-columns:1fr}.analysis-comparison,.analysis-quality{padding:16px}.analysis-controls-body{padding:0 16px 16px}}
