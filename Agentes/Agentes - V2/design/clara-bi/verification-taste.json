@@ -1,0 +1,114 @@
+{
+  "validation": {
+    "screens": 89,
+    "nativeNodes": 26192,
+    "interactiveNodes": 2293,
+    "remainingSidebars": [],
+    "desktopTopMenus": 82,
+    "mobileTopMenus": 4,
+    "fonts": [
+      "Figtree"
+    ],
+    "imageFills": 0,
+    "layoutIssueCount": 0,
+    "issues": [],
+    "invalidDestinations": [],
+    "readerEditOrAdmin": [],
+    "canvasWidth": 1056,
+    "revision": "Taste · BI empresarial",
+    "headerHeights": [
+      72
+    ],
+    "flowChecks": [
+      {
+        "source": "4:631",
+        "destination": "69:20209",
+        "connected": true
+      },
+      {
+        "source": "69:20209",
+        "destination": "4:631",
+        "connected": true
+      },
+      {
+        "source": "69:20209",
+        "destination": "9:1775",
+        "connected": true
+      },
+      {
+        "source": "4:2",
+        "destination": "28:5868",
+        "connected": true
+      },
+      {
+        "source": "28:5868",
+        "destination": "28:6500",
+        "connected": true
+      },
+      {
+        "source": "4:2",
+        "destination": "27:4767",
+        "connected": true
+      },
+      {
+        "source": "27:4767",
+        "destination": "27:5178",
+        "connected": true
+      },
+      {
+        "source": "7:2737",
+        "destination": "29:6503",
+        "connected": true
+      },
+      {
+        "source": "11:3963",
+        "destination": "11:4282",
+        "connected": true
+      }
+    ],
+    "allFlowsConnected": true,
+    "mobileIATouch": [
+      {
+        "id": "70:19669",
+        "width": 118,
+        "height": 44
+      },
+      {
+        "id": "70:19682",
+        "width": 118,
+        "height": 44
+      },
+      {
+        "id": "70:19695",
+        "width": 118,
+        "height": 44
+      },
+      {
+        "id": "70:19708",
+        "width": 118,
+        "height": 44
+      }
+    ]
+  },
+  "visualReview": {
+    "screens": [
+      "dashboard",
+      "editor",
+      "library",
+      "libraryList",
+      "home",
+      "aiWorkbench",
+      "mobileDashboard"
+    ],
+    "previews": [
+      "dashboard-taste.png",
+      "editor-taste.png",
+      "library-taste-final.png",
+      "library-list-taste-final.png",
+      "home-taste-final.png",
+      "ai-taste-final.png",
+      "mobile-taste-final.png"
+    ],
+    "status": "Conferidos: hierarquia, espaçamento, legibilidade e navegação superior."
+  }
+}

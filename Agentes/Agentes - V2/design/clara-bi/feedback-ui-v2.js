@@ -1,0 +1,1 @@
+async function feedback(key,title,body,detail,back,source='dashboard'){const m=await modalV2(key,title,624,source);await icon(m.box,'CircleCheck',40,'success');await txt(m.box,body,'Section','text',m.w);await txt(m.box,detail,'Body','muted',m.w);await button(m.box,'Continuar','Primary','ArrowRight',back,m.w);centerModal(m);return m;}

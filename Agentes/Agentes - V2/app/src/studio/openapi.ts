@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {assistantInputSchema,assistantOutputSchema,documentSchema,mutationSchema,querySchema,formulaSchema} from './contracts';
+import {assistantInputSchema,assistantOutputSchema,documentSchema,mutationSchema,querySchema,formulaSchema,filtersSchema,budgetEntrySchema,widgetSchema} from './contracts';
 const str={type:'string'},num={type:'number'};
 const ref=(name:string)=>({'$ref':`#/components/schemas/${name}`});
 const json=(schema:object)=>({content:{'application/json':{schema}}});
@@ -8,33 +8,49 @@ const list=(items:object)=>({type:'array',items});
 const actor=object({id:str,name:str,demo:{type:'boolean'},auth:{type:'string',enum:['demo','local','msal']},email:str},['id','name','demo']);
 const workspace=object({id:str,owner:str,name:str,personal:{type:'boolean'},role:{type:'string',enum:['reader','editor','admin']}});
 const version=object({id:str,at:str,document:ref('DashboardDocument')});
-const board=object({id:str,document:ref('DashboardDocument'),favorite:{type:'boolean'},revision:{type:'integer'},updatedAt:str,versions:list(version)});
-const plan=object({id:str,name:str,budgets:list(num),total:num,baseRevision:str,createdAt:str,createdBy:str});
-const scenario=object({id:str,name:str,percent:num,saving:num,actual:num,balance:num,baseRevision:str,createdAt:str,createdBy:str});
+const board=object({id:str,document:ref('DashboardDocument'),favorite:{type:'boolean'},revision:{type:'integer'},updatedAt:str,versions:list(version),sourceRevision:str,bannerId:{type:['string','null']}},['id','document','favorite','revision','updatedAt','versions']);
+const plan=object({id:str,name:str,budgets:list(z.toJSONSchema(budgetEntrySchema)),filters:z.toJSONSchema(filtersSchema),total:num,baseRevision:str,createdAt:str,createdBy:str},['id','name','budgets','total','baseRevision','createdAt','createdBy']);
+const scenario=object({id:str,name:str,percent:num,center:str,filters:z.toJSONSchema(filtersSchema),saving:num,actual:num,balance:num,baseRevision:str,createdAt:str,createdBy:str},['id','name','percent','saving','actual','balance','baseRevision','createdAt','createdBy']);
 const state=object({id:str,owner:str,schemaVersion:{const:1},revision:{type:'integer'},boards:list(board),plans:list(plan),scenarios:list(scenario),measure:object({name:str,formula:{type:'string',enum:formulaSchema.options}}),comments:list(object({id:str,boardId:str,authorId:str,author:str,text:str,at:str})),sourcePaused:{type:'boolean'},updatedAt:str});
-const runtime=object({storage:{enum:['memory','sqlite']},temporary:{type:'boolean'},dataProvider:str,aiProvider:str,sso:str,persistence:str,sap:str,ai:str,replicas:{const:1}});
+const check=object({state:{enum:['unconfigured','configured','verified','failed']},checkedAt:{type:['string','null']},message:str});
+const runtime=object({storage:{enum:['memory','sqlite']},temporary:{type:'boolean'},dataProvider:str,aiProvider:str,sso:str,persistence:str,sap:str,ai:str,replicas:{const:1},integrations:object({data:check,ai:check})});
 const group=object({name:str,code:str,owner:str,actual:num,budget:num});
 const row=object({id:str,center:str,company:str,date:str,month:str,index:{type:'integer'},actual:num,budget:num});
-const lineage=object({sourceId:str,revision:str,provider:str,updatedAt:str,unit:{const:'BRL'},filters:object({center:str,period:{enum:['all','q3']},company:str})});
+const lineage=object({sourceId:str,revision:str,provider:str,updatedAt:str,unit:{const:'BRL'},filters:z.toJSONSchema(filtersSchema)});
 const messages=list(object({role:{enum:['user','assistant']},text:str}));
+const column=object({key:str,label:str,type:{enum:['text','number','date']}});
+const dataset=object({name:str,columns:list(column),rows:list({type:'object',additionalProperties:{type:['string','number','null']}})});
+const executiveInput=object({title:str,boardIds:{type:'array',minItems:1,maxItems:12,items:str},current:ref('DashboardDocument')},['title','boardIds']);
 const schemas={
+ Widget:z.toJSONSchema(widgetSchema),Dataset:dataset,
  DashboardDocument:z.toJSONSchema(documentSchema),Mutation:z.toJSONSchema(mutationSchema,{io:'input'}),Query:z.toJSONSchema(querySchema,{io:'input'}),AssistantInput:z.toJSONSchema(assistantInputSchema,{io:'input'}),AssistantOutput:{...z.toJSONSchema(assistantOutputSchema),properties:{...z.toJSONSchema(assistantOutputSchema).properties,provider:str,messages},required:['status','message','proposal','provider','messages']},
  Error:object({error:object({code:str,message:str,requestId:{type:'string',format:'uuid'}})}),
- Bootstrap:object({actor,workspace,workspaces:list(workspace),state,runtime,messages,targetId:str},['actor','workspace','workspaces','state','runtime','messages']),
+ Bootstrap:object({actor,preferences:object({id:str,owner:str,onboarded:{type:'boolean'}}),files:list(object({id:str,name:str,count:num,updatedAt:str})),workspace,workspaces:list(workspace),state,runtime,messages,targetId:str},['actor','workspace','workspaces','state','runtime','messages']),
  QueryResult:object({actual:num,budget:num,balance:num,execution:{type:['number','null']},groups:list(group),months:list(object({month:str,index:{type:'integer'},actual:num,budget:num})),rows:list(row),count:{type:'integer'},matchedCount:{type:'integer'},offset:{type:'integer'},limit:{type:'integer'},lineage}),
  Catalog:object({sourceId:str,name:str,revision:str,provider:str,updatedAt:str,unit:str,rowCount:{type:'integer'},periods:list(str),centers:list(str),companies:list(str),fields:list({type:'object',properties:{key:str,type:str,role:str,aggregation:str,unit:str},required:['key','type','role']}),limits:object({records:{type:'integer'},page:{type:'integer'},bytes:{type:'integer'}}),semantics:{type:'object',additionalProperties:{type:'string'}}}),
- ScenarioPreview:object({percent:num,saving:num,actual:num,balance:num,baseRevision:str,base:ref('QueryResult'),forecast:list(object({month:str,forecast:num,budget:num}))}),
- Config:object({runtime,demo:{type:'boolean'},sso:object({clientId:str,tenantId:str,scope:str})}),
+ ScenarioPreview:object({percent:num,center:str,filters:z.toJSONSchema(filtersSchema),saving:num,actual:num,balance:num,baseRevision:str,base:ref('QueryResult'),forecast:list(object({month:str,forecast:num,budget:num}))}),
+ Config:object({runtime,demo:{type:'boolean'},local:{type:'boolean'},sso:object({clientId:str,tenantId:str,scope:str})}),
 };
 function operation(summary:string,response:object,body?:object,publicAccess=false){return {summary,security:publicAccess?[]:[{session:[]}],...(!publicAccess?{parameters:[{in:'header',name:'x-clara-workspace',required:false,schema:str,description:'Espaço autorizado da sessão; omitido usa o pessoal.'}]}:{}),...(body?{requestBody:{required:true,...json(body)}}:{}),responses:{'200':{description:'Sucesso',...json(response)},...Object.fromEntries([400,401,403,404,409,413,422,429,502,503,504].map(code=>[code,{description:'Falha validada; nenhuma alteração parcial',...json(ref('Error'))}]))}}}
-export function studioOpenApi(){return {openapi:'3.1.0',info:{title:'CLARA Studio API',version:'1.0.0',description:'API de análise financeira. Cookie HttpOnly e Origin nas mutações. Armazenamento temporário na avaliação; uma réplica. Comandos exigem revisão global e operationId (últimos 50 recibos por espaço). Demo e SAP compartilham o contrato canônico BRL. SAP somente leitura.'},servers:[{url:'/api/v1/studio'}],components:{schemas,securitySchemes:{session:{type:'apiKey',in:'cookie',name:'prometeu-session'}}},paths:{
+export function studioOpenApi(){return {openapi:'3.1.0',info:{title:'CLARA Studio API',version:'1.3.0',description:'API de dashboards financeiros e fontes de dados com colunas livres. Cookie HttpOnly e Origin nas mutações. Armazenamento em memória ou SQLite persistente; uma instância. Comandos exigem revisão global e operationId (últimos 50 recibos por espaço). Modelo financeiro em BRL e fontes genéricas CSV/XLSX/JSON/SAP. Gráficos calculados no servidor; apresentações HTML independentes e unificação preservam fontes e filtros. SAP somente leitura.'},servers:[{url:'/api/v1/studio'}],components:{schemas,securitySchemes:{session:{type:'apiKey',in:'cookie',name:'prometeu-session'}}},paths:{
  '/config':{get:operation('Configuração pública sem segredos',ref('Config'),undefined,true)},
  '/session':{post:operation('Criar sessão demonstrativa isolada',ref('Bootstrap'),object({name:{type:'string',maxLength:80}},[]),true)},
+ '/onboarding':{post:operation('Concluir apresentação para a pessoa autenticada',object({onboarded:{type:'boolean'}}),object({}))},
+ '/files':{get:operation('Listar planilhas do espaço',list(object({id:str,name:str,count:num,updatedAt:str})))},
+ '/files/preview':{post:{...operation('Prévia de planilha de até 8 MB',object({id:str,name:str,count:num,columns:list(object({key:str,label:str,type:str})),rows:list({type:'object',additionalProperties:true})})),requestBody:{required:true,content:{'multipart/form-data':{schema:object({file:{type:'string',format:'binary'}})}}}}},
+ '/files/import':{post:operation('Importar todas as colunas ou mapear o modelo financeiro',object({id:str,name:str,count:num}),object({uploadId:str,name:str,columns:list(object({key:str,type:{enum:['text','number','date']}})),mapping:object({company:str,center:str,date:str,actual:str,budget:str})},['uploadId','name']))},
+ '/widgets/query':{post:operation('Calcular um gráfico por colunas, operação e recorte',{type:'object'},object({document:ref('DashboardDocument'),widget:ref('Widget')}))},
+ '/presentations':{post:operation('Gerar slides HTML a partir dos dashboards autorizados',object({title:str,html:str,slideCount:num}),executiveInput)},
+ '/dashboards/merge':{post:operation('Reunir gráficos sem salvar; preserva fonte e filtros',ref('DashboardDocument'),executiveInput)},
+ '/datasets/sap':{post:operation('Importar ou atualizar a coleção SAP configurada com todas as colunas',object({id:str,name:str,count:num}),object({name:str,sourceId:str},['name']))},
+ '/banners':{post:operation('Gerar imagem de capa; aplicação exige comando dashboard.banner',object({id:str}),object({boardId:str,prompt:{type:'string',minLength:5,maxLength:700}}))},
+ '/banners/{id}':{get:{summary:'Imagem PNG autorizada por espaço',security:[{session:[]}],parameters:[{in:'path',name:'id',required:true,schema:str},{in:'query',name:'workspace',schema:str}],responses:{'200':{description:'Imagem de capa',content:{'image/png':{schema:{type:'string',format:'binary'}}}},'404':{description:'Capa não disponível no espaço'}}}},
+ '/catalog/{sourceId}':{get:{...operation('Catálogo da fonte escolhida',ref('Catalog')),parameters:[{in:'path',name:'sourceId',required:true,schema:str},{in:'header',name:'x-clara-workspace',schema:str}]}},
  '/bootstrap':{get:operation('Estado do espaço e conversa privada',ref('Bootstrap'))},
  '/catalog':{get:operation('Metadados e semântica da fonte financeira',ref('Catalog'))},
  '/query':{post:operation('Consultar dados com filtros e paginação de registros',ref('QueryResult'),ref('Query'))},
  '/commands':{post:operation('Executar comando autorizado e idempotente',ref('Bootstrap'),ref('Mutation'))},
  '/assistant':{post:operation('Obter proposta de análise; não salva dashboard',ref('AssistantOutput'),ref('AssistantInput'))},
- '/scenario':{post:operation('Calcular redução em Tecnologia sobre base completa',ref('ScenarioPreview'),object({percent:{type:'number',minimum:0,maximum:100}}))},
+ '/scenario':{post:operation('Calcular redução por centro e recorte',ref('ScenarioPreview'),object({percent:{type:'number',minimum:0,maximum:100},center:str,filters:z.toJSONSchema(filtersSchema)},['percent']))},
  '/openapi':{get:operation('Obter este contrato OpenAPI',{type:'object'},undefined,true)},
  }}}

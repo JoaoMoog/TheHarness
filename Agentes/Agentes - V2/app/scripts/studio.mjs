@@ -1,10 +1,12 @@
 import {spawn} from 'node:child_process';
+import {loadSettings} from './pilot-env.mjs';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const mode=process.argv.includes('--production')?'start':'dev';
-const port=process.env.PORT||'3000';
-const env={...process.env,CLARA_STORAGE_MODE:process.env.CLARA_STORAGE_MODE||'memory',AUTH_MODE:process.env.AUTH_MODE||'demo',AI_PROVIDER:process.env.AI_PROVIDER||'demo',STUDIO_DATA_PROVIDER:process.env.STUDIO_DATA_PROVIDER||'demo',STUDIO_AI_PROVIDER:process.env.STUDIO_AI_PROVIDER||'demo',PUBLIC_APP_URL:process.env.PUBLIC_APP_URL||`http://127.0.0.1:${port}`,NEXT_TELEMETRY_DISABLED:'1'};
+const configured=loadSettings(root,'.env.local');
+const port=configured.PORT||'3000';
+const env={...configured,CLARA_STORAGE_MODE:configured.CLARA_STORAGE_MODE||'memory',AUTH_MODE:configured.AUTH_MODE||'demo',AI_PROVIDER:configured.AI_PROVIDER||'demo',STUDIO_DATA_PROVIDER:configured.STUDIO_DATA_PROVIDER||'demo',STUDIO_AI_PROVIDER:configured.STUDIO_AI_PROVIDER||'demo',PUBLIC_APP_URL:configured.PUBLIC_APP_URL||`http://127.0.0.1:${port}`,NEXT_TELEMETRY_DISABLED:'1'};
 console.log(`CLARA Studio: http://127.0.0.1:${port} · armazenamento ${env.CLARA_STORAGE_MODE}`);
 if(env.CLARA_STORAGE_MODE==='memory')console.log('Contas, sessões e análises são temporárias: reiniciar apaga os dados desta execução.');
 const child=spawn(process.execPath,[resolve(root,'node_modules/next/dist/bin/next'),mode,'--hostname','127.0.0.1','--port',port],{cwd:root,env,stdio:'inherit',windowsHide:true});

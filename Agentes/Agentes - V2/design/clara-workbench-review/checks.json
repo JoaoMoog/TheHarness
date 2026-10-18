@@ -1,0 +1,97 @@
+{
+  "checks": [
+    {
+      "name": "home-1440",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "explore-1440",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "boards-1440",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "sources-1440",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "present-1440",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "home-390",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "explore-390",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "boards-390",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "sources-390",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "present-390",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "mobile-navigation",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "compare-dialog",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "formula-drawer",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "source-quality",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "import-preview",
+      "overflow": false,
+      "violations": []
+    }
+  ],
+  "flows": [
+    "Navegação móvel abre e fecha com seleção de tela",
+    "Pergunta e observação ainda não enviadas persistem ao navegar e recarregar",
+    "Drill-down, cálculo e recorte persistem na recarga; restaurar recupera total",
+    "Comparação mantém dois períodos reais, permite remover",
+    "Seleções combinam Tecnologia e Comercial com OU",
+    "Fórmula tem prévia exata; rejeita execução de código e informa divisão por zero",
+    "Salvar, revisar, restaurar e duplicar mantêm versões e observações escapadas",
+    "Busca, favoritos, Ctrl K e Enter chegam à ação; Escape fecha o painel",
+    "Qualidade e registros com busca e paginação",
+    "CSV real importa, mostra operação e calcula inclusive registros sem data",
+    "Excel real importa e calcula dois registros",
+    "JSON real importa e calcula dois registros",
+    "Apresentação usa teclado e exporta CSV, relatório e HTML com resumo escapado",
+    "Fontes, resumo e navegação Voltar persistem na recarga"
+  ],
+  "errors": [],
+  "external": []
+}

@@ -1,3 +1,5 @@
+import {validationMessage} from '@/server/validation';
+import {withCredits,trackUsage} from '@/server/credits';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { checkOrigin, demoEnabled, HttpError, microsoftActor, requireActor, revoke, session } from '@/server/auth';
@@ -56,7 +58,7 @@ async function handler(req: NextRequest, context: { params: Promise<{ path: stri
       if (route === 'auth/register' && input.mode !== 'local') throw new HttpError(400, 'Use Criar conta local para registrar uma conta.');
       if (input.mode === 'demo' && !demoEnabled()) throw new HttpError(403, 'Entre com sua conta Microsoft.');
       const actor: Actor = input.mode === 'local' ? await localActor({ email: input.email, password: input.password, ...(input.name ? { name: input.name } : {}) }, route === 'auth/register') : input.mode === 'demo' ? { id: 'demo-user', name: 'Marina Costa', demo: true, auth: 'demo' } : await microsoftActor(input.accessToken || '');
-      initialize(actor);
+      initialize(actor);trackUsage(actor,'login');
       const response = json({ actor });
       response.cookies.set('prometeu-session', session(actor), { httpOnly: true, secure: new URL(process.env.PUBLIC_APP_URL || req.url).protocol === 'https:', sameSite: 'lax', path: '/', maxAge: 28800 });
       return response;
@@ -85,7 +87,7 @@ async function handler(req: NextRequest, context: { params: Promise<{ path: stri
     if (path[0] === 'sources' && path.length === 3 && path[2] === 'sap-replacement-preview' && req.method === 'POST') {
       const source = owned<Source>('source', path[1], actor);
       if (source.origin !== 'sap') throw new HttpError(400, 'Essa fonte não usa a conexão SAP de leitura.');
-      const preview = prepareReplacement(path[1], actor.id, await readSapSample({ signal: req.signal }));
+      const preview = prepareReplacement(path[1], actor.id, await readSapSample({ signal: req.signal, workspaceId: workspace.id }));
       return json({ ...preview, rows: preview.rows.slice(0, 5), rowCount: preview.rows.length });
     }
     if (path[0] === 'sources' && path.length === 3 && path[2] === 'versions' && req.method === 'GET') return json(sourceVersions(path[1], actor.id));
@@ -111,7 +113,7 @@ async function handler(req: NextRequest, context: { params: Promise<{ path: stri
     }
     if (req.method === 'GET' && route === 'sap/domains') return json(domains);
     if (req.method === 'GET' && route === 'sap/configuration') return json(sapConfiguration());
-    if (req.method === 'POST' && route === 'imports/sap-preview') return json(previewUpload(await readSapSample({ signal: req.signal }), actor.id, 'sap'));
+    if (req.method === 'POST' && route === 'imports/sap-preview') return json(previewUpload(await readSapSample({ signal: req.signal, workspaceId: workspace.id }), actor.id, 'sap'));
     if (req.method === 'POST' && route === 'sources/sap') {
       const input = z.object({ domain: z.enum(['finance', 'sales', 'purchases', 'inventory']) }).strict().parse(await body(req));
       const existing = list<Source>('source', actor.id).find(s => s.origin === 'sap-demo' && s.domain === domains.find(d => d.id === input.domain)?.name);
@@ -153,7 +155,7 @@ async function handler(req: NextRequest, context: { params: Promise<{ path: stri
       if (previous && previous.messages.length >= 20) throw new HttpError(400, 'Esta conversa chegou a dez pedidos. Salve a prévia ou comece uma nova conversa.');
       const started = Date.now();
       const contextDraft = previous && input.plan ? { ...previous, plan: validatePlan(input.plan, source) } : previous;
-      const plan = await planDashboard(input.prompt, source, contextDraft, req.signal);
+      const plan = await withCredits(realActor,workspace.id,'assistant.classic',process.env.AI_PROVIDER||'demo',async()=>{const result=await planDashboard(input.prompt,source,contextDraft,req.signal);if(req.signal.aborted)throw new HttpError(499,'Pedido cancelado.');return result;});
       if (req.signal.aborted) throw new HttpError(499, 'Pedido cancelado.');
       const draft: Draft = { id: previous?.id || crypto.randomUUID(), owner: actor.id, createdBy: realActor.id, sourceId: source.id, sourceRevision: source.revision,
         revision: (previous?.revision || 0) + 1, plan, messages: [...(previous?.messages || []), { role: 'user', text: input.prompt }, { role: 'assistant', text: plan.message }], expiresAt: new Date(Date.now() + 1800000).toISOString() };
@@ -195,7 +197,7 @@ async function handler(req: NextRequest, context: { params: Promise<{ path: stri
     throw new HttpError(404, 'Essa ação não está disponível.');
   } catch (error) {
     if (error instanceof HttpError) return json({ error: error.message }, error.status);
-    if (error instanceof z.ZodError) return json({ error: 'Confira os campos preenchidos e tente novamente.', fields: error.issues.map(i => ({ field: i.path.join('.'), message: i.message })) }, 400);
+    if (error instanceof z.ZodError) return json({ error: validationMessage(error), fields: error.issues.map(i => ({ field: i.path.join('.'), message: i.message })) }, 400);
     console.error(JSON.stringify({ event: 'request.failed', type: error instanceof Error ? error.name : 'Unknown' }));
     return json({ error: 'Não foi possível concluir essa ação. Seus dados foram preservados. Tente novamente.' }, 500);
   }

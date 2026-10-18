@@ -1,0 +1,6 @@
+/* CLONE_SOURCES: dashboard */
+/* COMMON */
+const page=await figma.getNodeByIdAsync(STATE.foundations.pages.prototype);await figma.setCurrentPageAsync(page);
+/* UI */
+/* V2_UI */
+const m=await modalV2('exportV2','Leve sua análise com você',704);await txt(m.box,'A exportação usa o dashboard com os filtros atuais.','Body','muted',m.w);for(const [l,d,ico,k]of [['Dashboard em PDF','Imprima a página ativa ou salve como PDF.','FileSpreadsheet','exportPDF'],['Apresentação HTML independente','Todas as páginas, com navegação. Funciona sem internet.','Presentation','exportHTML'],['Dados filtrados em CSV','Números do recorte atual para trabalhar na planilha.','Table2','exportReady']]){const tile=row(m.box,l,m.w,16,16,'subtle');radius(tile);await icon(tile,ico,28,'action');const text=al(tile,'Formato e descrição',m.w-102,'VERTICAL',4);await txt(text,l,'BodyStrong');await txt(text,d,'Small','muted',m.w-102);await icon(tile,'ArrowRight',20,'action');target(tile,k);}await notice(m.box,'Uma cópia do momento atual','Os arquivos são snapshots: ajustes ou novas atualizações da fonte não alteram o conteúdo exportado.',m.w);await button(m.box,'Cancelar','Secondary',null,'dashboard');centerModal(m);return resultV2([m]);

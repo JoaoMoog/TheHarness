@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 const baseURL=process.env.PLAYWRIGHT_BASE_URL||'http://127.0.0.1:3000';
-async function enter(page:any){await page.goto('/');await page.getByRole('button',{name:'Começar demonstração',exact:true}).click();await expect(page.getByRole('heading',{name:'Desempenho financeiro',exact:true})).toBeVisible();}
+async function enter(page:any){await page.goto('/');await page.getByRole('button',{name:'Começar demonstração',exact:true}).click();await page.getByRole('button',{name:'Pular apresentação',exact:true}).click();await page.getByRole('button',{name:'Abrir Desempenho financeiro',exact:true}).click();await expect(page.getByRole('heading',{name:'Desempenho financeiro',exact:true})).toBeVisible();}
 test('Studio: entrada sem configuração e cálculos do servidor',async({page})=>{
  await enter(page);await expect(page.getByText('Armazenamento temporário',{exact:false}).first()).toBeVisible();
  await page.getByLabel('Centro de custo',{exact:true}).selectOption('Tecnologia');
@@ -13,28 +13,19 @@ test('Studio: entrada sem configuração e cálculos do servidor',async({page})=
  await page.getByLabel('Nome do dashboard',{exact:true}).last().fill('Minha análise integrada');
  await page.getByRole('button',{name:'Salvar dashboard',exact:true}).click();
  await expect(page.getByRole('dialog')).toHaveCount(0);
- await page.reload();await expect(page.getByRole('heading',{name:'Minha análise integrada',exact:true})).toBeVisible();
-});
-test('Studio: versões de planejamento, cenários e medidas',async({page})=>{
- await enter(page);await page.getByRole('button',{name:'Planejamento',exact:true}).first().click();
- await page.getByLabel('Nome da versão').fill('Revisão aprovada');await page.getByLabel('Orçamento de Tecnologia').fill('3500000');
- await page.getByRole('button',{name:'Salvar versão',exact:true}).click();await expect(page.getByText('Revisão aprovada',{exact:true})).toBeVisible();
- await page.getByRole('button',{name:'Previsões e cenários',exact:true}).click();await page.getByLabel('Nome do cenário').fill('Economia de tecnologia');
- await page.getByRole('button',{name:'Salvar cenário',exact:true}).click();await expect(page.getByText('Economia de tecnologia',{exact:true})).toBeVisible();
- await page.getByRole('button',{name:'Modelos de dados',exact:true}).click();await page.getByLabel('Nome da medida').fill('Saldo do período');await page.getByRole('button',{name:'Salvar medida',exact:true}).click();
- await page.reload();await page.getByRole('button',{name:'Modelos de dados',exact:true}).click();await expect(page.getByLabel('Nome da medida')).toHaveValue('Saldo do período');
+ await page.reload();await page.getByRole('button',{name:'Abrir Minha análise integrada',exact:true}).click();await expect(page.getByRole('heading',{name:'Minha análise integrada',exact:true})).toBeVisible();
 });
 test('Studio: erro de conexão preserva edição e permite reconectar',async({page})=>{
- await enter(page);await page.getByRole('button',{name:'Conexões',exact:true}).click();await page.getByRole('button',{name:'Pausar fonte',exact:true}).click();
+ await enter(page);await page.getByRole('button',{name:'Dados',exact:true}).click();await page.getByText('Estado dos serviços',{exact:true}).click();await page.getByRole('button',{name:'Pausar fonte',exact:true}).click();
  await page.getByRole('button',{name:'Dashboards',exact:false}).first().click();await page.getByRole('button',{name:'Abrir Desempenho financeiro',exact:true}).click();
- await expect(page.getByText('Fonte temporariamente indisponível',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Conexões',exact:true}).click();await page.getByRole('button',{name:'Reconectar fonte',exact:true}).click();
- await page.getByRole('button',{name:'Visão geral',exact:true}).click();await expect(page.getByRole('heading',{name:'Seu próximo passo começa com uma pergunta.'})).toBeVisible();
+ await expect(page.getByText('Fonte temporariamente indisponível',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Dados',exact:true}).click();await page.getByText('Estado dos serviços',{exact:true}).click();await page.getByRole('button',{name:'Retomar fonte',exact:true}).click();
+ await page.getByRole('button',{name:'Início',exact:true}).click();await expect(page.getByRole('heading',{name:'O que vamos descobrir hoje?'})).toBeVisible();
 });
 test('Studio: mobile mantém navegação e assistente utilizáveis',async({page})=>{
  await page.setViewportSize({width:390,height:844});await enter(page);
  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.getByRole('button',{name:'CLARA IA',exact:true}).last().click();await expect(page.getByLabel('Mensagem para CLARA')).toBeVisible();
- await page.getByRole('button',{name:'Recolher CLARA IA'}).click();await page.getByRole('button',{name:'Abrir navegação'}).click();await page.getByRole('button',{name:'Planejamento',exact:true}).first().click();await expect(page.getByRole('heading',{name:'Planejamento',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Recolher CLARA IA'}).click();await page.getByRole('button',{name:'Abrir navegação'}).click();await page.getByRole('button',{name:'Explorar dados',exact:true}).click();await expect(page.getByRole('heading',{name:'Explorar dados',exact:true})).toBeVisible();
 });
 
 test('Studio: painéis móveis contêm foco e métricas cabem nas células',async({page})=>{
@@ -73,16 +64,16 @@ test('Studio: conflito de revisão aparece na janela e preserva a edição',asyn
  await expect(page.getByRole('dialog').getByText(/espaço mudou/i)).toBeVisible();await expect(page.getByLabel('Nome do dashboard',{exact:true}).last()).toHaveValue('Edição que precisa sobreviver');
 });
 
-test('Studio: planejamento preserva rascunho ao recuperar conflito e sessão',async({page,context})=>{
+test('Studio: dashboard preserva rascunho ao recuperar conflito e sessão',async({page,context})=>{
  await page.goto('/');await page.getByRole('button',{name:'Usar conta local',exact:true}).click();await page.getByRole('button',{name:'Criar conta local',exact:true}).click();
  const email=`recovery-${crypto.randomUUID()}@example.test`,password='UmaSenhaDeTeste123!';
  await page.getByLabel('Nome',{exact:true}).fill('Conta de recuperação');await page.getByLabel('E-mail',{exact:true}).fill(email);await page.getByLabel('Senha',{exact:true}).fill(password);await page.getByRole('button',{name:'Criar conta',exact:true}).click();
- await page.getByRole('button',{name:'Planejamento',exact:true}).first().click();await page.getByLabel('Nome da versão').fill('Orçamento em edição');await page.getByLabel('Orçamento de Tecnologia').fill('3456789');
+ await page.getByRole('button',{name:'Pular apresentação',exact:true}).click();await page.getByRole('button',{name:'Abrir Desempenho financeiro',exact:true}).click();await page.getByRole('button',{name:'Editar',exact:true}).click();await page.getByLabel('Nome do dashboard',{exact:true}).fill('Dashboard em edição');await page.getByRole('button',{name:'Concluir edição',exact:true}).click();await page.getByRole('button',{name:'Salvar',exact:true}).click();
  const bootstrap=await (await context.request.get('/api/v1/studio/bootstrap')).json();await context.request.post('/api/v1/studio/commands',{headers:{origin:baseURL},data:{revision:bootstrap.state.revision,operationId:crypto.randomUUID(),command:{type:'model.save',name:'Mudança concorrente',formula:'actual-budget'}}});
- await page.getByRole('button',{name:'Salvar versão',exact:true}).click();await expect(page.getByText(/espaço mudou/i)).toBeVisible();await page.getByRole('button',{name:'Atualizar do servidor',exact:true}).click();
- await expect(page.getByLabel('Nome da versão')).toHaveValue('Orçamento em edição');await expect(page.getByLabel('Orçamento de Tecnologia')).toHaveValue('3456789');
- await context.clearCookies();await page.getByRole('button',{name:'Salvar versão',exact:true}).click();await page.getByRole('button',{name:'Usar conta local',exact:true}).click();await page.getByLabel('E-mail',{exact:true}).fill(email);await page.getByLabel('Senha',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar',exact:true}).click();
- await expect(page.getByLabel('Nome da versão')).toHaveValue('Orçamento em edição');await expect(page.getByLabel('Orçamento de Tecnologia')).toHaveValue('3456789');await page.getByRole('button',{name:'Salvar versão',exact:true}).click();await expect(page.getByText('Orçamento em edição',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Salvar dashboard',exact:true}).click();await expect(page.getByText(/espaço mudou/i)).toBeVisible();await page.getByRole('button',{name:'Atualizar do servidor',exact:true}).click();
+ await expect(page.getByLabel('Nome do dashboard',{exact:true})).toHaveValue('Dashboard em edição');
+ await context.clearCookies();await page.getByRole('button',{name:'Salvar dashboard',exact:true}).click();await page.getByRole('button',{name:'Usar conta local',exact:true}).click();await page.getByLabel('E-mail',{exact:true}).fill(email);await page.getByLabel('Senha',{exact:true}).fill(password);await page.getByRole('button',{name:'Entrar',exact:true}).click();
+ await expect(page.getByLabel('Nome do dashboard',{exact:true})).toHaveValue('Dashboard em edição');await page.getByRole('button',{name:'Salvar dashboard',exact:true}).click();await expect(page.getByRole('heading',{name:'Dashboard em edição',exact:true})).toBeVisible();
 });
 
 test('Studio: link de equipe continua depois de autenticar',async({page,context,browser})=>{

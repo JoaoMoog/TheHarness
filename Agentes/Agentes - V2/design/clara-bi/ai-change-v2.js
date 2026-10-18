@@ -1,0 +1,6 @@
+/* CLONE_SOURCES: dashboard */
+/* COMMON */
+const page=await figma.getNodeByIdAsync(STATE.foundations.pages.prototype);await figma.setCurrentPageAsync(page);
+/* UI */
+/* V2_UI */
+const m=await modalV2('aiChange','Confira o ajuste da CLARA IA',1120);await txt(m.box,'1 gráfico selecionado · Mesmo recorte e mesmos valores nas duas versões','Body','muted',m.w);const pair=row(m.box,'Antes e depois',m.w,16);pair.counterAxisAlignItems='MIN';for(const [label,c]of [['Antes','Chart/CostCenters'],['Depois','Chart/CostCentersHighlight']]){const side=al(pair,label,(m.w-16)/2,'VERTICAL',8);await badge(side,label,label==='Depois'?'Blue':'Neutral');const chart=await instance(side,c,{Title:label==='Depois'?'Despesas · desvios destacados':'Despesas por centro de custo'},(m.w-16)/2);fixed(chart,304);}await notice(m.box,'O que a IA vai alterar','Destaque em vermelho acima do orçamento · Valores visíveis · Novo título. Operações: +R$ 40 mil; Comercial: +R$ 30 mil.',m.w);const f=row(m.box,'Confirmar a proposta',m.w,12);await txt(f,'Você poderá desfazer em um único passo.','Small','muted',560);space(f);await button(f,'Cancelar','Secondary',null,'aiEdit');await button(f,'Aplicar alterações','Primary','Check','aiApplied');centerModal(m);return resultV2([m]);

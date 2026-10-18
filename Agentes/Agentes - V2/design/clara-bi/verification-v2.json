@@ -1,0 +1,38 @@
+{
+  "screenCount": 88,
+  "nativeNodes": 30858,
+  "interactiveNodes": 2235,
+  "wholeUIImages": 0,
+  "fontFamilies": [
+    "Figtree"
+  ],
+  "overflowCount": 0,
+  "collisionCount": 0,
+  "overflow": [],
+  "collisions": [],
+  "invalidDestinations": [],
+  "readerEditingActions": [],
+  "componentCount": 82,
+  "componentSets": 3,
+  "variableCount": 54,
+  "invalidScopes": [],
+  "missingCodeSyntax": [],
+  "textStyles": 11,
+  "reviewedScreens": [
+    "dashboard",
+    "editorAppearance",
+    "aiChange",
+    "workspace",
+    "editorDonut",
+    "chartTypes",
+    "shareReader",
+    "editorReordered",
+    "presentation",
+    "scenarioPreview"
+  ],
+  "prototypeInteractions": "guided demonstration",
+  "realSAP": false,
+  "realAI": false,
+  "liveSharing": false,
+  "applicationCodeChanged": false
+}

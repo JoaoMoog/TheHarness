@@ -1,0 +1,10 @@
+{
+  "extends": "../app/tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "plugins": [],
+    "paths": {"@/*": ["../app/src/*"]}
+  },
+  "include": ["clara-workbench.ts"],
+  "exclude": ["../app/node_modules"]
+}

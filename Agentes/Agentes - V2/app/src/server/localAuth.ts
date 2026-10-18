@@ -1,3 +1,4 @@
+import {inputLimits} from '../core/inputLimits';
 import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { z } from 'zod';
@@ -6,7 +7,7 @@ import { HttpError } from './auth';
 import type { Actor } from '@/core/types';
 
 const derive = promisify(scrypt);
-const inputSchema = z.object({ email: z.string().trim().email().max(200).transform(s => s.toLowerCase()), password: z.string().min(10).max(128), name: z.string().trim().min(2).max(80).optional() }).strict();
+const inputSchema = z.object({ email: z.string().trim().email().max(inputLimits.email).transform(s => s.toLowerCase()), password: z.string().min(10).max(inputLimits.password), name: z.string().trim().min(2).max(inputLimits.name).optional() }).strict();
 const attempts = new Map<string, number[]>();
 const windowMs = 15 * 60000;
 export const localEnabled = () => process.env.AUTH_MODE !== 'msal' && process.env.LOCAL_AUTH_ENABLED !== 'false';

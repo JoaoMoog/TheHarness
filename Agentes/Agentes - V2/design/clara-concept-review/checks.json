@@ -1,0 +1,30 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "width": 1440,
+      "screen": "home",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "screen": "analysis",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "screen": "home",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "screen": "analysis",
+      "overflow": false,
+      "violations": []
+    }
+  ],
+  "interactions": "filters, restore, modal/Escape and search passed"
+}

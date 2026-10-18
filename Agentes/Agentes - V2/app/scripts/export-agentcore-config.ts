@@ -1,0 +1,12 @@
+import {resolve} from 'node:path';
+import {writeFileSync,mkdirSync} from 'node:fs';
+import {loadSettings} from './pilot-env.mjs';
+import {modelConfig} from '../src/server/modelConfig';
+Object.assign(process.env,loadSettings(resolve('.'),process.env.CLARA_ENV_FILE||'.env.local'));
+const name=process.env.AGENTCORE_NAME,role=process.env.AGENTCORE_EXECUTION_ROLE_ARN,modelId=process.env.BEDROCK_MODEL_ID;
+if(!name||!role||!modelId)throw new Error('Preencha AGENTCORE_NAME, AGENTCORE_EXECUTION_ROLE_ARN e BEDROCK_MODEL_ID.');
+const model=modelConfig();
+const config={harnessName:name,executionRoleArn:role,model:{bedrockModelConfig:{modelId,...model.inferenceConfig,apiFormat:'converse_stream',additionalParams:model.additional}},systemPrompt:[{text:'Você é CLARA. Responda em português, somente JSON conforme o contrato do servidor. Use apenas os dados fornecidos. Pergunte quando faltar informação. Não execute ferramentas, código ou SQL.'}],tools:[],skills:[],allowedTools:[],memory:{disabled:{}},maxIterations:1,maxTokens:model.maxTokens,timeoutSeconds:Math.max(5,Math.floor(model.timeoutMs/1000)-5),environment:{agentCoreRuntimeEnvironment:{networkConfiguration:{networkMode:'PUBLIC'},lifecycleConfiguration:{idleRuntimeSessionTimeout:60,maxLifetime:300}}},environmentVariables:{OTEL_SDK_DISABLED:'true'},tags:{Application:'CLARA'}};
+mkdirSync('.local',{recursive:true});
+writeFileSync('.local/agentcore-config.json',JSON.stringify(config,null,2));
+console.log('Configuração não secreta salva em .local/agentcore-config.json');

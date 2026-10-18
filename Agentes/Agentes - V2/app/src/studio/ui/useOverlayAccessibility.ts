@@ -17,7 +17,7 @@ export function useOverlayAccessibility(nav:boolean,chat:boolean,editor:boolean,
   const focusables=()=>[...overlay.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input:not(:disabled),textarea:not(:disabled),select:not(:disabled),[tabindex="0"]')].filter(el=>el.getClientRects().length>0&&!el.closest('[inert]'));
   const focusFirst=()=>focusables()[0]?.focus();focusFirst();
   const key=(event:KeyboardEvent)=>{
-   if(document.querySelector('dialog[open]'))return;
+   if(document.querySelector('dialog[open],[popover]:popover-open'))return;
    if(event.key==='Escape'){event.preventDefault();close();return}
    if(event.key!=='Tab')return;
    const items=focusables(),first=items[0],last=items.at(-1);
@@ -25,7 +25,7 @@ export function useOverlayAccessibility(nav:boolean,chat:boolean,editor:boolean,
    if(event.shiftKey&&(document.activeElement===first||!overlay.contains(document.activeElement))){event.preventDefault();last?.focus()}
    else if(!event.shiftKey&&(document.activeElement===last||!overlay.contains(document.activeElement))){event.preventDefault();first.focus()}
   };
-  const focus=(event:FocusEvent)=>{if(!document.querySelector('dialog[open]')&&!overlay.contains(event.target as Node))focusFirst()};
+  const focus=(event:FocusEvent)=>{if(!document.querySelector('dialog[open],[popover]:popover-open')&&!overlay.contains(event.target as Node))focusFirst()};
   document.addEventListener('keydown',key);document.addEventListener('focusin',focus);
   return()=>{document.removeEventListener('keydown',key);document.removeEventListener('focusin',focus);previous.forEach(([el,inert])=>{el.inert=inert});if(previousRole)overlay.setAttribute('role',previousRole);else overlay.removeAttribute('role');overlay.removeAttribute('aria-modal');if(prior?.isConnected&&!prior.closest('[inert]'))prior.focus()};
  // The event closure only closes panels, and must not refocus on every render.

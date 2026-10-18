@@ -1,0 +1,15 @@
+const fs=require('node:fs');const path=require('node:path');
+const phase=process.argv[2],root=__dirname;
+const s=JSON.parse(fs.readFileSync(path.join(root,'state.json'),'utf8'));
+const r=JSON.parse(fs.readFileSync(path.join(root,'result-'+phase+'.json'),'utf8'));
+s.phases[phase]=r;
+Object.assign(s.screens,r.screens||{});Object.assign(s.components,r.components||{});
+const removed=new Set(r.removedNodeIds||[]);
+const unlink=new Set(r.removeLinkIds||[]);
+s.links=(s.links||[]).filter(l=>!removed.has(l.id)&&!unlink.has(l.id));s.links.push(...r.links||[]);
+if(r.clones)s.v2Clones=[...s.v2Clones||[],...r.clones];
+if(r.validation)s.validation=r.validation;
+if(r.foundationValues)Object.assign(s.foundations.values,r.foundationValues);
+s.revision='Completo · IA, editor e colaboração';
+fs.writeFileSync(path.join(root,'state.json'),JSON.stringify(s));
+console.log(JSON.stringify({phase,screens:Object.keys(s.screens).length,created:r.createdNodeIds?.length,mutated:r.mutatedNodeIds?.length,removed:removed.size,links:r.links?.length}));

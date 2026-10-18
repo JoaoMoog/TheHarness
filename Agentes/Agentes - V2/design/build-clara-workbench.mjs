@@ -1,0 +1,17 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+const directory = dirname(fileURLToPath(import.meta.url));
+const require = createRequire(resolve(directory, '../app/package.json'));
+const { build } = require('esbuild');
+const React = require('react'); const { renderToStaticMarkup } = require('react-dom/server'); const lucide = require('lucide-react');
+const names = ['Asterisk','LayoutDashboard','ChartNoAxesCombined','FolderOpen','Database','Presentation','Search','Bell','ChevronDown','ChevronRight','ArrowUpRight','ArrowRight','ArrowLeft','Plus','X','SlidersHorizontal','Download','Star','Clock','Check','CircleCheck','CircleAlert','Upload','FileSpreadsheet','Layers','Sparkles','Filter','Undo2','Table','ChartLine','ChartBar','Calculator','Save','History','Copy','MessageSquare','NotebookPen','Menu','Eye','Trash2','CheckCheck','Command','Settings2'];
+const icons = Object.fromEntries(names.map(name => [name, renderToStaticMarkup(React.createElement(lucide[name], { className: 'icon', 'aria-hidden': true, focusable: false }))]));
+const font = [400,500,600,700].map(weight => `@font-face{font-family:Figtree;font-weight:${weight};font-style:normal;font-display:swap;src:url(data:font/woff2;base64,${readFileSync(resolve(directory,`../app/node_modules/@fontsource/figtree/files/figtree-latin-${weight}-normal.woff2`)).toString('base64')}) format('woff2')}`).join('\n');
+const bundle = await build({ entryPoints: [resolve(directory,'clara-workbench.ts')], bundle:true, platform:'browser', format:'iife', target:'es2022', minify:true, write:false, tsconfig:resolve(directory,'../app/tsconfig.json'), define:{'process.env.NODE_ENV':'"production"'} });
+const script = bundle.outputFiles[0].text.replaceAll('</script','<\\/script');
+const css = readFileSync(resolve(directory,'clara-workbench.css'),'utf8');
+const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CLARA · Estúdio de análises web</title><style>${font}\n${css}</style></head><body><a class="skip" href="#main">Pular para o conteúdo</a><aside class="rail" id="rail" aria-label="Navegação principal"></aside><div class="app"><header class="topbar" id="topbar"></header><div class="prototype-bar"><span>Protótipo funcional · arquivos e análises ficam neste navegador</span><span id="storage-status">IA demonstrativa · sem conexão externa</span></div><main id="main" tabindex="-1"></main></div><dialog id="dialog"></dialog><div id="toast" class="toast" role="status" hidden></div><script>window.CLARA_ICONS=${JSON.stringify(icons)};${script}</script></body></html>`;
+writeFileSync(resolve(directory,'clara-web-v2.html'),html);
+console.log(JSON.stringify({ file:resolve(directory,'clara-web-v2.html'), bytes:Buffer.byteLength(html), fonts:'embedded', calculation:'existing CLARA core', network:'none' }));

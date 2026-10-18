@@ -52,8 +52,8 @@ export function parseFile(bytes: Uint8Array, name: string): ImportSample {
   if (records.length < 2) throw new Error('O arquivo está vazio. Inclua uma linha de cabeçalhos e ao menos um registro.');
   if (records.length > MAX_ROWS + 1) throw new Error('O limite desta demonstração é de 20 mil registros por arquivo.');
   const headers = records[0].map(v => String(v ?? '').trim());
-  if (!headers.length || headers.length > 50 || headers.some(h => !h || h.length > 100)) {
-    throw new Error('Use até 50 colunas, todas com um nome de até 100 caracteres.');
+  if (!headers.length || headers.length > 256 || headers.some(h => !h || h.length > 100)) {
+    throw new Error('Use até 256 colunas, todas com um nome de até 100 caracteres.');
   }
   if (new Set(headers.map(normalized)).size !== headers.length) throw new Error('Existem colunas com o mesmo nome. Renomeie-as antes de importar.');
   if (records.slice(1).some(row => row.length > headers.length && row.slice(headers.length).some(v => v != null && v !== ''))) throw new Error('Algumas linhas têm mais valores que os cabeçalhos. Confira os separadores do arquivo.');

@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "CLARA Studio API",
-    "version": "1.0.0",
-    "description": "API de análise financeira. Cookie HttpOnly e Origin nas mutações. Armazenamento temporário na avaliação; uma réplica. Comandos exigem revisão global e operationId (últimos 50 recibos por espaço). Demo e SAP compartilham o contrato canônico BRL. SAP somente leitura."
+    "version": "1.2.0",
+    "description": "API de análise financeira. Cookie HttpOnly e Origin nas mutações. Armazenamento em memória ou SQLite persistente; uma instância. Comandos exigem revisão global e operationId (últimos 50 recibos por espaço). Demo, serviço financeiro de teste e SAP compartilham o contrato canônico BRL. SAP somente leitura."
   },
   "servers": [
     {
@@ -16,6 +16,12 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
+          "sourceId": {
+            "default": "finance",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
           "center": {
             "default": "all",
             "type": "string",
@@ -26,7 +32,8 @@
             "type": "string",
             "enum": [
               "all",
-              "q3"
+              "q3",
+              "range"
             ]
           },
           "company": {
@@ -34,15 +41,40 @@
             "type": "string",
             "maxLength": 100
           },
-          "schemaVersion": {
-            "default": 1,
-            "type": "number",
-            "const": 1
+          "dateFrom": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
-          "sourceId": {
-            "default": "finance",
-            "type": "string",
-            "const": "finance"
+          "dateTo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "schemaVersion": {
+            "default": 2,
+            "anyOf": [
+              {
+                "type": "number",
+                "const": 1
+              },
+              {
+                "type": "number",
+                "const": 2
+              }
+            ]
           },
           "title": {
             "type": "string",
@@ -91,11 +123,11 @@
           }
         },
         "required": [
+          "sourceId",
           "center",
           "period",
           "company",
           "schemaVersion",
-          "sourceId",
           "title",
           "chart",
           "chartTitle",
@@ -138,6 +170,12 @@
                   "document": {
                     "type": "object",
                     "properties": {
+                      "sourceId": {
+                        "default": "finance",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 150
+                      },
                       "center": {
                         "default": "all",
                         "type": "string",
@@ -148,7 +186,8 @@
                         "type": "string",
                         "enum": [
                           "all",
-                          "q3"
+                          "q3",
+                          "range"
                         ]
                       },
                       "company": {
@@ -156,15 +195,40 @@
                         "type": "string",
                         "maxLength": 100
                       },
-                      "schemaVersion": {
-                        "default": 1,
-                        "type": "number",
-                        "const": 1
+                      "dateFrom": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
                       },
-                      "sourceId": {
-                        "default": "finance",
-                        "type": "string",
-                        "const": "finance"
+                      "dateTo": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "schemaVersion": {
+                        "default": 2,
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "const": 1
+                          },
+                          {
+                            "type": "number",
+                            "const": 2
+                          }
+                        ]
                       },
                       "title": {
                         "type": "string",
@@ -290,6 +354,38 @@
                 "properties": {
                   "type": {
                     "type": "string",
+                    "const": "dashboard.banner"
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
+                  "bannerId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "bannerId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
                     "const": "dashboard.restore"
                   },
                   "id": {
@@ -348,14 +444,100 @@
                     "maxLength": 120
                   },
                   "budgets": {
-                    "minItems": 4,
-                    "maxItems": 4,
-                    "type": "array",
-                    "items": {
-                      "type": "number",
-                      "minimum": 0,
-                      "maximum": 1000000000000
-                    }
+                    "anyOf": [
+                      {
+                        "minItems": 4,
+                        "maxItems": 4,
+                        "type": "array",
+                        "items": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1000000000000
+                        }
+                      },
+                      {
+                        "minItems": 1,
+                        "maxItems": 200,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "center": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "amount": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1000000000000
+                            }
+                          },
+                          "required": [
+                            "center",
+                            "amount"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object",
+                    "properties": {
+                      "sourceId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 150
+                      },
+                      "center": {
+                        "default": "all",
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "period": {
+                        "default": "all",
+                        "type": "string",
+                        "enum": [
+                          "all",
+                          "q3",
+                          "range"
+                        ]
+                      },
+                      "company": {
+                        "default": "all",
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "dateFrom": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "dateTo": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "baseRevision": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
                   }
                 },
                 "required": [
@@ -400,6 +582,68 @@
                     "type": "number",
                     "minimum": 0,
                     "maximum": 100
+                  },
+                  "center": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "filters": {
+                    "type": "object",
+                    "properties": {
+                      "sourceId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 150
+                      },
+                      "center": {
+                        "default": "all",
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "period": {
+                        "default": "all",
+                        "type": "string",
+                        "enum": [
+                          "all",
+                          "q3",
+                          "range"
+                        ]
+                      },
+                      "company": {
+                        "default": "all",
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "dateFrom": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "dateTo": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "baseRevision": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
                   }
                 },
                 "required": [
@@ -487,6 +731,11 @@
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
+          "sourceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
           "center": {
             "default": "all",
             "type": "string",
@@ -497,13 +746,36 @@
             "type": "string",
             "enum": [
               "all",
-              "q3"
+              "q3",
+              "range"
             ]
           },
           "company": {
             "default": "all",
             "type": "string",
             "maxLength": 100
+          },
+          "dateFrom": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dateTo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "search": {
             "default": "",
@@ -537,6 +809,12 @@
           "document": {
             "type": "object",
             "properties": {
+              "sourceId": {
+                "default": "finance",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 150
+              },
               "center": {
                 "default": "all",
                 "type": "string",
@@ -547,7 +825,8 @@
                 "type": "string",
                 "enum": [
                   "all",
-                  "q3"
+                  "q3",
+                  "range"
                 ]
               },
               "company": {
@@ -555,15 +834,40 @@
                 "type": "string",
                 "maxLength": 100
               },
-              "schemaVersion": {
-                "default": 1,
-                "type": "number",
-                "const": 1
+              "dateFrom": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
-              "sourceId": {
-                "default": "finance",
-                "type": "string",
-                "const": "finance"
+              "dateTo": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "schemaVersion": {
+                "default": 2,
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "const": 1
+                  },
+                  {
+                    "type": "number",
+                    "const": 2
+                  }
+                ]
               },
               "title": {
                 "type": "string",
@@ -676,12 +980,21 @@
                     "type": "object",
                     "properties": {
                       "schemaVersion": {
-                        "type": "number",
-                        "const": 1
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "const": 1
+                          },
+                          {
+                            "type": "number",
+                            "const": 2
+                          }
+                        ]
                       },
                       "sourceId": {
                         "type": "string",
-                        "const": "finance"
+                        "minLength": 1,
+                        "maxLength": 150
                       },
                       "title": {
                         "type": "string",
@@ -696,8 +1009,36 @@
                         "type": "string",
                         "enum": [
                           "all",
-                          "q3"
+                          "q3",
+                          "range"
                         ]
+                      },
+                      "dateFrom": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "dateTo": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "scenarioCenter": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
                       },
                       "company": {
                         "type": "string",
@@ -864,6 +1205,53 @@
             ],
             "additionalProperties": false
           },
+          "preferences": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string"
+              },
+              "onboarded": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "owner",
+              "onboarded"
+            ],
+            "additionalProperties": false
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "count",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
           "workspace": {
             "type": "object",
             "properties": {
@@ -990,6 +1378,15 @@
                         ],
                         "additionalProperties": false
                       }
+                    },
+                    "sourceRevision": {
+                      "type": "string"
+                    },
+                    "bannerId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
                   },
                   "required": [
@@ -1017,8 +1414,84 @@
                     "budgets": {
                       "type": "array",
                       "items": {
-                        "type": "number"
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "type": "object",
+                        "properties": {
+                          "center": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "amount": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000000000000
+                          }
+                        },
+                        "required": [
+                          "center",
+                          "amount"
+                        ],
+                        "additionalProperties": false
                       }
+                    },
+                    "filters": {
+                      "$schema": "https://json-schema.org/draft/2020-12/schema",
+                      "type": "object",
+                      "properties": {
+                        "sourceId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 150
+                        },
+                        "center": {
+                          "default": "all",
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "period": {
+                          "default": "all",
+                          "type": "string",
+                          "enum": [
+                            "all",
+                            "q3",
+                            "range"
+                          ]
+                        },
+                        "company": {
+                          "default": "all",
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "dateFrom": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "dateTo": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "center",
+                        "period",
+                        "company"
+                      ],
+                      "additionalProperties": false
                     },
                     "total": {
                       "type": "number"
@@ -1058,6 +1531,67 @@
                     },
                     "percent": {
                       "type": "number"
+                    },
+                    "center": {
+                      "type": "string"
+                    },
+                    "filters": {
+                      "$schema": "https://json-schema.org/draft/2020-12/schema",
+                      "type": "object",
+                      "properties": {
+                        "sourceId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 150
+                        },
+                        "center": {
+                          "default": "all",
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "period": {
+                          "default": "all",
+                          "type": "string",
+                          "enum": [
+                            "all",
+                            "q3",
+                            "range"
+                          ]
+                        },
+                        "company": {
+                          "default": "all",
+                          "type": "string",
+                          "maxLength": 100
+                        },
+                        "dateFrom": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "dateTo": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "center",
+                        "period",
+                        "company"
+                      ],
+                      "additionalProperties": false
                     },
                     "saving": {
                       "type": "number"
@@ -1202,6 +1736,72 @@
               },
               "replicas": {
                 "const": 1
+              },
+              "integrations": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "unconfigured",
+                          "configured",
+                          "verified",
+                          "failed"
+                        ]
+                      },
+                      "checkedAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "checkedAt",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "ai": {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "unconfigured",
+                          "configured",
+                          "verified",
+                          "failed"
+                        ]
+                      },
+                      "checkedAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "checkedAt",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "data",
+                  "ai"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [
@@ -1213,7 +1813,8 @@
               "persistence",
               "sap",
               "ai",
-              "replicas"
+              "replicas",
+              "integrations"
             ],
             "additionalProperties": false
           },
@@ -1403,19 +2004,54 @@
                 "const": "BRL"
               },
               "filters": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
                 "type": "object",
                 "properties": {
+                  "sourceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
                   "center": {
-                    "type": "string"
+                    "default": "all",
+                    "type": "string",
+                    "maxLength": 100
                   },
                   "period": {
+                    "default": "all",
+                    "type": "string",
                     "enum": [
                       "all",
-                      "q3"
+                      "q3",
+                      "range"
                     ]
                   },
                   "company": {
-                    "type": "string"
+                    "default": "all",
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "dateFrom": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "dateTo": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   }
                 },
                 "required": [
@@ -1573,6 +2209,67 @@
           "percent": {
             "type": "number"
           },
+          "center": {
+            "type": "string"
+          },
+          "filters": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "properties": {
+              "sourceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 150
+              },
+              "center": {
+                "default": "all",
+                "type": "string",
+                "maxLength": 100
+              },
+              "period": {
+                "default": "all",
+                "type": "string",
+                "enum": [
+                  "all",
+                  "q3",
+                  "range"
+                ]
+              },
+              "company": {
+                "default": "all",
+                "type": "string",
+                "maxLength": 100
+              },
+              "dateFrom": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "dateTo": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "center",
+              "period",
+              "company"
+            ],
+            "additionalProperties": false
+          },
           "saving": {
             "type": "number"
           },
@@ -1614,6 +2311,8 @@
         },
         "required": [
           "percent",
+          "center",
+          "filters",
           "saving",
           "actual",
           "balance",
@@ -1658,6 +2357,72 @@
               },
               "replicas": {
                 "const": 1
+              },
+              "integrations": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "unconfigured",
+                          "configured",
+                          "verified",
+                          "failed"
+                        ]
+                      },
+                      "checkedAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "checkedAt",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "ai": {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "unconfigured",
+                          "configured",
+                          "verified",
+                          "failed"
+                        ]
+                      },
+                      "checkedAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "checkedAt",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "data",
+                  "ai"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [
@@ -1669,11 +2434,15 @@
               "persistence",
               "sap",
               "ai",
-              "replicas"
+              "replicas",
+              "integrations"
             ],
             "additionalProperties": false
           },
           "demo": {
+            "type": "boolean"
+          },
+          "local": {
             "type": "boolean"
           },
           "sso": {
@@ -1700,6 +2469,7 @@
         "required": [
           "runtime",
           "demo",
+          "local",
           "sso"
         ],
         "additionalProperties": false
@@ -1871,6 +2641,1131 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Bootstrap"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/onboarding": {
+      "post": {
+        "summary": "Concluir apresentação para a pessoa autenticada",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "onboarded": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "onboarded"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files": {
+      "get": {
+        "summary": "Listar planilhas do espaço",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "number"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "count",
+                      "updatedAt"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/preview": {
+      "post": {
+        "summary": "Prévia de planilha de até 8 MB",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "label",
+                          "type"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "count",
+                    "columns",
+                    "rows"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/import": {
+      "post": {
+        "summary": "Importar após confirmar o mapeamento",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "uploadId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "mapping": {
+                    "type": "object",
+                    "properties": {
+                      "company": {
+                        "type": "string"
+                      },
+                      "center": {
+                        "type": "string"
+                      },
+                      "date": {
+                        "type": "string"
+                      },
+                      "actual": {
+                        "type": "string"
+                      },
+                      "budget": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "company",
+                      "center",
+                      "date",
+                      "actual",
+                      "budget"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "uploadId",
+                  "name",
+                  "mapping"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "count"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/banners": {
+      "post": {
+        "summary": "Gerar imagem de capa; aplicação exige comando dashboard.banner",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Espaço autorizado da sessão; omitido usa o pessoal."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "boardId": {
+                    "type": "string"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 700
+                  }
+                },
+                "required": [
+                  "boardId",
+                  "prompt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Falha validada; nenhuma alteração parcial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/banners/{id}": {
+      "get": {
+        "summary": "Imagem PNG autorizada por espaço",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workspace",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Imagem de capa",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Capa não disponível no espaço"
+          }
+        }
+      }
+    },
+    "/catalog/{sourceId}": {
+      "get": {
+        "summary": "Catálogo da fonte escolhida",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sourceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-clara-workspace",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalog"
                 }
               }
             }
@@ -2735,7 +4630,7 @@
     },
     "/scenario": {
       "post": {
-        "summary": "Calcular redução em Tecnologia sobre base completa",
+        "summary": "Calcular redução por centro e recorte",
         "security": [
           {
             "session": []
@@ -2763,6 +4658,67 @@
                     "type": "number",
                     "minimum": 0,
                     "maximum": 100
+                  },
+                  "center": {
+                    "type": "string"
+                  },
+                  "filters": {
+                    "$schema": "https://json-schema.org/draft/2020-12/schema",
+                    "type": "object",
+                    "properties": {
+                      "sourceId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 150
+                      },
+                      "center": {
+                        "default": "all",
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "period": {
+                        "default": "all",
+                        "type": "string",
+                        "enum": [
+                          "all",
+                          "q3",
+                          "range"
+                        ]
+                      },
+                      "company": {
+                        "default": "all",
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "dateFrom": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "dateTo": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "center",
+                      "period",
+                      "company"
+                    ],
+                    "additionalProperties": false
                   }
                 },
                 "required": [

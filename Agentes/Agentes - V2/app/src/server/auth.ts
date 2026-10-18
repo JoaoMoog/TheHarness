@@ -4,18 +4,21 @@ import type { NextRequest } from 'next/server';
 import type { Actor } from '@/core/types';
 import { db } from './store';
 import { BRAND } from '@/core/brand';
+import {directoryClaims} from './platformAccess';
 
 export class HttpError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
-export const demoEnabled = () => process.env.AUTH_MODE !== 'msal';
+export const demoEnabled = () => !process.env.AUTH_MODE || process.env.AUTH_MODE === 'demo';
 export function requireActor(req: NextRequest): Actor {
   const raw = req.cookies.get('prometeu-session')?.value;
   if (!raw) throw new HttpError(401, 'Entre para continuar.');
   const hash = createHash('sha256').update(raw).digest('hex');
   const session = db().prepare('SELECT actor FROM sessions WHERE token=? AND expires>?').get(hash, Date.now());
   if (!session) throw new HttpError(401, 'Sua sessão terminou. Entre novamente.');
-  return JSON.parse(String(session.actor));
+  const actor=JSON.parse(String(session.actor)) as Actor;
+  if(process.env.AUTH_MODE==='msal'&&actor.auth!=='msal')throw new HttpError(401,'Entre com sua conta Microsoft para continuar.');
+  return actor;
 }
 export function session(actor: Actor) {
   const token = randomBytes(32).toString('hex');
@@ -43,5 +46,5 @@ export async function microsoftActor(accessToken: string): Promise<Actor> {
   try { ({ payload } = await jwtVerify(accessToken, keys, { issuer: `https://login.microsoftonline.com/${tenant}/v2.0`, audience })); }
   catch { throw new HttpError(401, 'O acesso Microsoft não pôde ser validado. Entre novamente.'); }
   if (!payload.sub || payload.tid !== tenant || !String(payload.scp || '').split(' ').includes(scope)) throw new HttpError(403, `Sua conta não tem permissão para acessar a ${BRAND.name}.`);
-  return { id: createHash('sha256').update(`${tenant}:${payload.oid || payload.sub}`).digest('hex'), name: String(payload.name || 'Usuário Microsoft'), demo: false, auth: 'msal' };
+  return { id: createHash('sha256').update(`${tenant}:${payload.oid || payload.sub}`).digest('hex'), name: String(payload.name || 'Usuário Microsoft'), email:String(payload.preferred_username||payload.email||'').slice(0,200),demo: false, auth: 'msal',directory:directoryClaims(payload) };
 }

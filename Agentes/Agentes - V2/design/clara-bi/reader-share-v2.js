@@ -1,0 +1,6 @@
+/* CLONE_SOURCES: share */
+/* COMMON */
+const page=await figma.getNodeByIdAsync(STATE.foundations.pages.prototype);await figma.setCurrentPageAsync(page);
+/* UI */
+/* V2_UI */
+const roots=[];for(const [key,copied]of [['shareReader',false],['readerCopied',true]]){const root=await cloneScreen(key,'share',copied?'Compartilhar · Leitor · Link copiado':'Compartilhar · Leitor');for(const b of root.findAllWithCriteria({types:['INSTANCE']}).filter(n=>n.name.startsWith('Button/'))){if(Object.values(b.componentProperties).some(p=>p.type==='TEXT'&&['Gerenciar pessoas e permissões','Ver como leitor'].includes(p.value))){removed.push(...allIds(b));b.remove();}}for(const l of links)if(l.root===root.id){if(l.key==='dashboard')l.key='reader';if(l.key==='shareCopied')l.key='readerCopied';}if(copied){const heading=root.findOne(n=>n.type==='TEXT'&&n.characters==='Página e dados protegidos');heading.characters='Link copiado';heading.fills=[paint('success')];mutated.push(heading.id);const body=root.findOne(n=>n.type==='TEXT'&&n.characters==='O acesso acompanha o papel de cada pessoa no workspace.');body.characters='O link preserva as permissões da equipe.';mutated.push(body.id);}const dialog=root.children.find(n=>n.name==='Compartilhar uma descoberta');centerModal({box:dialog});roots.push(root);}return resultV2(roots);

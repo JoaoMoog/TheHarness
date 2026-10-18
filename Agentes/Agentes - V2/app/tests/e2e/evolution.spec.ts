@@ -128,7 +128,7 @@ test('equipe compartilhada aplica leitura e revogação, sem perder isolamento p
   await page.getByRole('textbox', { name: 'Nome do espaço', exact: true }).fill('Equipe de fechamento');
   await page.getByRole('button', { name: 'Criar espaço', exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'Espaço de trabalho', exact: true })).toContainText('Equipe de fechamento');
-  await page.getByRole('button', { name: 'Criar código de convite', exact: true }).click();
+  await page.getByRole('button', { name: 'Criar convite para o espaço', exact: true }).click();
   const code = await page.locator('#new-invite-code').inputValue();
   const workspace = (await (await page.request.get('/api/workspaces')).json()).workspaces.find((space: { name: string }) => space.name === 'Equipe de fechamento');
   const headers = { Origin: new URL(page.url()).origin, 'x-clara-workspace': workspace.id };

@@ -1,0 +1,7 @@
+/* CLONE_SOURCES: editor,editorWaterfall */
+/* COMMON */
+const page=await figma.getNodeByIdAsync(STATE.foundations.pages.prototype);await figma.setCurrentPageAsync(page);
+/* UI */
+/* V2_UI */
+const restored=await cloneScreen('versionRestored','editor','Editor · Versão restaurada para conferir');const subtitle=restored.findOne(n=>n.type==='TEXT'&&n.characters==='Workspace Financeiro · Editor · 3 páginas');subtitle.characters='Versão 2 restaurada no rascunho · Confira e salve';mutated.push(subtitle.id);const undo=restored.findOne(n=>n.type==='INSTANCE'&&Object.values(n.componentProperties).some(p=>p.type==='TEXT'&&p.value==='Desfazer'));target(undo,'editorUpdated');
+const measure=await cloneScreen('editorMeasure','editorWaterfall','Editor · Medida Saldo aplicada');const props=measure.findOne(n=>n.name==='Propriedades do gráfico');const group=props.findOne(n=>n.name==='Valor');const fieldNode=group.findOne(n=>n.type==='INSTANCE');const valueProp=Object.keys(fieldNode.componentProperties).find(k=>k.startsWith('Value#'));fieldNode.setProperties({[valueProp]:'Saldo calculado'});mutated.push(fieldNode.id);const subtitle2=measure.findOne(n=>n.type==='TEXT'&&n.characters==='Workspace Financeiro · Editor · 3 páginas');subtitle2.characters='Medida Saldo salva e aplicada · Orçamento − realizado';mutated.push(subtitle2.id);const noticeBody=props.findOne(n=>n.type==='TEXT'&&n.characters.startsWith('Soma do realizado'));noticeBody.characters='Fórmula: orcado − realizado · 72 registros · Jan a jun';mutated.push(noticeBody.id);return resultV2([restored,measure]);

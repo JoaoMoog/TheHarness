@@ -6,7 +6,7 @@ Resultados e limites da validação estão em [CLARA-VERIFICACAO.md](CLARA-VERIF
 
 ## Experimentar sem configuração
 
-Requer Node.js 24 e dependências instaladas. Na pasta `app`, execute `npm ci` na primeira instalação e `npm run studio`. Acesse **http://127.0.0.1:3000** e escolha **Começar demonstração**. Não exige SAP, Microsoft, AWS nem banco externo.
+Requer Node.js 24 e dependências instaladas. Na pasta `app`, execute `npm ci` na primeira instalação e `npm run studio`. No Windows também pode usar `iniciar-studio.cmd` na raiz. Acesse **http://127.0.0.1:3000** e escolha **Começar demonstração**. Não exige SAP, Microsoft, AWS nem banco externo.
 
 Cada entrada demonstrativa cria uma identidade e um espaço isolados. Para sair e entrar novamente na mesma conta enquanto o servidor estiver ativo, use **Usar conta local → Criar conta local**. Sessões duram até oito horas. Neste modo, reiniciar o processo apaga contas, sessões, equipes e análises. Dados SQLite anteriores não são apagados pelo iniciador Studio.
 

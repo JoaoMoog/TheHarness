@@ -1,0 +1,103 @@
+/* Evidence and proposal review use the Studio's existing visual system. */
+.app-shell{--ui-body:14px;--ui-label:13px;--ui-control:40px;--ui-row:14px}
+
+.app-shell .button,.app-shell .select-wrap>span,.app-shell .field,.app-shell .chart-legend,.app-shell .chart-foot,.app-shell .table-footer{font-size:var(--ui-label)}
+.app-shell .button{min-height:var(--ui-control)}
+.app-shell .select-wrap select,.app-shell .field input{min-height:var(--ui-control);font-size:var(--ui-body)}
+.app-shell .sidebar nav button{font-size:var(--ui-body);line-height:1.4;min-height:44px}
+.app-shell .message,.app-shell .message.from-user,.app-shell .composer textarea{font-size:var(--ui-body);line-height:1.65}
+.app-shell .assistant-head h2{font-size:17px}
+.app-shell .assistant-head span,.app-shell .assistant-context,.app-shell .composer-context,.app-shell .suggestions button{font-size:var(--ui-label)}
+.app-shell .ai-disclaimer{font-size:12px;line-height:1.5}
+.app-shell .suggestions button{min-height:44px}
+.app-shell table th,.app-shell table td{font-size:var(--ui-body);padding-top:var(--ui-row);padding-bottom:var(--ui-row)}
+.app-shell .panel-heading h2{font-size:17px}
+.app-shell .panel-heading p,.app-shell .page-heading p{font-size:var(--ui-label)}
+
+
+
+.decision-dashboard .page-heading h1{overflow-wrap:anywhere}
+.decision-dashboard .save-state{margin:8px 0 16px;padding:8px 0}
+.decision-dashboard .save-state:not(.is-dirty) small{display:inline;margin-left:12px}
+.decision-dashboard .save-state:not(.is-dirty) strong{display:inline}
+.analysis-scope{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:16px 0}
+.analysis-scope>div{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;min-width:0}
+.analysis-scope strong{font-size:var(--ui-body);overflow-wrap:anywhere}
+.analysis-scope span{font-size:var(--ui-label);color:var(--muted-foreground);overflow-wrap:anywhere}
+.analysis-scope>.button{flex-shrink:0}
+#dashboard-filters[hidden]{display:none}
+.decision-summary{display:flex;align-items:center;gap:24px;padding:24px 0 20px;border-top:1px solid var(--line)}
+.decision-summary>div{flex:1;min-width:0}
+.decision-summary h2{font-size:24px;font-weight:500;line-height:1.35;letter-spacing:-.02em;max-width:40ch;text-wrap:balance}
+.decision-summary p{font-size:var(--ui-body);color:var(--muted-foreground);line-height:1.65;max-width:70ch;margin-top:8px}
+.decision-summary .button{align-self:flex-end;flex-shrink:0}
+.evidence-trail{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:8px 0 20px}
+.evidence-trail>span{font-size:var(--ui-label);color:var(--muted-foreground)}
+.evidence-trail button{display:flex;align-items:center;gap:6px;min-height:40px;font-size:var(--ui-label);border-radius:6px;padding:6px 8px;color:var(--blue)}
+.evidence-trail button:hover,.evidence-trail button[aria-expanded=true]{background:var(--blue-soft);color:var(--ink)}
+.evidence-trail small{font-size:12px;color:var(--muted-foreground);margin-left:auto}
+.evidence-panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:0 0 24px;padding:24px;scroll-margin-top:16px}
+.evidence-panel>header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.evidence-panel h2{font-size:20px;line-height:1.4}
+.evidence-panel h3{font-size:16px;margin-bottom:8px}
+.evidence-panel p{font-size:var(--ui-body);line-height:1.65;max-width:75ch;margin-top:12px}
+.evidence-panel dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 32px;margin:0}
+.evidence-panel dl>div{min-width:0}
+.evidence-panel dt{font-size:var(--ui-label);color:var(--muted-foreground);margin-bottom:4px}
+.evidence-panel dd{margin:0;font-size:var(--ui-body);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.evidence-panel .evidence-formula{font-size:18px;color:var(--ink);line-height:1.6}
+.evidence-panel footer{margin-top:20px}
+.evidence-sample{overflow:auto;margin-top:20px;max-height:320px}
+.evidence-sample caption{text-align:left;font-size:13px;color:var(--muted-foreground);padding-bottom:12px;line-height:1.6;caption-side:top}
+.evidence-sample td:nth-last-child(-n+2){text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.source-revision-notice{font-size:var(--ui-label);margin-bottom:20px;color:var(--muted-foreground)}
+.source-revision-notice button{color:var(--blue);text-decoration:underline;min-height:40px}
+.decision-dashboard .metric-strip{margin:0 0 24px}
+.decision-dashboard .metric>span{font-size:var(--ui-label)}
+.decision-dashboard .metric strong{font-size:26px;letter-spacing:-.02em}
+.decision-dashboard .metric small{font-size:12px;line-height:1.5}
+.metric-evidence{display:block;margin-top:8px;min-height:40px;font-size:var(--ui-label);color:var(--blue);padding:4px 0;text-align:left;text-decoration:underline;text-underline-offset:4px}
+.metric-evidence:hover{color:var(--ink)}
+.decision-dashboard .dashboard-charts{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px}
+.decision-dashboard .dashboard-charts.single-chart{grid-template-columns:minmax(0,1fr)}
+.dashboard-charts .panel{min-width:0}
+.dashboard-charts .chart-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.dashboard-charts .chart-foot button{color:var(--blue);min-height:40px}
+.chart-values{border-top:1px solid var(--line)}
+.chart-values>summary{cursor:pointer;padding:12px 20px;min-height:44px;font-size:var(--ui-label);color:var(--blue)}
+.chart-values .table-scroll{max-height:340px;overflow:auto}
+.proposal-review{margin:20px 0;padding-top:20px;border-top:1px solid var(--line);min-width:0}
+.proposal-review h3{font-size:18px;line-height:1.4;margin-bottom:8px;overflow-wrap:anywhere}
+.proposal-review>p{font-size:var(--ui-body);line-height:1.65;margin-bottom:12px;overflow-wrap:anywhere}
+.proposal-review .proposal-scope{font-size:var(--ui-label);color:var(--muted-foreground)}
+.proposal-review .proposal-diff{width:100%;table-layout:fixed;border-collapse:collapse}
+.proposal-review .proposal-diff th,.proposal-review .proposal-diff td{padding:12px 8px;white-space:normal;overflow-wrap:anywhere;text-align:left;vertical-align:top;font-size:var(--ui-label);line-height:1.5}
+.proposal-diff thead th{color:var(--muted-foreground);font-weight:500;background:var(--canvas)}
+.proposal-diff tbody th{font-weight:500;color:var(--ink)}
+.proposal-diff tbody td:nth-child(2){color:var(--muted-foreground)}
+.proposal-diff tbody td:last-child{background:var(--blue-soft);color:var(--ink);font-weight:500}
+.proposal-review footer{margin-top:16px}
+.proposal-review footer p{font-size:12px;line-height:1.6;color:var(--muted-foreground);margin-bottom:12px}
+.proposal-review footer .button{min-height:44px;font-size:14px}
+.home-chat .proposal-review{margin-bottom:0}
+
+
+
+@media(max-width:1430px){.app-shell.has-assistant .dashboard-charts{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:1099px){.decision-summary{align-items:flex-start;flex-direction:column;gap:12px}.decision-summary .button{align-self:flex-start}.decision-dashboard .dashboard-charts{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:767px){
+ .app-shell{--ui-body:14px;--ui-label:13px;--ui-control:44px}
+ 
+ 
+ .global-header{gap:12px}.header-right{gap:12px}
+ .decision-summary h2{font-size:22px}.decision-summary{padding-top:20px}
+ .analysis-scope{align-items:flex-start;gap:8px;flex-wrap:wrap}.analysis-scope>div{flex-basis:100%;gap:6px 12px}
+ .evidence-trail{gap:4px 8px;padding-bottom:16px}.evidence-trail>span{flex-basis:100%}.evidence-trail button{min-height:44px;padding-inline:4px}.evidence-trail small{margin-left:0;flex-basis:100%}
+ .evidence-panel{padding:16px}.evidence-panel dl{grid-template-columns:minmax(0,1fr);gap:16px}.evidence-panel .icon-button{width:44px;height:44px}
+ .evidence-panel .evidence-formula{font-size:16px}
+ .decision-dashboard .metric strong{font-size:20px}.decision-dashboard .metric{padding-inline:12px}
+ .metric-evidence{min-height:44px;font-size:13px}
+ .decision-dashboard .save-state:not(.is-dirty) small{display:block;margin-left:0}
+ .proposal-review .proposal-diff th,.proposal-review .proposal-diff td{font-size:13px;padding:10px 6px}
+}
+@media(max-width:360px){.global-header{padding-inline:12px;gap:8px}.header-right{gap:8px}.wordmark{font-size:22px}}

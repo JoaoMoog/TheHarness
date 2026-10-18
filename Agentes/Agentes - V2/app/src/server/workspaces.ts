@@ -1,3 +1,4 @@
+import {inputLimits} from '../core/inputLimits';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { Actor } from '@/core/types';
@@ -17,6 +18,7 @@ export function governanceDb() {
       CREATE INDEX IF NOT EXISTS invites_workspace ON workspace_invites(workspace);
       CREATE TABLE IF NOT EXISTS audit_events (id INTEGER PRIMARY KEY AUTOINCREMENT, workspace TEXT NOT NULL, actor_id TEXT NOT NULL, actor_name TEXT NOT NULL, action TEXT NOT NULL, target TEXT NOT NULL, created_at TEXT NOT NULL);
       CREATE INDEX IF NOT EXISTS audit_workspace_id ON audit_events(workspace,id);`);
+    if (!database.prepare('PRAGMA table_info(workspace_invites)').all().some(c => c.name === 'email')) database.exec("ALTER TABLE workspace_invites ADD COLUMN email TEXT NOT NULL DEFAULT ''");
     initialized.add(database);
   }
   return database;
@@ -50,7 +52,7 @@ export function auditLog(actor: Actor, workspaceId: string, before?: number, lim
     .all(workspaceId, before || Number.MAX_SAFE_INTEGER, Math.max(1, Math.min(100, limit))) as unknown as AuditEntry[];
 }
 export function createWorkspace(actor: Actor, name: string): Workspace {
-  const title = z.string().trim().min(1).max(80).parse(name);
+  const title = z.string().trim().min(1).max(inputLimits.name).parse(name);
   personal(actor);
   if (listWorkspaces(actor).length >= 50) throw new HttpError(400, 'O limite é de 50 espaços por conta.');
   const id = `team-${randomUUID()}`, now = new Date().toISOString();
@@ -63,34 +65,35 @@ export function createWorkspace(actor: Actor, name: string): Workspace {
 }
 function teamAdmin(actor: Actor, id: string) {
   const workspace = resolveWorkspace(actor, id, 'admin');
-  if (workspace.personal) throw new HttpError(400, 'O espaço pessoal não pode ser compartilhado. Crie um espaço de equipe.');
   return workspace;
 }
 export function governanceState(actor: Actor, id: string): GovernanceState {
   const workspace = resolveWorkspace(actor, id, 'admin');
   const members = governanceDb().prepare('SELECT actor_id AS actorId,name,role,joined_at AS joinedAt FROM workspace_members WHERE workspace=? ORDER BY joined_at').all(id) as unknown as WorkspaceMember[];
-  const invites = governanceDb().prepare('SELECT id,role,expires_at AS expiresAt,created_at AS createdAt FROM workspace_invites WHERE workspace=? AND expires_at>? ORDER BY created_at DESC').all(id, new Date().toISOString()) as unknown as WorkspaceInvite[];
+  const invites = governanceDb().prepare('SELECT id,role,email,expires_at AS expiresAt,created_at AS createdAt FROM workspace_invites WHERE workspace=? AND expires_at>? ORDER BY created_at DESC').all(id, new Date().toISOString()) as unknown as WorkspaceInvite[];
   return { workspace, members, invites, audit: auditLog(actor, id) };
 }
-export function createInvite(actor: Actor, id: string, role: WorkspaceRole) {
+export function createInvite(actor: Actor, id: string, role: WorkspaceRole, email = '') {
   teamAdmin(actor, id); roles.parse(role);
+  email = email ? z.string().trim().email().max(inputLimits.email).parse(email).toLowerCase() : '';
   const now = new Date().toISOString();
   governanceDb().prepare('DELETE FROM workspace_invites WHERE expires_at<=?').run(now);
   if (Number(governanceDb().prepare('SELECT COUNT(*) AS n FROM workspace_invites WHERE workspace=?').get(id)!.n) >= 50) throw new HttpError(400, 'Revogue convites antigos antes de criar outro.');
   const code = randomBytes(24).toString('base64url');
   const invite = { id: randomUUID(), role, createdAt: now, expiresAt: new Date(Date.now() + 7 * 86400000).toISOString() };
   transaction(() => {
-    governanceDb().prepare('INSERT INTO workspace_invites VALUES(?,?,?,?,?,?)').run(invite.id, id, createHash('sha256').update(code).digest('hex'), role, invite.expiresAt, now);
+    governanceDb().prepare('INSERT INTO workspace_invites(id,workspace,token_hash,role,expires_at,created_at,email) VALUES(?,?,?,?,?,?,?)').run(invite.id, id, createHash('sha256').update(code).digest('hex'), role, invite.expiresAt, now, email);
     audit(actor, id, 'invite.created', invite.id);
   });
   return { ...invite, code };
 }
 export function acceptInvite(actor: Actor, code: string): Workspace {
-  z.string().min(20).max(100).parse(code); personal(actor);
+  z.string().min(20).max(inputLimits.inviteCode).regex(/^[A-Za-z0-9_-]+$/).parse(code); personal(actor);
   const hash = createHash('sha256').update(code).digest('hex');
   const workspaceId = transaction(() => {
     const invite = governanceDb().prepare('SELECT * FROM workspace_invites WHERE token_hash=? AND expires_at>?').get(hash, new Date().toISOString());
     if (!invite) throw new HttpError(404, 'Esse convite expirou, foi revogado ou já foi usado. Peça um novo código.');
+    if (invite.email && (actor.demo || String(actor.email || '').toLowerCase() !== invite.email || actor.auth !== 'msal')) throw new HttpError(403, 'Entre com a conta Microsoft do e-mail convidado para aceitar este convite.');
     const id = String(invite.workspace);
     // A join code must never downgrade an existing administrator or silently alter any member role.
     const existing = governanceDb().prepare('SELECT role FROM workspace_members WHERE workspace=? AND actor_id=?').get(id, actor.id);
@@ -104,6 +107,7 @@ export function acceptInvite(actor: Actor, code: string): Workspace {
 }
 export function updateMember(actor: Actor, id: string, memberId: string, role: WorkspaceRole | null) {
   teamAdmin(actor, id); if (role) roles.parse(role);
+  if (id === memberId && role !== 'admin') throw new HttpError(409, 'O proprietário mantém a administração do próprio espaço.');
   transaction(() => {
     const member = governanceDb().prepare('SELECT role FROM workspace_members WHERE workspace=? AND actor_id=?').get(id, memberId);
     if (!member) throw new HttpError(404, 'Esse membro não está mais no espaço.');
@@ -133,7 +137,7 @@ export function handleWorkspaceRequest(actor: Actor, method: string, path: strin
   const id = path[1];
   if (method === 'GET' && path.length === 2) return governanceState(actor, id);
   if (method === 'GET' && path.length === 3 && path[2] === 'audit') return { entries: auditLog(actor, id, z.object({ before: z.number().int().positive().optional() }).parse(input).before) };
-  if (method === 'POST' && path.length === 3 && path[2] === 'invites') return createInvite(actor, id, z.object({ role: roles }).strict().parse(input).role);
+  if (method === 'POST' && path.length === 3 && path[2] === 'invites') { const p = z.object({ role: roles, email: z.string().optional() }).strict().parse(input); return createInvite(actor, id, p.role, p.email); }
   if (method === 'DELETE' && path.length === 4 && path[2] === 'invites') return revokeInvite(actor, id, path[3]);
   if ((method === 'POST' || method === 'DELETE') && path.length === 4 && path[2] === 'members') return updateMember(actor, id, path[3], method === 'DELETE' ? null : z.object({ role: roles }).strict().parse(input).role);
   throw new HttpError(404, 'Essa ação de equipe não está disponível.');

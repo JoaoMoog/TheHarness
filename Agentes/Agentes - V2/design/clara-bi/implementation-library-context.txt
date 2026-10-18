@@ -1,0 +1,414 @@
+const imgIconMoreHorizontal = "https://www.figma.com/api/mcp/asset/a1dc5252-5057-484b-8576-736bbb4ecccf.svg";
+const imgIconChevronDown = "https://www.figma.com/api/mcp/asset/d084eb31-70ad-4d80-9280-46d237c0772f.svg";
+const imgIconSearch = "https://www.figma.com/api/mcp/asset/a5ca6a33-8827-497e-88ed-7ba3e641ce8d.svg";
+const imgIconSparkles = "https://www.figma.com/api/mcp/asset/f476a534-a3ec-4d74-82d8-7f9e95e4502f.svg";
+const imgIconPlus = "https://www.figma.com/api/mcp/asset/b88951e3-225c-4be4-87db-545422a2e587.svg";
+const imgIconLayoutGrid = "https://www.figma.com/api/mcp/asset/b6b8b278-8d32-4cf0-9e75-babce9e46dbe.svg";
+const imgIconList = "https://www.figma.com/api/mcp/asset/47de5ad3-476e-4def-a921-dda398ff2cf3.svg";
+const imgEvolucaoDasDespesas = "https://www.figma.com/api/mcp/asset/4631046c-04dc-460d-a02b-7590b93ceed5.svg";
+const imgIconArrowRight = "https://www.figma.com/api/mcp/asset/930011c4-24f3-493b-b58c-98a511c8ff48.svg";
+const imgComposicaoPorCentroDeCusto = "https://www.figma.com/api/mcp/asset/673a70c6-70f4-49a7-9e4b-67bb9846f671.svg";
+
+function IconMoreHorizontal({ className }: { className?: string }) {
+  return (
+    <div className={className || "content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] size-[24px]"} data-node-id="3:46" data-name="Icon/MoreHorizontal">
+      <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="3:47" data-name="Icon/MoreHorizontal">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconMoreHorizontal} />
+      </div>
+    </div>
+  );
+}
+
+type BadgeBlueProps = {
+  className?: string;
+  label?: string;
+};
+
+function BadgeBlue({ className, label = "Demonstração" }: BadgeBlueProps) {
+  return (
+    <div className={className || "bg-[var(--primary-soft,#eaf1fc)] content-stretch flex gap-[var(--clara-bi-space-4,4px)] items-center px-[var(--clara-bi-space-8,8px)] py-[var(--clara-bi-space-4,4px)] relative rounded-[var(--clara-bi-radius-control,6px)]"} data-node-id="3:285" data-name="Badge/Blue">
+      <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[18px] relative shrink-0 text-[12px] text-[color:var(--primary,#2166d1)] whitespace-nowrap" data-node-id="3:286">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+type BadgeNeutralProps = {
+  className?: string;
+  label?: string;
+};
+
+function BadgeNeutral({ className, label = "Demonstração" }: BadgeNeutralProps) {
+  return (
+    <div className={className || "bg-[var(--clara-bi-subtle,#f8fafc)] content-stretch flex gap-[var(--clara-bi-space-4,4px)] items-center px-[var(--clara-bi-space-8,8px)] py-[var(--clara-bi-space-4,4px)] relative rounded-[var(--clara-bi-radius-control,6px)]"} data-node-id="3:283" data-name="Badge/Neutral">
+      <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[18px] relative shrink-0 text-[12px] text-[color:var(--text-secondary,#53657b)] whitespace-nowrap" data-node-id="3:284">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function IconChevronDown({ className }: { className?: string }) {
+  return (
+    <div className={className || "content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] size-[24px]"} data-node-id="3:33" data-name="Icon/ChevronDown">
+      <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="3:34" data-name="Icon/ChevronDown">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconChevronDown} />
+      </div>
+    </div>
+  );
+}
+
+function IconSearch({ className }: { className?: string }) {
+  return (
+    <div className={className || "content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] size-[24px]"} data-node-id="3:17" data-name="Icon/Search">
+      <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="3:18" data-name="Icon/Search">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconSearch} />
+      </div>
+    </div>
+  );
+}
+
+function IconSparkles({ className }: { className?: string }) {
+  return (
+    <div className={className || "content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] size-[24px]"} data-node-id="22:4500" data-name="Icon/Sparkles">
+      <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="22:4501" data-name="Icon/Sparkles">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconSparkles} />
+      </div>
+    </div>
+  );
+}
+
+export default function Component03BibliotecaDeDashboards() {
+  return (
+    <div className="bg-[var(--canvas,#f5f7fa)] content-stretch flex flex-col items-start relative size-full" data-node-id="4:631" data-name="03 · Biblioteca de dashboards">
+      <div className="bg-[var(--surface,white)] border-[var(--line,#e1e7ef)] border-b border-solid content-stretch flex gap-[var(--clara-bi-space-8,8px)] h-[72px] items-center overflow-clip px-[var(--clara-bi-space-24,24px)] py-[var(--clara-bi-space-8,8px)] relative shrink-0 w-[1440px]" data-node-id="4:632" data-name="Navegação superior">
+        <a className="[word-break:break-word] block cursor-pointer font-['Figtree:Bold'] font-bold leading-[0] relative shrink-0 text-[24px] text-[color:var(--navy,#0b2348)] w-[112px]" data-node-id="4:633">
+          <p className="leading-[28px]">CLARA</p>
+        </a>
+        <div className="bg-[var(--line,#e1e7ef)] h-[24px] relative shrink-0 w-px" data-node-id="69:20196" data-name="Separação da marca" />
+        <div className="content-stretch flex gap-[var(--clara-bi-space-4,4px)] h-[40px] items-center overflow-clip relative shrink-0" data-node-id="69:20197" data-name="Links de navegação">
+          <a className="bg-[var(--primary-soft,#eaf1fc)] content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center p-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="42:20275" data-name="Menu superior · CLARA IA">
+            <IconSparkles className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[20px]" />
+            <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--primary,#2166d1)] text-left whitespace-nowrap" data-node-id="I42:20275;3:298">
+              CLARA IA
+            </p>
+          </a>
+          <a className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center p-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:653" data-name="Menu superior · Visão geral">
+            <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I4:653;3:298">
+              Visão geral
+            </p>
+          </a>
+          <div className="content-stretch flex h-[40px] items-center overflow-clip relative shrink-0" data-node-id="69:20198" data-name="Página ativa · Menu superior · Dashboards">
+            <div className="content-stretch flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center p-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:664" data-name="Menu superior · Dashboards">
+              <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--navy,#0b2348)] whitespace-nowrap" data-node-id="I4:664;3:306">
+                Dashboards
+              </p>
+            </div>
+            <div className="absolute bg-[var(--primary,#2166d1)] h-[2px] left-[8px] top-[38px] w-[70px]" data-node-id="69:20199" data-name="Indicador da página ativa" />
+          </div>
+          <a className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center p-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:677" data-name="Menu superior · Fontes de dados">
+            <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I4:677;3:298">
+              Fontes de dados
+            </p>
+          </a>
+          <a className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center p-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:689" data-name="Menu superior · Indicadores">
+            <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I4:689;3:298">
+              Indicadores
+            </p>
+          </a>
+          <a className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center p-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:704" data-name="Menu superior · Atualizações">
+            <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I4:704;3:298">
+              Atualizações
+            </p>
+          </a>
+          <a className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center p-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="42:20289" data-name="Menu superior · Pessoas e acesso">
+            <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I42:20289;3:298">
+              Pessoas e acesso
+            </p>
+          </a>
+        </div>
+        <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="69:20200" data-name="Espaço flexível" />
+        <a className="[word-break:break-word] block cursor-pointer font-['Figtree:Medium'] font-medium leading-[0] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] whitespace-nowrap" data-node-id="4:634">
+          <p className="leading-[20px]">Workspace Financeiro</p>
+        </a>
+        <div className="bg-[var(--surface,white)] border border-[var(--line,#e1e7ef)] border-solid content-stretch flex gap-[var(--clara-bi-space-8,8px)] h-[44px] items-center px-[var(--clara-bi-space-12,12px)] py-[10px] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0 w-[240px]" data-node-id="4:636" data-name="Field/Default">
+          <p className="[word-break:break-word] flex-[1_0_0] font-['Figtree:Regular'] font-normal leading-[20px] min-w-px relative text-[14px] text-[color:var(--ink,#102846)]" data-node-id="I4:636;3:269">
+            Buscar dashboards e dados
+          </p>
+          <IconSearch className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" />
+        </div>
+        <div className="bg-[var(--primary-soft,#eaf1fc)] content-stretch flex items-center justify-center overflow-clip relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0 size-[32px]" data-node-id="4:646" data-name="Perfil João Bahia">
+          <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[18px] relative shrink-0 text-[12px] text-[color:var(--primary,#2166d1)] whitespace-nowrap" data-node-id="4:647">
+            JB
+          </p>
+        </div>
+      </div>
+      <div className="content-stretch flex h-[928px] items-start overflow-clip relative shrink-0 w-[1440px]" data-node-id="4:648" data-name="Área de trabalho">
+        <div className="bg-[var(--canvas,#f5f7fa)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--clara-bi-space-12,12px)] h-[928px] items-start min-w-px overflow-x-clip overflow-y-auto p-[var(--clara-bi-space-24,24px)] relative" data-node-id="4:740" data-name="Conteúdo principal">
+          <div className="content-stretch flex gap-[var(--clara-bi-space-24,24px)] items-center overflow-clip relative shrink-0 w-[1392px]" data-node-id="4:741" data-name="Título e ações">
+            <div className="[word-break:break-word] content-stretch flex flex-col gap-[2px] items-start overflow-clip relative shrink-0 w-[796px]" data-node-id="4:742" data-name="Título da página">
+              <p className="font-['Figtree:SemiBold'] font-semibold leading-[36px] relative shrink-0 text-[28px] text-[color:var(--ink,#102846)] tracking-[-0.56px] w-[796px]" data-node-id="4:743">
+                Dashboards
+              </p>
+              <p className="font-['Figtree:Regular'] font-normal leading-[20px] relative shrink-0 text-[14px] text-[color:var(--text-secondary,#53657b)] w-[796px]" data-node-id="4:744">
+                Gerencie suas análises, critérios e versões salvas.
+              </p>
+            </div>
+            <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:745" data-name="Espaço flexível" />
+            <a className="bg-[var(--primary,#2166d1)] content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center justify-center px-[var(--clara-bi-space-12,12px)] py-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:746" data-name="Button/Primary">
+              <div className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" data-node-id="I4:746;3:212" data-name="Icon/Plus">
+                <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="I4:746;3:212;3:22" data-name="Icon/Plus">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconPlus} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--clara-bi-action-on,white)] text-left whitespace-nowrap" data-node-id="I4:746;3:216">
+                Novo dashboard
+              </p>
+            </a>
+          </div>
+          <div className="content-stretch flex gap-[var(--clara-bi-space-12,12px)] items-center overflow-clip relative shrink-0 w-[1392px]" data-node-id="4:755" data-name="Pesquisa e organização">
+            <div className="bg-[var(--surface,white)] border border-[var(--line,#e1e7ef)] border-solid content-stretch flex gap-[var(--clara-bi-space-8,8px)] h-[44px] items-center px-[var(--clara-bi-space-12,12px)] py-[10px] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0 w-[410px]" data-node-id="4:756" data-name="Field/Default">
+              <p className="[word-break:break-word] flex-[1_0_0] font-['Figtree:Regular'] font-normal leading-[20px] min-w-px relative text-[14px] text-[color:var(--ink,#102846)]" data-node-id="I4:756;3:269">
+                Buscar pelo nome do dashboard
+              </p>
+              <IconSearch className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" />
+            </div>
+            <a className="bg-[var(--surface,white)] border border-[var(--line,#e1e7ef)] border-solid content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[44px] items-center px-[var(--clara-bi-space-12,12px)] py-[10px] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0 w-[200px]" data-node-id="4:764" data-name="Field/Default">
+              <p className="[word-break:break-word] flex-[1_0_0] font-['Figtree:Regular'] font-normal leading-[20px] min-w-px relative text-[14px] text-[color:var(--ink,#102846)] text-left" data-node-id="I4:764;3:269">
+                Todas as fontes
+              </p>
+              <IconChevronDown className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" />
+            </a>
+            <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:771" data-name="Espaço flexível" />
+            <BadgeNeutral className="bg-[var(--clara-bi-subtle,#f8fafc)] content-stretch flex gap-[var(--clara-bi-space-4,4px)] items-center px-[var(--clara-bi-space-8,8px)] py-[var(--clara-bi-space-4,4px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" label="3 dashboards" />
+            <div className="bg-[var(--clara-bi-subtle,#f8fafc)] content-stretch flex gap-[var(--clara-bi-space-4,4px)] items-center overflow-clip relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="69:20418" data-name="Modo de visualização">
+              <div className="bg-[var(--surface,white)] content-stretch flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center justify-center px-[var(--clara-bi-space-12,12px)] py-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="69:20419" data-name="Button/Secondary">
+                <div className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" data-node-id="I69:20419;3:231" data-name="Icon/LayoutGrid">
+                  <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="I69:20419;3:231;3:7" data-name="Icon/LayoutGrid">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconLayoutGrid} />
+                  </div>
+                </div>
+                <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--ink,#102846)] whitespace-nowrap" data-node-id="I69:20419;3:235">
+                  Cartões
+                </p>
+              </div>
+              <a className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center justify-center px-[var(--clara-bi-space-12,12px)] py-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="69:20430" data-name="Button/Ghost">
+                <div className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" data-node-id="I69:20430;3:250" data-name="Icon/List">
+                  <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="I69:20430;3:250;3:183" data-name="Icon/List">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconList} />
+                  </div>
+                </div>
+                <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I69:20430;3:254">
+                  Lista
+                </p>
+              </a>
+            </div>
+          </div>
+          <div className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-20,20px)] items-center overflow-clip relative shrink-0 w-[1392px]" data-node-id="4:774" data-name="Dashboards salvos">
+            <a className="bg-[var(--surface,white)] border border-[var(--line,#e1e7ef)] border-solid content-stretch flex flex-col gap-[var(--clara-bi-space-12,12px)] items-start overflow-clip p-[var(--clara-bi-space-16,16px)] relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 w-[450.667px]" data-node-id="4:775" data-name="Despesas e orçamento">
+              <div className="content-stretch flex gap-[var(--clara-bi-space-8,8px)] items-center overflow-clip relative shrink-0 w-[418.667px]" data-node-id="4:776" data-name="Tipo e ação">
+                <BadgeBlue className="bg-[var(--primary-soft,#eaf1fc)] content-stretch flex gap-[var(--clara-bi-space-4,4px)] items-center px-[var(--clara-bi-space-8,8px)] py-[var(--clara-bi-space-4,4px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" label="Financeiro" />
+                <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:779" data-name="Espaço flexível" />
+                <IconMoreHorizontal className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[20px]" />
+              </div>
+              <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[24px] relative shrink-0 text-[16px] text-[color:var(--ink,#102846)] text-left w-[418.667px]" data-node-id="4:785">
+                Despesas e orçamento
+              </p>
+              <p className="[word-break:break-word] font-['Figtree:Regular'] font-normal leading-[18px] relative shrink-0 text-[12px] text-[color:var(--text-secondary,#53657b)] text-left w-[418.667px]" data-node-id="4:786">
+                SAP Financeiro · Jan – jun 2026
+              </p>
+              <div className="bg-[var(--clara-bi-subtle,#f8fafc)] h-[110px] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0 w-[418.667px]" data-node-id="4:787" data-name="Miniatura editável do dashboard">
+                <div className="absolute content-stretch flex gap-[var(--clara-bi-space-12,12px)] items-center left-[12px] overflow-clip top-[12px] w-[322.667px]" data-node-id="4:788" data-name="Prévia de indicadores">
+                  <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--ink,#102846)] text-left whitespace-nowrap" data-node-id="4:789">
+                    R$ 8,19 mi
+                  </p>
+                  <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:790" data-name="Espaço flexível" />
+                  <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--primary,#2166d1)] text-left whitespace-nowrap" data-node-id="4:791">
+                    98,4%
+                  </p>
+                </div>
+                <div className="absolute h-[60px] left-[12px] top-[42px] w-[322.667px]" data-node-id="69:20201" data-name="Evolução das despesas">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEvolucaoDasDespesas} />
+                </div>
+              </div>
+              <div className="content-stretch flex gap-[var(--clara-bi-space-8,8px)] items-center overflow-clip relative shrink-0 w-[418.667px]" data-node-id="4:796" data-name="Estado e abertura">
+                <p className="[word-break:break-word] font-['Figtree:Regular'] font-normal leading-[18px] relative shrink-0 text-[12px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="4:797">
+                  SAP · Demonstração
+                </p>
+                <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:798" data-name="Espaço flexível" />
+                <div className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center justify-center px-[var(--clara-bi-space-12,12px)] py-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:799" data-name="Button/Ghost">
+                  <div className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" data-node-id="I4:799;3:250" data-name="Icon/ArrowRight">
+                    <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="I4:799;3:250;3:26" data-name="Icon/ArrowRight">
+                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconArrowRight} />
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I4:799;3:254">
+                    Abrir
+                  </p>
+                </div>
+              </div>
+            </a>
+            <a className="bg-[var(--surface,white)] border border-[var(--line,#e1e7ef)] border-solid content-stretch flex flex-col gap-[var(--clara-bi-space-12,12px)] items-start overflow-clip p-[var(--clara-bi-space-16,16px)] relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 w-[450.667px]" data-node-id="4:808" data-name="Composição das despesas">
+              <div className="content-stretch flex gap-[var(--clara-bi-space-8,8px)] items-center overflow-clip relative shrink-0 w-[418.667px]" data-node-id="4:809" data-name="Tipo e ação">
+                <BadgeBlue className="bg-[var(--primary-soft,#eaf1fc)] content-stretch flex gap-[var(--clara-bi-space-4,4px)] items-center px-[var(--clara-bi-space-8,8px)] py-[var(--clara-bi-space-4,4px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" label="Financeiro" />
+                <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:812" data-name="Espaço flexível" />
+                <IconMoreHorizontal className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[20px]" />
+              </div>
+              <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[24px] relative shrink-0 text-[16px] text-[color:var(--ink,#102846)] text-left w-[418.667px]" data-node-id="4:818">
+                Composição das despesas
+              </p>
+              <p className="[word-break:break-word] font-['Figtree:Regular'] font-normal leading-[18px] relative shrink-0 text-[12px] text-[color:var(--text-secondary,#53657b)] text-left w-[418.667px]" data-node-id="4:819">
+                SAP Financeiro · Jan – jun 2026
+              </p>
+              <div className="bg-[var(--clara-bi-subtle,#f8fafc)] h-[110px] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0 w-[418.667px]" data-node-id="4:820" data-name="Miniatura editável do dashboard">
+                <div className="absolute content-stretch flex gap-[var(--clara-bi-space-12,12px)] items-center left-[12px] overflow-clip top-[12px] w-[322.667px]" data-node-id="4:821" data-name="Prévia de indicadores">
+                  <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--ink,#102846)] text-left whitespace-nowrap" data-node-id="4:822">
+                    R$ 8,19 mi
+                  </p>
+                  <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:823" data-name="Espaço flexível" />
+                  <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--primary,#2166d1)] text-left whitespace-nowrap" data-node-id="4:824">
+                    98,4%
+                  </p>
+                </div>
+                <div className="absolute h-[60px] left-[12px] top-[42px] w-[322.667px]" data-node-id="12:4193" data-name="Composição por centro de custo">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgComposicaoPorCentroDeCusto} />
+                </div>
+              </div>
+              <div className="content-stretch flex gap-[var(--clara-bi-space-8,8px)] items-center overflow-clip relative shrink-0 w-[418.667px]" data-node-id="4:829" data-name="Estado e abertura">
+                <p className="[word-break:break-word] font-['Figtree:Regular'] font-normal leading-[18px] relative shrink-0 text-[12px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="4:830">
+                  SAP · Demonstração
+                </p>
+                <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:831" data-name="Espaço flexível" />
+                <div className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center justify-center px-[var(--clara-bi-space-12,12px)] py-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:832" data-name="Button/Ghost">
+                  <div className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" data-node-id="I4:832;3:250" data-name="Icon/ArrowRight">
+                    <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="I4:832;3:250;3:26" data-name="Icon/ArrowRight">
+                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconArrowRight} />
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I4:832;3:254">
+                    Abrir
+                  </p>
+                </div>
+              </div>
+            </a>
+            <a className="bg-[var(--surface,white)] border border-[var(--line,#e1e7ef)] border-solid content-stretch flex flex-col gap-[var(--clara-bi-space-12,12px)] items-start overflow-clip p-[var(--clara-bi-space-16,16px)] relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 w-[450.667px]" data-node-id="4:841" data-name="Evolução do semestre">
+              <div className="content-stretch flex gap-[var(--clara-bi-space-8,8px)] items-center overflow-clip relative shrink-0 w-[418.667px]" data-node-id="4:842" data-name="Tipo e ação">
+                <BadgeBlue className="bg-[var(--primary-soft,#eaf1fc)] content-stretch flex gap-[var(--clara-bi-space-4,4px)] items-center px-[var(--clara-bi-space-8,8px)] py-[var(--clara-bi-space-4,4px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" label="Financeiro" />
+                <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:845" data-name="Espaço flexível" />
+                <IconMoreHorizontal className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[20px]" />
+              </div>
+              <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[24px] relative shrink-0 text-[16px] text-[color:var(--ink,#102846)] text-left w-[418.667px]" data-node-id="4:851">
+                Evolução do semestre
+              </p>
+              <p className="[word-break:break-word] font-['Figtree:Regular'] font-normal leading-[18px] relative shrink-0 text-[12px] text-[color:var(--text-secondary,#53657b)] text-left w-[418.667px]" data-node-id="4:852">
+                SAP Financeiro · Jan – jun 2026
+              </p>
+              <div className="bg-[var(--clara-bi-subtle,#f8fafc)] h-[110px] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0 w-[418.667px]" data-node-id="4:853" data-name="Miniatura editável do dashboard">
+                <div className="absolute content-stretch flex gap-[var(--clara-bi-space-12,12px)] items-center left-[12px] overflow-clip top-[12px] w-[322.667px]" data-node-id="4:854" data-name="Prévia de indicadores">
+                  <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--ink,#102846)] text-left whitespace-nowrap" data-node-id="4:855">
+                    R$ 8,19 mi
+                  </p>
+                  <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:856" data-name="Espaço flexível" />
+                  <p className="[word-break:break-word] font-['Figtree:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--primary,#2166d1)] text-left whitespace-nowrap" data-node-id="4:857">
+                    98,4%
+                  </p>
+                </div>
+                <div className="absolute h-[60px] left-[12px] top-[42px] w-[322.667px]" data-node-id="69:20205" data-name="Evolução das despesas">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEvolucaoDasDespesas} />
+                </div>
+              </div>
+              <div className="content-stretch flex gap-[var(--clara-bi-space-8,8px)] items-center overflow-clip relative shrink-0 w-[418.667px]" data-node-id="4:862" data-name="Estado e abertura">
+                <p className="[word-break:break-word] font-['Figtree:Regular'] font-normal leading-[18px] relative shrink-0 text-[12px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="4:863">
+                  SAP · Demonstração
+                </p>
+                <div className="flex-[1_0_0] h-px min-w-px relative" data-node-id="4:864" data-name="Espaço flexível" />
+                <div className="content-stretch cursor-pointer flex gap-[var(--clara-bi-space-8,8px)] h-[40px] items-center justify-center px-[var(--clara-bi-space-12,12px)] py-[var(--clara-bi-space-8,8px)] relative rounded-[var(--clara-bi-radius-control,6px)] shrink-0" data-node-id="4:865" data-name="Button/Ghost">
+                  <div className="content-stretch flex items-center relative rounded-[var(--clara-bi-radius-panel,8px)] shrink-0 size-[18px]" data-node-id="I4:865;3:250" data-name="Icon/ArrowRight">
+                    <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="I4:865;3:250;3:26" data-name="Icon/ArrowRight">
+                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconArrowRight} />
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-['Figtree:Medium'] font-medium leading-[20px] relative shrink-0 text-[13px] text-[color:var(--text-secondary,#53657b)] text-left whitespace-nowrap" data-node-id="I4:865;3:254">
+                    Abrir
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: CLARA BI/Wordmark: Font(family: "Figtree", style: Bold, size: 24, weight: 700, lineHeight: 28, letterSpacing: 0), CLARA BI/Label: Font(family: "Figtree", style: Medium, size: 13, weight: 500, lineHeight: 20, letterSpacing: 0), CLARA BI/Body: Font(family: "Figtree", style: Regular, size: 14, weight: 400, lineHeight: 20, letterSpacing: 0), CLARA BI/SmallStrong: Font(family: "Figtree", style: SemiBold, size: 12, weight: 600, lineHeight: 18, letterSpacing: 0), CLARA BI/Page: Font(family: "Figtree", style: SemiBold, size: 28, weight: 600, lineHeight: 36, letterSpacing: -2), CLARA BI/Section: Font(family: "Figtree", style: SemiBold, size: 16, weight: 600, lineHeight: 24, letterSpacing: 0), CLARA BI/Small: Font(family: "Figtree", style: Regular, size: 12, weight: 400, lineHeight: 18, letterSpacing: 0), CLARA BI/BodyStrong: Font(family: "Figtree", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0).
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Icon/Sparkles
+**Node ID:** 22:4500
+
+Ícone Lucide; cor vinculada aos tokens CLARA.
+
+## Icon/Search
+**Node ID:** 3:17
+
+Ícone Lucide existente no projeto CLARA. Cor herdada do contexto.
+
+## Button/Primary
+**Node ID:** 3:229
+
+Botão CLARA BI. Label, Icon e ShowIcon editáveis. Estados Default, Hover e Disabled.
+
+## Icon/Plus
+**Node ID:** 3:21
+
+Ícone Lucide existente no projeto CLARA. Cor herdada do contexto.
+
+## Icon/ChevronDown
+**Node ID:** 3:33
+
+Ícone Lucide existente no projeto CLARA. Cor herdada do contexto.
+
+## Button/Secondary
+**Node ID:** 3:248
+
+Botão CLARA BI. Label, Icon e ShowIcon editáveis. Estados Default, Hover e Disabled.
+
+## Icon/LayoutGrid
+**Node ID:** 3:6
+
+Ícone Lucide existente no projeto CLARA. Cor herdada do contexto.
+
+## State=Default
+**Node ID:** 3:249
+
+Ação complementar: contraste moderado em repouso, destaque azul no hover; mantenha a ação principal no botão Primary.
+
+## Button/Ghost
+**Node ID:** 3:267
+
+Botão CLARA BI. Label, Icon e ShowIcon editáveis. Estados Default, Hover e Disabled.
+
+## Icon/List
+**Node ID:** 3:182
+
+Ícone Lucide existente no projeto CLARA. Cor herdada do contexto.
+
+## Icon/MoreHorizontal
+**Node ID:** 3:46
+
+Ícone Lucide existente no projeto CLARA. Cor herdada do contexto.
+
+## Icon/ArrowRight
+**Node ID:** 3:25
+
+Ícone Lucide existente no projeto CLARA. Cor herdada do contexto.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

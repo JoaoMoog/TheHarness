@@ -1,0 +1,28 @@
+id;data;area;conta;realizado;orcamento;status;fornecedor
+H001;2026-07-30;Tecnologia;Nuvem;132000;132000;Realizado;Fornecedor 11
+H002;2026-07-30;Tecnologia;Licenças;88000;88000;Realizado;Fornecedor 12
+H003;2026-07-30;Operações;Logística;114000;120000;Realizado;Fornecedor 21
+H004;2026-07-30;Operações;Serviços;76000;80000;Realizado;
+H005;2026-07-30;Comercial;Campanhas;54000;60000;Realizado;Fornecedor 31
+H006;2026-07-30;Comercial;Eventos;36000;40000;Realizado;Fornecedor 32
+H007;2026-07-30;Pessoas;Treinamento;36000;48000;Realizado;Fornecedor 41
+H008;2026-07-30;Pessoas;Benefícios;24000;32000;Realizado;Fornecedor 42
+H009;2026-08-30;Tecnologia;Nuvem;144000;132000;Realizado;Fornecedor 11
+H010;2026-08-30;Tecnologia;Licenças;96000;88000;Realizado;Fornecedor 12
+H011;2026-08-30;Operações;Logística;117000;120000;Realizado;Fornecedor 21
+H012;2026-08-30;Operações;Serviços;78000;80000;Realizado;Fornecedor 22
+H013;2026-08-30;Comercial;Campanhas;57000;60000;Realizado;Fornecedor 31
+H014;2026-08-30;Comercial;Eventos;38000;40000;Realizado;Fornecedor 32
+H015;2026-08-30;Pessoas;Treinamento;36000;48000;Realizado;Fornecedor 41
+H016;2026-08-30;Pessoas;Benefícios;24000;32000;Realizado;Fornecedor 42
+H017;2026-09-30;Tecnologia;Nuvem;186000;132000;Realizado;
+H018;2026-09-30;Tecnologia;Licenças;124000;88000;Realizado;Fornecedor 12
+H019;2026-09-30;Operações;Logística;123000;120000;Realizado;Fornecedor 21
+H020;2026-09-30;Operações;Serviços;82000;80000;Realizado;Fornecedor 22
+H021;2026-09-30;Comercial;Campanhas;63000;60000;Realizado;Fornecedor 31
+H022;2026-09-30;Comercial;Eventos;42000;40000;Realizado;Fornecedor 32
+H023;2026-09-30;Pessoas;Treinamento;42000;48000;Realizado;Fornecedor 41
+H024;2026-09-30;Pessoas;Benefícios;28000;32000;Realizado;Fornecedor 42
+H025;2026-09-30;Tecnologia;Licenças;12000;0;Cancelado;Fornecedor 12
+H026;2026-09-30;Comercial;Eventos;25000;0;Previsão;Fornecedor 32
+H027;2026-09-30;Pessoas;Benefícios;;0;Realizado;Fornecedor 42

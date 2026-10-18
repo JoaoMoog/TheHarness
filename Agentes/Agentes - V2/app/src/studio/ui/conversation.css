@@ -1,0 +1,95 @@
+/* Conversation uses the Studio palette and a single reading/response rhythm. */
+.home-page{max-width:1040px}
+.home-chat{padding:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:none}
+.home-chat:focus-within{border-color:var(--line)}
+.chat-section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 28px 20px}
+.chat-identity{display:flex;align-items:center;gap:12px;min-width:0}
+.chat-identity>svg{color:var(--blue)}
+.chat-identity h2{font-size:18px;line-height:1.4;font-weight:600;letter-spacing:-.02em}
+.chat-identity p{font-size:13px;color:var(--muted-foreground);margin-top:2px}
+.chat-section-head>.button{flex:none}
+.chat-context{margin:0 28px;border-block:1px solid var(--line)}
+.chat-context summary{display:flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;list-style:none;color:var(--muted-foreground);font-size:12px}
+.chat-context summary::-webkit-details-marker{display:none}
+.chat-context summary>span{display:flex;align-items:baseline;gap:12px;min-width:0;flex:1}
+.chat-context summary strong{font-weight:500;color:var(--ink);white-space:nowrap}
+.chat-context summary>span>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-context summary>svg:last-child{transition:transform 180ms ease-out}
+.chat-context[open] summary>svg:last-child{transform:rotate(180deg)}
+.home-chat .home-composer-tools{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:16px;padding:0 0 16px;margin:4px 0 0}
+.home-chat .home-composer-tools.existing-analysis{grid-template-columns:minmax(0,1fr) auto}
+.home-composer-field{max-width:none}
+.home-composer-field select{background:var(--surface);border-color:var(--line)}
+.home-chat .home-import{align-self:end;display:block;margin:0;padding:0 0 2px}
+.home-chat .home-import .button{font-size:12px;min-height:28px;padding:0}
+.home-chat .home-import>span{display:block;font-size:12px;padding-left:24px;margin-top:2px}
+.chat-reading-area{position:relative;min-height:0;display:flex;flex-direction:column}
+.chat-scroll{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:24px 28px}
+.chat-scroll:focus-visible{outline:2px solid var(--blue);outline-offset:-4px;border-radius:8px}
+.home-chat .chat-scroll{max-height:420px}
+.is-conversing .chat-scroll{max-height:clamp(260px,40dvh,440px)}
+.chat-transcript{display:flex;flex-direction:column;gap:24px;min-width:0}
+.chat-transcript .message{margin:0;max-width:68ch;overflow-wrap:anywhere}
+.app-shell .chat-transcript .message p{white-space:pre-wrap;font-size:15px;line-height:1.7;margin:6px 0 0}
+.chat-transcript .from-user{align-self:flex-end;background:var(--blue-soft);color:var(--ink);border-radius:12px 12px 4px 12px;padding:12px 16px;max-width:85%}
+.chat-transcript .from-assistant{align-self:flex-start;background:transparent;padding:0;color:var(--ink)}
+.chat-transcript .message-author{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--muted-foreground)}
+.chat-transcript .from-assistant .message-author{color:var(--blue-hover)}
+.chat-transcript .from-user .message-author{color:var(--ink)}
+.chat-thinking{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted-foreground);line-height:1.5}
+.thinking-dots{display:flex;gap:3px}
+.thinking-dots i{height:4px;width:4px;background:var(--blue);border-radius:50%;animation:clara-thinking 1.2s ease-in-out infinite}
+.thinking-dots i:nth-child(2){animation-delay:150ms}.thinking-dots i:nth-child(3){animation-delay:300ms}
+@keyframes clara-thinking{0%,70%,100%{opacity:.4;transform:translateY(0)}35%{opacity:1;transform:translateY(-3px)}}
+.chat-latest{position:absolute;bottom:8px;align-self:center;display:flex;align-items:center;gap:8px;min-height:36px;padding:8px 12px;background:var(--surface);border:1px solid var(--line);border-radius:20px;font-size:12px;color:var(--blue-hover)}
+.chat-latest:hover{background:var(--blue-soft)}
+.chat-compose-wrap{padding:0 28px 16px;background:var(--surface)}
+.app-shell .chat-compose{display:block;border:1px solid var(--line);border-radius:12px;background:var(--canvas);padding:12px 16px;transition:border-color 160ms ease-out}
+.app-shell .chat-compose:focus-within{border-color:var(--blue)}
+.app-shell .chat-compose textarea{display:block;width:100%;min-height:56px;max-height:176px;resize:none;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:var(--ink);font-size:16px;line-height:1.6;outline:none;box-shadow:none}
+.app-shell .chat-compose textarea:focus-visible{outline:none}
+.chat-compose textarea::placeholder{color:var(--muted-foreground)}
+.app-shell .chat-compose .chat-compose-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:8px 0 0;padding:0}
+.chat-keyboard-hint{font-size:12px;color:var(--muted-foreground);line-height:1.5}
+.chat-keyboard-hint>span{margin:0 4px}
+.chat-send{display:flex;align-items:center;justify-content:center;gap:8px;min-width:92px;min-height:40px;padding:8px 14px;border-radius:8px;background:var(--blue);color:var(--surface);font-size:13px;font-weight:500;flex-shrink:0}
+.chat-send:hover:not(:disabled){background:var(--blue-hover)}
+.chat-send:active:not(:disabled){background:var(--navy)}
+.chat-send:disabled{background:var(--line);color:var(--muted-foreground);opacity:1}
+.chat-compose-note{font-size:12px;color:var(--muted-foreground);margin:8px 0 0;line-height:1.5;text-align:center}
+.chat-scroll .proposal-review{margin-top:24px;border:0;border-top:1px solid var(--line);border-radius:0;background:transparent;padding:24px 0 0}
+.chat-scroll .proposal-review h3{font-size:18px;letter-spacing:-.02em}
+.chat-scroll .proposal-review>p{font-size:13px;line-height:1.6}
+.chat-scroll .proposal-review footer{align-items:center;gap:16px}
+.assistant:not(.editor){background:var(--surface)}
+.assistant:not(.editor) .assistant-head{padding:20px;min-height:88px}
+.assistant:not(.editor) .assistant-context{gap:8px;padding:10px 20px;flex-wrap:wrap;background:var(--canvas);border-block:1px solid var(--line)}
+.assistant-context>.button{margin-left:auto;font-size:12px;min-height:32px}
+.assistant:not(.editor) .conversation{padding:0;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.assistant .chat-reading-area{flex:1}
+.assistant .chat-scroll{padding:24px 20px;flex:1}
+.assistant .chat-transcript .message p{font-size:14px;line-height:1.7}
+.assistant .composer-area{padding:16px 20px 12px;border-top:1px solid var(--line)}
+.assistant .chat-compose-wrap{padding:0}
+.assistant .composer-context{margin:0 0 12px;font-size:12px}
+.assistant .chat-keyboard-hint{display:none}
+.assistant .chat-compose .chat-compose-actions{justify-content:flex-end}
+.assistant .chat-compose-note{display:none}
+.assistant .ai-disclaimer{margin-top:10px;font-size:12px}
+@media(min-width:1440px){.app-shell{--assistant:388px}}
+@media(max-width:767px){
+ .home-intro h1{font-size:28px}.is-conversing .home-intro p{display:none}.is-conversing .home-intro{margin-bottom:16px}
+ .chat-section-head{padding:20px 16px 16px;gap:8px}.chat-identity{gap:10px}.chat-identity h2{font-size:16px}.chat-identity p{font-size:12px}.chat-identity>svg{display:none}
+ .chat-section-head>.button{font-size:12px;padding:8px}.chat-section-head>.button>svg{display:none}
+ .chat-context{margin-inline:16px}.chat-context summary>span{gap:6px;flex-wrap:wrap;padding:8px 0}.chat-context summary>span>span{max-width:100%;font-size:12px}
+ .home-chat .home-composer-tools,.home-chat .home-composer-tools.existing-analysis{grid-template-columns:minmax(0,1fr);gap:12px}
+ .home-chat .home-import{display:flex;align-items:center;gap:12px}.home-chat .home-import .button{min-height:40px}.home-chat .home-import>span{margin:0;padding:0}
+ .chat-scroll{padding:20px 16px}.is-conversing .chat-scroll{max-height:38dvh;min-height:200px}
+ .chat-transcript{gap:20px}.chat-transcript .from-user{max-width:94%;padding:10px 14px}
+ .app-shell .chat-transcript .message p{font-size:14px}
+ .chat-compose-wrap{padding:0 12px 12px}.app-shell .chat-compose{padding:12px}.chat-keyboard-hint{display:none}
+ .app-shell .chat-compose .chat-compose-actions{justify-content:flex-end;margin-top:4px}.chat-send{min-height:44px}
+ .chat-compose-note{font-size:12px;padding-inline:4px}
+ .chat-scroll .proposal-review h3{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){.thinking-dots i{animation:none}.chat-context summary>svg:last-child,.app-shell .chat-compose{transition:none}}

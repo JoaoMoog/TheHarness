@@ -1,0 +1,17 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const React = require('../../app/node_modules/react');
+const { renderToStaticMarkup } = require('../../app/node_modules/react-dom/server');
+const lucide = require('../../app/node_modules/lucide-react');
+const names = ['House','ChartNoAxesCombined','Database','Settings2','ArrowRight','ArrowLeft','Plus','Search','ChevronDown','ChevronRight','X','Check','PanelRightClose','MessageSquare','Pencil','Download','Info','MoreHorizontal','Folder','Upload','FileSpreadsheet','SlidersHorizontal','Clock','GripVertical','Undo2','CircleAlert','CircleCheck','LayoutGrid','Table2','TrendingUp','ListFilter','BookOpen','Menu'];
+const icons = Object.fromEntries(names.map(name => [name, renderToStaticMarkup(React.createElement(lucide[name], {size:20,strokeWidth:1.65,color:'#102846'}))]));
+fs.writeFileSync(path.join(__dirname,'icons.json'), JSON.stringify(icons));
+const template = fs.readFileSync(path.join(__dirname,'figma-template.js'),'utf8');
+const script = template.replace('/* ICON_DATA */', 'const ICONS = '+JSON.stringify(icons)+';');
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+new AsyncFunction(script);
+fs.writeFileSync(path.join(__dirname,'figma-build.js'),script);
+const refine=fs.readFileSync(path.join(__dirname,'figma-refine-template.js'),'utf8').replace('/* ICON_DATA */','const ICONS = '+JSON.stringify(icons)+';');
+new AsyncFunction(refine);
+fs.writeFileSync(path.join(__dirname,'figma-refine.js'),refine);
+console.log(JSON.stringify({icons:names.length,scriptBytes:script.length}));

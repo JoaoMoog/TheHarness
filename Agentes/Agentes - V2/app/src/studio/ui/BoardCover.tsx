@@ -1,0 +1,12 @@
+import {useState} from 'react';
+import {ImagePlus,Sparkles} from 'lucide-react';
+import type {Board} from '../contracts';
+import {useApp} from './state';
+import {Button,Modal} from './ui';
+import {request} from './api';
+export function coverUrl(id:string,workspace:string){return `/api/v1/studio/banners/${encodeURIComponent(id)}?workspace=${encodeURIComponent(workspace)}`;}
+export function BoardCover({board,workspace}:{board:Board;workspace:string}){const theme=[...board.id].reduce((a,c)=>a+c.charCodeAt(0),0)%4;return <div className={`board-cover cover-${theme}`} style={board.bannerId?{backgroundImage:`linear-gradient(0deg,rgba(8,22,38,.8),rgba(8,22,38,.15)),url("${coverUrl(board.bannerId,workspace)}")`}:undefined}><div className="cover-art" aria-hidden="true"><i/><i/><i/></div><span className="cover-eyebrow">CLARA / DASHBOARD</span><h3>{board.document.title}</h3></div>}
+export function BannerDialog({board,close}:{board:Board;close:()=>void}){const {server,command,pending,refreshCredits}=useApp();const [prompt,setPrompt]=useState('Composição abstrata em azul profundo, formas suaves e luz natural.'),[generated,setGenerated]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ async function generate(){setBusy(true);setError('');try{const result=await request<{id:string}>('banners',{boardId:board.id,prompt},server.workspace.id);setGenerated(result.id)}catch(e){setError(e instanceof Error?e.message:'Não foi possível gerar a capa.')}finally{setBusy(false);void refreshCredits()}}
+ return <Modal title="Uma capa para seu dashboard" onClose={close}><BoardCover board={{...board,bannerId:generated||board.bannerId}} workspace={server.workspace.id}/><label className="field">Descreva a capa<textarea value={prompt} maxLength={700} onChange={e=>setPrompt(e.target.value)} placeholder="Uma paisagem de montanhas em tons de azul…"/></label><small>{server.credits.cost} créditos por imagem. Saldo: {server.credits.available}. A IA gera a imagem. O nome do dashboard continua legível sobre ela.</small>{error&&<p className="error-banner" role="alert">{error}</p>}<div className="dialog-actions"><Button icon={Sparkles} disabled={busy||server.credits.available<server.credits.cost||prompt.trim().length<5} onClick={()=>void generate()}>{busy?'Criando sua capa…':'Gerar com IA'}</Button><Button primary icon={ImagePlus} disabled={!generated||busy||pending} onClick={async()=>{if(await command({type:'dashboard.banner',id:board.id,bannerId:generated}))close()}}>Usar capa</Button></div></Modal>;
+}

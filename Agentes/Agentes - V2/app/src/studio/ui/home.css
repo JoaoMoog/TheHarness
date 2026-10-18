@@ -1,0 +1,74 @@
+/* Shared Studio palette; balanced conversation and saved work. */
+.home-page{max-width:1000px;margin:0 auto;padding:16px 0 36px}
+.home-intro{margin-bottom:24px}
+.home-intro h1{font-size:2.2857rem;font-weight:500;line-height:1.25;letter-spacing:-.025em;text-wrap:balance;color:var(--ink)}
+.home-intro p{font-size:1rem;color:var(--muted-foreground);margin-top:8px}
+.home-chat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 24px;transition:border-color .18s ease}
+.home-chat:focus-within{border-color:var(--blue)}
+.home-chat textarea{display:block;width:100%;min-height:100px;max-height:280px;resize:vertical;padding:0 0 12px;border:0;border-radius:0;background:transparent;font-size:1.1429rem;line-height:1.65;color:var(--ink)}
+.home-chat textarea::placeholder{color:var(--muted-foreground)}
+.home-chat textarea:focus-visible{outline:2px solid var(--blue);outline-offset:6px;border-radius:2px}
+.home-composer-tools{display:grid;grid-template-columns:minmax(0,260px) minmax(0,260px) 1fr;align-items:end;gap:16px;margin-top:12px}
+.home-composer-tools.existing-analysis{grid-template-columns:minmax(0,1fr) auto}
+.home-composer-field{display:flex;flex-direction:column;gap:6px;min-width:0;max-width:320px}
+.home-composer-field>span{font-size:.8571rem;color:var(--muted-foreground)}
+.home-composer-field select{width:100%;height:44px;font-size:.9286rem;border-color:var(--line);border-radius:6px;background:var(--canvas);text-overflow:ellipsis}
+.home-composer-field select:hover:not(:disabled){border-color:var(--muted-foreground)}
+.home-send{display:inline-flex;align-items:center;justify-content:center;justify-self:end;gap:8px;min-width:100px;height:44px;padding:0 16px;background:var(--blue);color:var(--surface);border-radius:6px;font-size:1rem;font-weight:500}
+.home-send:hover:not(:disabled){background:var(--blue-hover)}
+.home-send:active:not(:disabled){background:var(--navy)}
+.home-send:disabled{background:var(--line);color:var(--muted-foreground);opacity:1}
+.home-response{display:flex;align-items:flex-start;gap:12px;border-top:1px solid var(--line);margin-top:20px;padding-top:20px;font-size:1rem;line-height:1.65}
+.home-response svg{color:var(--blue);margin-top:3px}
+.home-response p{max-width:70ch;overflow-wrap:anywhere}
+.home-preparing{color:var(--muted-foreground)}
+.home-proposal{display:flex;align-items:center;gap:24px;margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+.home-proposal>div{flex:1;min-width:0}
+.home-proposal strong{font-size:1rem;font-weight:600;overflow-wrap:anywhere}
+.home-proposal p{font-size:.9286rem;color:var(--muted-foreground);line-height:1.6;margin-top:6px;max-width:70ch;overflow-wrap:anywhere}
+.home-proposal .button{min-height:44px;font-size:.9286rem}
+.home-suggestions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.home-suggestions button{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:8px 12px;text-align:left;font-size:.9286rem;line-height:1.45;color:var(--muted-foreground);border-radius:6px}
+.home-suggestions button:hover:not(:disabled){background:var(--blue-soft);color:var(--ink)}
+.home-suggestions button:active:not(:disabled){background:var(--line)}
+.home-suggestions button:disabled{opacity:.55}
+.home-recent{margin-top:36px}
+.home-recent .section-title{margin:0 0 16px;min-height:44px;gap:16px}
+.home-recent h2{font-size:1.1429rem;font-weight:600}
+.home-recent .section-title>.button{flex-direction:row-reverse;font-size:.9286rem;min-height:44px;gap:8px}
+.home-recent .board-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.home-recent .board-card{border:1px solid var(--line);border-radius:12px;background:var(--surface);transition:border-color .18s ease;box-shadow:none}
+.home-recent .board-card:hover{border-color:var(--muted-foreground);transform:none;box-shadow:none}
+.home-recent .board-card:focus-within{outline:2px solid var(--blue);outline-offset:3px}
+.home-recent .board-open{display:block;height:100%;border-radius:12px}
+.home-recent .board-open:focus-visible{outline:none}
+.home-recent .board-cover{min-height:168px}
+.home-recent .board-cover h3{line-height:1.3;max-width:100%;text-wrap:balance;overflow-wrap:anywhere}
+.home-card-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;color:var(--muted-foreground);font-size:.8571rem;line-height:1.5}
+.home-card-meta>span{min-width:0;overflow-wrap:anywhere}
+.home-card-meta time{font-variant-numeric:tabular-nums}
+.home-empty{display:flex;align-items:center;gap:16px;padding:24px 0;color:var(--muted-foreground);border-top:1px solid var(--line)}
+.home-empty h3{font-size:1rem;color:var(--ink);margin-bottom:4px}
+.home-empty p{font-size:1rem}
+@media(max-width:1099px){.home-recent .board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-composer-tools{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:12px}.home-suggestions{gap:4px}.home-suggestions button{font-size:.8571rem}}
+@media(max-width:767px){
+ .home-page{padding:8px 0 24px}
+ .home-intro h1{font-size:2rem}
+ .home-intro p{font-size:1rem;max-width:34ch}
+ .home-chat{padding:16px}
+ .home-chat textarea{min-height:64px;font-size:16px}
+ .home-composer-tools{grid-template-columns:minmax(0,1fr) 44px;gap:12px}
+ .home-composer-field{max-width:none}
+ .home-composer-tools:not(.existing-analysis) .home-composer-field:first-child{grid-column:1/-1}
+ .home-composer-field select{font-size:16px;padding-left:8px}
+ .home-send{min-width:44px;padding:0}
+ .home-send>span{display:none}
+ .home-suggestions{grid-template-columns:1fr;gap:0;margin-top:8px}
+ .home-suggestions button{min-height:44px;font-size:.9286rem;padding:8px 4px}
+ .home-recent{margin-top:24px}
+ .home-recent .board-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+ .home-proposal{align-items:stretch;flex-direction:column;gap:16px}
+ .home-proposal .button{align-self:flex-start}
+}
+@media(max-width:540px){.home-recent .board-grid{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.home-page *{transition:none}}

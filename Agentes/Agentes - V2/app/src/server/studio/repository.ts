@@ -1,15 +1,19 @@
 import {createHash,randomUUID} from 'node:crypto';
 import {z} from 'zod';
 import {db,insert,read,update,transaction} from '../store';
+import {centers} from '@/studio/domain';
 import {HttpError} from '../auth';
-import {initialDocument,mutationSchema,type StudioRepository,type StudioState} from '@/studio/contracts';
+import {documentSchema,initialDocument,mutationSchema,type StudioRepository,type StudioState} from '@/studio/contracts';
 export function seedState(workspaceId:string):StudioState {
  const now=new Date().toISOString();
  return {id:`studio:${workspaceId}`,owner:workspaceId,schemaVersion:1,revision:1,boards:[{id:randomUUID(),document:{...initialDocument},favorite:true,revision:1,updatedAt:now,versions:[]}],plans:[],scenarios:[],comments:[],measure:{name:'Saldo disponível',formula:'budget-actual'},sourcePaused:false,updatedAt:now};
 }
 type Receipt={id:string;owner:string;hash:string;response:{state:StudioState;targetId?:string}};
 export const repository:StudioRepository={
- get(workspaceId){const id=`studio:${workspaceId}`;return read<StudioState>('studio',id,workspaceId)||insert('studio',seedState(workspaceId))},
+ get(workspaceId){const id=`studio:${workspaceId}`;const state=read<StudioState>('studio',id,workspaceId)||insert('studio',seedState(workspaceId));
+  state.plans=state.plans.map(p=>({...p,budgets:p.budgets.map((b,i)=>typeof b==='number'?{center:centers[i].name,amount:b}:b)}));
+  state.boards=state.boards.map(b=>({...b,document:documentSchema.parse({dateFrom:null,dateTo:null,...b.document}),versions:b.versions.map(v=>({...v,document:documentSchema.parse({dateFrom:null,dateTo:null,...v.document})}))}));
+  return state},
  mutate(workspaceId,actorId,request,change){return transaction(()=>{
   const key=`studio-op:${actorId}:${request.operationId}`,hash=createHash('sha256').update(JSON.stringify(request)).digest('hex');
   const previous=read<Receipt>('studio-receipt',key,workspaceId);

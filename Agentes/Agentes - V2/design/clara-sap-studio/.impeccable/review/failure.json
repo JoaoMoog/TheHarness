@@ -1,0 +1,133 @@
+{
+  "message": "locator.click: Error: strict mode violation: getByRole('button', { name: 'CLARA IA', exact: true }) resolved to 2 elements:\n    1) <button class=\"button  quiet\">…</button> aka locator('#main').getByRole('button', { name: 'CLARA IA' })\n    2) <button class=\"floating-ai\">…</button> aka getByRole('button', { name: 'CLARA IA' }).nth(1)\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'CLARA IA', exact: true })\u001b[22m\n",
+  "flows": [
+    "Filtros combinados e totais coerentes",
+    "Pedido, conferência, carregamento e geração",
+    "Refinamento por IA e desfazer",
+    "Simulação e projeção ilustrativa",
+    "Editor visual, realce e componentes",
+    "Salvar, persistir, buscar e reabrir",
+    "Planejamento revisado preserva a base",
+    "Medida calculada com prévia",
+    "Fonte indisponível e recuperação",
+    "Permissões e visão de Leitor",
+    "Busca global, registros e exportação CSV"
+  ],
+  "errors": [],
+  "requests": [],
+  "audits": [
+    {
+      "name": "dashboard-1440",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Visão geral",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Dashboards",
+      "overflow": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": [
+            {
+              "target": [
+                "button[aria-label=\"Abrir Desempenho financeiro\"] > .preview-label"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.13 (foreground color: #617692, background color: #edf2f8, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "button[aria-label=\"Abrir Despesas de Tecnologia\"] > .preview-label"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.13 (foreground color: #617692, background color: #edf2f8, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "article:nth-child(3) > .board-preview > .preview-label"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.13 (foreground color: #617692, background color: #edf2f8, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Explorar dados",
+      "overflow": false,
+      "violations": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "nodes": [
+            {
+              "target": [
+                ".table-scroll"
+              ],
+              "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planejamento",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Previsões e cenários",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Modelos de dados",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Conexões",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Administração",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-1920",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-1280",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-1024",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-768",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-390",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-320",
+      "overflow": false,
+      "violations": []
+    }
+  ]
+}

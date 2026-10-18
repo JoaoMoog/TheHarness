@@ -1,0 +1,95 @@
+{
+  "checks": {
+    "eligible": true,
+    "rows": true,
+    "total": true,
+    "budget": true,
+    "variance": true,
+    "monthly": true,
+    "groups": true,
+    "techGrowth": true,
+    "contribution": true,
+    "missing": true,
+    "forecast": true
+  },
+  "summary": {
+    "actual": 1840000,
+    "budget": 1800000,
+    "variance": 40000,
+    "execution": 1.0222222222222221,
+    "count": 24
+  },
+  "monthly": [
+    {
+      "month": "Jul",
+      "actual": 560000,
+      "budget": 600000,
+      "variance": -40000,
+      "execution": 0.9333333333333333,
+      "count": 8
+    },
+    {
+      "month": "Ago",
+      "actual": 590000,
+      "budget": 600000,
+      "variance": -10000,
+      "execution": 0.9833333333333333,
+      "count": 8
+    },
+    {
+      "month": "Set",
+      "actual": 690000,
+      "budget": 600000,
+      "variance": 90000,
+      "execution": 1.15,
+      "count": 8
+    }
+  ],
+  "groups": [
+    {
+      "area": "Tecnologia",
+      "actual": 770000,
+      "budget": 660000,
+      "variance": 110000,
+      "execution": 1.1666666666666667,
+      "count": 6
+    },
+    {
+      "area": "Operações",
+      "actual": 590000,
+      "budget": 600000,
+      "variance": -10000,
+      "execution": 0.9833333333333333,
+      "count": 6
+    },
+    {
+      "area": "Comercial",
+      "actual": 290000,
+      "budget": 300000,
+      "variance": -10000,
+      "execution": 0.9666666666666667,
+      "count": 6
+    },
+    {
+      "area": "Pessoas",
+      "actual": 190000,
+      "budget": 240000,
+      "variance": -50000,
+      "execution": 0.7916666666666666,
+      "count": 6
+    }
+  ],
+  "techSep": {
+    "actual": 310000,
+    "budget": 220000,
+    "variance": 90000,
+    "execution": 1.4090909090909092,
+    "count": 2
+  },
+  "quality": {
+    "supplierMissing": 2,
+    "actualMissing": 1,
+    "excluded": 3
+  },
+  "note": "Dados sintéticos. Desvio positivo significa acima do orçamento. Ausência não é zero. Previsão e cancelamento não entram no realizado."
+}

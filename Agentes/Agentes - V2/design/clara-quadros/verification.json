@@ -1,0 +1,79 @@
+{
+  "source": "app/src/server/seed.ts",
+  "records": 72,
+  "total": 8190000,
+  "budget": 8318880,
+  "difference": -128880,
+  "percent": -1.5492470140211183,
+  "groups": {
+    "Tecnologia": {
+      "actual": 1656000,
+      "budget": 1523520
+    },
+    "Operações": {
+      "actual": 1917000,
+      "budget": 1993680
+    },
+    "Comercial": {
+      "actual": 2178000,
+      "budget": 2265120
+    },
+    "Pessoas": {
+      "actual": 2439000,
+      "budget": 2536560
+    }
+  },
+  "trend": [
+    {
+      "month": "2026-04",
+      "value": 1269000
+    },
+    {
+      "month": "2026-05",
+      "value": 1307400
+    },
+    {
+      "month": "2026-06",
+      "value": 1345800
+    },
+    {
+      "month": "2026-07",
+      "value": 1384200
+    },
+    {
+      "month": "2026-08",
+      "value": 1422600
+    },
+    {
+      "month": "2026-09",
+      "value": 1461000
+    }
+  ],
+  "textContrast": {
+    "inkWhite": 14.07,
+    "mutedWhite": 5.63,
+    "mutedCanvas": 5.03,
+    "whitePrimary": 11.12,
+    "whiteAction": 5.93,
+    "mutedYellow": 5.07,
+    "yellowLabel": 6.66,
+    "greenLabel": 7.34,
+    "pinkLabel": 6.06,
+    "dangerWhite": 6.54
+  },
+  "graphicContrast": {
+    "budgetWhite": 3.51,
+    "controlWhite": 4.77,
+    "actualWhite": 11.12,
+    "focusWhite": 5.93
+  },
+  "checks": {
+    "records": true,
+    "totals": true,
+    "technology": true,
+    "monthly": true,
+    "normalText": true,
+    "graphics": true,
+    "allTargets": true
+  }
+}

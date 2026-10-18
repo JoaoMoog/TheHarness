@@ -1,0 +1,3 @@
+const fs=require('fs'),path=require('path'),root=__dirname;const s=JSON.parse(fs.readFileSync(path.join(root,'state.json'),'utf8'));
+const d=new Map(s.links.map(l=>[l.id+'|'+l.trigger,l]));s.links=[...d.values()];fs.writeFileSync(path.join(root,'state.json'),JSON.stringify(s));
+const template=fs.readFileSync(path.join(root,'wire-v2-template.js'),'utf8');let i=0;for(let p=0;p<s.links.length;p+=140){i++;fs.writeFileSync(path.join(root,'run-wire-v2-'+i+'.js'),template.replace('/* SCREENS */',JSON.stringify(s.screens)).replace('/* LINKS */',JSON.stringify(s.links.slice(p,p+140))));}console.log(JSON.stringify({batches:i,links:s.links.length}));

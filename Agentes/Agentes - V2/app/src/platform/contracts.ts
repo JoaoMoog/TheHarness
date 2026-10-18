@@ -1,0 +1,5 @@
+export type CreditBalance={available:number;reserved:number;consumed:number;allocated:number;cost:number;monthly:number;period:string;renewsAt:string};
+export type CreditUser=CreditBalance&{id:string;name:string;email:string;auth:string;lastSeen:string};
+export type CreditEntry={id:string;at:string;kind:string;amount:number;reason:string;adminName:string|null};
+export type CreditDirectory={users:CreditUser[];total:number;offset:number;limit:number;policy:{monthly:number;cost:number};totals:{users:number;available:number;consumed:number;reserved:number}};
+export type UsageReport={from:string;to:string;trackingSince:string;summary:{activeUsers:number;requests:number;completed:number;failed:number;blocked:number;credits:number;averageMs:number|null;dashboards:number;presentations:number;imports:number;merges:number};daily:{day:string;users:number;requests:number;credits:number}[];features:{feature:string;count:number}[];users:{id:string;name:string;requests:number;credits:number;lastAt:string}[]};

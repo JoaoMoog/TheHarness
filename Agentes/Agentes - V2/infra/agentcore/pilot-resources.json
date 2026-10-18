@@ -1,0 +1,35 @@
+{
+  "harnessArn": "arn:aws:bedrock-agentcore:us-east-1:354918379749:harness/clara_pilot-gGzyXd2TUA",
+  "harnessId": "clara_pilot-gGzyXd2TUA",
+  "version": "1",
+  "invokerRoleArn": "arn:aws:iam::354918379749:role/clara/clara-agentcore-invoker",
+  "runtimeArn": "arn:aws:bedrock-agentcore:us-east-1:354918379749:runtime/harness_clara_pilot-Ag36rQ9X5k",
+  "logGroup": "/aws/bedrock-agentcore/runtimes/harness_clara_pilot-Ag36rQ9X5k-DEFAULT",
+  "logDeliveryId": "xutPQPRKIy58WGKo",
+  "kmsKeyArn": "arn:aws:kms:us-east-1:354918379749:key/3543ff69-17c5-49db-bfb7-47e72691d740",
+  "endpoint": {
+    "harnessId": "clara_pilot-gGzyXd2TUA",
+    "harnessName": "clara_pilot",
+    "endpointName": "live",
+    "arn": "arn:aws:bedrock-agentcore:us-east-1:354918379749:harness/clara_pilot-gGzyXd2TUA/harness-endpoint/live",
+    "status": "READY",
+    "createdAt": "2026-10-18T21:23:49.096701+00:00",
+    "updatedAt": "2026-10-18T21:23:50.691449+00:00",
+    "liveVersion": "1",
+    "description": "CLARA pilot version"
+  },
+  "monitoring": {
+    "trailArn": "arn:aws:cloudtrail:us-east-1:354918379749:trail/clara-agentcore-audit",
+    "auditBucket": "clara-agentcore-audit-354918379749-us-east-1",
+    "logging": true,
+    "dashboard": "CLARA-AgentCore",
+    "alarms": [
+      "CLARA-AgentCore-Errors",
+      "CLARA-AgentCore-Throttles",
+      "CLARA-AgentCore-Invocations"
+    ]
+  },
+  "localPilotAuthentication": "Existing clara-piloto login; root use explicitly authorized for pilot only",
+  "model": "us.amazon.nova-2-lite-v1:0",
+  "region": "us-east-1"
+}

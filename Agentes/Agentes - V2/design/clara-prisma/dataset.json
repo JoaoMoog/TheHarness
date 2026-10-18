@@ -1,0 +1,367 @@
+{
+  "source": "Horizonte • despesas Q3 2026.csv",
+  "revision": 1,
+  "updated": "11/10/2026 às 09:20 BRT",
+  "demonstration": true,
+  "grain": "Uma área, conta e mês por registro; sem regras contábeis inferidas.",
+  "rows": [
+    {
+      "id": "H001",
+      "date": "2026-07-30",
+      "area": "Tecnologia",
+      "account": "Nuvem",
+      "actual": 132000,
+      "budget": 132000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 11"
+    },
+    {
+      "id": "H002",
+      "date": "2026-07-30",
+      "area": "Tecnologia",
+      "account": "Licenças",
+      "actual": 88000,
+      "budget": 88000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 12"
+    },
+    {
+      "id": "H003",
+      "date": "2026-07-30",
+      "area": "Operações",
+      "account": "Logística",
+      "actual": 114000,
+      "budget": 120000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 21"
+    },
+    {
+      "id": "H004",
+      "date": "2026-07-30",
+      "area": "Operações",
+      "account": "Serviços",
+      "actual": 76000,
+      "budget": 80000,
+      "status": "Realizado",
+      "supplier": null
+    },
+    {
+      "id": "H005",
+      "date": "2026-07-30",
+      "area": "Comercial",
+      "account": "Campanhas",
+      "actual": 54000,
+      "budget": 60000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 31"
+    },
+    {
+      "id": "H006",
+      "date": "2026-07-30",
+      "area": "Comercial",
+      "account": "Eventos",
+      "actual": 36000,
+      "budget": 40000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 32"
+    },
+    {
+      "id": "H007",
+      "date": "2026-07-30",
+      "area": "Pessoas",
+      "account": "Treinamento",
+      "actual": 36000,
+      "budget": 48000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 41"
+    },
+    {
+      "id": "H008",
+      "date": "2026-07-30",
+      "area": "Pessoas",
+      "account": "Benefícios",
+      "actual": 24000,
+      "budget": 32000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 42"
+    },
+    {
+      "id": "H009",
+      "date": "2026-08-30",
+      "area": "Tecnologia",
+      "account": "Nuvem",
+      "actual": 144000,
+      "budget": 132000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 11"
+    },
+    {
+      "id": "H010",
+      "date": "2026-08-30",
+      "area": "Tecnologia",
+      "account": "Licenças",
+      "actual": 96000,
+      "budget": 88000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 12"
+    },
+    {
+      "id": "H011",
+      "date": "2026-08-30",
+      "area": "Operações",
+      "account": "Logística",
+      "actual": 117000,
+      "budget": 120000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 21"
+    },
+    {
+      "id": "H012",
+      "date": "2026-08-30",
+      "area": "Operações",
+      "account": "Serviços",
+      "actual": 78000,
+      "budget": 80000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 22"
+    },
+    {
+      "id": "H013",
+      "date": "2026-08-30",
+      "area": "Comercial",
+      "account": "Campanhas",
+      "actual": 57000,
+      "budget": 60000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 31"
+    },
+    {
+      "id": "H014",
+      "date": "2026-08-30",
+      "area": "Comercial",
+      "account": "Eventos",
+      "actual": 38000,
+      "budget": 40000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 32"
+    },
+    {
+      "id": "H015",
+      "date": "2026-08-30",
+      "area": "Pessoas",
+      "account": "Treinamento",
+      "actual": 36000,
+      "budget": 48000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 41"
+    },
+    {
+      "id": "H016",
+      "date": "2026-08-30",
+      "area": "Pessoas",
+      "account": "Benefícios",
+      "actual": 24000,
+      "budget": 32000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 42"
+    },
+    {
+      "id": "H017",
+      "date": "2026-09-30",
+      "area": "Tecnologia",
+      "account": "Nuvem",
+      "actual": 186000,
+      "budget": 132000,
+      "status": "Realizado",
+      "supplier": null
+    },
+    {
+      "id": "H018",
+      "date": "2026-09-30",
+      "area": "Tecnologia",
+      "account": "Licenças",
+      "actual": 124000,
+      "budget": 88000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 12"
+    },
+    {
+      "id": "H019",
+      "date": "2026-09-30",
+      "area": "Operações",
+      "account": "Logística",
+      "actual": 123000,
+      "budget": 120000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 21"
+    },
+    {
+      "id": "H020",
+      "date": "2026-09-30",
+      "area": "Operações",
+      "account": "Serviços",
+      "actual": 82000,
+      "budget": 80000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 22"
+    },
+    {
+      "id": "H021",
+      "date": "2026-09-30",
+      "area": "Comercial",
+      "account": "Campanhas",
+      "actual": 63000,
+      "budget": 60000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 31"
+    },
+    {
+      "id": "H022",
+      "date": "2026-09-30",
+      "area": "Comercial",
+      "account": "Eventos",
+      "actual": 42000,
+      "budget": 40000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 32"
+    },
+    {
+      "id": "H023",
+      "date": "2026-09-30",
+      "area": "Pessoas",
+      "account": "Treinamento",
+      "actual": 42000,
+      "budget": 48000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 41"
+    },
+    {
+      "id": "H024",
+      "date": "2026-09-30",
+      "area": "Pessoas",
+      "account": "Benefícios",
+      "actual": 28000,
+      "budget": 32000,
+      "status": "Realizado",
+      "supplier": "Fornecedor 42"
+    },
+    {
+      "id": "H025",
+      "date": "2026-09-30",
+      "area": "Tecnologia",
+      "account": "Licenças",
+      "actual": 12000,
+      "budget": 0,
+      "status": "Cancelado",
+      "supplier": "Fornecedor 12"
+    },
+    {
+      "id": "H026",
+      "date": "2026-09-30",
+      "area": "Comercial",
+      "account": "Eventos",
+      "actual": 25000,
+      "budget": 0,
+      "status": "Previsão",
+      "supplier": "Fornecedor 32"
+    },
+    {
+      "id": "H027",
+      "date": "2026-09-30",
+      "area": "Pessoas",
+      "account": "Benefícios",
+      "actual": null,
+      "budget": 0,
+      "status": "Realizado",
+      "supplier": "Fornecedor 42"
+    }
+  ],
+  "summary": {
+    "actual": 1840000,
+    "budget": 1800000,
+    "variance": 40000,
+    "execution": 1.0222222222222221,
+    "count": 24
+  },
+  "monthly": [
+    {
+      "month": "Jul",
+      "actual": 560000,
+      "budget": 600000,
+      "variance": -40000,
+      "execution": 0.9333333333333333,
+      "count": 8
+    },
+    {
+      "month": "Ago",
+      "actual": 590000,
+      "budget": 600000,
+      "variance": -10000,
+      "execution": 0.9833333333333333,
+      "count": 8
+    },
+    {
+      "month": "Set",
+      "actual": 690000,
+      "budget": 600000,
+      "variance": 90000,
+      "execution": 1.15,
+      "count": 8
+    }
+  ],
+  "groups": [
+    {
+      "area": "Tecnologia",
+      "actual": 770000,
+      "budget": 660000,
+      "variance": 110000,
+      "execution": 1.1666666666666667,
+      "count": 6
+    },
+    {
+      "area": "Operações",
+      "actual": 590000,
+      "budget": 600000,
+      "variance": -10000,
+      "execution": 0.9833333333333333,
+      "count": 6
+    },
+    {
+      "area": "Comercial",
+      "actual": 290000,
+      "budget": 300000,
+      "variance": -10000,
+      "execution": 0.9666666666666667,
+      "count": 6
+    },
+    {
+      "area": "Pessoas",
+      "actual": 190000,
+      "budget": 240000,
+      "variance": -50000,
+      "execution": 0.7916666666666666,
+      "count": 6
+    }
+  ],
+  "sep": {
+    "actual": 690000,
+    "budget": 600000,
+    "variance": 90000,
+    "execution": 1.15,
+    "count": 8
+  },
+  "techSep": {
+    "actual": 310000,
+    "budget": 220000,
+    "variance": 90000,
+    "execution": 1.4090909090909092,
+    "count": 2
+  },
+  "techAug": {
+    "actual": 240000,
+    "budget": 220000,
+    "variance": 20000,
+    "execution": 1.0909090909090908,
+    "count": 2
+  }
+}

@@ -1,3 +1,4 @@
+import {readSacSample,type SacSelection} from './sac';
 import { z } from 'zod';
 import { MAX_BYTES, MAX_ROWS, parseFile } from '@/core/import';
 import type { ImportSample } from '@/core/types';
@@ -9,10 +10,11 @@ export const sapMappingSchema = z.object({
   unit: z.enum(['BRL', 'number']), operation: z.enum(['sum', 'average', 'count']),
   rule: z.object({ column: z.string(), value: z.string() }).strict().nullable().default(null),
 }).strict();
-export function sapConfiguration() { return { configured: !!process.env.SAP_READ_URL, mode: process.env.SAP_READ_URL ? 'read-only' : 'demo' }; }
-type Options = { url?: string; token?: string; fetcher?: typeof fetch; signal?: AbortSignal };
+export function sapConfiguration() { return { configured: !!(process.env.SAP_READ_URL||process.env.SAP_SAC_TENANT_URL), mode: (process.env.SAP_READ_URL||process.env.SAP_SAC_TENANT_URL) ? 'read-only' : 'demo' }; }
+type Options = { workspaceId?: string; selection?: SacSelection; url?: string; token?: string; fetcher?: typeof fetch; signal?: AbortSignal };
 /** Server-configured endpoint only. UI supplies no URL or credential. All requests are GET and redirects fail closed. */
 export async function readSapSample(options: Options = {}): Promise<ImportSample> {
+  if(process.env.SAP_CONNECTION_MODE==='sac'&&!options.url){if(!options.workspaceId)throw new HttpError(403,'Informe um espaço autorizado para consultar o SAP.');return readSacSample(options.workspaceId,options.selection,options.signal);}
   const endpoint = options.url ?? process.env.SAP_READ_URL;
   if (!endpoint) throw new HttpError(503, 'A conexão SAP de leitura ainda não foi configurada. Os exemplos continuam disponíveis.');
   let base: URL;

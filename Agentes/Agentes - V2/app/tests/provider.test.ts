@@ -21,7 +21,7 @@ test('Bedrock recebe campos e agregados, não recebe registros brutos nem pode s
     assert.match(data, /totals/); assert.doesNotMatch(data, /"rows"/);
     assert.equal(captured.input.toolConfig, undefined);
     assert.match(captured.input.system?.[0]?.text || '', /nunca salva/);
-    assert.equal(captured.input.inferenceConfig?.maxTokens, 2048);
+    assert.equal(captured.input.inferenceConfig?.maxTokens, 2000);
   } finally { stub.mock.restore(); }
 });
 

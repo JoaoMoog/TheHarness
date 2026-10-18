@@ -7,3 +7,9 @@ node_modules/
 test-results/
 playwright-report/
 *.tsbuildinfo
+
+!.env.pilot.example
+!.env.agentcore.example
+!.env.credits.example
+!.env.runtime.example
+!.env.studio.example

@@ -1,0 +1,100 @@
+{
+  "flows": [
+    "Filtros combinados e totais coerentes",
+    "Pedido, critérios efetivos, carregamento, geração e restauração da identidade",
+    "Refinamento por IA e desfazer",
+    "Simulação, projeção ilustrativa e desfazer completo",
+    "Editor visual, realce e componentes",
+    "Salvar, persistir, buscar e reabrir",
+    "Planejamento revisado preserva a base",
+    "Medida calculada com prévia",
+    "Fonte indisponível e recuperação",
+    "Permissões e visão de Leitor",
+    "Busca global, registros e exportação CSV",
+    "Navegação móvel, layout e chat sobreposto"
+  ],
+  "errors": [],
+  "requests": [],
+  "audits": [
+    {
+      "name": "dashboard-1440",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Visão geral",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Dashboards",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Explorar dados",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Planejamento",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Previsões e cenários",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Modelos de dados",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Conexões",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "Administração",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-1920",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-1280",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-1024",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-768",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-390",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "responsive-320",
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "name": "mobile-chat",
+      "overflow": false,
+      "violations": []
+    }
+  ]
+}

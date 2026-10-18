@@ -1,0 +1,113 @@
+{
+  "project": "CLARA",
+  "requestedReference": "https://orquestraweb.btgpactual.com/card",
+  "status": "awaiting-official-source",
+  "deliverableOrder": ["design-system", "new-prototype"],
+  "sourceOfTruth": {
+    "visual": "Orquestra oficial: documentação, tokens ou biblioteca Figma acessível",
+    "product": "D:/Prometeu/app/PRODUCT.md",
+    "existingDesign": "https://www.figma.com/design/IbSwd5Bj71v6V4JXll6kug",
+    "precedence": "A nova referência Orquestra substitui os valores visuais interpretados do protótipo anterior."
+  },
+  "discovery": {
+    "officialPage": "A busca web recebeu HTML sem conteúdo legível. Após o usuário informar Acesso liberado, uma nova tentativa foi recusada pelo controle de segurança do navegador devido a uma preferência salva que bloqueia o domínio.",
+    "userAuthorizedReading": true,
+    "figma": "Busca por componente Orquestra Card e variáveis Orquestra não encontrou ativos.",
+    "code": "O projeto usa CSS próprio, Figtree, Lucide e Radix Select. Nenhum pacote Orquestra foi identificado no package.json.",
+    "existingAssets": {
+      "variableCollections": 2,
+      "variables": 43,
+      "textStyles": 7,
+      "componentFamilies": 1
+    },
+    "officialValuesVerified": false,
+    "newFigmaAssetsCreated": false
+  },
+  "libraryStructure": [
+    "00 · Guia e origem",
+    "01 · Fundações",
+    "02 · Ações e feedback",
+    "03 · Campos e seleção",
+    "04 · Navegação",
+    "05 · Cards e dados",
+    "06 · Padrões CLARA e IA",
+    "07 · Exemplos de uso",
+    "08 · Protótipo desktop",
+    "09 · Protótipo mobile"
+  ],
+  "foundations": {
+    "collections": [
+      {"name": "Orquestra / Primitivos", "content": ["paleta oficial", "escala de medidas"], "values": null},
+      {"name": "Orquestra / Semânticos", "content": ["superfície", "texto", "borda", "ação", "foco", "seleção", "status"], "values": null},
+      {"name": "Orquestra / Layout", "content": ["espaçamento", "raio", "dimensões", "densidade"], "values": null},
+      {"name": "Orquestra / Tipografia", "content": ["família", "peso", "tamanho", "entrelinha", "números tabulares"], "values": null},
+      {"name": "CLARA / Produto", "content": ["séries de gráfico", "comparação", "origem de dados", "estados da análise"], "values": null}
+    ],
+    "themes": "Incluir apenas modos documentados pelo Orquestra; não inventar um tema escuro oficial.",
+    "styles": ["hierarquia tipográfica", "elevação e sobreposição", "grids responsivos"],
+    "binding": "Tokens semânticos usam aliases dos primitivos, com escopos explícitos e sintaxe WEB var(--nome). As propriedades compatíveis dos componentes usam bindings."
+  },
+  "componentInventory": [
+    {"family": "Button", "coverage": ["hierarquias oficiais", "default", "hover", "focus", "pressed", "disabled", "loading", "texto editável", "ícone substituível"]},
+    {"family": "IconButton", "coverage": ["ações locais", "rótulo acessível", "focus", "disabled"]},
+    {"family": "Card", "coverage": ["anatomia oficial", "título", "conteúdo", "rodapé", "ações", "selecionável quando permitido pela fonte"]},
+    {"family": "Input", "coverage": ["label", "hint", "required", "default", "focus", "error", "disabled", "read-only"]},
+    {"family": "Textarea", "coverage": ["pergunta", "edição", "contador", "erro"]},
+    {"family": "Select", "coverage": ["fechado", "aberto", "selecionado", "busca quando prevista", "erro", "disabled"]},
+    {"family": "Checkbox", "coverage": ["unchecked", "checked", "indeterminate", "focus", "disabled"]},
+    {"family": "Radio", "coverage": ["unchecked", "checked", "focus", "disabled"]},
+    {"family": "Switch", "coverage": ["off", "on", "focus", "disabled"]},
+    {"family": "Tag e Chip", "coverage": ["status com texto", "filtro removível", "seleção"]},
+    {"family": "Alert e Toast", "coverage": ["informação", "sucesso", "atenção", "erro", "ação", "fechar"]},
+    {"family": "Tooltip", "coverage": ["explicação curta", "foco", "posicionamento"]},
+    {"family": "Dialog e Drawer", "coverage": ["título", "conteúdo", "ações", "fechar", "retorno de foco"]},
+    {"family": "Menu", "coverage": ["ações", "seleção", "separador", "ação destrutiva"]},
+    {"family": "Tabs", "coverage": ["default", "selected", "focus", "disabled"]},
+    {"family": "Navigation", "coverage": ["desktop", "mobile", "ativo", "conta", "navegação por teclado"]},
+    {"family": "Breadcrumb e Stepper", "coverage": ["hierarquia", "etapa atual", "completa", "pendente"]},
+    {"family": "Table", "coverage": ["header", "row", "sort", "seleção", "números à direita", "empty", "loading", "error", "paginação"]},
+    {"family": "Metric e Chart", "coverage": ["valor", "unidade", "comparação", "legenda", "valores exatos", "origem"]},
+    {"family": "FileUpload", "coverage": ["vazio", "selecionado", "validação", "processando", "erro", "concluído"]},
+    {"family": "EmptyState e Skeleton", "coverage": ["primeiro uso", "sem resultados", "carregamento", "falha recuperável"]},
+    {"family": "AI Composer", "coverage": ["pergunta", "fonte", "sugestões", "enviar", "processando", "erro"]},
+    {"family": "AI Result", "coverage": ["esclarecimento", "interpretação", "prévia", "ação proposta", "critério", "refinamento"]},
+    {"family": "Analysis Toolbar", "coverage": ["período", "filtros", "salvar", "editar", "exportar", "origem"]}
+  ],
+  "componentRules": [
+    "Reutilizar a biblioteca oficial acessível antes de reconstruir componentes.",
+    "Distinguir componentes oficiais de padrões específicos da CLARA na nomenclatura e documentação.",
+    "Usar propriedades de texto, booleanas e INSTANCE_SWAP; evitar variantes por ícone.",
+    "Dividir famílias quando a matriz de variantes superar 30 combinações.",
+    "Usar auto layout para relações de conteúdo e instâncias nas telas finais.",
+    "Confirmar nomes de componentes e API de código na fonte oficial antes de criar mapeamentos Code Connect."
+  ],
+  "prototype": {
+    "direction": "Área de trabalho confortável, com resultados legíveis, ações previsíveis, edição junto do conteúdo e IA contextual.",
+    "desktopScreens": [
+      "Visão geral: pergunta, análises recentes e estado das fontes",
+      "Nova análise: fonte, objetivo e esclarecimento da IA",
+      "Prévia: interpretação, indicadores, gráficos e salvamento explícito",
+      "Análise salva: filtros, origem, edição e exportação",
+      "Biblioteca: busca, ordenação, lista e ações de gerenciamento",
+      "Fontes: dados demonstrativos e arquivos importados",
+      "Importação: arquivo, conferência de colunas, critérios e conclusão"
+    ],
+    "mobileScreens": ["Visão geral", "Nova análise", "Análise e tabela", "Fontes e importação"],
+    "overlays": ["assistente", "edição", "origem e cálculo", "exportação", "menu de análise", "confirmar exclusão"],
+    "flow": ["trazer dados", "perguntar", "esclarecer", "conferir prévia", "refinar", "salvar", "reabrir", "exportar"],
+    "preservation": ["texto e conversa ao recolher a IA", "análise original ao pedir outra análise", "plano salvo ao aplicar filtros de consulta"],
+    "interactionContract": "Navegação e estados demonstrados no Figma. Operações de IA, importação e exportação não executam o backend no protótipo.",
+    "productConstraints": ["SAP demonstrativo identificado", "sem escrita no SAP", "sem integrações fictícias", "sem workspaces ou perfis de equipe apresentados como implementados"]
+  },
+  "acceptance": [
+    "Origem oficial e versão dos valores documentadas.",
+    "Inventário necessário à CLARA coberto, com estados e propriedades editáveis.",
+    "Aliases, escopos, sintaxe, bindings e estilos verificados.",
+    "Biblioteca visualmente revisada em escala normal, sem conteúdo cortado ou sobreposto.",
+    "Telas compostas com instâncias da biblioteca.",
+    "Fluxo principal e sobreposições conectados e verificados.",
+    "Desktop e mobile legíveis, com contraste e foco visível.",
+    "Distinguir protótipo de funcionalidades implementadas."
+  ],
+  "remainingPrerequisite": "Acesso permitido à documentação Orquestra ou uma fonte oficial alternativa fornecida pelo usuário."
+}

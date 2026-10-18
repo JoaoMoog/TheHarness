@@ -1,0 +1,6 @@
+/* COMMON */
+const page=await figma.getNodeByIdAsync(STATE.foundations.pages.prototype);await figma.setCurrentPageAsync(page);
+/* UI */
+const composition=await screen('composition','15 · Dashboard — Composição das despesas','library');const cc=await dashboardContent(composition.content,composition.w);const cl=await figma.getNodeByIdAsync(cc.monthly);cl.remove();const cb=await figma.getNodeByIdAsync(cc.centers);cb.resize(composition.w,cb.height);for(const t of composition.content.findAllWithCriteria({types:['TEXT']})){if(t.characters==='Despesas e orçamento'){t.characters='Composição das despesas';mutated.push(t.id);}}
+const evolution=await screen('evolution','16 · Dashboard — Evolução do semestre','library');const ev=await dashboardContent(evolution.content,evolution.w);const ec=await figma.getNodeByIdAsync(ev.centers);ec.remove();const el=await figma.getNodeByIdAsync(ev.monthly);el.resize(evolution.w,el.height);for(const t of evolution.content.findAllWithCriteria({types:['TEXT']})){if(t.characters==='Despesas e orçamento'){t.characters='Evolução do semestre';mutated.push(t.id);}}
+const alive=new Set([...allIds(composition.root),...allIds(evolution.root)]);return {createdNodeIds:[...new Set(ids)].filter(id=>alive.has(id)),mutatedNodeIds:mutated,screens,links,evidence:[composition,evolution].map(s=>evidence(s.root))};

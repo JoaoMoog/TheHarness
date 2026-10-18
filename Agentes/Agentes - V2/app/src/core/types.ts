@@ -28,7 +28,7 @@ export type Report = {
   id: string; owner: string; sourceId: string; plan: Plan; createdAt: string;
   revision?: number; sourceRevision?: number; updatedAt?: string; editedBy?: string;
 };
-export type Actor = { id: string; name: string; demo: boolean; auth?: 'local' | 'msal' | 'demo'; email?: string };
+export type Actor = { id: string; name: string; demo: boolean; auth?: 'local' | 'msal' | 'demo'; email?: string; directory?: {tenantId:string;objectId:string;groups:string[];expiresAt:number;overage:boolean} };
 export type Bootstrap = { actor: Actor; sources: Source[]; reports: Report[]; provider: 'demo' | 'bedrock'; workspace?: Workspace; workspaces?: Workspace[] };
 export type ImportSample = { name: string; columns: Column[]; rows: Record<string, Cell>[] };
 export type Upload = ImportSample & { id: string; owner: string; expiresAt: string; origin?: 'sap' };

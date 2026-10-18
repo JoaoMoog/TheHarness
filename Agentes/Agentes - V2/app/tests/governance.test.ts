@@ -18,12 +18,16 @@ after(() => { db().close(); rmSync(directory, { recursive: true, force: true });
 const actor = (name = 'Pessoa'): Actor => ({ id: crypto.randomUUID(), name, demo: true });
 const status = (expected: number) => (error: unknown) => !!error && typeof error === 'object' && 'status' in error && error.status === expected;
 
-test('espaço pessoal conserva dados legados e nunca é compartilhado', () => {
+test('espaço pessoal conserva dados legados, aceita convite e protege o proprietário', () => {
   const admin = actor(); initialize(admin); const source = list<Source>('source', admin.id)[0];
   const workspace = resolveWorkspace(admin);
   assert.equal(workspace.id, admin.id); assert.equal(workspace.role, 'admin'); assert.equal(workspace.personal, true);
   assert.equal(list<Source>('source', workspace.owner)[0].id, source.id);
-  assert.throws(() => createInvite(admin, workspace.id, 'reader'), status(400));
+  const guest=actor();acceptInvite(guest,createInvite(admin,workspace.id,'reader').code);
+  assert.equal(resolveWorkspace(guest,workspace.id).role,'reader');
+  assert.throws(()=>updateMember(admin,workspace.id,admin.id,'reader'),status(409));
+  updateMember(admin,workspace.id,guest.id,null);
+  assert.throws(()=>resolveWorkspace(guest,workspace.id),status(404));
   assert.equal(listWorkspaces(admin).length, 1);
 });
 

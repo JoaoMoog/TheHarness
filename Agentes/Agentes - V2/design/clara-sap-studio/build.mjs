@@ -1,0 +1,15 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createRequire} from 'node:module';
+const root=dirname(fileURLToPath(import.meta.url));
+const modules=resolve(root,'../../app/node_modules');
+const require=createRequire(resolve(root,'../../app/package.json'));
+const {build}=require('esbuild');
+const result=await build({entryPoints:[resolve(root,'App.tsx')],bundle:true,platform:'browser',format:'iife',target:'es2022',jsx:'automatic',minify:true,write:false,nodePaths:[modules],define:{'process.env.NODE_ENV':'"production"'}});
+const font=[400,500,600,700].map(weight=>`@font-face{font-family:Figtree;font-weight:${weight};font-style:normal;font-display:swap;src:url(data:font/woff2;base64,${readFileSync(resolve(modules,`@fontsource/figtree/files/figtree-latin-${weight}-normal.woff2`)).toString('base64')}) format('woff2')}`).join('\n');
+const css=readFileSync(resolve(root,'styles.css'),'utf8');
+const js=result.outputFiles[0].text.replaceAll('</script','<\\/script');
+const html=`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#142c47"><meta name="description" content="CLARA — protótipo de análise, planejamento e dashboards com IA e dados SAP demonstrativos."><title>CLARA · Analytics Studio</title><style>${font}\n${css}</style></head><body><div id="root"></div><script>${js}</script></body></html>`;
+writeFileSync(resolve(root,'index.html'),html);
+console.log(JSON.stringify({file:resolve(root,'index.html'),bytes:Buffer.byteLength(html),assets:'embedded',externalRequests:0}));
