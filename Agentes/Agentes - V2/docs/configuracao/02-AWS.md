@@ -120,7 +120,7 @@ Depois de a AWS liberar o modelo:
 
 ```powershell
 # Escolha o arquivo correto antes de executar.
-$env:CLARA_ENV_FILE = '.env.pilot.local'
+$env:CLARA_ENV_FILE = '.env.dev'
 npm.cmd run agentcore:model -- --activate
 npm.cmd run agentcore:check
 ```

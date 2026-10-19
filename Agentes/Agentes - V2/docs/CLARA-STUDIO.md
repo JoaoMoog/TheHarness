@@ -2,7 +2,7 @@
 
 A aplicação em `/` usa o backend e contratos versionados. O protótipo visual original continua em `design/clara-sap-studio`; a aplicação anterior está preservada em `/classic`. Não é uma reprodução completa de todos os recursos do SAP Analytics Cloud.
 
-Resultados e limites da validação estão em [CLARA-VERIFICACAO.md](CLARA-VERIFICACAO.md).
+Configuração e operação estão no [guia de implantação](configuracao/README.md).
 
 ## Experimentar sem configuração
 
@@ -62,7 +62,7 @@ Com o port-forward, acessar http://localhost:3000. A base não cria Ingress, TLS
 | Persistência | Contrato do repositório, transação, revisão e idempotência | Escolher e implementar armazenamento compartilhado, sessões, migrações, retenção, backup/restauração; testar concorrência entre réplicas |
 | Infraestrutura | Dockerfile, Compose, base Kubernetes, probes | Docker Engine, cluster, registry, imagem, domínio/TLS, segredos, recursos e observabilidade do ambiente |
 
-As variáveis estão documentadas em `app/.env.studio.example`. São instruções para uma etapa futura; valores reais não foram preenchidos. A persistência distribuída exige implementação do adaptador e migração dos serviços existentes, não apenas uma URL de banco. O contrato atual do repositório é síncrono; um driver remoto assíncrono também exigirá propagar `async/await` nos consumidores. O comportamento de domínio e os contratos HTTP podem ser preservados.
+As variáveis estão documentadas em `app/.env.local`. São instruções para uma etapa futura; valores reais não foram preenchidos. A persistência distribuída exige implementação do adaptador e migração dos serviços existentes, não apenas uma URL de banco. O contrato atual do repositório é síncrono; um driver remoto assíncrono também exigirá propagar `async/await` nos consumidores. O comportamento de domínio e os contratos HTTP podem ser preservados.
 
 ## Contratos
 

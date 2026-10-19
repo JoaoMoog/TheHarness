@@ -142,7 +142,7 @@ O mundo visual interpreta referências públicas do aplicativo BTG Pactual Inves
 - Assistente recolhível que preserva o trabalho em andamento.
 - Estados descritos por palavras, foco visível e movimento breve.
 
-Extraído em 10/10/2026 de `src/app/globals.css`, `src/app/workspace.css`, `src/ui/` e `src/core/brand.ts`. O frontmatter é normativo; [design.json](.impeccable/design.json) contém extensões e amostras.
+Referência histórica extraída em 10/10/2026 de `src/app/globals.css`, `src/app/workspace.css`, `src/ui/` e `src/core/brand.ts`. Os artefatos auxiliares de revisão não acompanham a distribuição.
 
 ## Colors
 

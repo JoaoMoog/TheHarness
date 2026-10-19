@@ -63,7 +63,7 @@ A aplicação devolve mensagens sanitizadas das integrações. Para diagnóstico
 
 | Arquivo | Finalidade |
 |---|---|
-| `app/.env.runtime.example` | Inventário de implantação sem segredos |
+| `app/.env.prod` | Inventário de implantação sem segredos |
 | `app/scripts/configure-agentcore-model.ts` | Testar acesso, preparar versão e ativar modelo explicitamente |
 | `app/scripts/export-agentcore-config.ts` | Gerar configuração inicial do harness a partir do env |
 | `app/scripts/secrets-migrate.ts` | Migração inicial, sem imprimir valores |

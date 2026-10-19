@@ -1,15 +1,17 @@
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, copyFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { spawn, spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadSettings } from './app/scripts/pilot-env.mjs';
 
 const directory = dirname(fileURLToPath(import.meta.url));
 const app = join(directory, 'app');
+const configured = loadSettings(app, '.env.local');
 const options = process.argv.slice(2);
 const valid = options.every(option => ['--preparar', '--producao'].includes(option) || /^--porta=\d+$/.test(option));
 const portOption = options.find(option => option.startsWith('--porta='));
-const port = Number(portOption ? portOption.slice(8) : process.env.PORT || 3000);
+const port = Number(portOption ? portOption.slice(8) : configured.PORT || 3000);
 
 function stop(message) { console.error(`\n${message}`); process.exit(1); }
 if (!valid || (options.includes('--preparar') && options.includes('--producao'))) {
@@ -26,7 +28,7 @@ function runNpm(args) {
   // Windows needs cmd.exe for npm.cmd. Arguments here are fixed, never user input.
   const result = spawnSync(npm, args, {
     cwd: app, stdio: 'inherit', shell: process.platform === 'win32',
-    env: { ...process.env, npm_config_cache: join(app, '.local', 'npm-cache') },
+    env: { ...configured, npm_config_cache: join(app, '.local', 'npm-cache') },
   });
   if (result.error) stop(`Não foi possível executar npm. Confira sua instalação do Node.js. ${result.error.message}`);
   if (result.status !== 0) process.exit(result.status || 1);
@@ -34,7 +36,7 @@ function runNpm(args) {
 
 const environment = join(app, '.env.local');
 if (!existsSync(environment)) {
-  copyFileSync(join(app, '.env.example'), environment);
+  writeFileSync(environment, 'AUTH_MODE=demo\nAI_PROVIDER=demo\nLOCAL_AUTH_ENABLED=true\nCLARA_STORAGE_MODE=memory\nSTUDIO_DATA_PROVIDER=demo\nSTUDIO_AI_PROVIDER=demo\n');
   console.log('Configuração inicial criada: app/.env.local (modo demonstração).');
 }
 
@@ -63,7 +65,7 @@ const production = options.includes('--producao');
 if (production) runNpm(['run', 'build']);
 console.log(`\nCLARA local: http://localhost:${port}\nAbra esse endereço no navegador e escolha “Explorar demonstração”.\nMantenha este terminal aberto. Para encerrar, pressione Ctrl+C.\n`);
 const child = spawn(process.execPath, [join(app, 'node_modules', 'next', 'dist', 'bin', 'next'), production ? 'start' : 'dev', '--hostname', '127.0.0.1', '--port', String(port)], {
-  cwd: app, stdio: 'inherit', env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1' },
+  cwd: app, stdio: 'inherit', env: { ...configured, NEXT_TELEMETRY_DISABLED: '1' },
 });
 let stopping = false;
 for (const signal of ['SIGINT', 'SIGTERM']) {

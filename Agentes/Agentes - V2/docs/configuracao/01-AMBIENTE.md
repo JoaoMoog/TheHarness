@@ -2,23 +2,23 @@
 
 ## Instalação
 
-Use Node.js 22 LTS ou uma versão posterior compatível, npm e AWS CLI v2 para procedimentos operacionais. A aplicação usa Next.js 16. O servidor precisa alcançar por HTTPS Microsoft Entra, AWS e, quando configurado, o tenant SAC e seu serviço OAuth.
+Use Node.js 24, npm e AWS CLI v2 para procedimentos operacionais. A aplicação usa Next.js 16. O servidor precisa alcançar por HTTPS Microsoft Entra, AWS e, quando configurado, o tenant SAC e seu serviço OAuth.
 
 ```powershell
-Set-Location D:\Prometeu\app
+Set-Location app
 npm.cmd ci
-Copy-Item .env.runtime.example .env.local
+$env:CLARA_ENV_FILE = '.env.dev'
 ```
 
-Edite os valores sem preencher segredos. Em produção, variáveis podem ser fornecidas pelo serviço que executa o processo; o `.env` é a referência única de configuração, não um arquivo obrigatório dentro da imagem. Nunca use `NEXT_PUBLIC_` para credenciais.
+Os perfis são `.env.local`, `.env.dev`, `.env.uat` e `.env.prod`. Selecione com `CLARA_ENV_FILE` antes de dev, build, start, studio ou utilitários. O padrão é `.env.local`; o piloto usa `.env.dev`. Use o mesmo perfil no build e na execução. Edite os valores sem preencher segredos. Em produção, variáveis podem ser fornecidas pelo serviço que executa o processo; o `.env` é a referência única de configuração, não um arquivo obrigatório dentro da imagem. Nunca use `NEXT_PUBLIC_` para credenciais.
 
 ### Modos de execução
 
 | Comando | Arquivo de configuração | Uso |
 |---|---|---|
-| `npm run studio` | `.env.local`, sobreposto pelo ambiente do processo | Desenvolvimento |
-| `npm run build` e `npm run studio:start` | `.env.local` / ambiente | Aplicação de produção, inclusive SAP real |
-| `npm run pilot:start` após build | `.env.pilot.local`, sobreposto pelo ambiente | Piloto local com serviço financeiro **sintético** |
+| `npm run studio` | `CLARA_ENV_FILE` ou `.env.local`, sobreposto pelo processo | Desenvolvimento |
+| `npm run build` e `npm run studio:start` | `CLARA_ENV_FILE` ou `.env.local` / processo | Aplicação de produção, inclusive SAP real |
+| `npm run pilot:start` após build | `CLARA_ENV_FILE` ou `.env.dev`, sobreposto pelo ambiente | Piloto local com serviço financeiro **sintético** |
 | `node .next/standalone/server.js` | Ambiente injetado no processo | Imagem/serviço de produção; copie também `public` e `.next/static` para a estrutura standalone |
 
 O piloto exige `STUDIO_DATA_PROVIDER=financial-test` e sobe dois processos. Para SAP real use `studio:start` ou standalone, não `pilot:start`. Defaults de demonstração existem para desenvolvimento, mas produção deve definir explicitamente autenticação, fonte, IA e armazenamento.
@@ -96,7 +96,7 @@ O servidor entrega somente IDs e escopos públicos ao navegador. `NEXT_PUBLIC_MS
 ## Opcionais e utilitários
 
 - `FINANCIAL_TEST_PORT`, `FINANCIAL_TEST_PROFILE`: porta e perfil do serviço sintético. O launcher gera o token efêmero `FINANCIAL_TEST_TOKEN`, compartilhado somente entre os processos locais; ele não é credencial SAP corporativa persistente.
-- `CLARA_ENV_FILE`: arquivo usado pelos utilitários de modelo/migração, padrão `.env.local`.
+- `CLARA_ENV_FILE`: arquivo usado pelos iniciadores e utilitários de modelo/migração, padrão `.env.local`.
 - `CLARA_SECRET_NAME`, `CLARA_SECRET_KMS_KEY_ID`: nome e CMK opcional na migração inicial de credenciais para AWS.
 - `PLAYWRIGHT_BASE_URL`: URL de testes quando o runner precisar de um servidor externo. Não é configuração funcional da aplicação.
 

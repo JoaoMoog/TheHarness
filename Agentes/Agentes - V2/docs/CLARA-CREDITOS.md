@@ -13,7 +13,7 @@ Regra definida pelo usuário em 18/10/2026: 5 créditos por chamada concluída; 
 
 ## Acesso
 
-As áreas Créditos e Uso da plataforma exigem participação no grupo de segurança `CLARA-Administradores-Plataforma`, no Microsoft Entra ID. Único membro autorizado inicialmente: `jpmoog@hotmail.com`.
+As áreas Créditos e Uso da plataforma exigem participação no grupo de segurança `CLARA-Administradores-Plataforma`, no Microsoft Entra ID. Configure os membros autorizados no diretório do destino.
 
 O servidor compara IDs de grupos provenientes do access token validado por assinatura, issuer, tenant, audience e scope. Nome ou e-mail não concedem permissão. Administração de um espaço, conta local e demonstração não equivalem a administração da plataforma. As APIs verificam o grupo em todas as operações; ocultar menus é apenas uma parte da experiência.
 
@@ -57,6 +57,6 @@ Nenhum endpoint aceita a identidade do solicitante ou sua associação a grupos 
 
 Versão validada em 18/10/2026: build de produção, 139 testes de servidor/componentes e três cenários de navegador (créditos, expansão do produto e onboarding). O cenário de créditos verifica bloqueio real por HTTP 402, concessão e histórico, isolamento dos menus, exportação CSV, tela móvel e persistência após reiniciar.
 
-Ativação do Entra pendente: formulário do grupo preparado com somente `jpmoog@hotmail.com`. A revisão automática bloqueou a submissão inicial, exigindo confirmação no momento da alteração de acesso. O grupo ainda não foi criado; a claim `groups` da API e o ID real em `CLARA_PLATFORM_ADMIN_GROUP_IDS` serão configurados após essa confirmação. Até lá, os dois menus administrativos permanecem bloqueados no piloto. Não foi criada exceção de acesso por e-mail.
+Preencha `CLARA_PLATFORM_ADMIN_GROUP_IDS` com o ID real do grupo do destino e configure a claim `groups` na API. Até isso ser feito, os menus administrativos permanecem bloqueados.
 
 `tests/credits.test.ts` cobre débito, devolução, concorrência, limite, concessão idempotente, isolamento, renovação, chamadas atravessando o mês, recuperação após interrupção, autorização e indicadores. `tests/e2e/credits-platform.spec.ts` usa contas e claims sintéticas apenas em uma base descartável, sem criar porta de entrada especial no produto.

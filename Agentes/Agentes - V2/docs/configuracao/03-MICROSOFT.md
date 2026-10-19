@@ -50,7 +50,7 @@ PUBLIC_APP_URL=https://clara.suaempresa.com
 
 Crie um grupo de segurança chamado `CLARA-Administradores-Plataforma`. Nome não autoriza acesso: copie o **Object ID do grupo** para `CLARA_PLATFORM_ADMIN_GROUP_IDS`.
 
-O membro solicitado para o piloto é `jpmoog@hotmail.com`. Se a conta for externa ao tenant, ela precisa existir como usuário convidado no diretório e concluir o ingresso. A autorização da CLARA usa o grupo no token assinado; não compara o e-mail a uma lista privilegiada.
+Defina os membros autorizados no diretório do destino. Contas externas precisam existir como usuários convidados e concluir o ingresso. A autorização da CLARA usa o grupo no token assinado; não compara o e-mail a uma lista privilegiada.
 
 No registro da **API**, configure group claims para que os IDs dos grupos de segurança constem no **access token** emitido para a CLARA. Se usar “Groups assigned to the application”, atribua os grupos à Enterprise Application correspondente e confira as exigências de licença do tenant.
 

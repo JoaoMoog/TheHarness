@@ -12,7 +12,7 @@ Guia de implantação e operação. Revisto em 18/10/2026. Código da aplicaçã
 
 Referências entregues junto ao guia:
 
-- [Modelo completo de ambiente](../../app/.env.runtime.example).
+- [Modelo completo de ambiente](../../app/.env.prod).
 - [Contrato OpenAPI SAP em JSON](../SAP-OPENAPI.json), também servido em `GET /api/v1/sap/openapi`.
 - [Contrato principal do Studio](../../app/src/studio/contracts.ts), servido em `GET /api/v1/studio/openapi`.
 - [Implementação do conector SAP](../../app/src/server/sac.ts).

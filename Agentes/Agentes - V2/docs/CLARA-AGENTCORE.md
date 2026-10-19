@@ -37,7 +37,7 @@ Este piloto usa rede pública autenticada. Uma implantação de produção que p
 
 ## Configuração e operação
 
-Os valores de exemplo estão em [app/.env.agentcore.example](../app/.env.agentcore.example). A ativação local usa `STUDIO_AI_PROVIDER=agentcore` e `AI_PROVIDER=agentcore` em `.env.pilot.local`, preservando as configurações de dados e SSO.
+Os valores de exemplo estão em [app/.env.dev](../app/.env.dev). A ativação local usa `STUDIO_AI_PROVIDER=agentcore` e `AI_PROVIDER=agentcore` em `.env.dev`, preservando as configurações de dados e SSO.
 
 Na pasta `app`:
 
